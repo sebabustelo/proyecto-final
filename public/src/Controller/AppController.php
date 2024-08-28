@@ -159,22 +159,32 @@ class AppController extends Controller
                     'ciphers' => env('EMAIL_SSL_CIPHERS', 'DEFAULT:!DH')
                 ]
             ],
-            'client' => env('EMAIL_CLIENT', 'MREC ViajAR mailer'),
+            'client' => env('EMAIL_CLIENT', 'IPMagna'),
             'charset' => env('EMAIL_CHARSET', 'utf-8'),
             'headerCharset' => env('EMAIL_HEADER_CHARSET', 'utf-8'),
             'log' => filter_var(env('EMAIL_LOG', false), FILTER_VALIDATE_BOOLEAN),
         ];
 
-        TransportFactory::setConfig('appm', $emailConfig);
+        // TransportFactory::setConfig('appm', $emailConfig);
         try {
-            $mailer = new Mailer();
-            $mailer->setTransport('appm')
-                ->setFrom([$confVals['app_email'] => 'Elecciones'])
-                ->setTo($datos['email'])
-                ->setEmailFormat('html')
-                ->setSubject($datos['subject'])
-                ->setViewVars(['url' => @$datos['url'], 'content' => @$datos['body']])
-                ->viewBuilder()->setTemplate($datos['template']);
+            // $mailer = new Mailer();
+            // $mailer->setTransport('appm')
+            //     ->setFrom([$confVals['app_email'] => 'Elecciones'])
+            //     ->setTo($datos['email'])
+            //     ->setEmailFormat('html')
+            //     ->setSubject($datos['subject'])
+            //     ->setViewVars(['url' => @$datos['url'], 'content' => @$datos['body']])
+            //     ->viewBuilder()->setTemplate($datos['template']);
+            // $mailer->deliver();
+            $mailer = new Mailer('default');
+            $mailer
+                ->setEmailFormat('both')
+                ->setTo('sebabustelo@gmail.com')
+                ->setFrom('app@domain.com')
+                ->viewBuilder();
+                //->setTemplate('welcome')
+                // ->setLayout('fancy');
+
             $mailer->deliver();
         } catch (\Throwable $th) {
             Log::write('debug', 'El email no pudo ser enviado');
@@ -182,7 +192,6 @@ class AppController extends Controller
             Log::write('debug', 'Mailer Dump: ' . var_export($mailer, true));
             $this->Flash->error('#F45DG, el email no pudo ser enviado, intente nuevamente en unos minutos');
         }
-
     }
 
     public static function secured_encrypt($data = null)
@@ -220,6 +229,4 @@ class AppController extends Controller
             return $data;
         return false;
     }
-
-
 }

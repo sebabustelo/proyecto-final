@@ -5,8 +5,8 @@
                 <div class="box-header  with-border">
                     <h3 class="box-title"> <span class="fa fa-user-plus fa-lg"></span> Nuevo Usuario</h3>
                     <div class="box-tools pull-right">
-                        <a href="/rbac/rbacUsuarios/index/" id="agregarUsuario" class="btn btn-primary ">
-                            <span class="fa fa-list"></span> Usuarios</a>
+                        <a href="/rbac/rbacUsuarios/index/" id="agregarUsuario" class="btn btn-sm btn-primary ">
+                            <span class="fa fa-users"></span> Usuarios</a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
@@ -23,15 +23,18 @@
 
                             <div class="form-group col-sm-5">
                                 <label for="nombre">Nombre</label>
-                                <input required type="text" id="RbacUsuarioNombre" placeholder="Se autocompleta automáticamente al asociar un usuarios LDAP" class="form-control" name="nombre">
+                                <input required type="text" placeholder="Ingrese el/los nombre/s" class="form-control" name="nombre"
+                                oninvalid="this.setCustomValidity('Debe completar el/los nombre/s')" oninput="this.setCustomValidity('')" >
                             </div>
                             <div class="form-group col-sm-5">
                                 <label for="apellido">Apellido</label>
-                                <input required type="text" id="RbacUsuarioApellido" placeholder="Se autocompleta automáticamente al asociar un usuarios LDAP" class="form-control" name="apellido">
+                                <input required type="text"  placeholder="Ingrese el/los apellido/s" class="form-control" name="apellido"
+                                oninvalid="this.setCustomValidity('Debe completar el/los apellido/s')" oninput="this.setCustomValidity('')" >
                             </div>
                             <div class="form-group col-sm-2">
-                                <label for="rbac-perfiles-ids">Perfil</label><br>
-                                <select required id="rbac-perfiles-ids" name="rbac_perfiles[_ids][]" class="form-control" >
+                                <label>Perfil</label><br>
+                                <select required name="perfil_id" class="form-control" >
+                                <option value="">Seleccione un perfil</option>
                                     <?php foreach ($rbacPerfiles as $id => $perfil) : ?>
                                         <option value="<?php echo $id; ?>"><?php echo $perfil; ?></option>
                                     <?php endforeach; ?>

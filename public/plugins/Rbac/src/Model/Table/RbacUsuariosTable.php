@@ -68,7 +68,8 @@ class RbacUsuariosTable extends Table
             'RbacPerfiles',
             [
                 'className'        => 'Rbac.RbacPerfiles',
-                'foreignKey'       => 'perfil_id',                
+                'foreignKey'       => 'perfil_id',  
+                'propertyName' => 'rbac_perfil'              
             ]
         );
     }
@@ -79,20 +80,10 @@ class RbacUsuariosTable extends Table
      * @return boolean, TRUE si la autenticacion es correcta, FALSE en caso contrario.
      */
     public function autenticacion($usuario, $password)
-    {
-        $passwordHash = hash('sha256', $password);      
-        $usuario  = $this->find()->where(['usuario'=>$usuario,'password'=>$passwordHash])->first();
-            
-        if (!empty($usuario['seed']))
-            $seed = $usuario['seed'];
-        else
-            $seed = '';
-       
-      
+    {        
+        $usuario  = $this->find()->where(['usuario'=>$usuario,'password'=>$password])->first();
+                  
         return (isset($usuario->id));
-    }
-
-   
-
+    }   
     
 }

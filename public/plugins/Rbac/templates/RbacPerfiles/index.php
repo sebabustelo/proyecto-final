@@ -70,7 +70,7 @@
           <h3 class="box-title"> <span class="fa fa-suitcase fa-lg"></span> Perfiles</h3>
           <div class="box-tools pull-right">
             <?php if (!empty($accionesPermitidas['RbacPerfiles']['agregar'])) { ?>
-              <a href="/rbac/rbacPerfiles/agregar/" id="agregarUsuario" class="btn btn-primary ">
+              <a href="/rbac/rbacPerfiles/agregar/" id="agregarUsuario" class="btn btn-primary btn-sm ">
                 <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nuevo Perfil</span></a>
             <?php } ?>
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>

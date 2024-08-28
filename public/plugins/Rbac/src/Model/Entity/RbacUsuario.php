@@ -33,18 +33,15 @@ class RbacUsuario extends Entity
     protected array $_accessible = [
         'usuario' => true,
         'nombre' => true,
-        'activo' => true,
-        //'area' => true,
+        'activo' => true,        
         'apellido' => true,
         'correo' => true,
-        //'valida_ldap' => true,
+        'perfil_id' => true,
         'password' => true,
         'seed' => true,
         'created' => true,
-        'modified' => true,
-        //'perfil_default_id' => true,
-        'rbac_perfiles' => true,
-        //'password' => true
+        'modified' => true,        
+        'rbac_perfil' => true,        
     ];
 
     /**

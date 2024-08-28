@@ -97,7 +97,7 @@
           <h3 class="box-title"> <span class="fa fa-users fa-lg"></span> Usuarios</h3>
           <div class="box-tools pull-right">
             <?php if (!empty($accionesPermitidas['RbacUsuarios']['agregar'])) { ?>
-              <a href="/rbac/rbacUsuarios/agregar/" id="agregarUsuario" class="btn btn-primary btn-xs ">
+              <a href="/rbac/rbacUsuarios/agregar/" id="agregarUsuario" class="btn btn-primary btn-sm ">
                 <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nuevo
                   Usuario</span></a>
             <?php } ?>
@@ -146,13 +146,14 @@
                         <?php echo $usuario->usuario; ?>
                       </td>
                       <td>
-                        <?php echo $usuario->rbac_perfile->descripcion; ?>
+                        <?php echo $usuario->rbac_perfil->descripcion; ?>
                       </td>
                       <td class="pencil">
-                        editar
+                      <a href="/rbac/RbacUsuarios/editar/<?php echo $usuario->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                       </td>
                       <td class="remove">
-                        eliminar
+                      <a href="/rbac/RbacUsuarios/eliminar/<?php echo $usuario->id; ?>" class="editar btn btn-danger btn-xs pencil" title="Eliminar" target="_self"><i class="fa fa-remove"></i></a>
+                        
                       </td>
                     </tr>
                   <?php } ?>

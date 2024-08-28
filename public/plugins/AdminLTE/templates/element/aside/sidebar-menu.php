@@ -4,8 +4,9 @@ $action =   $this->request->getParam('action');
 ?>
 <ul class="sidebar-menu" data-widget="tree">
   <li class="header"> </li>
-  <li><a href="<?php echo $this->Url->build('/pages/home2'); ?>"><i class="fa fa-dashboard"></i> <span>Informes</span></a></li>
-
+  <?php if ((isset($accionesPermitidas['Pages']['index']) && $accionesPermitidas['Pages']['display'])) { ?>
+    <li><a href="<?php echo $this->Url->build('/pages/home2'); ?>"><i class="fa fa-dashboard"></i> <span>Informes</span></a></li>
+  <?php } ?>
   <?php
   if (
     (isset($accionesPermitidas['Configuraciones']['index']) && $accionesPermitidas['Configuraciones']['index']) ||
@@ -35,16 +36,21 @@ $action =   $this->request->getParam('action');
         </span>
       </a>
       <ul class="treeview-menu">
-        <li class=" <?php echo ($controller == 'RbacUsuarios' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
-          <a href="<?php echo $this->Url->build('/rbac/RbacUsuarios/index'); ?>"><i class="fa fa-users"></i> Usuarios</a>
-        </li>
-        <li class=" <?php echo ($controller == 'RbacPerfiles' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
-          <a href="<?php echo $this->Url->build('/rbac/RbacPerfiles/index'); ?>"><i class="fa fa-suitcase"></i>Perfiles</a>
-        </li>
-        <li class=" <?php echo ($controller == 'RbacAcciones' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
-          <a href="<?php echo $this->Url->build('/rbac/RbacAcciones/index'); ?>"><i class="fa fa-list"></i>Acciones</a>
-        </li>
-
+        <?php if ((isset($accionesPermitidas['RbacUsuarios']['index']) && $accionesPermitidas['RbacUsuarios']['index'])) { ?>
+          <li class=" <?php echo ($controller == 'RbacUsuarios' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
+            <a href="<?php echo $this->Url->build('/rbac/RbacUsuarios/index'); ?>"><i class="fa fa-users"></i> Usuarios</a>
+          </li>
+        <?php } ?>
+        <?php if ((isset($accionesPermitidas['RbacPerfiles']['index']) && $accionesPermitidas['RbacPerfiles']['index'])) { ?>
+          <li class=" <?php echo ($controller == 'RbacPerfiles' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
+            <a href="<?php echo $this->Url->build('/rbac/RbacPerfiles/index'); ?>"><i class="fa fa-suitcase"></i>Perfiles</a>
+          </li>
+        <?php } ?>
+        <?php if ((isset($accionesPermitidas['RbacAcciones']['index']) && $accionesPermitidas['RbacAcciones']['index'])) { ?>
+          <li class=" <?php echo ($controller == 'RbacAcciones' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
+            <a href="<?php echo $this->Url->build('/rbac/RbacAcciones/index'); ?>"><i class="fa fa-list"></i>Acciones</a>
+          </li>
+        <?php } ?>
       </ul>
     </li>
   <?php } ?>

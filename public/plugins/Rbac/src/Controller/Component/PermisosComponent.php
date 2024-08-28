@@ -41,6 +41,10 @@ class PermisosComponent extends Component
 			} else {
 				$accionesPermitidasPorPerfiles = $session->read('RbacAcciones');				
 				$tienePermiso = (bool) FALSE;
+				// debug($controlador);
+				// debug($accion);
+				// debug($accionesPermitidasPorPerfiles);die;
+
 				
 				if (isset($accionesPermitidasPorPerfiles[$controlador][$accion])) {
 					$tienePermiso = (bool) ($accionesPermitidasPorPerfiles[$controlador][$accion] == 1);
@@ -48,7 +52,7 @@ class PermisosComponent extends Component
 								
 				if (!$tienePermiso) {
 					throw new InternalErrorException('El usuario no tiene permiso para acceder a la funcionalidad requerida.');
-					return $this->Controller->redirect(array('plugin' => 'rbac', 'controller' => 'rbacUsuarios', 'action' => 'login'));			
+					//return $this->Controller->redirect(array('plugin' => 'rbac', 'controller' => 'rbacUsuarios', 'action' => 'login'));			
 				}				
 			}
 		}
