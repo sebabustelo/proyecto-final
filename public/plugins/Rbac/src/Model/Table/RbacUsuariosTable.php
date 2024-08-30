@@ -104,6 +104,7 @@ class RbacUsuariosTable extends Table
      */
     public function autenticacion($usuario, $password)
     {
+
         $usuario  = $this->find()->where(['usuario'=>$usuario,'password'=>$password])->first();
 
         return (isset($usuario->id));

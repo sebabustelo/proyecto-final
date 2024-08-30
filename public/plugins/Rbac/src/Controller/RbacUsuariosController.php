@@ -293,6 +293,8 @@ class RbacUsuariosController extends RbacController
                 ]);
                 $result = json_decode($response->getBody(), true);
 
+            }else{
+                $result['success']=true;
             }
 
             //validacion de usuario
