@@ -63,10 +63,8 @@ return function (RouteBuilder $routes): void {
 
 
         //$builder->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display', 'plugin' => '']);
-        $builder->connect('/', ['controller' => 'resoluciones', 'action' => 'busqueda']);
-        $builder->connect('/busqueda', ['controller' => 'resoluciones', 'action' => 'busqueda']);
-
-        $builder->connect('/db/index', array('plugin' => 'Db', 'controller' => 'Db', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
+       
+       
 
         $builder->connect('/login', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login'), array('routeClass' => 'InflectedRoute'));
         $builder->connect('/register', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'register'), array('routeClass' => 'InflectedRoute'));

@@ -8,6 +8,18 @@
         border-radius: 4px;
         background-color: #f9f9f9;
     }
+
+    /* Para Chrome, Safari, Edge, y Opera */
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+    /* Para Firefox */
+    input[type="number"] {
+        -moz-appearance: textfield;
+    }
 </style>
 
 <script>
@@ -26,10 +38,8 @@
                     submitButton.disabled = true; // Deshabilitar el botón
                 }
             }
-
             // Añadir el manejador de eventos
             acceptTermsCheckbox.addEventListener('change', toggleTermsMessage);
-
             // Inicializar el estado del botón al cargar la página
             toggleTermsMessage();
         } else {
@@ -41,12 +51,13 @@
 <?php
 
 use Cake\Core\Configure; ?>
-<form id="formLogin" class="form-signin well" role="form" action="/register/" method="POST">
+<form id="formLogin" class="form-signin well" role="form" action="/register" method="POST">
     <div class="register-logo">
         <a href="<?php echo $this->Url->build(); ?>"><?php echo Configure::read('Theme.logo.large') ?></a>
     </div>
     <div class="form-group has-feedback">
-        <input required type="email" class="form-control" placeholder="Email">
+        <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
+        <input name="usuario" required type="email" class="form-control" placeholder="Email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
     </div>
     <div class="form-group has-feedback">
@@ -69,14 +80,18 @@ use Cake\Core\Configure; ?>
 
             </div>
             <div class="col-xs-6">
-                <input name="documento" required type="text" class="form-control" placeholder="Documento">
-
+                <input name="documento" required type="number" step="1" min="8" class="form-control" placeholder="Documento" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <span class="glyphicon fa fa-lg fa-credit-card form-control-feedback" style="margin-right: 14px;"></span>
             </div>
         </div>
     </div>
     <div class="form-group has-feedback">
-        <input id="autocomplete" name="domicilio" required type="text" class="form-control" placeholder="Domicilio">
-
+        <input name="direccion" required type="text" class="form-control" placeholder="Dirección">
+        <span class="glyphicon fa fa-lg fa-home form-control-feedback"></span>
+    </div>
+    <div class="form-group has-feedback">
+        <input name="celular" required type="number" step="1" min="8" class="form-control" placeholder="Celular" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+        <span class="glyphicon fa fa-lg fa-mobile-phone form-control-feedback"></span>
     </div>
 
 

@@ -39,6 +39,8 @@ class RbacUsuario extends Entity
         'direccion' => true,
         'tipo_documento_id' => true,
         'documento' => true,
+        'direccion' => true,
+        'celular' => true,
         'password' => true,
         'seed' => true,
         'activo' => true,

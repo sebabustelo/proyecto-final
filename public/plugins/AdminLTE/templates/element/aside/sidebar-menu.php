@@ -13,17 +13,15 @@ $action =   $this->request->getParam('action');
     <?php
     if (
         (isset($accionesPermitidas['Configuraciones']['index']) && $accionesPermitidas['Configuraciones']['index']) ||
-        (isset($accionesPermitidas['RbacUsuarios']['index']) && $accionesPermitidas['RbacUsuarios']['index']) ||
-        (isset($accionesPermitidas['RbacUsuarios']['editar']) && $accionesPermitidas['RbacUsuarios']['editar']) ||
-        (isset($accionesPermitidas['RbacUsuarios']['agregar']) && $accionesPermitidas['RbacUsuarios']['agregar']) ||
+        (isset($accionesPermitidas['RbacUsuarios']['index']) && $accionesPermitidas['RbacUsuarios']['index']) ||       
         (isset($accionesPermitidas['RbacPerfiles']['index']) && $accionesPermitidas['RbacPerfiles']['index']) ||
-        (isset($accionesPermitidas['RbacAcciones']['index']) && $accionesPermitidas['RbacAcciones']['index']) ||
-        (isset($accionesPermitidas['Productos']['index']) && $accionesPermitidas['Productos']['index'])
+        (isset($accionesPermitidas['RbacAcciones']['index']) && $accionesPermitidas['RbacAcciones']['index']) 
+       
     ) {
         //Preguntar si esta ingresando a algunos de los menus de "Sistema" array $menu_sistema[],
         //para esto pregunto por el contralador y la accion
-        $menu_sistema = array("Configuraciones", "RbacAcciones", "RbacPerfiles", "RbacPermisos", "RbacUsuarios", "Productos");
-        if (in_array($controller, $menu_sistema)) {
+        $menu_sistema = array("Configuraciones", "RbacAcciones", "RbacPerfiles", "RbacPermisos", "RbacUsuarios");
+        if (in_array($controller, $menu_sistema) and $action!='detail') {
             $active = "active";
             $menu_open = "menu-open";
         } else {
@@ -70,13 +68,21 @@ $action =   $this->request->getParam('action');
             </span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="<?php echo $this->Url->build('/TipoDocumentos/index'); ?>"><i class="fa fa-circle-o"></i> Tipo de Documentos</a></li>
+            <li><a href="<?php echo $this->Url->build('/TipoDocumentos/index'); ?>">
+                    <i class="fa fa-circle-o"></i> Tipo de Documentos</a>
+            </li>
+            <li>
+                <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+                    <i class="fa fa-circle-o"></i> <span>Productos</span>
+
+                </a>
+            </li>
         </ul>
+
     </li>
     <li>
         <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
             <i class="fa fa-fw  fa-cubes"></i> <span>Productos</span>
-
         </a>
     </li>
 
@@ -108,7 +114,7 @@ $action =   $this->request->getParam('action');
                     ?>"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
     </ul>
   </li> -->
-    <!-- <li>
+    <li>
         <a href="<?php echo $this->Url->build('/pages/widgets'); ?>">
             <i class="fa fa-th"></i> <span>Widgets</span>
             <span class="pull-right-container">
@@ -172,10 +178,10 @@ $action =   $this->request->getParam('action');
             <li><a href="<?php echo $this->Url->build('/pages/tables/simple'); ?>"><i class="fa fa-circle-o"></i> Simple tables</a></li>
             <li><a href="<?php echo $this->Url->build('/pages/tables/data'); ?>"><i class="fa fa-circle-o"></i> Data tables</a></li>
         </ul>
-    </li> -->
+    </li>
     <li>
         <a href="<?php echo $this->Url->build('/pages/calendar'); ?>">
-            <i class="fa fa-calendar"></i> <span>Calendar</span>
+            <i class="fa fa-calendar"></i> <span>Agenda</span>
             <span class="pull-right-container">
                 <small class="label pull-right bg-red">3</small>
                 <small class="label pull-right bg-blue">17</small>
@@ -245,9 +251,9 @@ $action =   $this->request->getParam('action');
     </ul>
   </li> -->
     <!-- <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Documentation</span></a></li> -->
-    <?php //if(Configure::d)
-    ?>
-    <li><a href="<?php echo $this->Url->build('/pages/debug'); ?>"><i class="fa fa-bug"></i> <span>Debug</span></a></li>
+    <?php if (Configure::read('debug')) { ?>
+        <li><a href="<?php echo $this->Url->build('/pages/debug'); ?>">
+                <i class="fa fa-bug"></i> <span>Debug</span></a>
+        </li>
+    <?php  } ?>
 </ul>
-<?php // }
-?>

@@ -14,7 +14,9 @@ use Cake\Log\Log;
 
 class RbacUsuariosController extends RbacController
 {
-    public function _null() {}
+    public function _null()
+    {
+    }
 
     public function initialize(): void
     {
@@ -43,14 +45,14 @@ class RbacUsuariosController extends RbacController
     /**
      * Agrega un usuario nuevo
      */
-    public function agregar()
+    public function add()
     {
         $configuraciones = $this->fetchTable('Rbac.Configuraciones');
 
         $rbacUsuario = $this->RbacUsuarios->newEmptyEntity();
         $this->set(compact('rbacUsuario'));
         if ($this->getRequest()->is('post')) {
-            //$conn = ConnectionManager::get('default');
+
             try {
                 $rbacUsuario = $this->RbacUsuarios->newEntity($this->getRequest()->getData(), ['associated' => ['RbacPerfiles']]);
 
@@ -58,11 +60,11 @@ class RbacUsuariosController extends RbacController
                 $params = Configure::read('params');
                 $seed = md5(rand(0, 9999));
                 $rbacUsuario['seed'] = $seed;
-                // debug($rbacUsuario);
+
                 if (!empty($rbacUsuario['password'])) {
                     $rbacUsuario['password'] = hash('sha256', $seed . $rbacUsuario['password']);
                 }
-                // debug($rbacUsuario);die;
+
                 $this->RbacUsuarios->getConnection()->begin();
 
                 if ($this->RbacUsuarios->save($rbacUsuario)) {
@@ -86,17 +88,17 @@ class RbacUsuariosController extends RbacController
                     //$this->RbacUsuarios->getConnection()->commit();
                     $error = 0;
                     if ($RbacToken->save($rbacToken)) {
-                        if ($this->_sendEmail($datos)) {
+                        if ($this->sendEmail($datos)) {
                             $this->RbacUsuarios->getConnection()->commit();
                             $this->Flash->success('Se ha enviado la información para crear la clave de su usuario ingresando a la dirección ' . $this->getRequest()->getData('usuario'));
                         } else {
                             $this->RbacUsuarios->getConnection()->rollback();
-                            $this->Flash->error('No pudo enviar confirmación de nuevo usuario');
+                            $this->Flash->error('No se pudo enviar el email de confirmación de nuevo usuario');
                             $error = 1;
                         }
                     } else {
                         $this->RbacUsuarios->getConnection()->rollback();
-                        $this->Flash->error('No pudo generar token antes de enviar confirmacion del nuevo usuario');
+                        $this->Flash->error('No se pudo generar token antes de enviar confirmación del nuevo usuario');
                         $error = 1;
                     }
                     if (!$error) {
@@ -104,27 +106,20 @@ class RbacUsuariosController extends RbacController
                     }
                 } else {
                     $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
-                    // debug($rbacUsuario);die;
                     $this->RbacUsuarios->getConnection()->rollback();
-                    $error_msg = '';
-                    // if (!empty($rbacUsuario->invalid('usuario'))) $error_msg .= 'Ya esta registrado usuario, ';
-                    // if (!empty($rbacUsuario->invalid('correo'))) $error_msg .= 'Ya esta registrado correo, ';
-                    // $this->Flash->error('Error, ' . $error_msg . ' No se puede actualizar');
-                    // return $this->redirect(array('action' => 'index'));
                 }
             } catch (MissingDatasourceException $e) {
                 $this->RbacUsuarios->getConnection()->rollback();
-                //$conn->rollback();
                 $this->Flash->success(__($e->getMessage()));
                 return $this->redirect(array('action' => 'index'));
-                //return $this->redirect($this->referer());
             }
         }
         $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
         $this->set('rbacPerfiles', $rbacPerfiles);
+        $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
     }
 
-    public function _sendEmail($datos)
+    private function sendEmail($datos)
     {
         //s $confVals = Configure::read('configVals');
         // $emailConfig = [
@@ -185,9 +180,9 @@ class RbacUsuariosController extends RbacController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function editar($id = null)
+    public function edit($id = null)
     {
-        $rbacUsuario = $this->RbacUsuarios->findById($id)->contain(['RbacPerfiles'])->first();
+        $rbacUsuario = $this->RbacUsuarios->findById($id)->contain(['RbacPerfiles', 'TipoDocumentos'])->first();
         if ($this->getRequest()->is(['patch', 'post', 'put'])) {
             $rbacUsuario = $this->RbacUsuarios->patchEntity($rbacUsuario, $this->getRequest()->getData(), ['associated' => ['RbacPerfiles']]);
             if ($this->RbacUsuarios->save($rbacUsuario)) {
@@ -200,7 +195,27 @@ class RbacUsuariosController extends RbacController
         $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
         $this->set('rbacPerfiles', $rbacPerfiles);
         $this->set(compact('rbacUsuario'));
+        $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
     }
+
+    public function detail($id = null)
+    {
+        $rbacUsuario = $this->RbacUsuarios->findById($id)->contain(['RbacPerfiles', 'TipoDocumentos'])->first();
+        if ($this->getRequest()->is(['patch', 'post', 'put'])) {
+            $rbacUsuario = $this->RbacUsuarios->patchEntity($rbacUsuario, $this->getRequest()->getData(), ['associated' => ['RbacPerfiles']]);
+            if ($this->RbacUsuarios->save($rbacUsuario)) {
+                $this->Flash->success(__('El Usuario se guardo exitosamente.'));
+                $previousUrl = $this->request->getSession()->read('previousUrl');
+                return $this->redirect($previousUrl);
+            }
+            $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
+        }
+        $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
+        $this->set('rbacPerfiles', $rbacPerfiles);
+        $this->set(compact('rbacUsuario'));
+        $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
+    }
+
 
     /**
      * Elimina un usuario
@@ -265,7 +280,6 @@ class RbacUsuariosController extends RbacController
         $session = $this->getRequest()->getSession();
         //session_destroy();
         //session_start();
-
         $configuraciones = $this->fetchTable('Rbac.Configuraciones');
         $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
 
@@ -274,15 +288,12 @@ class RbacUsuariosController extends RbacController
         $captchaPublic       = $configuraciones->findByClave('reCaptchaPublic')->first();
         $this->set('captchaPublic', $captchaPublic->valor);
 
-
         if ($this->getRequest()->is('Post')) {
             $this->data = $this->getRequest()->getData('data');
-
             //validación de captcha
             if ($configuracionCaptcha->valor == 'Si') {
 
                 $captchaSecret        = $configuraciones->findByClave('reCaptchaSecret')->first();
-
                 $recaptcha = $this->request->getData('g-recaptcha-response');
                 $secret = $captchaSecret->valor;
 
@@ -292,9 +303,8 @@ class RbacUsuariosController extends RbacController
                     'response' => $recaptcha,
                 ]);
                 $result = json_decode($response->getBody(), true);
-
-            }else{
-                $result['success']=true;
+            } else {
+                $result['success'] = true;
             }
 
             //validacion de usuario
@@ -302,37 +312,39 @@ class RbacUsuariosController extends RbacController
                 $usuario  = $this->request->getData('usuario');
                 $password = $this->request->getData('password');
 
-                $usr = $this->RbacUsuarios->findByUsuario($usuario)->contain(['RbacPerfiles' => ['RbacAcciones']])->first();
-                $this->LoginManager->setUserAndPassword($usuario, hash('sha256', $usr->seed . $password));
+                $usr = $this->RbacUsuarios
+                    ->findByUsuario($usuario)
+                    ->contain(['RbacPerfiles' => ['RbacAcciones', 'RbacAccionDefault']])
+                    ->first();
+                //debug($usr);
 
-                if (isset($usr->id)) {
+
+                if (isset($usr->id) and $usr->activo) {
+                    $this->LoginManager->setUserAndPassword($usuario, hash('sha256', $usr->seed . $password));
                     $usuarioValido = $this->LoginManager->autenticacion($this->DbHandler);
-                } else {
+                    if ($usuarioValido) {
+                        $perfilDefault = $usr->perfil_id;
+                        $this->generarListadoAccionesPorPerfiles($usr->rbac_perfil);
+
+                        $session->write('RbacUsuario', $usr);
+                        $session->write('PerfilDefault', $perfilDefault);
+                        $session->write('Auth.User', $usr);
+
+                        $pluginRedirect = (!empty($usr['rbac_perfil']['accion_default']['plugin'])) ? $usr['rbac_perfil']['accion_default']['plugin'] : '';
+                        $controllerRedirect = $usr['rbac_perfil']['accion_default']['controller'];
+                        $actionRedirect = $usr['rbac_perfil']['accion_default']['action'];
+
+                        return $this->redirect(['plugin' => $pluginRedirect, 'controller' => $controllerRedirect, 'action' => $actionRedirect]);
+                    } else {
+                        $this->Flash->error('Usuario y/o contraseña incorrecta.');
+                    }
+                } elseif (isset($usr->id) and !$usr->activo) {
                     $usuarioValido = false;
-                }
-
-                if ($usuarioValido) {
-
-                    $perfilDefault = $usr->perfil_id;
-                    $this->generarListadoAccionesPorPerfiles($usr->rbac_perfil);
-
-                    $session->write('RbacUsuario', $usr);
-                    $session->write('PerfilDefault', $perfilDefault);
-                    $session->write('Auth.User', $usr);
-
-                    if ($session->check('redirect')) {
-                        $redirect = $session->read('redirect');
-                        $session->delete('redirect');
-                        $this->redirect($redirect);
-                    } else
-                        $this->redirect($this->getUrlRedirect($perfilDefault));
+                    $this->Flash->error('El usuario se encuentra en el sistema pero no esta activo .Debe comunicarse con la administracion 454654654 o enviar un mail a ipmagna@gmail.com');
                 } else {
-                    $session->delete('PerfilDefault');
-                    $session->delete('RbacUsuario');
                     $this->Flash->error('Usuario y/o contraseña incorrecta.');
-                    //return $this->redirect("/login");die;
                 }
-             } else {
+            } else {
                 $this->Flash->error(__('reCAPTCHA no válido.'));
             }
         }
@@ -346,22 +358,81 @@ class RbacUsuariosController extends RbacController
         return $this->redirect("/login");
     }
 
-    public function register() {}
 
-    /**
-     * @param array $perfilesAcciones
-     * @return array $rbacAcciones
-     */
 
+    public function register()
+    {
+        $rbacUsuario = $this->RbacUsuarios->newEmptyEntity();
+        $this->set(compact('rbacUsuario'));
+        if ($this->getRequest()->is('post')) {
+
+            try {
+                //poner como perfil por defecto Cliente
+                $configuraciones = $this->fetchTable('Rbac.Configuraciones');
+                $perfilCliente        = $this->Configuraciones->findByClave('Perfil Cliente')->first();
+                $data = $this->getRequest()->getData();
+                $data['perfil_id'] = $perfilCliente->valor;
+                $rbacUsuario = $this->RbacUsuarios->newEntity($data, ['associated' => ['RbacPerfiles']]);
+                
+                $this->RbacUsuarios->getConnection()->begin();
+
+                if ($this->RbacUsuarios->save($rbacUsuario)) {
+
+                    $id                              = $rbacUsuario->id;
+                    $token                           = $this->generateToken();
+
+                    $RbacToken = $this->fetchTable('Rbac.RbacToken');
+                    $data['token']      = $token;
+                    $data['usuario_id'] = $id;
+                    $data['validez']    = 1440;
+                    $rbacToken = $RbacToken->newEntity($data);
+                    //debug( $rbacToken);die;
+
+                    $datos               = array();
+                    $datos['subject']    = 'Confirmación de registro nuevo usuario';
+                    $datos['url']        = Router::url('/', true) . "rbac/rbac_usuarios/recuperarPass/" . $token;
+                    $datos['aplicacion'] = "IPMAGNA";
+                    $datos['template']   = 'registrarse';
+                    $datos['email']      = $this->getRequest()->getData('usuario');
+                    //$this->RbacUsuarios->getConnection()->commit();
+                    $error = 0;
+                    if ($RbacToken->save($rbacToken)) {
+                        if ($this->sendEmail($datos)) {
+                            $this->RbacUsuarios->getConnection()->commit();
+                            $this->Flash->success('Se ha enviado la información a '.$data['usuario'].' para crear la clave de su usuario ingresando al link que esta la descripción del email.');
+                        } else {
+                            $this->RbacUsuarios->getConnection()->rollback();
+                            $this->Flash->error('No se pudo enviar el email de confirmación de nuevo usuario');
+                            $error = 1;
+                        }
+                    } else {
+                        $this->RbacUsuarios->getConnection()->rollback();
+                        $this->Flash->error('No se pudo generar token para enviar la confirmación del nuevo usuario');
+                        $error = 1;
+                    }
+                    if (!$error) {
+                        return $this->redirect(array('action' => 'index'));
+                    }
+                } else {
+                    $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
+                    $this->RbacUsuarios->getConnection()->rollback();
+                }
+            } catch (MissingDatasourceException $e) {
+                $this->RbacUsuarios->getConnection()->rollback();
+                $this->Flash->success(__($e->getMessage()));
+                return $this->redirect(array('action' => 'index'));
+            }
+        }
+       
+        $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
+    }
 
     private function generarListadoAccionesPorPerfiles($perfilAcciones)
     {
-
         $rbacAcciones = array();
         $p['id']              = $perfilAcciones->id;
         $p['descripcion']     = $perfilAcciones->descripcion;
         $perfilesPorUsuario[] = $p;
-
         // debug($perfilAcciones);die;
 
         foreach ($perfilAcciones->rbac_acciones as $accion) {
@@ -420,7 +491,6 @@ class RbacUsuariosController extends RbacController
     {
 
         $this->Configuraciones = $this->fetchTable('Rbac.Configuraciones');
-        //$this->loadModel('Rbac.Configuraciones');
         $captcha_public        = $this->Configuraciones->findByClave('reCaptchaPublic');
         $this->set('captcha_public', $captcha_public->toArray());
 
@@ -453,7 +523,7 @@ class RbacUsuariosController extends RbacController
                         $datos['aplicacion'] = $params['aplicacion'];
                         $datos['template'] = 'recuperar_contrasenia';
                         $datos['email'] = $this->getRequest()->getData('correo');
-                        if ($this->_sendEmail($datos)) {
+                        if ($this->sendEmail($datos)) {
                             $this->RbacToken = $this->fetchTable('Rbac.RbacToken');
                             $rbacToken = $this->RbacToken->newEntity($data);
                             //$rbacToken = $this->RbacToken->patchEntity($rbacToken, $data);
@@ -515,32 +585,6 @@ class RbacUsuariosController extends RbacController
         } else {
             $this->redirect(array('controller' => 'rbac_usuarios', 'action' => 'login', 1));
         }
-    }
-
-
-    /*
- 	* Descripcion: Dado un Perfil, devuelve la url de redireccion segun virtual host y accion de inicio
- 	*/
-
-    private function getUrlRedirect($perfilId)
-    {
-
-        $baseUri = Configure::read('app.fullBaseUrl');
-        //$RbacPerfil = $this->loadModel('Rbac.RbacPerfiles');
-        $RbacPerfil = $this->fetchTable('Rbac.RbacPerfiles');
-        $perfil     = $RbacPerfil->findById($perfilId)->toArray();
-        //$RbacAccion = $this->loadModel('Rbac.RbacAcciones');
-        $RbacAccion = $this->fetchTable('Rbac.RbacAcciones');
-        $accion     = $RbacAccion->findById($perfil[0]['accion_default_id'])->toArray();
-        if (!empty($accion[0]['controller'])) {
-            $pg = '';
-            if (similar_text('Rbac', $accion[0]['controller']) == 4) {
-                $pg = 'rbac/';
-            }
-        } else {
-            throw new NotFoundException('Perfil inválido o Sesión expirada, consulte con el administrador');
-        }
-        return $baseUri . '/' . $pg . $accion[0]['controller'] . '/' . $accion[0]['action'];
     }
 
     private function verifyReCaptcha($recaptchaCode)

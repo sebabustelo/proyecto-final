@@ -42,6 +42,14 @@ class RbacPerfilesTable extends Table
                 'foreignKey' => 'perfil_id',
             ]
         );
+        $this->belongsTo(
+            'RbacAccionDefault',
+            [
+                'className'        => 'Rbac.RbacAcciones',
+                'foreignKey'       => 'accion_default_id',
+                'propertyName' => 'accion_default'
+            ]
+        );
     }
 
 

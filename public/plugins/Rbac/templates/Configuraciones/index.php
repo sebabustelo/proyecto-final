@@ -6,9 +6,9 @@
         <div class="box-header  with-border">
           <h3 class="box-title"> <span class="fa fa-wrench fa-lg"></span> Configuraciones</h3>
           <div class="box-tools pull-right">
-            <?php if (!empty($accionesPermitidas['configuraciones']['agregar'])) { ?>
-              <a href="/rbac/configuraciones/agregar/" id="agregarConfiguracion" class="btn btn-primary ">
-                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText"> Configuracion</span></a>
+            <?php if (!empty($accionesPermitidas['Configuraciones']['agregar'])) { ?>
+              <a href="/rbac/configuraciones/agregar/" id="agregarConfiguracion" class="btn btn-sm btn-primary ">
+                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText"> Nueva Configuración</span></a>
             <?php } ?>
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
           </div>

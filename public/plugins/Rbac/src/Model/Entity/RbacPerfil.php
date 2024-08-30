@@ -36,6 +36,8 @@ class RbacPerfil extends Entity
         'descripcion' => true,        
         'accion_default_id' => true,
         'rbac_acciones' => true,
-        'rbac_usuarios' => true
+        'rbac_usuarios' => true,
+        'accion_default' => true
+
     ];
 }
