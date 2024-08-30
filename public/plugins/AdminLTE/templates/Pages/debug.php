@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
  * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
@@ -12,6 +13,7 @@
  * @since         0.10.0
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
+
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
@@ -31,7 +33,7 @@ endif;
 
 <!-- Content Header (Page header) -->
 <section class="content-header">
-  <h1>Welcome to CakePHP <?= Configure::version() ?> Red Velvet. Build fast. Grow solid.</h1>
+    <h1>Configuración de la Aplicación IPMAGA. Framework CakePHP <?= Configure::version() ?> Red Velvet.</h1>
 </section>
 
 <!-- Main content -->
@@ -40,7 +42,7 @@ endif;
     <div class="row">
         <div class="col-md-12">
             <div class="callout callout-info">
-                <p>Please be aware that this page will not be shown if you turn off debug mode unless you replace templates/Pages/home.ctp with your own version.</p>
+                <p>Tenga en cuenta que esta página no se mostrará si desactiva el modo de depuración (DEBUG=TRUE)  en el archivo .env.</p>
             </div>
         </div>
     </div>
@@ -70,32 +72,32 @@ endif;
             }
             ?>
             <div class="callout <?= $class ?>">
-                <h4>Environment</h4>
-                    <?php if (version_compare(PHP_VERSION, '7.2.0', '>=')): ?>
-                        <p class="success">Your version of PHP is <?= PHP_VERSION ?>.</p>
-                    <?php else: ?>
-                        <p class="problem">Your version of PHP is too low. You need PHP 7.2.0 or higher to use CakePHP (detected <?= PHP_VERSION ?>).</p>
-                    <?php endif; ?>
+                <h4>Entorno</h4>
+                <?php if (version_compare(PHP_VERSION, '7.2.0', '>=')): ?>
+                    <p class="success">La versión de php es <?= PHP_VERSION ?>.</p>
+                <?php else: ?>
+                    <p class="problem">La versión de PHP es demasiado baja. Necesita PHP 7.2.0 o superior para usar CakePHP (detectado <?= PHP_VERSION ?>).</p>
+                <?php endif; ?>
 
-                    <?php if (extension_loaded('mbstring')): ?>
-                        <p class="success">Your version of PHP has the mbstring extension loaded.</p>
-                    <?php else: ?>
-                        <p class="problem">Your version of PHP does NOT have the mbstring extension loaded.</p>;
-                    <?php endif; ?>
+                <?php if (extension_loaded('mbstring')): ?>
+                    <p class="success">La versión de php tiene la extensión mbstring cargada.</p>
+                <?php else: ?>
+                    <p class="problem">La versión de php no tiene la extensión mbstring cargada.</p>;
+                <?php endif; ?>
 
-                    <?php if (extension_loaded('openssl')): ?>
-                        <p class="success">Your version of PHP has the openssl extension loaded.</p>
-                    <?php elseif (extension_loaded('mcrypt')): ?>
-                        <p class="success">Your version of PHP has the mcrypt extension loaded.</p>
-                    <?php else: ?>
-                        <p class="problem">Your version of PHP does NOT have the openssl or mcrypt extension loaded.</p>
-                    <?php endif; ?>
+                <?php if (extension_loaded('openssl')): ?>
+                    <p class="success">La versión de php tiene la extensión extensión openssl cargada.</p>
+                <?php elseif (extension_loaded('mcrypt')): ?>
+                    <p class="success">La versión de php tiene la extensión extensión mcrypt cargada. </p>
+                <?php else: ?>
+                    <p class="problem">La versión de php no tiene la extensión openssl o mcrypt cargada.</p>
+                <?php endif; ?>
 
-                    <?php if (extension_loaded('intl')): ?>
-                        <p class="success">Your version of PHP has the intl extension loaded.</p>
-                    <?php else: ?>
-                        <p class="problem">Your version of PHP does NOT have the intl extension loaded.</p>
-                    <?php endif; ?>
+                <?php if (extension_loaded('intl')): ?>
+                    <p class="success">Your version of PHP has the intl extension loaded.</p>
+                <?php else: ?>
+                    <p class="problem">Your version of PHP does NOT have the intl extension loaded.</p>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -111,23 +113,24 @@ endif;
             }
             ?>
             <div class="callout <?= $class ?>">
-                <h4>Filesystem</h4>
+                <h4>Sistema de archivos</h4>
                 <?php if (is_writable(TMP)): ?>
-                    <p class="success">Your tmp directory is writable.</p>
+                    <p class="success">El directorio tmp tiene permiso de escritura.</p>
                 <?php else: ?>
-                    <p class="text-red">Your tmp directory is NOT writable.</p>
+                    <p class="text-red">El directorio tmp no es tiene permisos de escritura writable.</p>
                 <?php endif; ?>
 
                 <?php if (is_writable(LOGS)): ?>
-                    <p class="success">Your logs directory is writable.</p>
+                    <p class="success">El directorio logs tiene permiso de escritura.</p>
                 <?php else: ?>
-                    <p class="text-red">Your logs directory is NOT writable.</p>
+                    <p class="text-red">El directorio logs no tiene permiso de escritura.</p>
                 <?php endif; ?>
 
                 <?php if (!empty($settings)): ?>
-                    <p class="success">The <em><?= $settings['className'] ?>Engine</em> is being used for core caching. To change the config edit config/app.php</p>
+
+                    <p class="success">El <em><?= $settings['className'] ?>Engine</em>se utiliza para el almacenamiento en caché del núcleo. Para cambiar la configuración, edite config/app.php</p>
                 <?php else: ?>
-                    <p class="problem">Your cache is NOT working. Please check the settings in config/app.php</p>
+                    <p class="problem">La caché NO funciona. Comprueba la configuración en config/app.php</p>
                 <?php endif; ?>
             </div>
         </div>
@@ -136,32 +139,32 @@ endif;
     <div class="row">
         <div class="col-md-12">
             <?php
-                try {
-                    $connection = ConnectionManager::get('default');
+            try {
+                $connection = ConnectionManager::get('default');
 
-                    $connected = $connection;
-                } catch (Exception $connectionError) {
-                    $connected = false;
-                    $errorMsg = $connectionError->getMessage();
-                    if (method_exists($connectionError, 'getAttributes')):
-                        $attributes = $connectionError->getAttributes();
-                        if (isset($errorMsg['message'])):
-                            $errorMsg .= '<br />' . $attributes['message'];
-                        endif;
+                $connected = $connection;
+            } catch (Exception $connectionError) {
+                $connected = false;
+                $errorMsg = $connectionError->getMessage();
+                if (method_exists($connectionError, 'getAttributes')):
+                    $attributes = $connectionError->getAttributes();
+                    if (isset($errorMsg['message'])):
+                        $errorMsg .= '<br />' . $attributes['message'];
                     endif;
-                }
+                endif;
+            }
             ?>
-                <?php if ($connected): ?>
-                    <div class="callout callout-success">
-                        <h4>Database</h4>
-                        <p class="success">CakePHP is able to connect to the database.</p>
-                    </div>
-                <?php else: ?>
-                    <div class="callout callout-danger">
-                        <h4>Database</h4>
-                        <p class="problem">CakePHP is NOT able to connect to the database.<br /><br /><?= $errorMsg ?></p>
-                    </div>
-                <?php endif; ?>
+            <?php if ($connected): ?>
+                <div class="callout callout-success">
+                    <h4>Base de Datos</h4>
+                    <p class="success">CakePHP puede conectarse a la base de datos.</p>
+                </div>
+            <?php else: ?>
+                <div class="callout callout-danger">
+                    <h4>Base de Datos</h4>
+                    <p class="problem">CakePHP no puede conectarse a la base de datos.<br /><br /><?= $errorMsg ?></p>
+                </div>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -170,14 +173,14 @@ endif;
             <?php if (Plugin::isLoaded('DebugKit')): ?>
                 <div class="callout callout-success">
                     <h4>DebugKit</h4>
-                        <p class="success">DebugKit is loaded.</p>
+                    <p class="success">DebugKit se cargo correctamente.</p>
                 </div>
-                <?php else: ?>
+            <?php else: ?>
                 <div class="callout callout-danger">
                     <h4>DebugKit</h4>
-                    <p class="problem">DebugKit is NOT loaded. You need to either install pdo_sqlite, or define the "debug_kit" connection name.</p>
+                    <p class="problem">DebugKit no pudo ser cargado. Necesita instalar pdo_sqlite o definir el nombre de conexión "debug_kit".</p>
                 </div>
-                <?php endif; ?>
+            <?php endif; ?>
         </div>;
     </div>
 

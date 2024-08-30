@@ -16,29 +16,53 @@
         <!-- /.box-header -->
         <div class="box-body">
           <div class="col-md-12 table">
-            <?php
-            if (isset($configuraciones)) {
-              $this->DiticHtml->generateReportTable(
-                $configuraciones,
-                array(
-                  'Configuraciones.clave'              => array('truncate', 'title' => 'Clave'),
-                  'Configuraciones.valor'              => array('truncate', 'truncate-length' => 50, 'no-sort', 'title' => 'Valor'),
-                  'edit'                          => array(
-                    'no-sort',
-                    'edit-action' => 'editar',
-                    'tooltip'       => 'Editar',
-                    'class' => 'pencil'
-                  ),
-                  'delete'                        => array(
-                    'confirm'       => '¿Está seguro de que quiere borrar la configuracion?',
-                    'tooltip'       => 'Eliminar',
-                    'class'         => 'remove',
-                    'delete-action'        => 'eliminar'
-                  )
-                )
-              );
-            }
-            ?>
+          <?php if (isset($configuraciones)) { ?>
+            <div class="table-responsive">
+              <table class="table table-hover table-striped table-ajax">
+                <thead>
+                  <tr>
+                    <th>
+                      <?php echo $this->Paginator->sort('Clave'); ?>
+                    </th>
+                    <th>
+                      <?php echo $this->Paginator->sort('Valor'); ?>
+                    </th>
+
+                    <th>
+                    </th>
+                    <th>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($configuraciones as $k => $configuracion) {  ?>
+                    <tr>
+                      <td>
+                        <?php echo $configuracion->clave; ?>
+                      </td>
+                      <td>
+                        <?php echo $configuracion->valor; ?>
+                      </td>
+
+                      <td class="pencil">
+                      <a href="/rbac/Configuraciones/editar/<?php echo $configuracion->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                      </td>
+                      <td class="remove">
+                      <a href="/rbac/Configuraciones/eliminar/<?php echo $configuracion->id; ?>" class="editar btn btn-danger btn-xs pencil" title="Eliminar" target="_self"><i class="fa fa-remove"></i></a>
+
+                      </td>
+                    </tr>
+                  <?php } ?>
+                </tbody>
+              </table>
+            </div>
+          <?php } else {
+          ?>
+            <div class="callout callout-danger">
+              <p> <i class="icon fa fa-warning" aria-hidden="true"></i> No se encontraron Configuraciones.</p>
+            </div>
+          <?php } ?>
+
             <div class="alert alert-info">
               Aquellas claves cuyos nombres terminen con _enc guardarán sus valores encriptados.<br />
             </div>
@@ -81,7 +105,7 @@
                       <div class="progress-bar" style="width: 100%"></div>
                     </div>
                     <span>
-                      Eliminar los archivos de cache de CAKE
+                      Eliminar los archivos de cache
                     </span>
                   </div>
                 </div>
@@ -104,7 +128,7 @@
           </div>
         </div>
 
-        
+
         <div class="box box-default collapsed-box">
           <div class="box-header with-border">
             <h3 class="box-title">PHP INFO</h3>
@@ -123,8 +147,8 @@
               ob_end_clean();
 
               $pinfo = preg_replace('%^.*<body>(.*)</body>.*$%ms', '$1', $pinfo);
-              //echo $pinfo;
-              echo '<pre>' . shell_exec("php -r 'phpinfo();'") . '</pre>';
+              echo $pinfo;
+              //echo '<pre>' . shell_exec("php -r 'phpinfo();'") . '</pre>';
               ?>
             </ul>
           </div>
@@ -241,7 +265,7 @@
           <div class="box-body">
             <ul>
               <li><?php echo 'HOST REMOTO: ' . gethostbyaddr($_SERVER['REMOTE_ADDR']); ?></li>
-              <!--li><?php //echo 'HOST IP REMOTA: ' . gethostbyaddr($_SERVER['HTTP_X_REAL_IP']); 
+              <!--li><?php //echo 'HOST IP REMOTA: ' . gethostbyaddr($_SERVER['HTTP_X_REAL_IP']);
                       ?></li!-->
               <?php
               foreach ($_SERVER as $varname => $varVal) {
@@ -267,7 +291,7 @@
 <script type="text/javascript">
   $("#btnLimpiar").on("click", function(e) {
     e.preventDefault();
-    /*$('#formConfiguracion')[0].reset();  
+    /*$('#formConfiguracion')[0].reset();
     $("#formConfiguracion").trigger("submit");*/
     window.location.href = "/rbac/configuraciones/?inicio=1";
   });

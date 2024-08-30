@@ -1,4 +1,5 @@
 <?php
+
 namespace Rbac\Model\Entity;
 
 use Cake\ORM\Entity;
@@ -30,18 +31,24 @@ class RbacUsuario extends Entity
      *
      * @var array
      */
+
     protected array $_accessible = [
         'usuario' => true,
         'nombre' => true,
-        'activo' => true,        
         'apellido' => true,
-        'correo' => true,
-        'perfil_id' => true,
+        'direccion' => true,
+        'tipo_documento_id' => true,
+        'documento' => true,
         'password' => true,
         'seed' => true,
+        'activo' => true,
         'created' => true,
-        'modified' => true,        
-        'rbac_perfil' => true,        
+        'modified' => true,
+        'created_by' => true,
+        'modified_by' => true,
+        'rbac_perfil' => true,
+        'tipo_documento' => true,
+        'perfil_id' => true,
     ];
 
     /**
@@ -57,6 +64,6 @@ class RbacUsuario extends Entity
 
     protected function _getFullName()
     {
-        return   $this->usuario. ' ['.$this->apellido .', '.$this->nombre .']';
+        return   $this->usuario . ' [' . $this->apellido . ', ' . $this->nombre . ']';
     }
 }

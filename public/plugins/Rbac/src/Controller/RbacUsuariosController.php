@@ -5,15 +5,16 @@ namespace Rbac\Controller;
 use Cake\Core\Configure;
 use Cake\Http\Exception\NotFoundException;
 use Cake\Datasource\Exception\MissingDatasourceException;
-use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Inflector;
+use Cake\Mailer\Mailer;
+use Cake\Mailer\Exception\MissingActionException;
+use Cake\Http\Client;
+use Cake\Log\Log;
 
 class RbacUsuariosController extends RbacController
 {
-    public function _null()
-    {
-    }
+    public function _null() {}
 
     public function initialize(): void
     {
@@ -57,54 +58,48 @@ class RbacUsuariosController extends RbacController
                 $params = Configure::read('params');
                 $seed = md5(rand(0, 9999));
                 $rbacUsuario['seed'] = $seed;
-               // debug($rbacUsuario);
+                // debug($rbacUsuario);
                 if (!empty($rbacUsuario['password'])) {
-                    $rbacUsuario['password'] = hash('sha256', $seed.$rbacUsuario['password']);
-                    
+                    $rbacUsuario['password'] = hash('sha256', $seed . $rbacUsuario['password']);
                 }
-               // debug($rbacUsuario);die;
+                // debug($rbacUsuario);die;
                 $this->RbacUsuarios->getConnection()->begin();
-               
+
                 if ($this->RbacUsuarios->save($rbacUsuario)) {
-                    if (!$this->getRequest()->getData('valida_ldap')) {
-                        $id                              = $rbacUsuario->id;
-                        $token                           = $this->generateToken();
-                        //$this->loadModel('Rbac.RbacToken');
-                        $RbacToken = $this->fetchTable('Rbac.RbacToken');
-                        $data['token']      = $token;
-                        $data['usuario_id'] = $id;
-                        $data['validez']    = 1440;
-                        $rbacToken = $RbacToken->newEntity($data);
 
+                    $id                              = $rbacUsuario->id;
+                    $token                           = $this->generateToken();
 
-                        $datos               = array();
-                        $datos['subject']    = 'Confirmación de nuevo usuario';
-                        $datos['url']        = Router::url('/', true) . "rbac/rbac_usuarios/recuperarPass/" . $token;
-                        $datos['aplicacion'] = "IPMAGNA";
-                        $datos['template']   = 'nuevo_usuario';
-                        $datos['email']      = $this->getRequest()->getData('correo');
-                        $this->RbacUsuarios->getConnection()->commit();
-                        $error = 0;
-                        // if ($RbacToken->save($rbacToken)) {
-                        //     if ($this->_sendEmail($datos)) {
-                        //         $this->RbacUsuarios->getConnection()->commit();
-                        //         $this->Flash->success('Se ha enviado la información para crear la clave de su usuario ingresando a la dirección ' . $this->getRequest()->getData('usuario'));
-                        //     } else {
-                        //         $this->RbacUsuarios->getConnection()->rollback();
-                        //         $this->Flash->error('No pudo enviar confirmación de nuevo usuario');
-                        //         $error = 1;
-                        //     }
-                        // } else {
-                        //     $this->RbacUsuarios->getConnection()->rollback();
-                        //     $this->Flash->error('No pudo generar token antes de enviar confirmacion del nuevo usuario');
-                        //     $error = 1;
-                        // }
-                        if (!$error) {
-                            return $this->redirect(array('action' => 'index'));
+                    $RbacToken = $this->fetchTable('Rbac.RbacToken');
+                    $data['token']      = $token;
+                    $data['usuario_id'] = $id;
+                    $data['validez']    = 1440;
+                    $rbacToken = $RbacToken->newEntity($data);
+                    //debug( $rbacToken);die;
+
+                    $datos               = array();
+                    $datos['subject']    = 'Confirmación de nuevo usuario';
+                    $datos['url']        = Router::url('/', true) . "rbac/rbac_usuarios/recuperarPass/" . $token;
+                    $datos['aplicacion'] = "IPMAGNA";
+                    $datos['template']   = 'registrarse';
+                    $datos['email']      = $this->getRequest()->getData('usuario');
+                    //$this->RbacUsuarios->getConnection()->commit();
+                    $error = 0;
+                    if ($RbacToken->save($rbacToken)) {
+                        if ($this->_sendEmail($datos)) {
+                            $this->RbacUsuarios->getConnection()->commit();
+                            $this->Flash->success('Se ha enviado la información para crear la clave de su usuario ingresando a la dirección ' . $this->getRequest()->getData('usuario'));
+                        } else {
+                            $this->RbacUsuarios->getConnection()->rollback();
+                            $this->Flash->error('No pudo enviar confirmación de nuevo usuario');
+                            $error = 1;
                         }
                     } else {
-                        $this->Flash->success('Se ha creado el usuario ' . $this->getRequest()->getData('usuario'));
-                        $this->RbacUsuarios->getConnection()->commit();
+                        $this->RbacUsuarios->getConnection()->rollback();
+                        $this->Flash->error('No pudo generar token antes de enviar confirmacion del nuevo usuario');
+                        $error = 1;
+                    }
+                    if (!$error) {
                         return $this->redirect(array('action' => 'index'));
                     }
                 } else {
@@ -129,7 +124,61 @@ class RbacUsuariosController extends RbacController
         $this->set('rbacPerfiles', $rbacPerfiles);
     }
 
-      /**
+    public function _sendEmail($datos)
+    {
+        //s $confVals = Configure::read('configVals');
+        // $emailConfig = [
+        //     'className' => 'Smtp',
+        //     'port' => env('EMAIL_PORT', 465),
+        //     'host' => env('EMAIL_HOST', 'ssl://smtp.mrecic.gov.ar'),
+        //     'username' => $confVals['app_email'],
+        //     'password' => $this->secured_decrypt($confVals['app_email_pass_enc']),
+        //     'persistent' => env('EMAIL_SOCKET_PERSISTENT', false),
+        //     'transport' => env('EMAIL_TRANSPORT', 'Mail'),
+        //     'timeout' => env('EMAIL_TIMEOUT', 30),
+        //     'tls' => filter_var(env('EMAIL_TLS', true), FILTER_VALIDATE_BOOLEAN),
+        //     'context' => [
+        //         'ssl' => [
+        //             'verify_peer' => filter_var(env('EMAIL_SSL_VERIFY_PEER', false), FILTER_VALIDATE_BOOLEAN),
+        //             'verify_peer_name' => filter_var(env('EMAIL_SSL_PEER_NAME', false), FILTER_VALIDATE_BOOLEAN),
+        //             'allow_self_signed' => filter_var(env('EMAIL_SSL_ALLOW_SELF_SIGNED', true), FILTER_VALIDATE_BOOLEAN),
+        //             'ciphers' => env('EMAIL_SSL_CIPHERS', 'DEFAULT:!DH')
+        //         ]
+        //     ],
+        //     'client' => env('EMAIL_CLIENT', 'IPMagna'),
+        //     'charset' => env('EMAIL_CHARSET', 'utf-8'),
+        //     'headerCharset' => env('EMAIL_HEADER_CHARSET', 'utf-8'),
+        //     'log' => filter_var(env('EMAIL_LOG', false), FILTER_VALIDATE_BOOLEAN),
+        // ];
+
+
+
+        $mailer = new Mailer('default');
+        try {
+            $mailer->setFrom(['ipmagna@gmail.com' => 'IPMAGNA'])
+                ->setTo($datos['email'])
+                ->setSubject($datos['subject'])
+                ->setEmailFormat('html')
+                ->setViewVars(['url' => @$datos['url']])
+                ->viewBuilder()
+                ->setTemplate($datos['template']);
+            //->deliver();
+            $mailer->deliver();
+
+            $this->Flash->success('Correo enviado con éxito.');
+            return true;
+        } catch (MissingActionException $e) {
+            Log::error('Error al enviar el correo: ' . $e->getMessage());
+            // Error al encontrar la acción del correo (plantilla faltante, etc.)
+            $this->Flash->error('Error en el envío: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error('Error al enviar el correo: ' . $e->getMessage());
+            // Cualquier otro tipo de error
+            $this->Flash->error('Se produjo un error inesperado: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Editar method
      *
      * @param string|null $id Usuario id.
@@ -146,7 +195,7 @@ class RbacUsuariosController extends RbacController
                 $previousUrl = $this->request->getSession()->read('previousUrl');
                 return $this->redirect($previousUrl);
             }
-            $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));           
+            $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
         }
         $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
         $this->set('rbacPerfiles', $rbacPerfiles);
@@ -219,10 +268,11 @@ class RbacUsuariosController extends RbacController
 
         $configuraciones = $this->fetchTable('Rbac.Configuraciones');
         $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
+
         $this->set('captcha', $configuracionCaptcha->valor);
 
-        $captcha_public        = $configuraciones->findByClave('reCaptchaPublic')->first();
-        $this->set('captcha_public', $captcha_public->valor);
+        $captchaPublic       = $configuraciones->findByClave('reCaptchaPublic')->first();
+        $this->set('captchaPublic', $captchaPublic->valor);
 
 
         if ($this->getRequest()->is('Post')) {
@@ -230,24 +280,28 @@ class RbacUsuariosController extends RbacController
 
             //validación de captcha
             if ($configuracionCaptcha->valor == 'Si') {
-                $captchaOk = false;
-                if (isset($_POST['g-recaptcha-response']) && $this->verifyRecaptcha($_POST['g-recaptcha-response'])) {
-                    $captchaOk = true;
-                }
-                if (!$captchaOk) {
-                    $this->Flash->error('Validación errónea...');
-                    return null;
-                }
+
+                $captchaSecret        = $configuraciones->findByClave('reCaptchaSecret')->first();
+
+                $recaptcha = $this->request->getData('g-recaptcha-response');
+                $secret = $captchaSecret->valor;
+
+                $http = new Client();
+                $response = $http->post('https://www.google.com/recaptcha/api/siteverify', [
+                    'secret' => $secret,
+                    'response' => $recaptcha,
+                ]);
+                $result = json_decode($response->getBody(), true);
+
             }
 
             //validacion de usuario
-            if (isset($this->data['RbacUsuario']['usuario']) && isset($this->data['RbacUsuario']['password'])) {
-                $usuario  = $this->data['RbacUsuario']['usuario'];
-                $password = $this->data['RbacUsuario']['password'];            
-                
-                $usr = $this->RbacUsuarios->findByUsuario($usuario)->contain(['RbacPerfiles' => ['RbacAcciones']])->first();               
-                $this->LoginManager->setUserAndPassword($usuario, hash('sha256', $usr->seed.$password));
-                                
+            if ($result['success']) {
+                $usuario  = $this->request->getData('usuario');
+                $password = $this->request->getData('password');
+
+                $usr = $this->RbacUsuarios->findByUsuario($usuario)->contain(['RbacPerfiles' => ['RbacAcciones']])->first();
+                $this->LoginManager->setUserAndPassword($usuario, hash('sha256', $usr->seed . $password));
 
                 if (isset($usr->id)) {
                     $usuarioValido = $this->LoginManager->autenticacion($this->DbHandler);
@@ -276,6 +330,8 @@ class RbacUsuariosController extends RbacController
                     $this->Flash->error('Usuario y/o contraseña incorrecta.');
                     //return $this->redirect("/login");die;
                 }
+             } else {
+                $this->Flash->error(__('reCAPTCHA no válido.'));
             }
         }
     }
@@ -288,9 +344,7 @@ class RbacUsuariosController extends RbacController
         return $this->redirect("/login");
     }
 
-    public function register()
-    {
-    }
+    public function register() {}
 
     /**
      * @param array $perfilesAcciones
@@ -300,11 +354,13 @@ class RbacUsuariosController extends RbacController
 
     private function generarListadoAccionesPorPerfiles($perfilAcciones)
     {
-       
+
         $rbacAcciones = array();
         $p['id']              = $perfilAcciones->id;
         $p['descripcion']     = $perfilAcciones->descripcion;
         $perfilesPorUsuario[] = $p;
+
+        // debug($perfilAcciones);die;
 
         foreach ($perfilAcciones->rbac_acciones as $accion) {
             $controller = Inflector::camelize($accion['controller']);
@@ -361,10 +417,6 @@ class RbacUsuariosController extends RbacController
     public function recuperar($cache = null)
     {
 
-        if ($cache == 12) {
-            $this->clear_cache();
-        }
-
         $this->Configuraciones = $this->fetchTable('Rbac.Configuraciones');
         //$this->loadModel('Rbac.Configuraciones');
         $captcha_public        = $this->Configuraciones->findByClave('reCaptchaPublic');
@@ -392,6 +444,7 @@ class RbacUsuariosController extends RbacController
                         $data['token'] = $token;
                         $data['usuario_id'] = $usuario->id;
                         $data['validez'] = 1440;
+
                         $datos = array();
                         $datos['subject'] = 'Recuperar contraseña';
                         $datos['url'] = Router::url('/', true) . "rbac/rbac_usuarios/recuperarPass/" . $token;

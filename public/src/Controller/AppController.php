@@ -7,10 +7,7 @@ namespace App\Controller;
 use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Event\EventInterface;
-use Cake\Mailer\Mailer;
-use Cake\Mailer\Transport\MailTransport;
-use Cake\Mailer\TransportFactory;
-use Cake\Log\Log;
+
 use Cake\View\JsonView;
 use Cake\Utility\Inflector;
 
@@ -44,8 +41,6 @@ class AppController extends Controller
         $confi = $query->toArray();
         Configure::write('configVals', $confi);
 
-        // de la lista de la tabla con todas las filas, escribo en Tema.skin el que tenga en la BD
-        Configure::write('Tema.skin', $confi['skin_admin']);
         $this->loadComponent('Flash');
         $this->loadComponent('Rbac.Permisos');
     }
@@ -95,10 +90,6 @@ class AppController extends Controller
                 }
             }
 
-            // debug($accionesPermitidas);
-            // debug($action);
-            // debug($controller);
-            // die;
         }
     }
 
@@ -138,61 +129,7 @@ class AppController extends Controller
         return $token;
     }
 
-    public function _sendEmail($datos)
-    {
-        $confVals = Configure::read('configVals');
-        $emailConfig = [
-            'className' => 'Smtp',
-            'port' => env('EMAIL_PORT', 465),
-            'host' => env('EMAIL_HOST', 'ssl://smtp.mrecic.gov.ar'),
-            'username' => $confVals['app_email'],
-            'password' => $this->secured_decrypt($confVals['app_email_pass_enc']),
-            'persistent' => env('EMAIL_SOCKET_PERSISTENT', false),
-            'transport' => env('EMAIL_TRANSPORT', 'Mail'),
-            'timeout' => env('EMAIL_TIMEOUT', 30),
-            'tls' => filter_var(env('EMAIL_TLS', true), FILTER_VALIDATE_BOOLEAN),
-            'context' => [
-                'ssl' => [
-                    'verify_peer' => filter_var(env('EMAIL_SSL_VERIFY_PEER', false), FILTER_VALIDATE_BOOLEAN),
-                    'verify_peer_name' => filter_var(env('EMAIL_SSL_PEER_NAME', false), FILTER_VALIDATE_BOOLEAN),
-                    'allow_self_signed' => filter_var(env('EMAIL_SSL_ALLOW_SELF_SIGNED', true), FILTER_VALIDATE_BOOLEAN),
-                    'ciphers' => env('EMAIL_SSL_CIPHERS', 'DEFAULT:!DH')
-                ]
-            ],
-            'client' => env('EMAIL_CLIENT', 'IPMagna'),
-            'charset' => env('EMAIL_CHARSET', 'utf-8'),
-            'headerCharset' => env('EMAIL_HEADER_CHARSET', 'utf-8'),
-            'log' => filter_var(env('EMAIL_LOG', false), FILTER_VALIDATE_BOOLEAN),
-        ];
 
-        // TransportFactory::setConfig('appm', $emailConfig);
-        try {
-            // $mailer = new Mailer();
-            // $mailer->setTransport('appm')
-            //     ->setFrom([$confVals['app_email'] => 'Elecciones'])
-            //     ->setTo($datos['email'])
-            //     ->setEmailFormat('html')
-            //     ->setSubject($datos['subject'])
-            //     ->setViewVars(['url' => @$datos['url'], 'content' => @$datos['body']])
-            //     ->viewBuilder()->setTemplate($datos['template']);
-            // $mailer->deliver();
-            $mailer = new Mailer('default');
-            $mailer
-                ->setEmailFormat('both')
-                ->setTo('sebabustelo@gmail.com')
-                ->setFrom('app@domain.com')
-                ->viewBuilder();
-                //->setTemplate('welcome')
-                // ->setLayout('fancy');
-
-            $mailer->deliver();
-        } catch (\Throwable $th) {
-            Log::write('debug', 'El email no pudo ser enviado');
-            Log::write('debug', 'Exception: ' . $th);
-            Log::write('debug', 'Mailer Dump: ' . var_export($mailer, true));
-            $this->Flash->error('#F45DG, el email no pudo ser enviado, intente nuevamente en unos minutos');
-        }
-    }
 
     public static function secured_encrypt($data = null)
     {

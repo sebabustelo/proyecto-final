@@ -27,7 +27,7 @@
               <div class="form-group col-md-12">
                 <input type="text" name="descripcion" placeholder="Descripción" class="form-control" id="descripcion" aria-label="Descripcion" value="<?php echo (isset($filters['descripcion'])) ? $filters['descripcion'] : '' ?>">
               </div>
-              
+
             </div>
 
             <div class=" form-row">
@@ -44,7 +44,7 @@
                 <script>
                   $(function() {
                     $('#limpiar').on('click', function() {
-                      $('#formOrderFilter').find('input:text, input:password, select, textarea').val('');                                          
+                      $('#formOrderFilter').find('input:text, input:password, select, textarea').val('');
                       $('#formOrderFilter').submit();
 
                       return false;
@@ -55,7 +55,7 @@
                 </div>
               </div>
             </div>
-          </form>          
+          </form>
         </div>
         <!-- /.box-body -->
       </div>
@@ -79,7 +79,7 @@
         <!-- /.box-header -->
         <div class="box-body">
 
-          <?php //debug($rbacPerfiles); 
+          <?php //debug($rbacPerfiles);
           ?>
 
           <?php if (isset($rbacPerfiles)) { ?>
@@ -104,10 +104,10 @@
                       </td>
 
                       <td class="pencil">
-                        editar
+                      <a href="/rbac/RbacPerfiles/editar/<?php echo $perfil->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                       </td>
                       <td class="remove">
-                        eliminar
+                      <a href="/rbac/RbacPerfiles/eliminar/<?php echo $perfil->id; ?>" class="editar btn btn-danger btn-xs pencil" title="Eliminar" target="_self"><i class="fa fa-remove"></i></a>
                       </td>
                     </tr>
                   <?php } ?>
@@ -121,20 +121,20 @@
             </div>
           <?php } ?>
           <?php
-          //debug($rbacPerfiles)    ;     
-          // if (isset($rbacPerfiles)) {            
+          //debug($rbacPerfiles)    ;
+          // if (isset($rbacPerfiles)) {
           //   $this->DiticHtml->generateReportTable(
           //     $rbacPerfiles,
           //     array(
           //       'RbacPerfil.descripcion'              => array('truncate', 'sort', 'title' => 'Descripción'),
-          //       'RbacPerfil.es_default'              => array('show-status', 'no-sort', 'title' => 'Perfil default'),                  
+          //       'RbacPerfil.es_default'              => array('show-status', 'no-sort', 'title' => 'Perfil default'),
           //       'RbacPerfil.permisos_virtual_host.permiso'              => array('truncate', 'no-sort', 'title' => 'Virtual Host'),
           //       'edit'                          => array(
           //         'no-sort',
           //         'edit-action' => 'editar',
           //         'tooltip'       => 'Editar',
           //         'class' => 'pencil'
-          //       ),                 
+          //       ),
           //       'eliminar'                        => array(
           //         'confirm'       => '¿Está seguro de que quiere borrar el Perfil?',
           //         'tooltip'       => 'Eliminar',

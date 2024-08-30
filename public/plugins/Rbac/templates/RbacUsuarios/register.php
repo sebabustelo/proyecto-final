@@ -1,3 +1,42 @@
+<style>
+    #termsMessage {
+        display: none;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: #f9f9f9;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var acceptTermsCheckbox = document.getElementById('acceptTerms');
+        var termsMessage = document.getElementById('termsMessage');
+        var submitButton = document.getElementById('submitButton');
+
+        if (acceptTermsCheckbox && termsMessage && submitButton) {
+            function toggleTermsMessage() {
+                if (acceptTermsCheckbox.checked) {
+                    termsMessage.style.display = 'block';
+                    submitButton.disabled = false; // Habilitar el botón
+                } else {
+                    termsMessage.style.display = 'none';
+                    submitButton.disabled = true; // Deshabilitar el botón
+                }
+            }
+
+            // Añadir el manejador de eventos
+            acceptTermsCheckbox.addEventListener('change', toggleTermsMessage);
+
+            // Inicializar el estado del botón al cargar la página
+            toggleTermsMessage();
+        } else {
+            console.error('Uno o más elementos no se encuentran en el DOM.');
+        }
+    });
+</script>
 <?php $this->layout = 'AdminLTE.register'; ?>
 <?php
 
@@ -7,37 +46,59 @@ use Cake\Core\Configure; ?>
         <a href="<?php echo $this->Url->build(); ?>"><?php echo Configure::read('Theme.logo.large') ?></a>
     </div>
     <div class="form-group has-feedback">
-        <input required type="text" class="form-control" placeholder="Nombre">
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-    </div>
-    <div class="form-group has-feedback">
-        <input required type="text" class="form-control" placeholder="Apellido">
-        <span class="glyphicon glyphicon-user form-control-feedback"></span>
-    </div>
-    <div class="form-group has-feedback">
         <input required type="email" class="form-control" placeholder="Email">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
     </div>
     <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Password">
-        <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+        <input name="nombre" required type="text" class="form-control" placeholder="Nombre">
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
     </div>
     <div class="form-group has-feedback">
-        <input type="password" class="form-control" placeholder="Confirme el password">
-        <span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+        <input name="apellido" required type="text" class="form-control" placeholder="Apellido">
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
     </div>
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="checkbox icheck">
-                <label>
-                    <input type="checkbox">&nbsp; Acepto los <a href="#">terminos</a>
-                </label>
+    <div class="form-group has-feedback">
+        <div class="row">
+            <div class="col-xs-6">
+                <select name="tipo_documento" required class="form-control">
+                    <option value="">Tipo documento</option>
+                    <option value="DNI">DNI</option>
+                    <option value="LE">LE</option>
+                    <option value="LE">PASAPORTE</option>
+                </select>
+
+            </div>
+            <div class="col-xs-6">
+                <input name="documento" required type="text" class="form-control" placeholder="Documento">
+
             </div>
         </div>
+    </div>
+    <div class="form-group has-feedback">
+        <input id="autocomplete" name="domicilio" required type="text" class="form-control" placeholder="Domicilio">
+
+    </div>
+
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="checkbox ">
+                <label>
+                    <input id="acceptTerms" type="checkbox">&nbsp; Acepto los terminos
+                </label>
+            </div>
+            <div id="termsMessage">
+                <p>1 - De acuerdo con la Ley N° 25.326, el titular podrá en cualquier momento solicitar el retiro o bloqueo de su nombre de los bancos de datos a los que se refiere. El titular de los datos personales tiene la facultad de ejercer el derecho de acceso a los mismos en forma gratuita a intervalos no inferiores a seis meses, salvo que se acredite un interés legítimo al efecto conforme lo establecido en el artículo 14, inciso 3 de la Ley N° 25.326.</p>
+                <p>2 - La DIRECCIÓN NACIONAL DE PROTECCIÓN DE DATOS PERSONALES, Órgano de Control de la Ley 25.326, tiene la atribución de atender las denuncias y reclamos que se interpongan con relación al incumplimiento de las normas sobre protección de datos personales.</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
         <!-- /.col -->
         <div class="col-xs-12">
-            <button type="submit" class="btn btn-primary btn-block ">Registrarse</button>
+            <button id="submitButton" type="submit" class="btn btn-primary btn-block ">Registrarse</button>
         </div>
         <!-- /.col -->
     </div>
+
 </form>

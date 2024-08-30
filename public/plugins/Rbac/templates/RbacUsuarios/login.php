@@ -1,5 +1,7 @@
 <?php $this->layout = 'Rbac.login'; ?>
-<?php use Cake\Core\Configure; ?>
+<?php
+
+use Cake\Core\Configure; ?>
 <div>
 
     <form id="formLogin" class="form-signin well" role="form" action="/login/" method="POST">
@@ -16,7 +18,7 @@
 
 
         <div class="form-group has-feedback">
-            <input type="text" class="form-control" name="data[RbacUsuario][usuario]" required placeholder="Usuario">
+            <input type="text" class="form-control" name="usuario" required placeholder="Usuario">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <!-- <div class="form-group has-feedback">
@@ -24,24 +26,27 @@
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
         </div> -->
         <div class="form-group has-feedback">
-            <input type="password" name="data[RbacUsuario][password]" class="form-control" placeholder="Password" required>
+            <input type="password" name="password" class="form-control" placeholder="Password" required>
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
 
-        <!-- <div class="input-group input-group-lg">
-            <span class="input-group-addon" id="sizing-addon1"><i class="glyphicon glyphicon-lock"></i></span>
-            <input id="password" type="password" aria-describedby="sizing-addon1" name="data[RbacUsuario][password]" class="form-control" placeholder="Contraseña" required>
-        </div> -->
-        <!--<label class="checkbox"> <input type="checkbox" value="remember-me">Recordarme </label>-->
+
         <br>
         <?php if (isset($captcha) && $captcha == 'Si') { ?>
-
-            <div id="captcha">
-                <script src='https://www.google.com/recaptcha/api.js'></script>
-                <div class="g-recaptcha" data-sitekey="<?php echo $captcha_public[0]["valor"]; ?>" summary="Espacio asignado al captcha"></div>
-            </div>
-        <?php } ?>
-
+            <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+            <script src="https://www.google.com/recaptcha/api.js?render=<?php echo $captchaPublic; ?>"></script>
+            <script>
+                grecaptcha.ready(function() {
+                    grecaptcha.execute('<?php echo $captchaPublic; ?>', {
+                        action: 'login'
+                    }).then(function(token) {
+                        document.getElementById('g-recaptcha-response').value = token;
+                    });
+                });
+            </script>
+            <br>
+        <?php }
+        ?>
 
         <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
         <br />

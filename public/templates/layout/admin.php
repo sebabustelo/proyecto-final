@@ -29,7 +29,7 @@ use Cake\Core\Configure; ?>
   <?php echo $this->Html->script('AdminLTE./bower_components/jquery/dist/jquery.min'); ?>
   <?php echo $this->Html->script('jquery.bootstrap-duallistbox'); ?>
   <?php echo $this->Html->script('jquery.treegrid'); ?>
-  
+
   <!-- Bootstrap 3.3.7 -->
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap/dist/js/bootstrap.min'); ?>
   <!-- AdminLTE App -->

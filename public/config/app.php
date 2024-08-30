@@ -17,7 +17,7 @@ return [
      * Development Mode:
      * true: Errors and warnings shown.
      */
-    'debug' => filter_var(env('DEBUG',false), FILTER_VALIDATE_BOOLEAN),
+    'debug' => filter_var(env('DEBUG', false), FILTER_VALIDATE_BOOLEAN),
 
     /*
      * Configure basic information about the application.
@@ -214,39 +214,18 @@ return [
      * appropriate file to src/Mailer/Transport. Transports should be named
      * 'YourTransport.php', where 'Your' is the name of the transport.
      */
-    // 'EmailTransport' => [
-    //     'default' => [
-    //         'className' => MailTransport::class,
-    //         /*
-    //          * The keys host, port, timeout, username, password, client and tls
-    //          * are used in SMTP transports
-    //          */
-    //         'host' => 'localhost',
-    //         'port' => 25,
-    //         'timeout' => 30,
-    //         /*
-    //          * It is recommended to set these options through your environment or app_local.php
-    //          */
-    //         //'username' => null,
-    //         //'password' => null,
-    //         'client' => null,
-    //         'tls' => false,
-    //         'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
-    //     ],
-    // ],
+
     'EmailTransport' => [
-        // Sample Mail configuration
         'default' => [
-            'className' => 'Mail',
-        ],
-        // Sample SMTP configuration
-        'gmail' => [
+            'className' => 'Smtp',
             'host' => 'smtp.gmail.com',
             'port' => 587,
-            'username' => 'sebabustelo@gmail.com',
+            'timeout' => 30,
+            'username' => 'ipmagna@gmail.com',
             'password' => 'secret',
-            'className' => 'Smtp',
+            'client' => null,
             'tls' => true,
+            'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
         ],
     ],
 
@@ -262,12 +241,9 @@ return [
     'Email' => [
         'default' => [
             'transport' => 'default',
-            'from' => 'you@localhost',
-            /*
-             * Will by default be set to config value of App.encoding, if that exists otherwise to UTF-8.
-             */
-            //'charset' => 'utf-8',
-            //'headerCharset' => 'utf-8',
+            'from' => ['sebabustelo@gmail.com' => 'Tu Nombre'],
+            'charset' => 'utf-8',
+            'headerCharset' => 'utf-8',
         ],
     ],
 
@@ -298,14 +274,14 @@ return [
         'default' => [
             'className' => Connection::class,
             'driver' => Mysql::class,
-            'host' => env('DATABASE_DEFAULT_HOST','localhost'),
-            'port' => env('DATABASE_DEFAULT_PORT',false),
-            'username' => env('DATABASE_DEFAULT_USERNAME','root'),
-            'password' => env('DATABASE_DEFAULT_PASSWORD',''),
-            'database' => env('DATABASE_DEFAULT_NAME','ipmagna'),
-            'log' =>filter_var(env('DATABASE_DEFAULT_LOG'), FILTER_VALIDATE_BOOLEAN),
-            'encoding' => env('DATABASE_DEFAULT_ENCODING','utf8'),
-            'timezone' => env('DATABASE_DEFAULT_TIMEZONE','UTC'),
+            'host' => env('DATABASE_DEFAULT_HOST', 'localhost'),
+            'port' => env('DATABASE_DEFAULT_PORT', false),
+            'username' => env('DATABASE_DEFAULT_USERNAME', 'root'),
+            'password' => env('DATABASE_DEFAULT_PASSWORD', ''),
+            'database' => env('DATABASE_DEFAULT_NAME', 'ipmagna'),
+            'log' => filter_var(env('DATABASE_DEFAULT_LOG'), FILTER_VALIDATE_BOOLEAN),
+            'encoding' => env('DATABASE_DEFAULT_ENCODING', 'utf8'),
+            'timezone' => env('DATABASE_DEFAULT_TIMEZONE', 'UTC'),
             'className' => Connection::class,
             'driver' => Mysql::class,
             'persistent' => false,

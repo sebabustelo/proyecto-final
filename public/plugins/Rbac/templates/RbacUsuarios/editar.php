@@ -13,13 +13,13 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="form-row">
-                        <form id="RbacUsuariosAddForm" name="RbacUsuariosAddForm" role="form" action="/rbac/rbacUsuarios/agregar/" method="POST">
+                        <form id="RbacUsuariosAddForm" name="RbacUsuariosAddForm" role="form" action="/rbac/rbacUsuarios/editar/<?php echo $rbacUsuario->id; ?>" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
 
                             <div class="form-group col-sm-2">
                                 <label id="lblUsuario" for="usuario">Usuario (mail)</label>
-                                <input type="email" name="usuario" required value="<?php echo $rbacUsuario->usuario; ?>" 
-                                oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')" 
+                                <input type="email" name="usuario" required value="<?php echo $rbacUsuario->usuario; ?>"
+                                oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
                                 placeholder="Ingrese el usuario" class="form-control" maxlength="20" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
                                 <?php foreach ($rbacUsuario->getError('usuario') as $k => $v) { ?>
                                     <div class="form-group   label label-danger">
@@ -32,7 +32,7 @@
 
                             <div class="form-group col-sm-4">
                                 <label for="nombre">Nombre</label>
-                                <input required type="text" value="<?php echo $rbacUsuario->nombre; ?>" 
+                                <input required type="text" value="<?php echo $rbacUsuario->nombre; ?>"
                                 placeholder="Ingrese el nombre" class="form-control" name="nombre"
                                 oninvalid="this.setCustomValidity('Debe completar el/los nombre/s')" oninput="this.setCustomValidity('')"  >
                                 <?php foreach ($rbacUsuario->getError('nombre') as $k => $v) { ?>
@@ -45,7 +45,7 @@
                             </div>
                             <div class="form-group col-sm-3">
                                 <label for="apellido">Apellido</label>
-                                <input required type="text" value="<?php echo $rbacUsuario->apellido; ?>" placeholder="Ingrese el apellido" 
+                                <input required type="text" value="<?php echo $rbacUsuario->apellido; ?>" placeholder="Ingrese el apellido"
                                 class="form-control" name="apellido"
                                 oninvalid="this.setCustomValidity('Debe completar el/los apellido/s')" oninput="this.setCustomValidity('')" >
                                 <?php foreach ($rbacUsuario->getError('apellido') as $k => $v) { ?>

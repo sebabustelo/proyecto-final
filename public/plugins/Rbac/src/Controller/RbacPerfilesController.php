@@ -13,9 +13,7 @@ class RbacPerfilesController extends RbacController
 
     public $accionesDefaultLogin = array();
 
-    public function _null()
-    {
-    }
+    public function _null() {}
 
     public function index()
     {
@@ -84,14 +82,11 @@ class RbacPerfilesController extends RbacController
             $rbacPerfilNew = $this->RbacPerfiles->patchEntity($rbacPerfil, $this->getRequest()->getData(), ['associated' => ['RbacAcciones']]);
             if ($this->RbacPerfiles->save($rbacPerfilNew)) {
                 $this->Flash->success('Se ha actualizado exitosamente.');
-                /* Actualizar las acciones por perfiles sin cerrar la sesiom - alex */
+                /* Actualizar las acciones por perfiles sin cerrar la sesiom  */
                 $usuario = $this->getRequest()->getSession()->read('RbacUsuario');
-                //$this->loadModel('Rbac.RbacUsuarios');                
                 $this->RbacUsuarios = $this->fetchTable('Rbac.RbacUsuarios');
                 $usr = $this->RbacUsuarios->findByUsuario($usuario['usuario'])->contain(['RbacPerfiles' => ['RbacAcciones']])->toArray();
-                if (!empty($usr[0]['rbac_perfiles'])) {
-                    $rbacAcciones = $this->generarListadoAccionesPorPerfiles($usr[0]['rbac_perfiles']);
-                }
+
                 /* ------- */
             } else {
                 $this->Flash->error('No se puede actualizar el perfil');
@@ -99,13 +94,14 @@ class RbacPerfilesController extends RbacController
             return $this->redirect(['action' => 'index']);
         } else {
 
-            $permisoVH = $rbacPerfil->permisos_virtual_host;
-            $permiso = $permisoVH->permiso;
-
+            // $permisoVH = $rbacPerfil->permisos_virtual_host;
+            // $permiso = $permisoVH->permiso;
+            // debug($rbacPerfil);
+            // die;
             //traigo las acciones que el perfil tiene asignadas de la tabla intermedia
             $accionesAsignadas = array();
             foreach ($rbacPerfil->rbac_acciones as $accion) {
-                //traigo acciones que no sean null y que no sean las reservadas(acciones default para usuarios)                
+                //traigo acciones que no sean null y que no sean las reservadas(acciones default para usuarios)
                 if (($accion->action != '_null') && (!in_array($accion->id, $this->accionesDefaultLogin))) {
                     $this->accionesDefaultLogin[] = $accion->id;
                     $accionesAsignadas[]          = $accion;
@@ -115,15 +111,12 @@ class RbacPerfilesController extends RbacController
                 return $a['controller'] <= $b['controller'];
             });
 
-            $PermisosVirtualHostDisponiblesDefault = $this->RbacPerfiles->getHostVirtualDisponiblesDefault();
-            $this->set('PermisosVirtualHostDisponiblesDefault', $PermisosVirtualHostDisponiblesDefault); //los diponibles + el mismo arreglar
-
-            //acciones asignadas al usuario            
+            //acciones asignadas al usuario
             $this->set('accionesAsignadas', $accionesAsignadas);
-            $accionesPosibles = $this->RbacPerfiles->RbacAcciones->find()->where(['RbacAcciones.id NOT IN' => $this->accionesDefaultLogin, 'RbacAcciones.action <>' => "_null", 'RbacAcciones.' . $permiso => 1])->all();
+            $accionesPosibles = $this->RbacPerfiles->RbacAcciones->find()->where(['RbacAcciones.id NOT IN' => $this->accionesDefaultLogin, 'RbacAcciones.action <>' => "_null", 'RbacAcciones.publico'  => 0])->all();
             $this->set('accionesPosibles', $accionesPosibles);
             $this->set('rbacPerfil', $rbacPerfil);
-            $this->set('PermisosVirtualHost', $this->RbacPerfiles->PermisosVirtualHosts->find('all')->toArray()); //todas          
+
         }
     }
 

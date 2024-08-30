@@ -6,7 +6,7 @@
                     <h3 class="box-title"> <span class="fa fa-user fa-lg"></span> Nueva Configuración</h3>
                     <div class="box-tools pull-right">
                         <a href="/rbac/configuraciones/index/" id="agregarUsuario" class="btn btn-primary ">
-                            <span class="fa fa-list"></span> Listado de Configuraciones</a>
+                            <span class="fa fa-wrench fa-lg"></span> Configuraciones</a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>

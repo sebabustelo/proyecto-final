@@ -12,12 +12,12 @@ class PermisosComponent extends Component
 	 * Acceso local al controlador que invoco a la componente.
 	 */
 	private $RbacAccion = NULL;
-	
+
 	private $Controller = NULL;
 	private array $accionesNoPublicasPermitidasSinLogin = ['login', 'recuperar', 'recuperarPass'];
 
 	public function initialize(array $config): void
-	{		
+	{
 		$this->RbacAccion  = TableRegistry::getTableLocator()->get('Rbac.RbacAcciones');
 		$this->Controller = $this->_registry->getController();
 		$this->Verificar();
@@ -39,24 +39,24 @@ class PermisosComponent extends Component
 					return $this->Controller->redirect(array('plugin' => 'rbac', 'controller' => 'rbacUsuarios', 'action' => 'login'));
 				}
 			} else {
-				$accionesPermitidasPorPerfiles = $session->read('RbacAcciones');				
+				$accionesPermitidasPorPerfiles = $session->read('RbacAcciones');
 				$tienePermiso = (bool) FALSE;
 				// debug($controlador);
 				// debug($accion);
 				// debug($accionesPermitidasPorPerfiles);die;
 
-				
+
 				if (isset($accionesPermitidasPorPerfiles[$controlador][$accion])) {
 					$tienePermiso = (bool) ($accionesPermitidasPorPerfiles[$controlador][$accion] == 1);
 				}
-								
+
 				if (!$tienePermiso) {
 					throw new InternalErrorException('El usuario no tiene permiso para acceder a la funcionalidad requerida.');
-					//return $this->Controller->redirect(array('plugin' => 'rbac', 'controller' => 'rbacUsuarios', 'action' => 'login'));			
-				}				
+					//return $this->Controller->redirect(array('plugin' => 'rbac', 'controller' => 'rbacUsuarios', 'action' => 'login'));
+				}
 			}
 		}
 	}
 
-	
+
 }

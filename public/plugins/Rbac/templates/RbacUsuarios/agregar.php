@@ -18,8 +18,9 @@
 
                             <div class="form-group col-sm-2">
                                 <label id="lblUsuario" for="usuario">Usuario (mail)</label>
-                                <input type="email" name="usuario" required id="RbacUsuarioUsuario" oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')" placeholder="Ingrese el usuario" class="form-control" maxlength="20" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
-                            </div>                           
+                                <input type="email" name="usuario" required id="RbacUsuarioUsuario" oninvalid="this.setCustomValidity('Complete el usuario (mail)')"
+                                 oninput="this.setCustomValidity('')" placeholder="Ingrese el usuario" class="form-control" maxlength="40" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
+                            </div>
 
                             <div class="form-group col-sm-5">
                                 <label for="nombre">Nombre</label>
@@ -39,7 +40,7 @@
                                         <option value="<?php echo $id; ?>"><?php echo $perfil; ?></option>
                                     <?php endforeach; ?>
                                 </select>
-                            </div>                                                     
+                            </div>
                             <div class="form-group col-sm-5">
                                 <label for="contrasenia">Contraseña</label>
                                 <input required type="password" class="form-control" name="password" id="contrasenia" placeholder="Contraseña">

@@ -3,9 +3,9 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-sitemap fa-lg"></span> Nuevo Perfil</h3>
+                    <h3 class="box-title"> <span class="fa fa-suitcase fa-lg"></span> Nuevo Perfil</h3>
                     <div class="box-tools pull-right">
-                        <a href="/rbac/RbacPerfiles/index/" class="btn btn-primary ">
+                        <a href="/rbac/RbacPerfiles/index/" class="btn btn-sm btn-primary ">
                             <span class="fa fa-list"></span> Perfiles</a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
@@ -33,7 +33,6 @@
                                 <select id="ca-inicio" required name="accion_default_id" class="form-control">
                                     <!-- Carga automatica-->
                                 </select>
-
                             </div>
                             <div class="form-group col-sm-12">
                                 <div class="callout callout-info">

@@ -3,10 +3,10 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-sitemap fa-lg"></span> Editar Perfil</h3>
+                    <h3 class="box-title"> <i class="fa fa-suitcase fa-lg"></i> Editar Perfil</h3>
                     <div class="box-tools pull-right">
-                        <a href="/rbac/RbacPerfiles/index/" class="btn btn-primary ">
-                            <span class="fa fa-list"></span> Listado de Perfiles</a>
+                        <a href="/rbac/RbacPerfiles/index/" class="btn btn-sm btn-primary ">
+                            <i class="fa fa-list"></i>&nbsp;Perfiles</a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
@@ -15,76 +15,12 @@
                     <div class="box-body">
                         <form class="form-horizontal" id="RbacPerfilesEditForm" name="RbacPerfilesEditForm" role="form" action="/rbac/RbacPerfiles/editar/<?php echo $rbacPerfil->id; ?>" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
+                            <div class="form-group col-sm-12">
+                                <label for="descripcion">Descripción</label>
+                                <input type="hidden" required="required" id="id" value="<?php echo $rbacPerfil->id; ?>" placeholder="Descripción" class="form-control" name="id">
+                                <input type="text" required="required" id="RbacPerfilesDescripcion" value="<?php echo $rbacPerfil->descripcion; ?>" placeholder="Descripción" class="form-control" name="descripcion">
+                            </div>
 
-                            <div class="form-group">
-                                <label for="descripcion" class="col-sm-3 control-label">Descripción</label>
-                                <div class="col-sm-9">
-                                    <input type="hidden" required="required" id="id" value="<?php echo $rbacPerfil->id; ?>" placeholder="Descripción" class="form-control" name="id">
-                                    <input type="text" required="required" id="RbacPerfilesDescripcion" value="<?php echo $rbacPerfil->descripcion; ?>" placeholder="Descripción" class="form-control" name="descripcion">
-                                </div>
-                            </div>
-                            <div class="form-group form-inline">
-                                <label for="usa_area_representacion" class="col-sm-3 control-label">Usa Área/Repre.</label>
-                                <div class="col-sm-9">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="usa_area_representacion" id="optionsRadios" value="1" <?php if ($rbacPerfil->usa_area_representacion) echo "checked"; ?>>
-                                            Si
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="usa_area_representacion" id="optionsRadios" value="0" <?php if (!$rbacPerfil->usa_area_representacion) echo "checked"; ?>>
-                                            No
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group form-inline">
-                                <label for="es_default" class="col-sm-3 control-label">Perfil Default</label>
-                                <div class="col-sm-3">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="es_default" id="optionsEsDefault" onclick="changeRadio(1);" value="1" <?php if ($rbacPerfil->es_default) echo "checked"; ?>>
-                                            Si
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="es_default" id="optionsEsDefault" onclick="changeRadio(0);" value="0" <?php if (!$rbacPerfil->es_default) echo "checked"; ?>>
-                                            No
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group form-inline">
-                                <label for="perfil_publico" class="col-sm-3 control-label">Perfil Público</label>
-                                <div class="col-sm-9">
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="perfil_publico" id="perfil_publico" value="1" <?php if (isset($rbacPerfil->perfil_publico) && $rbacPerfil->perfil_publico)
-                                                                                                                        echo 'checked';
-                                                                                                                    ?> />
-                                            Si
-                                        </label>
-                                    </div>
-                                    <div class="radio">
-                                        <label>
-                                            <input type="radio" name="perfil_publico" id="perfil_publico" value="0" <?php if (isset($rbacPerfil->perfil_publico) && !$rbacPerfil->perfil_publico)
-                                                                                                                        echo 'checked';
-                                                                                                                    ?> />
-                                            No
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="vh" class="col-sm-3 control-label">Virtual Host</label>
-                                <div class="controls col-sm-9">
-                                    <select id="vh" name="permiso_virtual_host_id" class="form-control" required="required">
-                                    </select>
-                                </div>
-                            </div>
                             <div class="form-group well" id="dual-list">
                                 <div class="controls col-sm-12">
                                     <select id="rbac-acciones-ids" name="rbac_acciones[_ids][]" class="form-control" multiple="multiple">
@@ -99,10 +35,9 @@
                                     <br>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <label for="ca-inicio" class="col-sm-3 control-label">Página de inicio</label>
-                                <div class="controls col-sm-9">
-                                    <select id="ca-inicio" name="accion_default_id" class="form-control" required="required">
+                            <div class="form-group col-sm-12">
+                                <label for="ca-inicio">Página de inicio</label>
+                                <select id="ca-inicio" name="accion_default_id" class="form-control" required="required">
                                         <!-- Carga automatica segun virtual host-->
                                         <option value="">Seleccionar Página Inicio</option>
                                         <?php foreach ($accionesAsignadas as $ra) { ?>
@@ -113,8 +48,8 @@
                                             <?php } ?>
                                         <?php } ?>
                                     </select>
-                                </div>
                             </div>
+
                             <div class="form-group">
                                 <div class=" col-sm-9 col-md-offset-5">
                                     <a href="/rbac/RbacPerfiles/index/" class="btn btn-danger">
@@ -139,37 +74,6 @@
 <script type="text/javascript">
     $(function() {
 
-        PermisosVirtualHostDisponiblesDefault = <?php echo json_encode($PermisosVirtualHostDisponiblesDefault); ?>;
-        PermisosVirtualHost = <?php echo json_encode($PermisosVirtualHost); ?>;
-
-        //carga del virtual host
-        esDefault = <?php echo $rbacPerfil->es_default ?>;
-        permiso_virtual_host_id = <?php echo $rbacPerfil->permiso_virtual_host_id; ?>;
-
-        if (permiso_virtual_host_id == 5) {
-            data = PermisosVirtualHost;
-        } else {
-            data = PermisosVirtualHostDisponiblesDefault;
-        }
-        console.log(esDefault);
-        if (esDefault == 1) {
-            $('#dual-list').hide();
-
-        } else {
-            $('#dual-list').show();
-
-        }
-
-        $('#vh').html('');
-        var options = '<option value="">Seleccionar Virtual Host</option>';
-        $.each(data, function(key, value) {
-            if (permiso_virtual_host_id == value.id) {
-                options = options + '<option value="' + value.id + '" selected="selected">' + value.permiso + '</option>';
-            } else {
-                options = options + '<option value="' + value.id + '">' + value.permiso + '</option>';
-            }
-        });
-        $('#vh').html(options);
 
         var RbacAcciones = $('#rbac-acciones-ids')
             .bootstrapDualListbox({
@@ -195,79 +99,6 @@
             //.append('<option>added element</option>')
             .bootstrapDualListbox('refresh');
 
-
-        $("#vh").change(function() {
-
-            $('<div></div>').appendTo('body')
-                .html('<div><h6>Si realiza esta accion perdera las acciones seleccionadas</h6></div>')
-                .dialog({
-                    modal: true,
-                    title: 'Aviso',
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: false,
-                    buttons: {
-                        Yes: function() {
-                            $.ajax({
-                                url: '/rbac/RbacPerfiles/getAccionesByVirtualHost/',
-                                cache: false,
-                                type: 'POST',
-                                dataType: 'json',
-                                data: {
-                                    virtualHost: $("#vh option:selected").text()
-                                },
-                                success: function(data) {
-                                    if (esDefault == 1) {
-                                        //si deberia llenar el combo de acciones default directamente                        
-                                        $('#ca-inicio').html('');
-                                        var options = '<option value="">Seleccionar Controlador => Accion</option>';
-                                        $.each(data.acciones, function(key, value) {
-                                            options = options + '<option value="' + value.RbacAccion.id + '">' + value.RbacAccion.controller + '=>' + value.RbacAccion.action + '</option>';
-                                        });
-                                        $('#ca-inicio').html(options);
-
-                                    } else {
-                                        //si deberia llenar el dual list
-
-                                        RbacAcciones.html('');
-                                        var options = '';
-                                        $.each(data.acciones, function(key, value) {
-                                            options = options + '<option value="' + value.RbacAccion.id + '">' + value.RbacAccion.controller + '=>' + value.RbacAccion.action + '</option>';
-                                        });
-
-                                        RbacAcciones.append(options);
-                                        RbacAcciones.bootstrapDualListbox('refresh');
-                                    }
-                                }
-                            });
-
-                            $(this).dialog("close");
-                        },
-                        No: function() {
-                            $('#vh').html('');
-                            var options = '<option value="">Seleccionar Virtual Host</option>';
-                            $.each(data, function(key, value) {
-                                console.log(value)
-                                if (permiso_virtual_host_id == value.id) {
-                                    options = options + '<option value="' + value.id + '" selected="selected">' + value.permiso + '</option>';
-                                } else {
-                                    options = options + '<option value="' + value.id + '">' + value.permiso + '</option>';
-                                }
-                            });
-                            $('#vh').html(options);
-                            //$('option:selected', $(this)).text()}
-                            $(this).dialog("close");
-                        }
-                    },
-                    close: function(event, ui) {
-                        $(this).remove();
-                    }
-                });
-
-
-
-        });
 
         $("#rbac-acciones-ids").change(function() {
             var select = $('[name="accion_default_id"]');
