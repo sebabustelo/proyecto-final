@@ -218,11 +218,11 @@ return [
     'EmailTransport' => [
         'default' => [
             'className' => 'Smtp',
-            'host' => 'smtp.gmail.com',
-            'port' => 587,
-            'timeout' => 30,
-            'username' => 'sebabustelo@gmail.com',
-            'password' => 'uqhy vrud pxkj jvpf',
+            'host' => env('EMAIL_HOST',null),
+            'port' => env('EMAIL_PORT',null),
+            'timeout' => env('EMAIL_TIMEOUT',null),
+            'username' => env('EMAIL_USERNAME', 'sebabustelo@gmail.com'),
+            'password' => env('EMAIL_PASSWORD', null),
             'client' => null,
             'tls' => true,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
