@@ -221,8 +221,8 @@ return [
             'host' => 'smtp.gmail.com',
             'port' => 587,
             'timeout' => 30,
-            'username' => 'ipmagna@gmail.com',
-            'password' => 'secret',
+            'username' => 'sebabustelo@gmail.com',
+            'password' => 'uqhy vrud pxkj jvpf',
             'client' => null,
             'tls' => true,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
@@ -241,7 +241,7 @@ return [
     'Email' => [
         'default' => [
             'transport' => 'default',
-            'from' => ['sebabustelo@gmail.com' => 'Tu Nombre'],
+            'from' => ['sebabustelo@gmail.com' => 'IPMagna'],
             'charset' => 'utf-8',
             'headerCharset' => 'utf-8',
         ],
@@ -409,5 +409,19 @@ return [
      */
     'Session' => [
         'defaults' => 'php',
+    ],
+
+    'EmailTransport' => [
+        'default' => [
+            'className' => 'Smtp',
+            'host' => 'smtp.gmail.com',
+            'port' => 587,
+            'timeout' => 30,
+            'username' => 'sebabustelo@gmail.com',
+            'password' => 'uqhy vrud pxkj jvpf',
+            'client' => null,
+            'tls' => true,
+            'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),
+        ],
     ],
 ];

@@ -14,9 +14,7 @@ use Cake\Log\Log;
 
 class RbacUsuariosController extends RbacController
 {
-    public function _null()
-    {
-    }
+    public function _null() {}
 
     public function initialize(): void
     {
@@ -81,7 +79,7 @@ class RbacUsuariosController extends RbacController
 
                     $datos               = array();
                     $datos['subject']    = 'Confirmación de nuevo usuario';
-                    $datos['url']        = Router::url('/', true) . "rbac/rbac_usuarios/recuperarPass/" . $token;
+                    $datos['url']        = Router::url('/', true) . "rbac/rbac_usuarios/registerPassword/" . $token;
                     $datos['aplicacion'] = "IPMAGNA";
                     $datos['template']   = 'registrarse';
                     $datos['email']      = $this->getRequest()->getData('usuario');
@@ -150,7 +148,7 @@ class RbacUsuariosController extends RbacController
 
         $mailer = new Mailer('default');
         try {
-            $mailer->setFrom(['ipmagna@gmail.com' => 'IPMAGNA'])
+            $mailer->setFrom(['sebabustelo@gmail.com' => 'IPMAGNA'])
                 ->setTo($datos['email'])
                 ->setSubject($datos['subject'])
                 ->setEmailFormat('html')
@@ -160,7 +158,7 @@ class RbacUsuariosController extends RbacController
             //->deliver();
             $mailer->deliver();
 
-            $this->Flash->success('Correo enviado con éxito.');
+           // $this->Flash->success('Correo enviado con éxito.');
             return true;
         } catch (MissingActionException $e) {
             Log::error('Error al enviar el correo: ' . $e->getMessage());
@@ -259,7 +257,7 @@ class RbacUsuariosController extends RbacController
         }
 
         if (isset($data['usuario']) and !empty($data['usuario'])) {
-            $conditions['where'][] = ['RbacUsuarios.usuario  ' =>  $data['usuario']];
+            $conditions['where'][] = ['RbacUsuarios.usuario  LIKE' =>   '%' . $data['usuario'] . '%'];
         }
 
         if (isset($data['activo'])) {
@@ -331,10 +329,18 @@ class RbacUsuariosController extends RbacController
                         $session->write('Auth.User', $usr);
 
                         $pluginRedirect = (!empty($usr['rbac_perfil']['accion_default']['plugin'])) ? $usr['rbac_perfil']['accion_default']['plugin'] : '';
+
                         $controllerRedirect = $usr['rbac_perfil']['accion_default']['controller'];
                         $actionRedirect = $usr['rbac_perfil']['accion_default']['action'];
+                        if (!empty($pluginRedirect)) {
+                            $redirectParams = ['plugin' => $pluginRedirect, 'controller' => $controllerRedirect, 'action' => $actionRedirect];
+                            return $this->redirect($redirectParams);
+                        }else{
+                            $redirectParams = [ 'controller' => $controllerRedirect, 'action' => $actionRedirect];
+                            return $this->redirect( "/".$controllerRedirect."/".$actionRedirect);
+                        }
 
-                        return $this->redirect(['plugin' => $pluginRedirect, 'controller' => $controllerRedirect, 'action' => $actionRedirect]);
+//                        return $this->redirect($redirectParams);
                     } else {
                         $this->Flash->error('Usuario y/o contraseña incorrecta.');
                     }
@@ -373,7 +379,7 @@ class RbacUsuariosController extends RbacController
                 $data = $this->getRequest()->getData();
                 $data['perfil_id'] = $perfilCliente->valor;
                 $rbacUsuario = $this->RbacUsuarios->newEntity($data, ['associated' => ['RbacPerfiles']]);
-                
+
                 $this->RbacUsuarios->getConnection()->begin();
 
                 if ($this->RbacUsuarios->save($rbacUsuario)) {
@@ -390,7 +396,7 @@ class RbacUsuariosController extends RbacController
 
                     $datos               = array();
                     $datos['subject']    = 'Confirmación de registro nuevo usuario';
-                    $datos['url']        = Router::url('/', true) . "rbac/rbac_usuarios/recuperarPass/" . $token;
+                    $datos['url']        = Router::url('/', true) . "rbac/rbac_usuarios/registerPassword/" . $token;
                     $datos['aplicacion'] = "IPMAGNA";
                     $datos['template']   = 'registrarse';
                     $datos['email']      = $this->getRequest()->getData('usuario');
@@ -399,7 +405,7 @@ class RbacUsuariosController extends RbacController
                     if ($RbacToken->save($rbacToken)) {
                         if ($this->sendEmail($datos)) {
                             $this->RbacUsuarios->getConnection()->commit();
-                            $this->Flash->success('Se ha enviado la información a '.$data['usuario'].' para crear la clave de su usuario ingresando al link que esta la descripción del email.');
+                            $this->Flash->success('Se ha enviado la información a ' . $data['usuario'] . ' para crear la clave de su usuario ingresando al link que esta la descripción del email.');
                         } else {
                             $this->RbacUsuarios->getConnection()->rollback();
                             $this->Flash->error('No se pudo enviar el email de confirmación de nuevo usuario');
@@ -423,8 +429,57 @@ class RbacUsuariosController extends RbacController
                 return $this->redirect(array('action' => 'index'));
             }
         }
-       
+
         $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
+    }
+
+    /**
+     * Permite recuperar el password a partir del token enviado por mail al usuario
+     * @param $token
+     */
+    public function registerPassword($token)
+    {
+        $this->RbacToken = $this->fetchTable('Rbac.RbacToken');
+
+        $result = $this->RbacToken->find()->where(['token' => $token])->first();
+        if (!empty($result)) {
+            $fecha_actual   = strtotime('now');
+            $fecha_creacion = strtotime($result->created);
+            $minutos        = ($fecha_actual - $fecha_creacion) / 60;
+
+            if ($minutos < strtotime($result->validez)) {
+                $id   = $result->usuario_id;
+                $user = $this->RbacUsuarios->get($id);
+                if ($this->getRequest()->is('post')) {
+                    $this->RbacUsuarios->recursive = -1;
+                    $seed = $user->seed;
+                    $password        = $this->getRequest()->getData('password');
+                    $passwordConfirm = $this->getRequest()->getData('password_confirm');
+
+                    if ($password != $passwordConfirm) {
+                        $this->Flash->error('Las contraseñas deben ser iguales');
+                    }
+
+                    $usuario['id']       = $id;
+                    $usuario['password'] = hash('sha256', $seed . $passwordConfirm);
+
+                    $usuario = $this->RbacUsuarios->patchEntity($user, $usuario);
+
+                    if ($this->RbacUsuarios->save($usuario)) {
+                        $this->Flash->success('La contraseña se establecio correctamente');
+
+                        return $this->redirect(['plugin' => 'Rbac', 'controller' =>'RbacUsuarios', 'action' => 'login']);
+                    } else {
+                        $this->Flash->error('No se pudo cambiar contraseña. Por favor pongase en contacto con el administrador');
+                    }
+                }
+                $this->set(compact('user', 'token'));
+            } else {
+                return $this->redirect(['plugin' => 'Rbac', 'controller' =>'RbacUsuarios', 'action' => 'login']);
+            }
+        } else {
+            return $this->redirect(['plugin' => 'Rbac', 'controller' =>'RbacUsuarios', 'action' => 'login']);
+        }
     }
 
     private function generarListadoAccionesPorPerfiles($perfilAcciones)
@@ -543,6 +598,8 @@ class RbacUsuariosController extends RbacController
             }
         }
     }
+
+
 
     /**
      * Permite recuperar el password a partir del token enviado por mail al usuario

@@ -62,12 +62,14 @@ return function (RouteBuilder $routes): void {
         //$builder->connect('/', ['controller' => 'Home', 'action' => 'index']);
 
 
-        //$builder->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display', 'plugin' => '']);
-       
-       
+      // $builder->connect('/', ['controller' => 'Pages', 'action' => 'display']);
+       $builder->connect('/', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login'), array('routeClass' => 'InflectedRoute'));
+
+
 
         $builder->connect('/login', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login'), array('routeClass' => 'InflectedRoute'));
         $builder->connect('/register', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'register'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/registerPassword', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'registerPassword'), array('routeClass' => 'InflectedRoute'));
 
         //$builder->connect('/rbac/:controller', array('plugin'=>'Rbac', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
 
@@ -80,6 +82,7 @@ return function (RouteBuilder $routes): void {
          * ...and connect the rest of 'Pages' controller's URLs.
          */
         $builder->connect('/pages/*', 'Pages::display');
+        $builder->connect('/Pages/*', 'Pages::display');
 
         $builder->connect('/{controller}/{action}/*', []);
         /*

@@ -1,9 +1,9 @@
-<?php 
+<?php
 if(isset($user)){?>
 <h2 class="sub-header"><small>
     <?php if($user['seed'] == NULL)
     	    echo "Nuevo Usuario |";
-          else 
+          else
           	echo "Recuperar contraseña |";
     ?>
 <?php echo $user['nombre'].' '.$user['apellido'].' ('.$user['usuario'].')';?></small></h2>
@@ -13,7 +13,7 @@ if(isset($user)){?>
             <form class="form-horizontal" id="RbacPerfilesChangePass" name="RbacPerfilesChangePass" role="form" action="/rbac/rbac_usuarios/recuperarPass/<?php echo $token;?>/" method="POST">
                 <div class="form-group">
                     <label for="nombre" class="col-sm-4 control-label">Nueva contraseña</label>
-                    <div class="col-sm-8">                        
+                    <div class="col-sm-8">
                         <input type="password" name="contraseniaNueva" id="contraseniaNueva" placeholder="Nueva contraseña" class="form-control" >
                     </div>
                 </div>
@@ -27,7 +27,7 @@ if(isset($user)){?>
                     <div class="col-sm-offset-4 col-sm-10">
                         <button type="button" class="btn btn-success" onclick="cambiar()">Guardar</button>
                     </div>
-                </div>                
+                </div>
             </form>
         </fieldset>
     </div>
@@ -35,21 +35,21 @@ if(isset($user)){?>
 <?php }else{ ?>
 	<h2 class="sub-header"><small>Recuperar contraseña | No se encontro el usuario solicitado</small></h2>
 <?php } ?>
-<script type="text/javascript">    
-    $(function () {        
+<script type="text/javascript">
+    $(function () {
         inicialize();
     });
-    
+
     function inicialize()
     {
     	$.validator.addMethod('alfanumerico', function(value, element, param) {
             var vsExprReg = /(([\d]+[A-Za-z]+)|[A-Za-z]+[\d]+$)/;
-            return vsExprReg.test(value);                     	    	   
+            return vsExprReg.test(value);
     	});
-    	
+
         $('#RbacPerfilesChangePass').validate({
-           rules: {              
-               'contraseniaActual':{                   
+           rules: {
+               'contraseniaActual':{
                    required: true
                },
                'contraseniaNueva':{
@@ -85,9 +85,9 @@ if(isset($user)){?>
                .text('OK!').addClass('valid')
                .closest('.control-group').removeClass('error').addClass('success');
            }
-       });        
+       });
     }
-    
+
     function cambiar()
     {
         if($('#RbacPerfilesChangePass').valid())
@@ -108,5 +108,5 @@ if(isset($user)){?>
         	}
         }
     }
-    
+
 </script>

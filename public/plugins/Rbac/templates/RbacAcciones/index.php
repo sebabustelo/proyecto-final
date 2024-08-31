@@ -60,7 +60,7 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-list fa-lg"></span> Acciones</h3>
+                    <h3 class="box-title"> <span class="fa  fa-lock fa-lg"></span> Permisos</h3>
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-primary" onclick="sincronizar()">
                             <span class="fa fa-refresh"></span> Sincronizar

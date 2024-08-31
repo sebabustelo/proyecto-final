@@ -13,10 +13,10 @@ $action =   $this->request->getParam('action');
     <?php
     if (
         (isset($accionesPermitidas['Configuraciones']['index']) && $accionesPermitidas['Configuraciones']['index']) ||
-        (isset($accionesPermitidas['RbacUsuarios']['index']) && $accionesPermitidas['RbacUsuarios']['index']) ||       
+        (isset($accionesPermitidas['RbacUsuarios']['index']) && $accionesPermitidas['RbacUsuarios']['index']) ||
         (isset($accionesPermitidas['RbacPerfiles']['index']) && $accionesPermitidas['RbacPerfiles']['index']) ||
-        (isset($accionesPermitidas['RbacAcciones']['index']) && $accionesPermitidas['RbacAcciones']['index']) 
-       
+        (isset($accionesPermitidas['RbacAcciones']['index']) && $accionesPermitidas['RbacAcciones']['index'])
+
     ) {
         //Preguntar si esta ingresando a algunos de los menus de "Sistema" array $menu_sistema[],
         //para esto pregunto por el contralador y la accion
@@ -49,7 +49,7 @@ $action =   $this->request->getParam('action');
                 <?php } ?>
                 <?php if ((isset($accionesPermitidas['RbacAcciones']['index']) && $accionesPermitidas['RbacAcciones']['index'])) { ?>
                     <li class=" <?php echo ($controller == 'RbacAcciones' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
-                        <a href="<?php echo $this->Url->build('/rbac/RbacAcciones/index'); ?>"><i class="fa fa-list"></i>Acciones</a>
+                        <a href="<?php echo $this->Url->build('/rbac/RbacAcciones/index'); ?>"><i class="fa fa-lock fa-lg"></i>Permisos</a>
                     </li>
                 <?php } ?>
                 <?php if ((isset($accionesPermitidas['Configuraciones']['index']) && $accionesPermitidas['Configuraciones']['index'])) { ?>
@@ -114,7 +114,7 @@ $action =   $this->request->getParam('action');
                     ?>"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
     </ul>
   </li> -->
-    <li>
+    <!-- <li>
         <a href="<?php echo $this->Url->build('/pages/widgets'); ?>">
             <i class="fa fa-th"></i> <span>Widgets</span>
             <span class="pull-right-container">
@@ -187,7 +187,7 @@ $action =   $this->request->getParam('action');
                 <small class="label pull-right bg-blue">17</small>
             </span>
         </a>
-    </li>
+    </li> -->
     <!-- <li>
         <a href="<?php echo $this->Url->build('/pages/mailbox/mailbox'); ?>">
             <i class="fa fa-envelope"></i> <span>Mailbox</span>
