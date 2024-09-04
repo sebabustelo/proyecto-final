@@ -95,7 +95,7 @@ $action =   $this->request->getParam('action');
     </li>
     <?php //}
     ?>
-    <!-- <li class="treeview">
+    <li class="treeview">
     <a href="#">
       <i class="fa fa-files-o"></i>
       <span>Layout Options</span>
@@ -113,8 +113,8 @@ $action =   $this->request->getParam('action');
       <li><a href="<?php //echo $this->Url->build('/pages/layout/collapsed-sidebar');
                     ?>"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
     </ul>
-  </li> -->
-    <!-- <li>
+  </li>
+    <li>
         <a href="<?php echo $this->Url->build('/pages/widgets'); ?>">
             <i class="fa fa-th"></i> <span>Widgets</span>
             <span class="pull-right-container">
@@ -187,7 +187,7 @@ $action =   $this->request->getParam('action');
                 <small class="label pull-right bg-blue">17</small>
             </span>
         </a>
-    </li> -->
+    </li>
     <!-- <li>
         <a href="<?php echo $this->Url->build('/pages/mailbox/mailbox'); ?>">
             <i class="fa fa-envelope"></i> <span>Mailbox</span>

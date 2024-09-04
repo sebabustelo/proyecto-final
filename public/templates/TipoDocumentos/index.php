@@ -1,44 +1,165 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\TipoDocumento> $tipoDocumentos
  */
 ?>
-<div class="tipoDocumentos index content">
-    <?= $this->Html->link(__('New Tipo Documento'), ['action' => 'add'], ['class' => 'button float-right']) ?>
-    <h3><?= __('Tipo Documentos') ?></h3>
-    <div class="table-responsive">
-        <table>
-            <thead>
-                <tr>
-                    <th><?= $this->Paginator->sort('id') ?></th>
-                    <th><?= $this->Paginator->sort('descripcion') ?></th>
-                    <th class="actions"><?= __('Actions') ?></th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($tipoDocumentos as $tipoDocumento): ?>
-                <tr>
-                    <td><?= $this->Number->format($tipoDocumento->id) ?></td>
-                    <td><?= h($tipoDocumento->descripcion) ?></td>
-                    <td class="actions">
-                        <?= $this->Html->link(__('View'), ['action' => 'view', $tipoDocumento->id]) ?>
-                        <?= $this->Html->link(__('Edit'), ['action' => 'edit', $tipoDocumento->id]) ?>
-                        <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $tipoDocumento->id], ['confirm' => __('Are you sure you want to delete # {0}?', $tipoDocumento->id)]) ?>
-                    </td>
-                </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
+
+<!-- Main content -->
+<section class="content-header">
+    <h1>
+        Administración
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-credit-card"></i> Tipo de Documentos</a></li>
+        <li class="active">index</li>
+    </ol>
+</section>
+<section id="TipoDocumentosList" class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header  with-border">
+                    <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> Buscador</h3>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter"
+                        action="/TipoDocumentos/index">
+                        <div class="form-row">
+                            <div class="form-group col-md-10">
+                                <input type="text" name="descripcion" placeholder="descripcion"  style = 'text-transform: uppercase;' class="form-control"
+                                    id="descripcion" aria-label="descripcion"
+                                    value="<?php echo (isset($filters['descripcion'])) ? $filters['descripcion'] : '' ?>">
+                            </div>
+                            <div class=" form-group col-sm-2">
+                                <label class="btn btn-default btn-block">
+                                    <input type="hidden" name="activo" value="0">
+                                    <input value="1" type="checkbox" id="activo" name="activo" <?php echo (!isset($filters['activo']))
+                                                                                                    ? 'checked' : (($filters['activo']) ? 'checked' : '') ?>>
+                                    <span>Activo</span>
+
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class=" form-row">
+                            <div class="form-group col-md-12 text-center ">
+                                <button type="button" id="limpiar" class="btn btn-default">
+                                    <span class="glyphicon glyphicon-trash"></span>
+                                    Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                <button type="submit" id="enviar" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                    Buscar</button>
+
+                                <!--div class="form-group col-md-4"!-->
+                                <!--a href="#" id="limpiar" class="btn btn-default" title=""><span class="glyphicon glyphicon-trash"></span> Limpiar</a!-->
+                                <script>
+                                    $(function() {
+                                        $('#limpiar').on('click', function() {
+                                            $('#formOrderFilter').find(
+                                                'input:text, input:password, select, textarea').val('');
+                                            $('#formOrderFilter').find(
+                                                'input:radio, input:checkbox:not(#activo)').prop(
+                                                'checked', false);
+                                            document.getElementById("activo").checked = true;
+
+                                            $('#formOrderFilter').submit();
+
+                                            return false;
+                                        });
+                                    });
+                                </script>
+                                <div id="filterErrors">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
     </div>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(__('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')) ?></p>
+
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header  with-border">
+                    <h3 class="box-title"> <span class="fa fa-credit-card"></span> Tipos de Documentos</h3>
+                    <div class="box-tools pull-right">
+                        <?php if (!empty($accionesPermitidas['TipoDocumentos']['add'])) { ?>
+                            <a href="/TipoDocumentos/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
+                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nuevo
+                                    Tipo de Documento</span></a>
+                        <?php } ?>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
+                                class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <?php //debug(($rbacUsuarios));die;
+                    ?>
+
+                    <?php if (isset($tipoDocumentos)) { ?>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-striped table-ajax">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            <?php echo $this->Paginator->sort('descripcion', 'Descripción'); ?>
+                                        </th>
+                                        <th>
+                                        </th>
+                                        <th>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($tipoDocumentos as $tipoDocumento) {  ?>
+                                        <tr>
+                                            <td>
+                                                <?php echo $tipoDocumento->descripcion; ?>
+                                            </td>
+                                            <td class="pencil">
+                                                <a href="/TipoDocumentos/edit/<?php echo $tipoDocumento->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                            </td>
+                                            <td class="remove">
+                                                <?= $this->Form->postLink(
+                                                    __('<i class="fa fa-remove"></i>'),
+                                                    ['action' => 'delete', $tipoDocumento->id],
+                                                    ['confirm' => __('¿Esta seguro de eliminar el documento {0}?', $tipoDocumento->descripcion),
+                                                     'class' => 'btn btn-danger btn-xs pencil',
+                                                     'escape'=>false]
+                                                ) ?>
+                                            </td>
+                                        </tr>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                    <?php } else {
+                    ?>
+                        <div class="callout callout-danger">
+                            <p> <i class="icon fa fa-warning" aria-hidden="true"></i> No se encontraron resultados que
+                                coincidan con el criterio de búsqueda.</p>
+                        </div>
+                    <?php } ?>
+
+                </div>
+                <!-- /.box-body -->
+            </div>
+            <!-- /.box -->
+        </div>
+        <!-- /.col -->
     </div>
-</div>
+    <!-- /.row -->
+</section>
+<!-- /.content -->

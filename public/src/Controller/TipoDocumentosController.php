@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -45,13 +46,23 @@ class TipoDocumentosController extends AppController
     {
         $tipoDocumento = $this->TipoDocumentos->newEmptyEntity();
         if ($this->request->is('post')) {
-            $tipoDocumento = $this->TipoDocumentos->patchEntity($tipoDocumento, $this->request->getData());
-            if ($this->TipoDocumentos->save($tipoDocumento)) {
-                $this->Flash->success(__('El Tipo de Documento se guardo exitosamente.'));
+            $data = $this->request->getData();
+            $data['descripcion'] = strtoupper($data['descripcion']);
+            $tipoDocumento = $this->TipoDocumentos->patchEntity($tipoDocumento, $data);
+            if ($tipoDocumento->getErrors()) {
+                foreach ($tipoDocumento->getErrors() as $field => $errors) {
+                    foreach ($errors as $error) {
+                        $this->Flash->error(__($error));
+                    }
+                }
+            } else {
+                if ($this->TipoDocumentos->save($tipoDocumento)) {
+                    $this->Flash->success(__('El Tipo de Documento se guardo correctamente.'));
 
-                return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['action' => 'index']);
+                }
+                $this->Flash->error(__('El Tipo de Documento no pudo ser guardado. Por favor, verifique los campo e intenete nuevamente.'));
             }
-            $this->Flash->error(__('El Tipo de Documento no pudo ser guardado. Por favor, verifique los campo e intenete nuevamente.'));
         }
         $this->set(compact('tipoDocumento'));
     }
@@ -67,9 +78,11 @@ class TipoDocumentosController extends AppController
     {
         $tipoDocumento = $this->TipoDocumentos->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $tipoDocumento = $this->TipoDocumentos->patchEntity($tipoDocumento, $this->request->getData());
+            $data = $this->request->getData();
+            $data['descripcion'] = strtoupper($data['descripcion']);
+            $tipoDocumento = $this->TipoDocumentos->patchEntity($tipoDocumento, $data);
             if ($this->TipoDocumentos->save($tipoDocumento)) {
-                $this->Flash->success(__('El Tipo de Documento se guardo exitosamente.'));
+                $this->Flash->success(__('El Tipo de Documento se guardo correctamente.'));
 
 
                 return $this->redirect(['action' => 'index']);
@@ -93,7 +106,11 @@ class TipoDocumentosController extends AppController
         if ($this->TipoDocumentos->delete($tipoDocumento)) {
             $this->Flash->success(__('El Tipo de Documento se elimino correctamente.'));
         } else {
-            $this->Flash->error(__('El Tipo de Documento no pudo ser eliminado. Por favor, intente nuevamente o envie un mail a soporte.'));
+            foreach ($tipoDocumento->getErrors() as $field => $errors) {
+                foreach ($errors as $error) {
+                    $this->Flash->error(__($error));
+                }
+            }
         }
 
         return $this->redirect(['action' => 'index']);

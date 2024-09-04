@@ -354,7 +354,7 @@ class ResolucionesController extends AppController
             // Guardar la entidad solo si el archivo se ha subido correctamente
             if ($this->Resoluciones->save($resolucion)) {
 
-                $this->Flash->success(__('La resolución se guardó exitosamente.'));
+                $this->Flash->success(__('La resolución se guardó correctamente.'));
                 $previousUrl = $this->request->getSession()->read('previousUrl');
                 return $this->redirect($previousUrl);
             } else {
@@ -505,7 +505,7 @@ class ResolucionesController extends AppController
             ]);
 
             if ($this->Resoluciones->save($resolucion)) {
-                $this->Flash->success(__('El Registro se actualizo exitosamente.'));
+                $this->Flash->success(__('El Registro se actualizo correctamente.'));
                 $previousUrl = $this->request->getSession()->read('previousUrl');
                 return $this->redirect($previousUrl);
                 #return $this->redirect(['action' => 'index']);

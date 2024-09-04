@@ -1,5 +1,13 @@
+<section class="content-header">
+    <h1>
+        Administración
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-wrench fa-lg"></i> Configuraciones</a></li>
+        <li class="active">Agregar</li>
+    </ol>
+</section>
 <section id="ConfiguracionesList" class="content">
-
   <div class="row">
     <div class="col-xs-12">
       <div class="box box-primary">
@@ -41,7 +49,7 @@
                         <?php echo $configuracion->clave; ?>
                       </td>
                       <td>
-                        <?php echo $configuracion->valor; ?>
+                      <?php echo substr($configuracion->valor, 0, 50); ?>
                       </td>
 
                       <td class="pencil">
@@ -98,7 +106,7 @@
               </div>
               <div class=" col-sm-3">
                 <div class="info-box bg-blue">
-                  <a class="info-box-icon" style="color: white;" href="/rbac/configuraciones/index/1"><i class="fa fa-eraser"></i></a>
+                  <a class="info-box-icon" style="color: white;" href="/rbac/configuraciones/index/3"><i class="fa fa-eraser"></i></a>
                   <div class="info-box-content">
                     <span class="info-box-text">Limpiar Cache</a></span>
                     <div class="progress">
@@ -112,7 +120,7 @@
               </div>
               <div class=" col-sm-3">
                 <div class="info-box bg-blue">
-                  <a class="info-box-icon " style="color: white;" href="/rbac/configuraciones/index/2"><i class="fa fa-eraser"></i></a>
+                  <a class="info-box-icon " style="color: white;" href="/rbac/configuraciones/index/4"><i class="fa fa-eraser"></i></a>
                   <div class="info-box-content">
                     <span class="info-box-text">Limpiar Logs</a></span>
                     <div class="progress">

@@ -70,14 +70,14 @@ use Cake\Core\Configure; ?>
     </div>
     <div class="form-group has-feedback">
         <div class="row">
-            <div class="col-xs-6">
-                <select name="tipo_documento" required class="form-control">
-                    <option value="">Tipo documento</option>
-                    <option value="DNI">DNI</option>
-                    <option value="LE">LE</option>
-                    <option value="LE">PASAPORTE</option>
-                </select>
 
+            <div class="col-xs-6">
+                <select required name="tipo_documento_id" class="form-control">
+                    <option value="">Seleccione un tipo de documento</option>
+                    <?php foreach ($tipoDocumentos as $id => $tipoDocumento) : ?>
+                            <option value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
             <div class="col-xs-6">
                 <input name="documento" required type="number" step="1" min="8" class="form-control" placeholder="Documento" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
@@ -115,5 +115,10 @@ use Cake\Core\Configure; ?>
         </div>
         <!-- /.col -->
     </div>
-
 </form>
+<br>
+<div class="row">
+    <div class="col-xs-12">
+        <?= $this->Flash->render() ?>
+    </div>
+</div>

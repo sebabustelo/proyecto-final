@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query\SelectQuery;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+
 
 /**
  * TipoDocumentos Model
@@ -43,7 +42,7 @@ class TipoDocumentosTable extends Table
         $this->setDisplayField('descripcion');
         $this->setPrimaryKey('id');
 
-        $this->hasMany('RbacUsuarios', [
+        $this->hasMany('Rbac.RbacUsuarios', [
             'foreignKey' => 'tipo_documento_id',
         ]);
     }
@@ -58,10 +57,27 @@ class TipoDocumentosTable extends Table
     {
         $validator
             ->scalar('descripcion')
-            ->maxLength('descripcion', 100)
+            ->maxLength('descripcion', 200,'La descripción no puede tener más de 200 caracteres.')
             ->requirePresence('descripcion', 'create')
-            ->notEmptyString('descripcion');
+            ->notEmptyString('descripcion', 'La descripción es obligatoria.')
+            ->add('descripcion', 'unique', [
+                'rule' => 'validateUnique',
+                'provider' => 'table',
+                'message' => 'La descripción ya existe.'
+            ]);
 
         return $validator;
+    }
+
+    public function beforeDelete($event, $entity, $options)
+    {
+        $count = $this->RbacUsuarios->find()
+            ->where(['tipo_documento_id' => $entity->id])
+            ->count();
+
+        if ($count > 0) {
+            $entity->setError('descripcion', 'No se puede eliminar este tipo de documento porque tiene usuarios asociados.');
+            return false;
+        }
     }
 }

@@ -10,14 +10,6 @@ class ConfiguracionesController extends RbacController
     {
     }
 
-    protected array $paginate = [
-        'limit' => 10,
-        'order' => [
-            'Configuraciones.clave' => 'asc',
-        ],
-    ];
-
-
     public function index($downloadLog = NULL)
     {
         if ($downloadLog != NULL) {
@@ -80,11 +72,8 @@ class ConfiguracionesController extends RbacController
             exit();
         }
 
-
         $this->set('configuraciones', $this->paginate());
     }
-
-
 
     public function agregar()
     {
@@ -95,7 +84,7 @@ class ConfiguracionesController extends RbacController
                 $configuracion->valor = $this->secured_encrypt($configuracion->valor);
             }
             if ($this->Configuraciones->save($configuracion)) {
-                $this->Flash->success('Se ha creado exitosamente', 'flash_custom');
+                $this->Flash->success('Se ha creado correctamente', 'flash_custom');
                 return $this->redirect(array('action' => 'index'));
             } else {
                 $this->Flash->error('Error, no se pudo agregar');
@@ -128,7 +117,7 @@ class ConfiguracionesController extends RbacController
                 $configuracion->valor = $this->secured_encrypt($configuracion->valor);
             }
             if ($this->Configuraciones->save($configuracion)) {
-                $this->Flash->success('Se ha actualizado exitosamente.');
+                $this->Flash->success('Se ha actualizado correctamente.');
                 return $this->redirect(array('action' => 'index'));
             } else {
                 $this->Flash->error('No se puede actualizar');

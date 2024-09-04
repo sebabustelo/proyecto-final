@@ -95,6 +95,27 @@ class RbacUsuariosTable extends Table
         return $validator;
     }
 
+    public function validationPassword(Validator $validator): Validator
+    {
+        $validator
+            ->notEmptyString('password', 'El password es obligatorio.')
+            ->minLength('password', 16, 'El campo debe tener al menos 8 caracteres.')
+            ->add('password', 'complexity', [
+                'rule' => function ($value, $context) {
+                    return (bool)preg_match('/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/', $value);
+                },
+                'message' => 'El password debe contener al menos una mayúscula, un número y un carácter especial.',
+            ])
+            ->add('password', 'match', [
+                'rule' => ['compareWith', 'password_confirm'],
+                'message' => 'El password y la confirmación no coinciden.',
+            ])
+            ->notEmptyString('password_confirm', 'La confirmación del password es obligatoria.');
+
+        return $validator;
+    }
+
+
 
 
     /**
@@ -105,10 +126,8 @@ class RbacUsuariosTable extends Table
     public function autenticacion($usuario, $password)
     {
 
-        $usuario  = $this->find()->where(['usuario'=>$usuario,'password'=>$password])->first();
+        $usuario  = $this->find()->where(['usuario' => $usuario, 'password' => $password])->first();
 
         return (isset($usuario->id));
     }
-
 }
-

@@ -51,7 +51,13 @@ class RbacUsuario extends Entity
         'rbac_perfil' => true,
         'tipo_documento' => true,
         'perfil_id' => true,
+        'password_confirm'=>true
     ];
+
+    protected function password_confirm()
+    {
+        return $this->password;
+    }
 
     /**
      * Fields that are excluded from JSON versions of the entity.
