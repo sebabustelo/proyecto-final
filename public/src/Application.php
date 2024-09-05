@@ -112,8 +112,8 @@ class Application extends BaseApplication
         $this->addOptionalPlugin('AdminLTE');
         $this->addOptionalPlugin('Rbac');
         $this->addPlugin('Migrations');
-        $this->addPlugin('Db');
+        //$this->addPlugin('Authorization');
         // Load more plugins here
     }
-    
+
 }

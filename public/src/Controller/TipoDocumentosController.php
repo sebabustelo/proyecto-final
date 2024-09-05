@@ -56,6 +56,7 @@ class TipoDocumentosController extends AppController
                     }
                 }
             } else {
+
                 if ($this->TipoDocumentos->save($tipoDocumento)) {
                     $this->Flash->success(__('El Tipo de Documento se guardo correctamente.'));
 

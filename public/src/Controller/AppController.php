@@ -33,16 +33,33 @@ class AppController extends Controller
     {
         parent::initialize();
 
-        // trae de la tabla configuraciones el valor de la skin que luego lee admin.php (linea 25)
-        // cargo la tabla (sino da error)
-        $this->Configuraciones = $this->fetchTable('Rbac.Configuraciones');
-        // Guarda la tabla configuraciones en una variable (configVals) con todas la filas y lo convierte en un listado simple; para futuras busquedas de datos!
-        $query = $this->Configuraciones->find('list', keyField: 'clave', valueField: 'valor');
-        $confi = $query->toArray();
-        Configure::write('configVals', $confi);
-
         $this->loadComponent('Flash');
         $this->loadComponent('Rbac.Permisos');
+
+
+
+        // Configurar el componente de autenticación
+        // $this->loadComponent('Auth', [
+        //     'authenticate' => [
+        //         'Form' => [
+        //             'fields' => [
+        //                 'username' => 'usuario',
+        //                 'password' => 'password'
+        //             ],
+        //             'userModel' => 'Rbac.RbacUsuarios'
+        //         ]
+        //     ],
+        //     'loginAction' => [
+        //         'controller' => 'Rbac.RbacUsuarios',
+        //         'action' => 'login'
+        //     ],
+        //     'logoutRedirect' => [
+        //         'controller' => 'Rbac.RbacUsuarios',
+        //         'action' => 'login'
+        //     ],
+        //     'authError' => 'No tienes permisos para acceder a esa página.',
+        //     'checkAuthIn' => 'Controller.initialize'  // Verifica la autenticación en cada request
+        // ]);
     }
 
     public function beforeRender(EventInterface $event)

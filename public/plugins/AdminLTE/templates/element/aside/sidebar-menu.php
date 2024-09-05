@@ -81,8 +81,13 @@ $action =   $this->request->getParam('action');
 
     </li>
     <li>
-        <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-            <i class="fa fa-fw  fa-cubes"></i> <span>Productos</span>
+        <a href="<?php echo $this->Url->build('/Productos/catalogoCliente'); ?>">
+            <i class="fa fa-fw  fa-cubes"></i> <span>Categorias</span>
+        </a>
+    </li>
+    <li>
+        <a href="<?php echo $this->Url->build('/Productos/catalogoCliente'); ?>">
+            <i class="fa fa-fw  fa-cube"></i> <span>Productos</span>
         </a>
     </li>
 
@@ -91,7 +96,7 @@ $action =   $this->request->getParam('action');
     <li>
         <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
             <i class="fa fa-edit"></i>
-            <span>Pedidos</span></a>
+            <span>Mis compras</span></a>
     </li>
     <?php //}
     ?>

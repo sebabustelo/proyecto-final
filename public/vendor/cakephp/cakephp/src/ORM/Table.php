@@ -356,19 +356,6 @@ class Table implements RepositoryInterface, EventListenerInterface, EventDispatc
         $this->dispatchEvent('Model.initialize');
     }
 
-    public function beforeSave(EventInterface $event, $entity, $options)
-    {
-        $session = Router::getRequest()->getSession();
-        if ($entity->isNew()) {
-            $entity->created_by = $session->read('RbacUsuario.id');
-            $entity->modified_by = $session->read('RbacUsuario.id');
-            $entity->created = date("Y-m-d H:i:s");   
-            $entity->modified =  date("Y-m-d H:i:s");  
-        }else{
-            $entity->modified_by = $session->read('RbacUsuario.id');            
-            $entity->modified =  date("Y-m-d H:i:s");   
-        }
-    }
 
     /**
      * Get the default connection name.
