@@ -6,10 +6,9 @@ $controller =   $this->request->getParam('controller');
 $action =   $this->request->getParam('action');
 ?>
 <ul class="sidebar-menu" data-widget="tree">
-    <li class="header"> </li>
-    <?php if ((isset($accionesPermitidas['Pages']['display']) && $accionesPermitidas['Pages']['display'])) { ?>
-        <li><a href="<?php echo $this->Url->build('/pages/home2'); ?>"><i class="fa fa-area-chart"></i> <span>Informes</span></a></li>
-    <?php } ?>
+    <li class="header"> Administración </li>
+
+
     <?php
     if (
         (isset($accionesPermitidas['Configuraciones']['index']) && $accionesPermitidas['Configuraciones']['index']) ||
@@ -20,8 +19,8 @@ $action =   $this->request->getParam('action');
     ) {
         //Preguntar si esta ingresando a algunos de los menus de "Sistema" array $menu_sistema[],
         //para esto pregunto por el contralador y la accion
-        $menu_sistema = array("Configuraciones", "RbacAcciones", "RbacPerfiles", "RbacPermisos", "RbacUsuarios");
-        if (in_array($controller, $menu_sistema) and $action!='detail') {
+        $menu_permisos = array("Configuraciones", "RbacAcciones", "RbacPerfiles", "RbacPermisos", "RbacUsuarios");
+        if (in_array($controller, $menu_permisos) and $action != 'detail') {
             $active = "active";
             $menu_open = "menu-open";
         } else {
@@ -31,7 +30,7 @@ $action =   $this->request->getParam('action');
     ?>
         <li class="treeview <?php echo $active . " " . $menu_open ?>">
             <a href="#">
-                <i class="fa fa-gears"></i> <span>Aplicación</span>
+                <i class="fa fa-gears"></i> <span>Gestión de permisos</span>
                 <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                 </span>
@@ -60,65 +59,166 @@ $action =   $this->request->getParam('action');
             </ul>
         </li>
     <?php } ?>
+
+    <?php
+    if (
+        (isset($accionesPermitidas['TipoDocumentos']['index']) && $accionesPermitidas['TipoDocumentos']['index'])
+    ) {
+        $menu_sistema = array("TipoDocumentos");
+        if (in_array($controller, $menu_sistema) and $action != 'detail') {
+            $active = "active";
+            $menu_open = "menu-open";
+        } else {
+            $active = "";
+            $menu_open = "";
+        }
+    ?>
+        <li class="treeview <?php echo $active . " " . $menu_open ?>">
+            <a href="#">
+                <i class="fa fa-laptop"></i> <span>Parámetros del sistema</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <li class=" <?php echo ($controller == 'TipoDocumentos' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
+                    <a href="<?php echo $this->Url->build('/TipoDocumentos/index'); ?>">
+                        <i class="fa fa-circle-o"></i> Tipo de Documentos
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+                        <i class="fa fa-circle-o"></i> <span>Productos</span>
+
+                    </a>
+                </li>
+            </ul>
+        </li>
+    <?php } ?>
+
+    <?php if ((isset($accionesPermitidas['Informes']['index']) && $accionesPermitidas['Informes']['index'])) { ?>
+        <?php
+        $menu_informes = array("Pages");
+
+        if (in_array($controller, $menu_informes) and $action == 'display') {
+            $active = "active";
+        } else {
+            $active = "";
+        }
+        ?>
+        <li class=" <?php echo $active  ?>">
+            <a href="<?php echo $this->Url->build('/Informes/index'); ?>">
+                <i class="fa fa-area-chart"></i> <span>Informes</span>
+            </a>
+        </li>
+    <?php } ?>
+
+
+    <li>
+        <a href="<?php echo $this->Url->build('/pages/calendar'); ?>">
+            <i class="fa fa-calendar"></i> <span>Agenda</span>
+            <span class="pull-right-container">
+                <small class="label pull-right bg-red">3</small>
+                <small class="label pull-right bg-blue">17</small>
+            </span>
+        </a>
+    </li>
+
+    <li class="header"> Cliente </li>
+
     <li class="treeview">
         <a href="#">
-            <i class="fa fa-folder"></i> <span>Parametricas</span>
+            <i class="fa fa-fw  fa-cubes"></i> <span>Categorias</span>
             <span class="pull-right-container">
                 <i class="fa fa-angle-left pull-right"></i>
             </span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="<?php echo $this->Url->build('/TipoDocumentos/index'); ?>">
-                    <i class="fa fa-circle-o"></i> Tipo de Documentos</a>
+            <li><a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+                    <i class="fa fa-circle-o"></i>Cadera</a>
             </li>
             <li>
                 <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-                    <i class="fa fa-circle-o"></i> <span>Productos</span>
-
+                    <i class="fa fa-circle-o"></i> <span>Columna</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+                    <i class="fa fa-circle-o"></i> <span>Complementos</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+                    <i class="fa fa-circle-o"></i> <span>Pediátricos</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+                    <i class="fa fa-circle-o"></i> <span>Rodilla</span>
+                </a>
+            </li>
+            <li>
+                <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+                    <i class="fa fa-circle-o"></i> <span>Trauma</span>
                 </a>
             </li>
         </ul>
 
     </li>
-    <li>
-        <a href="<?php echo $this->Url->build('/Productos/catalogoCliente'); ?>">
-            <i class="fa fa-fw  fa-cubes"></i> <span>Categorias</span>
-        </a>
-    </li>
-    <li>
-        <a href="<?php echo $this->Url->build('/Productos/catalogoCliente'); ?>">
-            <i class="fa fa-fw  fa-cube"></i> <span>Productos</span>
-        </a>
-    </li>
 
-    <?php //if ((isset($accionesPermitidas['Pages']['index']) && $accionesPermitidas['Pages']['display'])) {
+    <?php if ((isset($accionesPermitidas['Productos']['catalogoCliente']) && $accionesPermitidas['Productos']['catalogoCliente'])) { ?>
+        <?php
+        $menu_productos = array("Productos");
+
+        if (in_array($controller, $menu_productos) and $action == 'catalogoCliente') {
+            $active = "active";
+        } else {
+            $active = "";
+        }
+        ?>
+        <li class=" <?php echo $active  ?>">
+            <a href="<?php echo $this->Url->build('/Productos/catalogoCliente'); ?>">
+                <i class="fa fa-fw fa-medkit"></i> <span>Productos</span>
+            </a>
+        </li>
+    <?php } ?>
+
+    <?php //if ((isset($accionesPermitidas['Pages']['index']) && $accionesPermitidas['Pages']['display'])) {   
     ?>
     <li>
         <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-            <i class="fa fa-edit"></i>
+            <i class="fa fa-fw fa-shopping-cart"></i>
             <span>Mis compras</span></a>
     </li>
-    <?php //}
+    <?php //} 
     ?>
-    <li class="treeview">
-    <a href="#">
-      <i class="fa fa-files-o"></i>
-      <span>Layout Options</span>
-      <span class="pull-right-container">
-        <span class="label label-primary pull-right">4</span>
-      </span>
-    </a>
-    <ul class="treeview-menu">
-      <li><a href="<?php //echo $this->Url->build('/pages/layout/top-nav');
-                    ?>"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
-      <li><a href="<?php //echo $this->Url->build('/pages/layout/boxed');
-                    ?>"><i class="fa fa-circle-o"></i> Boxed</a></li>
-      <li><a href="<?php //echo $this->Url->build('/pages/layout/fixed');
-                    ?>"><i class="fa fa-circle-o"></i> Fixed</a></li>
-      <li><a href="<?php //echo $this->Url->build('/pages/layout/collapsed-sidebar');
-                    ?>"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
-    </ul>
-  </li>
+
+    <li>
+        <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+            <i class="fa fa-fw  fa-envelope"></i>
+            <span>Consultas</span></a>
+    </li>
+
+
+    <!-- <li class="treeview">
+        <a href="#">
+            <i class="fa fa-files-o"></i>
+            <span>Layout Options</span>
+            <span class="pull-right-container">
+                <span class="label label-primary pull-right">4</span>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="<?php echo $this->Url->build('/pages/layout/top-nav');
+                            ?>"><i class="fa fa-circle-o"></i> Top Navigation</a></li>
+            <li><a href="<?php echo $this->Url->build('/pages/layout/boxed');
+                            ?>"><i class="fa fa-circle-o"></i> Boxed</a></li>
+            <li><a href="<?php echo $this->Url->build('/pages/layout/fixed');
+                            ?>"><i class="fa fa-circle-o"></i> Fixed</a></li>
+            <li><a href="<?php echo $this->Url->build('/pages/layout/collapsed-sidebar');
+                            ?>"><i class="fa fa-circle-o"></i> Collapsed Sidebar</a></li>
+        </ul>
+    </li>
     <li>
         <a href="<?php echo $this->Url->build('/pages/widgets'); ?>">
             <i class="fa fa-th"></i> <span>Widgets</span>
@@ -184,15 +284,7 @@ $action =   $this->request->getParam('action');
             <li><a href="<?php echo $this->Url->build('/pages/tables/data'); ?>"><i class="fa fa-circle-o"></i> Data tables</a></li>
         </ul>
     </li>
-    <li>
-        <a href="<?php echo $this->Url->build('/pages/calendar'); ?>">
-            <i class="fa fa-calendar"></i> <span>Agenda</span>
-            <span class="pull-right-container">
-                <small class="label pull-right bg-red">3</small>
-                <small class="label pull-right bg-blue">17</small>
-            </span>
-        </a>
-    </li>
+     -->
     <!-- <li>
         <a href="<?php echo $this->Url->build('/pages/mailbox/mailbox'); ?>">
             <i class="fa fa-envelope"></i> <span>Mailbox</span>

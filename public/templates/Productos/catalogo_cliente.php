@@ -14,28 +14,22 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> Buscador</h3>
-                    <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                class="fa fa-minus"></i></button>
-                    </div>
+                    <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> </h3>
+                   
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter"
-                        action="/rbac/rbac_usuarios/index">
-                        <div class="form-row">
-                            <div class="form-group col-md-4">
-                                <input type="text" name="apellido" placeholder="Apellido" class="form-control"
-                                    id="apellido" aria-label="Apellido"
-                                    value="<?php echo (isset($filters['apellido'])) ? $filters['apellido'] : '' ?>">
+                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/productos/search">
+                        
+                        <div class="form-row text-center">
+                            <div class="input-group col-md-6 col-md-offset-3 ">
+                                <input type="text" name="message" placeholder=" Buscar productos... " class="form-control">
+                                <span class="input-group-btn">
+                                    <button type="submit" class="btn btn-primary btn-flat"> <span class="glyphicon glyphicon-search"></span></button>
+                                </span>
                             </div>
-                            <div class="form-group col-md-4">
-                                <input type="text" name="nombre" placeholder="Nombre" class="form-control" id="nombre"
-                                    aria-label="Nombre"
-                                    value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
-                            </div>
-                            <div class="form-group col-md-4 ">
+                           
+                            <!-- <div class="form-group col-md-4 ">
                                 <button type="button" id="limpiar" class="btn btn-default">
                                     <span class="glyphicon glyphicon-trash"></span>
                                     Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -43,8 +37,7 @@
                                     <span class="glyphicon glyphicon-search"></span>
                                     Buscar</button>
 
-                                <!--div class="form-group col-md-4"!-->
-                                <!--a href="#" id="limpiar" class="btn btn-default" title=""><span class="glyphicon glyphicon-trash"></span> Limpiar</a!-->
+                              
                                 <script>
                                     $(function() {
                                         $('#limpiar').on('click', function() {
@@ -63,7 +56,7 @@
                                 </script>
                                 <div id="filterErrors">
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
 
