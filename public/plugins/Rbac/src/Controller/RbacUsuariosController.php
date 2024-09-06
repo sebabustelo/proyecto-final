@@ -12,8 +12,6 @@ use Cake\Log\Log;
 
 class RbacUsuariosController extends RbacController
 {
-    public function _null() {}
-
     public function initialize(): void
     {
         parent::initialize();
@@ -237,7 +235,7 @@ class RbacUsuariosController extends RbacController
         }
     }
 
-    public function getConditions()
+    private function getConditions()
     {
         $data = $this->getRequest()->getQuery();
         $filterErrors = array();

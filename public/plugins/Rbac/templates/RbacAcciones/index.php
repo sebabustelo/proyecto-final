@@ -70,49 +70,14 @@
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
-                    <!-- <table class="tree">
-						<tbody>
-							<tr class="treegrid-1 expanded">
-								<td>Root node</td>
-								<td>Additional info</td>
-							</tr>
-							<tr class="treegrid-2 treegrid-parent-1">
-								<td>Node 1-1</td>
-								<td>Additional info</td>
-							</tr>
-							<tr class="treegrid-3 treegrid-parent-1">
-								<td>Node 1-2</td>
-								<td>Additional info</td>
-							</tr>
-							<tr class="treegrid-4 treegrid-parent-3">
-								<td>Node 1-2-1</td>
-								<td>Additional info</td>
-							</tr>
-							<tr class="treegrid-5 treegrid-parent-3">
-								<td>Node 1-2-2</td>
-								<td>Additional info</td>
-							</tr>
-							<tr class="treegrid-6">
-								<td>Root node</td>
-								<td>Additional info</td>
-							</tr>
-							<tr class="treegrid-7 treegrid-parent-6">
-								<td>Node 2-1</td>
-								<td>Additional info</td>
-							</tr>
-						</tbody>
-					</table> -->
+
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered tree">
                             <thead>
                                 <tr>
                                     <th class="col-sm-4">Controlador
-                                        <?php //echo $this->Paginator->sort('RbacAccion.controller','Controlador', array('Model'=>'Rbac,RbacAccion'));
-                                        ?>
                                     </th>
                                     <th class="col-sm-7">Acción
-                                        <?php //echo $this->Paginator->sort('RbacAccion.action','Acción', array('Model'=>'Rbac.RbacAccion'));
-                                        ?>
                                     </th>
                                     <th class="col-sm-1">Acciones</th>
                             </thead>
@@ -121,41 +86,34 @@
                                 $i = 1;
                                 $num = 0;
                                 $aux = '';
-                                $controlador = '';
+                                $controllers = [];
 
-                                foreach ($rbacAcciones as $rbacAccion) : ?>
-                                    <?php
-                                    //si es la primera vez que aparece el controlador, agrego un encabezado que se va a desplegar y despues el coontrolador accion
-                                    if (!isset($acciones[$rbacAccion['controller']])) {
-                                        $acciones[$rbacAccion['controller']] = 1;
-                                    }
-                                    ?>
-                                    <?php if ($rbacAccion['action'] == '_null') $aux = $rbacAccion['controller']; ?>
-                                    <tr id="headerTable" <?php if ($aux == $rbacAccion['controller'] && $rbacAccion['action'] == '_null') {
-                                                                echo 'class="treegrid-' . $i . '"';
-                                                                $controlador = $rbacAccion['controller'];
-                                                                $i++;
-                                                            } elseif ($aux == $rbacAccion['controller']) {
-                                                                echo 'class="treegrid-parent-' . ($i - 1) . '"';
-                                                                $controlador = '';
-                                                            } else {
-                                                                $controlador = $rbacAccion['controller'];
-                                                            } ?>>
-                                        <td><?php echo $controlador; ?></td>
-                                        <td><?php echo ($rbacAccion['action'] != '_null') ? $rbacAccion['action'] : ''; ?></td>
-                                        <td>
-                                            <?php if ($rbacAccion['action'] != '_null') {  ?>
+                                foreach ($rbacAcciones as $rbacAccion) :
+                                    if (!in_array($rbacAccion['controller'], $controllers)) {
+
+                                        $controllers[] =  $rbacAccion['controller'];
+                                        $treeGrid = 'class="treegrid-' . $i . '"';
+                                        $i++;
+                                ?>
+                                        <tr id="headerTable" <?php echo $treeGrid; ?>>
+                                            <td colspan="3"><?php echo  $rbacAccion['controller']; ?></td>
+                                            <?php $num++; ?>
+                                        </tr>
+                                    <?php } //else { ?>
+                                        <?php
+                                        $treeGrid =  'class="treegrid-parent-' . ($i - 1) . '"';
+                                        ?>
+                                        <tr id="headerTable" <?php echo $treeGrid; ?>>
+                                            <td></td>
+                                            <td><?php echo $rbacAccion['action']; ?></td>
+                                            <td>
                                                 <button class="btn-xs btn-danger" onclick="eliminar(<?php echo $rbacAccion['id']; ?>,'<?php echo $rbacAccion['action']; ?>');">
                                                     <i class="fa fa-fw fa-remove"></i>
                                                 </button>
-                                            <?php  } ?>
-                                        </td>
-                                        <?php $num++; ?>
-
-                                    </tr>
-
-                                <?php
-                                //$i++;
+                                            </td>
+                                            <?php $num++; ?>
+                                        </tr>
+                                <?php //}
                                 endforeach; ?>
                             </tbody>
                         </table>

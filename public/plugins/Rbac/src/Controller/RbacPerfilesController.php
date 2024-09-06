@@ -11,9 +11,8 @@ class RbacPerfilesController extends RbacController
 
     public $order = 'descripcion ASC';
 
-    public $accionesDefaultLogin = array();
+    private $accionesDefaultLogin = array();
 
-    public function _null() {}
 
     public function index()
     {

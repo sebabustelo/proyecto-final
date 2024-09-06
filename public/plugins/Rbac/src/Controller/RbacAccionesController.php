@@ -6,10 +6,6 @@ use Cake\Core\Configure;
 
 class RbacAccionesController extends RbacController
 {
-	public function _null()
-	{
-	}
-
 	public function index()
 	{
 		if ($this->getRequest()->is('post')) {
