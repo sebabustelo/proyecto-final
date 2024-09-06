@@ -1,4 +1,5 @@
 <?php
+
 namespace Rbac\Controller;
 
 use Cake\Core\Configure;
@@ -9,9 +10,11 @@ use Cake\Mailer\Mailer;
 use Cake\Mailer\Exception\MissingActionException;
 use Cake\Http\Client;
 use Cake\Log\Log;
+use Cake\Validation\Validator;
 
 class RbacUsuariosController extends RbacController
 {
+
     public function initialize(): void
     {
         parent::initialize();
@@ -268,13 +271,11 @@ class RbacUsuariosController extends RbacController
 
     public function login()
     {
-        $this->viewBuilder()->setLayout('Rbac.login');
         $session = $this->getRequest()->getSession();
         //session_destroy();
         //session_start();
         $configuraciones = $this->fetchTable('Rbac.Configuraciones');
         $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
-
         $this->set('captcha', $configuracionCaptcha->valor);
 
         $captchaPublic       = $configuraciones->findByClave('reCaptchaPublic')->first();
@@ -382,12 +383,11 @@ class RbacUsuariosController extends RbacController
 
                     if ($this->RbacUsuarios->save($rbacUsuario)) {
 
-                        $id                              = $rbacUsuario->id;
                         $token                           = $this->generateToken();
 
                         $RbacToken = $this->fetchTable('Rbac.RbacToken');
                         $data['token']      = $token;
-                        $data['usuario_id'] = $id;
+                        $data['usuario_id'] = $rbacUsuario->i;
                         $data['validez']    = 1440;
                         $rbacToken = $RbacToken->newEntity($data);
 
@@ -395,10 +395,9 @@ class RbacUsuariosController extends RbacController
                         $datos['subject']    = 'Confirmación de registro nuevo usuario';
                         $datos['url']        = Router::url('/', true) . "rbac/rbac_usuarios/registerPassword/" . $token;
                         $datos['aplicacion'] = "IPMAGNA";
-                        $datos['template']   = 'registrarse';
+                        $datos['template']   = 'register';
                         $datos['email']      = $this->getRequest()->getData('usuario');
 
-                        $error = 0;
                         if ($RbacToken->save($rbacToken)) {
                             if ($this->sendEmail($datos)) {
                                 $this->RbacUsuarios->getConnection()->commit();
@@ -406,12 +405,10 @@ class RbacUsuariosController extends RbacController
                             } else {
                                 $this->RbacUsuarios->getConnection()->rollback();
                                 $this->Flash->error('No se pudo enviar el email de confirmación de nuevo usuario');
-                                $error = 1;
                             }
                         } else {
                             $this->RbacUsuarios->getConnection()->rollback();
                             $this->Flash->error('No se pudo generar token para enviar la confirmación del nuevo usuario');
-                            $error = 1;
                         }
                     } else {
                         $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
@@ -420,17 +417,14 @@ class RbacUsuariosController extends RbacController
                 } catch (MissingDatasourceException $e) {
                     $this->RbacUsuarios->getConnection()->rollback();
                     $this->Flash->success(__($e->getMessage()));
-                    //return $this->redirect(array('action' => 'index'));
                 }
             }
         }
-
-
         $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
     }
 
     /**
-     * Permite recuperar el password a partir del token enviado por mail al usuario
+     * Permite registrar el password a partir del token enviado por mail al usuario
      *
      * @param string $token Token único enviado al correo del usuario
      * @return \Cake\Http\Response|null Redirecciona al login o muestra el formulario
@@ -508,27 +502,101 @@ class RbacUsuariosController extends RbacController
         }
     }
 
-    private function generarListadoAccionesPorPerfiles($perfilAcciones)
+    /**
+     * Permite recuperar la contraseña a un usuario no LDAP
+     */
+    public function recoverPassword()
     {
-        $rbacAcciones = array();
-        $p['id']              = $perfilAcciones->id;
-        $p['descripcion']     = $perfilAcciones->descripcion;
-        $perfilesPorUsuario[] = $p;
-        // debug($perfilAcciones);die;
+        $configuraciones = $this->fetchTable('Rbac.Configuraciones');
+        $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
+        $this->set('captcha', $configuracionCaptcha->valor);
 
-        foreach ($perfilAcciones->rbac_acciones as $accion) {
-            $controller = Inflector::camelize($accion['controller']);
-            $rbacAcciones[$controller][$accion->action] = 1;
+        $captchaPublic       = $configuraciones->findByClave('reCaptchaPublic')->first();
+        $this->set('captchaPublic', $captchaPublic->valor);
+
+        if ($this->getRequest()->is('post')) {
+
+            $data = $this->getRequest()->getData();
+            $validator = new Validator();
+            // Definir las reglas de validación
+            $validator
+                ->email('usuario', false, 'El campo usuario debe ser una dirección de correo válida.')
+                ->notEmptyString('usuario', 'El campo usuario no puede estar vacío.');
+
+            // Validar los datos
+            $errors = $validator->validate($data);
+
+            if (!empty($errors)) {
+                foreach ($errors as $field => $fieldErrors) {
+                    foreach ($fieldErrors as $error) {
+                        $this->Flash->error(__($error));
+                    }
+                }
+            } else {
+
+                if ($configuracionCaptcha->valor == 'Si') {
+                    $captchaSecret        = $configuraciones->findByClave('reCaptchaSecret')->first();
+                    $recaptcha = $this->request->getData('g-recaptcha-response');
+                    $secret = $captchaSecret->valor;
+
+                    $http = new Client();
+                    $response = $http->post('https://www.google.com/recaptcha/api/siteverify', [
+                        'secret' => $secret,
+                        'response' => $recaptcha,
+                    ]);
+                    $result = json_decode($response->getBody(), true);
+                } else {
+                    $result['success'] = true;
+                }
+
+                if ($result['success']) {
+
+                    $usuario = $this->RbacUsuarios->find()->where(['usuario' => $data['usuario']])->first();
+                    debug(!empty($usuario));
+                    die;
+
+                    if (!empty($usuario)) {
+
+                        /////
+                        $token = $this->generateToken();
+
+                        $RbacToken = $this->fetchTable('Rbac.RbacToken');
+                        $data['token']      = $token;
+                        $data['usuario_id'] = $usuario->id;
+                        $data['validez']    = 1440;
+                        $rbacToken = $RbacToken->newEntity($data);
+
+                        $datos               = array();
+                        $datos['subject']    = 'Confirmación de registro nuevo usuario';
+                        $datos['url'] = Router::url('/', true) . "rbac/rbac_usuarios/recuperarPass/" . $token;
+                        $datos['aplicacion'] = "IPMAGNA";
+                        $datos['template']   = 'recover_password';
+                        $datos['email']      = $this->getRequest()->getData('usuario');
+                        /////
+                        if ($this->sendEmail($datos)) {
+
+
+                            if ($this->RbacToken->save($rbacToken)) {
+                                $this->Flash->success(
+                                    'Se ha enviado la información para recuperar la clave al usuario ingresado a la dirección ' . $this->getRequest()->getData('correo')
+                                );
+                            }
+                        } else {
+                            $this->Flash->error($this->Email->smtpError);
+                        }
+                    } else {
+                        $this->Flash->error('No encuentra correo para enviar la informacón de recuperar contraseña');
+                        $this->redirect(array('controller' => 'rbac_usuarios', 'action' => 'login'));
+                    }
+                }
+            }
         }
-
-        $this->getRequest()->getSession()->write('PerfilesPorUsuario', $perfilesPorUsuario);
-        $this->getRequest()->getSession()->write('RbacAcciones', $rbacAcciones);
     }
 
     /**
      * Permite modificar la contraseña del usuario
      */
-    public function changePass()
+    public function changePassword()
     {
 
         $usuario = $this->getRequest()->getSession()->read('RbacUsuario');
@@ -565,64 +633,20 @@ class RbacUsuariosController extends RbacController
         }
     }
 
-    // /**
-    //  * Permite recuperar la contraseña a un usuario no LDAP
-    //  */
-    // public function recuperar($cache = null)
-    // {
+    private function generarListadoAccionesPorPerfiles($perfilAcciones)
+    {
+        $rbacAcciones = array();
+        $p['id']              = $perfilAcciones->id;
+        $p['descripcion']     = $perfilAcciones->descripcion;
+        $perfilesPorUsuario[] = $p;
+        // debug($perfilAcciones);die;
 
-    //     $this->Configuraciones = $this->fetchTable('Rbac.Configuraciones');
-    //     $captcha_public        = $this->Configuraciones->findByClave('reCaptchaPublic');
-    //     $this->set('captcha_public', $captcha_public->toArray());
+        foreach ($perfilAcciones->rbac_acciones as $accion) {
+            $controller = Inflector::camelize($accion['controller']);
+            $rbacAcciones[$controller][$accion->action] = 1;
+        }
 
-    //     //$this->ViewBuilder()->setLayout('Rbac.login');
-    //     if ($this->getRequest()->is('post')) {
-
-
-    //         $captchaOk = false;
-
-    //         if (isset($_POST['g-recaptcha-response']) && $this->verifyRecaptcha($_POST['g-recaptcha-response'])) {
-    //             $captchaOk = true;
-    //         }
-
-    //         if ($captchaOk) {
-    //             if (strtolower($this->getRequest()->getSession()->read('hash')) == strtolower($this->getRequest()->getData('captcha'))) {
-    //                 //$usuario = $this->RbacUsuarios->find('first', array('conditions' => array('correo' => $this->getRequest()->getData('correo'))))->toArray();
-    //                 $usuario = $this->RbacUsuarios->find()->where(['correo' => $this->getRequest()->getData('correo')])->first();
-    //                 //->contain(['RbacPerfiles' => ['RbacAcciones']])
-    //                 if (!empty($usuario)) {
-    //                     $params = Configure::read('params');
-    //                     //$url = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/';
-    //                     $token = $this->generateToken();
-    //                     $data['token'] = $token;
-    //                     $data['usuario_id'] = $usuario->id;
-    //                     $data['validez'] = 1440;
-
-    //                     $datos = array();
-    //                     $datos['subject'] = 'Recuperar contraseña';
-    //                     $datos['url'] = Router::url('/', true) . "rbac/rbac_usuarios/recuperarPass/" . $token;
-    //                     $datos['aplicacion'] = $params['aplicacion'];
-    //                     $datos['template'] = 'recuperar_contrasenia';
-    //                     $datos['email'] = $this->getRequest()->getData('correo');
-    //                     if ($this->sendEmail($datos)) {
-    //                         $this->RbacToken = $this->fetchTable('Rbac.RbacToken');
-    //                         $rbacToken = $this->RbacToken->newEntity($data);
-    //                         //$rbacToken = $this->RbacToken->patchEntity($rbacToken, $data);
-    //                         if ($this->RbacToken->save($rbacToken)) {
-    //                             $this->Flash->success(
-    //                                 'Se ha enviado la información para recuperar la clave al usuario ingresado a la dirección ' . $this->getRequest()->getData('correo')
-    //                             );
-    //                         }
-    //                     } else {
-    //                         $this->Flash->error($this->Email->smtpError);
-    //                     }
-    //                 } else {
-    //                     $this->Flash->error('No encuentra correo para enviar la informacón de recuperar contraseña');
-    //                     $this->redirect(array('controller' => 'rbac_usuarios', 'action' => 'login'));
-    //                 }
-    //             }
-    //         }
-    //     }
-    // }
-
+        $this->getRequest()->getSession()->write('PerfilesPorUsuario', $perfilesPorUsuario);
+        $this->getRequest()->getSession()->write('RbacAcciones', $rbacAcciones);
+    }
 }

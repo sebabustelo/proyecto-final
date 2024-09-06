@@ -200,7 +200,7 @@ $action =   $this->request->getParam('action');
     </li>
 
 
-    <!-- <li class="treeview">
+    <li class="treeview">
         <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Layout Options</span>
@@ -284,7 +284,7 @@ $action =   $this->request->getParam('action');
             <li><a href="<?php echo $this->Url->build('/pages/tables/data'); ?>"><i class="fa fa-circle-o"></i> Data tables</a></li>
         </ul>
     </li>
-     -->
+    
     <!-- <li>
         <a href="<?php echo $this->Url->build('/pages/mailbox/mailbox'); ?>">
             <i class="fa fa-envelope"></i> <span>Mailbox</span>

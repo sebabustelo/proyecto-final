@@ -1,5 +1,4 @@
 <?php $this->layout = 'AdminLTE.register_password';
-
 use Cake\Core\Configure; ?>
 <?php
 if (isset($user)) { ?>
@@ -20,12 +19,12 @@ if (isset($user)) { ?>
 
     <div class="form-group has-feedback">
         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-        <input name="password" id="password" required type="password" class="form-control" placeholder="Password">
+        <input name="password" id="password" required type="password" class="form-control" placeholder="Contraseña">
         <span class="fa fa-lock fa-lg form-control-feedback"></span>
         <?php $user->getErrors() ?>
     </div>
     <div class="form-group has-feedback">
-        <input name="password_confirm" id="password_confirm" required type="password" class="form-control" placeholder="Repita el password">
+        <input name="password_confirm" id="password_confirm" required type="password" class="form-control" placeholder="Repita la contraseña">
         <span class="fa fa-lock fa-lg form-control-feedback"></span>
     </div>
 

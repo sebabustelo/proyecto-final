@@ -18,7 +18,7 @@ use Cake\Core\Configure; ?>
 
 
         <div class="form-group has-feedback">
-            <input type="text" class="form-control" name="usuario" required placeholder="Usuario">
+            <input type="text" class="form-control" name="usuario" required placeholder="Correo electrónico">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <!-- <div class="form-group has-feedback">
@@ -26,7 +26,7 @@ use Cake\Core\Configure; ?>
             <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
         </div> -->
         <div class="form-group has-feedback">
-            <input type="password" name="password" class="form-control" placeholder="Password" required>
+            <input type="password" name="password" class="form-control" placeholder="Contraseña" required>
             <span class="glyphicon glyphicon-lock form-control-feedback"></span>
         </div>
 
@@ -48,14 +48,14 @@ use Cake\Core\Configure; ?>
         <?php }
         ?>
 
-        <button class="btn btn-primary btn-block" type="submit">Ingresar</button>
+        <button class="btn btn-lg btn-primary btn-block" type="submit"><i class="fa fa-lg fa-sign-in"></i>  Ingresar</button>
         <br />
         <?php if (!empty($authUrl)) { ?>
             <a class="wow fadeInUp" href="<?php echo $authUrl; ?>" data-wow-delay="0.4s"><i class="fa fa-google-plus">
                     <img src="<?php echo $this->Url->image('login_google.png'); ?>" alt=" Google"></i></a>
         <?php } ?>
         <?= $this->Flash->render() ?>
-        <!-- <a href="/rbac/rbac_usuarios/recuperar"><span class="label label-danger">Recuperar contraseña</span></a>-->
+       
     </form>
 
 </div>
