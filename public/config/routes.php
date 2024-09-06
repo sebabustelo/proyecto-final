@@ -70,6 +70,7 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/login', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login'), array('routeClass' => 'InflectedRoute'));
         $builder->connect('/register', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'register'), array('routeClass' => 'InflectedRoute'));
         $builder->connect('/registerPassword', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'registerPassword'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/recoverPassword', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'recoverPassword'), array('routeClass' => 'InflectedRoute'));
 
         //$builder->connect('/rbac/:controller', array('plugin'=>'Rbac', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
 

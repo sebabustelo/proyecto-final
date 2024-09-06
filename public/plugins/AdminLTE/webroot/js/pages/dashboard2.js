@@ -17,13 +17,13 @@ $(function () {
 
     var salesChartData = {
         labels: [
-            "January",
-            "February",
-            "March",
-            "April",
-            "May",
-            "June",
-            "July",
+            "Enero",
+            "Febrero",
+            "Marzo",
+            "Abril",
+            "Mayo",
+            "Junio",
+            "Julio",
         ],
         datasets: [
             {
@@ -180,10 +180,12 @@ $(function () {
      */
     $("#world-map-markers").vectorMap({
         map: "world_mill_en",
-        normalizeFunction: "polynomial",
+       // normalizeFunction: "polynomial",
         hoverOpacity: 0.7,
         hoverColor: false,
         backgroundColor: "transparent",
+       
+       
         regionStyle: {
             initial: {
                 fill: "rgba(210, 214, 222, 1)",
@@ -207,10 +209,10 @@ $(function () {
                 stroke: "#111",
             },
         },
-        // focusOn: {
-        //     region: "AR", // Código ISO de Argentina
-        //     animate: true,
-        // },
+       
+        onRegionClick: function(event, code) {
+            console.log(code); // Para obtener el código del país si es necesario
+        },
         markers: [
             {
                 latLng: [-34.6037, -58.3816],
@@ -219,7 +221,14 @@ $(function () {
             { latLng: [-32.9442, -60.65], name: "Rosario" },
             { latLng: [-31.4201, -64.1888], name: "Córdoba" },
         ],
+        // focusOn: {
+        //     region: 'AR',  // Código para centrar en Argentina
+        //     scale: 3,      // Nivel de zoom
+        //     animate: true  // Animar la transición
+        // },
     });
+
+    
 
     /* SPARKLINE CHARTS
      * ----------------

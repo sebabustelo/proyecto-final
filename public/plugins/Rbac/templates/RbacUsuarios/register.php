@@ -57,7 +57,7 @@ use Cake\Core\Configure; ?>
     </div>
     <div class="form-group has-feedback">
         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-        <input name="usuario" required type="email" class="form-control" placeholder="Email">
+        <input name="usuario" required type="email" class="form-control" placeholder="Correo electrónico">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
     </div>
     <div class="form-group has-feedback">
@@ -111,7 +111,7 @@ use Cake\Core\Configure; ?>
     <div class="row">
         <!-- /.col -->
         <div class="col-xs-12">
-            <button id="submitButton" type="submit" class="btn btn-primary btn-block ">Registrarse</button>
+            <button id="submitButton" type="submit" class="btn btn-lg btn-primary btn-block "><i class="fa fa-lg fa-edit"></i> Registrarse</button>
         </div>
         <!-- /.col -->
     </div>

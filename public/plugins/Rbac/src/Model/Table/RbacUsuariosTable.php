@@ -64,9 +64,10 @@ class RbacUsuariosTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
+            ->email('usuario', false, 'El campo usuario debe ser una dirección de correo válida.')
             ->maxLength('usuario', 120, 'El usuarios debe ser menor a 120 caracteres.')
             ->requirePresence('usuario', 'create')
-            ->notEmptyString('usuario', 'El usuario debe contener algún dato.')
+            ->notEmptyString('usuario', 'El campo usuario no puede estar vacío.')
             ->add(
                 'usuario',
                 [
