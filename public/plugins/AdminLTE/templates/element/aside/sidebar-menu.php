@@ -6,7 +6,7 @@ $controller =   $this->request->getParam('controller');
 $action =   $this->request->getParam('action');
 ?>
 <ul class="sidebar-menu" data-widget="tree">
-    <li class="header"> Administración </li>
+    <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Administración </li>
 
 
     <?php
@@ -124,7 +124,7 @@ $action =   $this->request->getParam('action');
         </a>
     </li>
 
-    <li class="header"> Cliente </li>
+    <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Cliente </li>
 
     <li class="treeview">
         <a href="#">
@@ -183,14 +183,14 @@ $action =   $this->request->getParam('action');
         </li>
     <?php } ?>
 
-    <?php //if ((isset($accionesPermitidas['Pages']['index']) && $accionesPermitidas['Pages']['display'])) {   
+    <?php //if ((isset($accionesPermitidas['Pages']['index']) && $accionesPermitidas['Pages']['display'])) {
     ?>
     <li>
         <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
             <i class="fa fa-fw fa-shopping-cart"></i>
             <span>Mis compras</span></a>
     </li>
-    <?php //} 
+    <?php //}
     ?>
 
     <li>
@@ -284,7 +284,7 @@ $action =   $this->request->getParam('action');
             <li><a href="<?php echo $this->Url->build('/pages/tables/data'); ?>"><i class="fa fa-circle-o"></i> Data tables</a></li>
         </ul>
     </li>
-    
+
     <!-- <li>
         <a href="<?php echo $this->Url->build('/pages/mailbox/mailbox'); ?>">
             <i class="fa fa-envelope"></i> <span>Mailbox</span>

@@ -31,13 +31,14 @@ use Cake\Core\Configure; ?>
         </div>
 
 
-        <br>
+
         <?php if (isset($captcha) && $captcha == 'Si') { ?>
+
             <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
-            <script src="https://www.google.com/recaptcha/api.js?render=<?php echo $captchaPublic; ?>"></script>
+            <script src="https://www.google.com/recaptcha/api.js?render=<?php echo env('RECAPTCHA_CLAVE_PUBLICA'); ?>"></script>
             <script>
                 grecaptcha.ready(function() {
-                    grecaptcha.execute('<?php echo $captchaPublic; ?>', {
+                    grecaptcha.execute('<?php echo env('RECAPTCHA_CLAVE_PUBLICA'); ?>', {
                         action: 'login'
                     }).then(function(token) {
                         document.getElementById('g-recaptcha-response').value = token;
@@ -55,7 +56,7 @@ use Cake\Core\Configure; ?>
                     <img src="<?php echo $this->Url->image('login_google.png'); ?>" alt=" Google"></i></a>
         <?php } ?>
         <?= $this->Flash->render() ?>
-       
+
     </form>
 
 </div>

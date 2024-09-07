@@ -18,13 +18,14 @@ use Cake\Core\Configure;
         </div>
 
 
-        <br>
+
         <?php if (isset($captcha) && $captcha == 'Si') { ?>
+
             <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
-            <script src="https://www.google.com/recaptcha/api.js?render=<?php echo $captchaPublic; ?>"></script>
+            <script src="https://www.google.com/recaptcha/api.js?render=<?php echo env('RECAPTCHA_CLAVE_PUBLICA'); ?>"></script>
             <script>
                 grecaptcha.ready(function() {
-                    grecaptcha.execute('<?php echo $captchaPublic; ?>', {
+                    grecaptcha.execute('<?php echo env('RECAPTCHA_CLAVE_PUBLICA'); ?>', {
                         action: 'login'
                     }).then(function(token) {
                         document.getElementById('g-recaptcha-response').value = token;
@@ -37,7 +38,7 @@ use Cake\Core\Configure;
 
         <button class="btn btn-lg btn-primary btn-block" type="submit"><i class="fa fa-lg fa-history"></i> Recuperar</button>
         <br />
-        <div class="callout callout-success">            
+        <div class="callout callout-success">
             <p><i class="fa fa-lg fa fa-info"></i> Por favor, ingresa tu dirección de correo electrónico. Te enviaremos un enlace para restablecer tu contraseña.</p>
         </div>
         <?= $this->Flash->render() ?>

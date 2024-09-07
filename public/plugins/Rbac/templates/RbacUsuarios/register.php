@@ -75,7 +75,7 @@ use Cake\Core\Configure; ?>
                 <select required name="tipo_documento_id" class="form-control">
                     <option value="">Seleccione un tipo de documento</option>
                     <?php foreach ($tipoDocumentos as $id => $tipoDocumento) : ?>
-                            <option value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
+                        <option value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
                     <?php endforeach; ?>
                 </select>
             </div>
@@ -108,6 +108,23 @@ use Cake\Core\Configure; ?>
             </div>
         </div>
     </div>
+
+    <?php if (isset($captcha) && $captcha == 'Si') { ?>
+
+        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+        <script src="https://www.google.com/recaptcha/api.js?render=<?php echo env('RECAPTCHA_CLAVE_PUBLICA'); ?>"></script>
+        <script>
+            grecaptcha.ready(function() {
+                grecaptcha.execute('<?php echo env('RECAPTCHA_CLAVE_PUBLICA'); ?>', {
+                    action: 'login'
+                }).then(function(token) {
+                    document.getElementById('g-recaptcha-response').value = token;
+                });
+            });
+        </script>
+        <br>
+    <?php }
+    ?>
     <div class="row">
         <!-- /.col -->
         <div class="col-xs-12">

@@ -86,11 +86,11 @@ class RbacAccionesController extends RbacController
 		$miArray = $this->getRequest()->getData('miArray');
 		$i = 0;
 
-		$vh = $this->getVirtualHost();
+
 
 		$perfilDefault = $this->getRequest()->getSession()->read('PerfilDefault');
 
-		if ($perfilDefault == 1 && $vh == 'carga_administracion') {
+		if ($perfilDefault == 1) {
 			foreach ($miArray as $item) {
 				$datos = explode(';', $item);
 
@@ -135,14 +135,5 @@ class RbacAccionesController extends RbacController
 		}
 		$this->set('data', $result);
 		$this->render('/element/ajaxreturn');
-	}
-
-	private function getVirtualHost()
-	{
-		if (Configure::read('debug') == 1 || env('AMBIENTE') == 'carga') {
-			return 'carga_administracion';
-		} else {
-			return 'carga_administracion';
-		}
 	}
 }

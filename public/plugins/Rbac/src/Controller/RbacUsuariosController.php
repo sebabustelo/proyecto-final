@@ -151,8 +151,9 @@ class RbacUsuariosController extends RbacController
                 ->setEmailFormat('html')
                 ->setViewVars(['url' => @$datos['url']])
                 ->viewBuilder()
-                ->setTemplate($datos['template']);
-            //->deliver();
+                ->setTemplate($datos['template'])
+                ->setPlugin('Rbac');
+
             $mailer->deliver();
 
             // $this->Flash->success('Correo enviado con éxito.');
@@ -282,7 +283,7 @@ class RbacUsuariosController extends RbacController
         $this->set('captchaPublic', $captchaPublic->valor);
 
         if ($this->getRequest()->is('Post')) {
-            $this->data = $this->getRequest()->getData('data');
+
             //validación de captcha
             if ($configuracionCaptcha->valor == 'Si') {
 
@@ -358,13 +359,17 @@ class RbacUsuariosController extends RbacController
 
     public function register()
     {
+        $configuraciones = $this->fetchTable('Rbac.Configuraciones');
+        $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
+        $this->set('captcha', $configuracionCaptcha->valor);
+
         $rbacUsuario = $this->RbacUsuarios->newEmptyEntity();
         $this->set(compact('rbacUsuario'));
         if ($this->getRequest()->is('post')) {
 
-            $configuraciones = $this->fetchTable('Rbac.Configuraciones');
+
             //poner como perfil por defecto Cliente
-            $perfilCliente        = $this->Configuraciones->findByClave('Perfil Cliente')->first();
+            $perfilCliente        = $configuraciones->findByClave('Perfil Cliente')->first();
             $data = $this->getRequest()->getData();
             $data['perfil_id'] = $perfilCliente->valor;
             //Hasta que no valide el mail el usuario esta inactivo
@@ -387,7 +392,7 @@ class RbacUsuariosController extends RbacController
 
                         $RbacToken = $this->fetchTable('Rbac.RbacToken');
                         $data['token']      = $token;
-                        $data['usuario_id'] = $rbacUsuario->i;
+                        $data['usuario_id'] = $rbacUsuario->id;
                         $data['validez']    = 1440;
                         $rbacToken = $RbacToken->newEntity($data);
 
@@ -401,7 +406,8 @@ class RbacUsuariosController extends RbacController
                         if ($RbacToken->save($rbacToken)) {
                             if ($this->sendEmail($datos)) {
                                 $this->RbacUsuarios->getConnection()->commit();
-                                $this->Flash->success('Se ha enviado la información a ' . $data['usuario'] . ' para crear el password de su usuario. Por favor, ingrese al enlace que se encuentra en la descripción del email');
+                                $this->Flash->success('Se ha enviado la información a ' . $data['usuario'] . ' para crear una nueva contraseña.
+                                Por favor, ingrese al enlace que se encuentra en la descripción del email');
                             } else {
                                 $this->RbacUsuarios->getConnection()->rollback();
                                 $this->Flash->error('No se pudo enviar el email de confirmación de nuevo usuario');
@@ -503,16 +509,13 @@ class RbacUsuariosController extends RbacController
     }
 
     /**
-     * Permite recuperar la contraseña a un usuario no LDAP
+     * Si el usuario ovlido su contraseña, el sistema envia un mail con un token (24 horas) que permite crear una nueva contreseña.
      */
     public function recoverPassword()
     {
         $configuraciones = $this->fetchTable('Rbac.Configuraciones');
         $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
         $this->set('captcha', $configuracionCaptcha->valor);
-
-        $captchaPublic       = $configuraciones->findByClave('reCaptchaPublic')->first();
-        $this->set('captchaPublic', $captchaPublic->valor);
 
         if ($this->getRequest()->is('post')) {
 
@@ -535,13 +538,11 @@ class RbacUsuariosController extends RbacController
             } else {
 
                 if ($configuracionCaptcha->valor == 'Si') {
-                    $captchaSecret        = $configuraciones->findByClave('reCaptchaSecret')->first();
                     $recaptcha = $this->request->getData('g-recaptcha-response');
-                    $secret = $captchaSecret->valor;
 
                     $http = new Client();
                     $response = $http->post('https://www.google.com/recaptcha/api/siteverify', [
-                        'secret' => $secret,
+                        'secret' => env('RECAPTCHA_CLAVE_SECRETA'),
                         'response' => $recaptcha,
                     ]);
                     $result = json_decode($response->getBody(), true);
@@ -552,12 +553,9 @@ class RbacUsuariosController extends RbacController
                 if ($result['success']) {
 
                     $usuario = $this->RbacUsuarios->find()->where(['usuario' => $data['usuario']])->first();
-                    debug(!empty($usuario));
-                    die;
 
                     if (!empty($usuario)) {
 
-                        /////
                         $token = $this->generateToken();
 
                         $RbacToken = $this->fetchTable('Rbac.RbacToken');
@@ -572,22 +570,26 @@ class RbacUsuariosController extends RbacController
                         $datos['aplicacion'] = "IPMAGNA";
                         $datos['template']   = 'recover_password';
                         $datos['email']      = $this->getRequest()->getData('usuario');
-                        /////
-                        if ($this->sendEmail($datos)) {
 
-
-                            if ($this->RbacToken->save($rbacToken)) {
-                                $this->Flash->success(
-                                    'Se ha enviado la información para recuperar la clave al usuario ingresado a la dirección ' . $this->getRequest()->getData('correo')
-                                );
+                        $RbacToken->getConnection()->begin();
+                        if ($RbacToken->save($rbacToken)) {
+                            if ($this->sendEmail($datos)) {
+                                $RbacToken->getConnection()->commit();
+                                $this->Flash->success('Se ha enviado la información a ' . $data['usuario'] . ' para crear el password de su usuario. Por favor, ingrese al enlace que se encuentra en la descripción del email');
+                            } else {
+                                $RbacToken->getConnection()->rollback();
+                                $this->Flash->error('No se pudo enviar el email de recuperación de contraseña');
                             }
                         } else {
-                            $this->Flash->error($this->Email->smtpError);
+                            $this->RbacToken->getConnection()->rollback();
+                            $this->Flash->error('No se pudo generar token para enviar el email de recuperación de contraseña');
                         }
+
                     } else {
-                        $this->Flash->error('No encuentra correo para enviar la informacón de recuperar contraseña');
-                        $this->redirect(array('controller' => 'rbac_usuarios', 'action' => 'login'));
+                        $this->Flash->error('El usuario no se encuentra registrado.');
                     }
+                } else {
+                    $this->Flash->error('Error con la configuración de recaptcha '.$result);
                 }
             }
         }
