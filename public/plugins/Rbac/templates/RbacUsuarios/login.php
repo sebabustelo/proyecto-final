@@ -18,7 +18,7 @@ use Cake\Core\Configure; ?>
 
 
         <div class="form-group has-feedback">
-            <input type="text" class="form-control" name="usuario" required placeholder="Correo electrónico">
+            <input type="email" class="form-control" name="usuario" required placeholder="Correo electrónico">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <!-- <div class="form-group has-feedback">
@@ -55,6 +55,7 @@ use Cake\Core\Configure; ?>
             <a class="wow fadeInUp" href="<?php echo $authUrl; ?>" data-wow-delay="0.4s"><i class="fa fa-google-plus">
                     <img src="<?php echo $this->Url->image('login_google.png'); ?>" alt=" Google"></i></a>
         <?php } ?>
+
         <?= $this->Flash->render() ?>
 
     </form>

@@ -6,21 +6,14 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Proveedore Entity
+ * Consulta Entity
  *
  * @property int $id
- * @property string $nombre
- * @property string $descripcion
- * @property string|null $direccion
- * @property string|null $telefono
- * @property string $email
- * @property string $cuit
+ * @property string $motivo
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
- * @property string|null $created_by
- * @property string|null $modified_by
  */
-class Proveedore extends Entity
+class Consulta extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -32,15 +25,8 @@ class Proveedore extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'nombre' => true,
-        'descripcion' => true,
-        'direccion' => true,
-        'telefono' => true,
-        'email' => true,
-        'cuit' => true,
+        'motivo' => true,
         'created' => true,
         'modified' => true,
-        'created_by' => true,
-        'modified_by' => true,
     ];
 }

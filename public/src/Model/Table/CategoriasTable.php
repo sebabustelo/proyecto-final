@@ -1,17 +1,17 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Event\EventInterface;
+use Cake\ORM\Entity;
 
 /**
  * Categorias Model
- *
- * @property \App\Model\Table\ProductosTable&\Cake\ORM\Association\HasMany $Productos
  *
  * @method \App\Model\Entity\Categoria newEmptyEntity()
  * @method \App\Model\Entity\Categoria newEntity(array $data, array $options = [])
@@ -47,7 +47,7 @@ class CategoriasTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('Productos', [
+        $this->hasMany('SetCirugia', [
             'foreignKey' => 'categoria_id',
         ]);
     }
@@ -62,25 +62,49 @@ class CategoriasTable extends Table
     {
         $validator
             ->scalar('nombre')
-            ->maxLength('nombre', 255)
-            ->requirePresence('nombre', 'create')
-            ->notEmptyString('nombre');
+            ->maxLength('nombre', 200, 'El nombre no puede ser mayor a 100 caracteres')
+            ->requirePresence('nombre', 'create', 'El nombre es obligatorio')
+            ->notEmptyString('nombre', 'El nombre es obligatorio')
+            ->add('nombre', 'unique', ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Ya existe una categoría con ese nombre. Por favor, elija un nombre diferente.']);
 
         $validator
             ->scalar('descripcion')
-            ->requirePresence('descripcion', 'create')
-            ->notEmptyString('descripcion');
+            ->maxLength('descripcion', 500, 'La descripción no puede ser mayor a 500 caracteres');
 
         $validator
-            ->scalar('created_by')
-            ->maxLength('created_by', 100)
-            ->allowEmptyString('created_by');
-
-        $validator
-            ->scalar('modified_by')
-            ->maxLength('modified_by', 100)
-            ->allowEmptyString('modified_by');
+            ->boolean('activo')
+            ->notEmptyString('activo');
 
         return $validator;
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules): RulesChecker
+    {
+        $rules->add($rules->isUnique(['nombre']), ['errorField' => 'nombre']);
+
+        return $rules;
+    }
+
+    /**
+     * Modifies the entity before saving it to the database.
+     * Converts the 'nombre' field to uppercase before the save operation.
+     *
+     * @param \Cake\Event\EventInterface $event The event object.
+     * @param \Cake\ORM\Entity $entity The entity being saved.
+     * @param \ArrayObject $options Additional options for the save operation.
+     * @return void
+     */
+    public function beforeSave(EventInterface $event, Entity $entity, $options)
+    {
+        if ($entity->isNew() || $entity->isDirty('nombre')) {
+            $entity->nombre = strtoupper($entity->nombre);
+        }
     }
 }

@@ -86,8 +86,6 @@ class RbacAccionesController extends RbacController
 		$miArray = $this->getRequest()->getData('miArray');
 		$i = 0;
 
-
-
 		$perfilDefault = $this->getRequest()->getSession()->read('PerfilDefault');
 
 		if ($perfilDefault == 1) {

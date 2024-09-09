@@ -20,21 +20,7 @@ class TipoDocumentosController extends AppController
     {
         $query = $this->TipoDocumentos->find();
         $tipoDocumentos = $this->paginate($query);
-
         $this->set(compact('tipoDocumentos'));
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Tipo Documento id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $tipoDocumento = $this->TipoDocumentos->get($id, contain: ['RbacUsuarios']);
-        $this->set(compact('tipoDocumento'));
     }
 
     /**
@@ -49,21 +35,13 @@ class TipoDocumentosController extends AppController
             $data = $this->request->getData();
             $data['descripcion'] = strtoupper($data['descripcion']);
             $tipoDocumento = $this->TipoDocumentos->patchEntity($tipoDocumento, $data);
-            if ($tipoDocumento->getErrors()) {
-                foreach ($tipoDocumento->getErrors() as $field => $errors) {
-                    foreach ($errors as $error) {
-                        $this->Flash->error(__($error));
-                    }
-                }
-            } else {
 
-                if ($this->TipoDocumentos->save($tipoDocumento)) {
-                    $this->Flash->success(__('El Tipo de Documento se guardo correctamente.'));
+            if ($this->TipoDocumentos->save($tipoDocumento)) {
+                $this->Flash->success(__('El Tipo de Documento se guardo correctamente.'));
 
-                    return $this->redirect(['action' => 'index']);
-                }
-                $this->Flash->error(__('El Tipo de Documento no pudo ser guardado. Por favor, verifique los campo e intenete nuevamente.'));
+                return $this->redirect(['action' => 'index']);
             }
+            $this->Flash->error(__('El Tipo de Documento no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
         }
         $this->set(compact('tipoDocumento'));
     }
@@ -88,7 +66,7 @@ class TipoDocumentosController extends AppController
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('El Tipo de Documento no pudo ser guardado. Por favor, verifique los campo e intenete nuevamente o envie un mail a soporte.'));
+            $this->Flash->error(__('El Tipo de Documento no pudo ser guardado. Por favor, verifique los campo e intenete nuevamente.'));
         }
         $this->set(compact('tipoDocumento'));
     }

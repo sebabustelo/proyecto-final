@@ -1,10 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
 
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Event\EventInterface;
+use Cake\ORM\Entity;
 
 
 /**
@@ -58,7 +61,7 @@ class TipoDocumentosTable extends Table
     {
         $validator
             ->scalar('descripcion')
-            ->maxLength('descripcion', 200,'La descripción no puede tener más de 200 caracteres.')
+            ->maxLength('descripcion', 200, 'La descripción no puede tener más de 200 caracteres.')
             ->requirePresence('descripcion', 'create')
             ->notEmptyString('descripcion', 'La descripción es obligatoria.')
             ->add('descripcion', 'unique', [
@@ -70,6 +73,17 @@ class TipoDocumentosTable extends Table
         return $validator;
     }
 
+    /**
+     * Method executed before deleting a TipoDocumento entity.
+     * This method prevents the deletion if there are associated users
+     * (RbacUsuarios) with the TipoDocumento being deleted.
+     * If users are associated, an error message is set on the 'descripcion' field.
+     *
+     * @param \Cake\Event\EventInterface $event The event object.
+     * @param \Cake\ORM\Entity $entity The entity being deleted.
+     * @param \ArrayObject $options Additional options for the delete operation.
+     * @return bool False if the delete operation should be aborted.
+     */
     public function beforeDelete($event, $entity, $options)
     {
         $count = $this->RbacUsuarios->find()
@@ -79,6 +93,22 @@ class TipoDocumentosTable extends Table
         if ($count > 0) {
             $entity->setError('descripcion', 'No se puede eliminar este tipo de documento porque tiene usuarios asociados.');
             return false;
+        }
+    }
+
+    /**
+     * Modifies the entity before saving it to the database.
+     * Converts the 'nombre' field to uppercase before the save operation.
+     *
+     * @param \Cake\Event\EventInterface $event The event object.
+     * @param \Cake\ORM\Entity $entity The entity being saved.
+     * @param \ArrayObject $options Additional options for the save operation.
+     * @return void
+     */
+    public function beforeSave(EventInterface $event, Entity $entity, $options)
+    {
+        if ($entity->isNew() || $entity->isDirty('nombre')) {
+            $entity->nombre = strtoupper($entity->nombre);
         }
     }
 }

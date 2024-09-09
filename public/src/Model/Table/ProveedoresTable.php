@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -11,19 +12,19 @@ use Cake\Validation\Validator;
 /**
  * Proveedores Model
  *
- * @method \App\Model\Entity\Proveedore newEmptyEntity()
- * @method \App\Model\Entity\Proveedore newEntity(array $data, array $options = [])
- * @method array<\App\Model\Entity\Proveedore> newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\Proveedore get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \App\Model\Entity\Proveedore findOrCreate($search, ?callable $callback = null, array $options = [])
- * @method \App\Model\Entity\Proveedore patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method array<\App\Model\Entity\Proveedore> patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\Proveedore|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method \App\Model\Entity\Proveedore saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method iterable<\App\Model\Entity\Proveedore>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Proveedore>|false saveMany(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\Proveedore>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Proveedore> saveManyOrFail(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\Proveedore>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Proveedore>|false deleteMany(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\Proveedore>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Proveedore> deleteManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\Proveedor newEmptyEntity()
+ * @method \App\Model\Entity\Proveedor newEntity(array $data, array $options = [])
+ * @method array<\App\Model\Entity\Proveedor> newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\Proveedor get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \App\Model\Entity\Proveedor findOrCreate($search, ?callable $callback = null, array $options = [])
+ * @method \App\Model\Entity\Proveedor patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method array<\App\Model\Entity\Proveedor> patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\Proveedor|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method \App\Model\Entity\Proveedor saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method iterable<\App\Model\Entity\Proveedor>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Proveedor>|false saveMany(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\Proveedor>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Proveedor> saveManyOrFail(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\Proveedor>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Proveedor>|false deleteMany(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\Proveedor>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\Proveedor> deleteManyOrFail(iterable $entities, array $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
@@ -38,7 +39,7 @@ class ProveedoresTable extends Table
     public function initialize(array $config): void
     {
         parent::initialize($config);
-
+        $this->setEntityClass('Proveedor');
         $this->setTable('proveedores');
         $this->setDisplayField('nombre');
         $this->setPrimaryKey('id');
@@ -86,15 +87,7 @@ class ProveedoresTable extends Table
             ->requirePresence('cuit', 'create')
             ->notEmptyString('cuit');
 
-        $validator
-            ->scalar('created_by')
-            ->maxLength('created_by', 100)
-            ->allowEmptyString('created_by');
 
-        $validator
-            ->scalar('modified_by')
-            ->maxLength('modified_by', 100)
-            ->allowEmptyString('modified_by');
 
         return $validator;
     }

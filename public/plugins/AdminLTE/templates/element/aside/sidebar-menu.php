@@ -6,7 +6,7 @@ $controller =   $this->request->getParam('controller');
 $action =   $this->request->getParam('action');
 ?>
 <ul class="sidebar-menu" data-widget="tree">
-    <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Administración </li>
+    <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Administración </li>
 
 
     <?php
@@ -62,9 +62,11 @@ $action =   $this->request->getParam('action');
 
     <?php
     if (
-        (isset($accionesPermitidas['TipoDocumentos']['index']) && $accionesPermitidas['TipoDocumentos']['index'])
+        (isset($accionesPermitidas['TipoDocumentos']['index']) && $accionesPermitidas['TipoDocumentos']['index']) ||
+        (isset($accionesPermitidas['Categorias']['index']) && $accionesPermitidas['Categorias']['index']) ||
+        (isset($accionesPermitidas['Proveedores']['index']) && $accionesPermitidas['Proveedores']['index'])
     ) {
-        $menu_sistema = array("TipoDocumentos");
+        $menu_sistema = array("TipoDocumentos","Categorias","Proveedores");
         if (in_array($controller, $menu_sistema) and $action != 'detail') {
             $active = "active";
             $menu_open = "menu-open";
@@ -81,17 +83,38 @@ $action =   $this->request->getParam('action');
                 </span>
             </a>
             <ul class="treeview-menu">
+                <li class=" <?php echo ($controller == 'Categorias' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
+                    <a href="<?php echo $this->Url->build('/Categorias/index'); ?>">
+                        <i class="fa fa-circle-o"></i> Categorías
+                    </a>
+                </li>
+                <li class=" <?php echo ($controller == 'TipoDocumentos' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
+                    <a href="<?php echo $this->Url->build('/Estados/index'); ?>">
+                        <i class="fa fa-circle-o"></i> Estados de pedido
+                    </a>
+                </li>
+
+                <li>
+                    <a href="<?php echo $this->Url->build('/ObrasSociales/index'); ?>">
+                        <i class="fa fa-circle-o"></i> <span>Obras Sociales</span>
+                    </a>
+                </li>
+                <li class=" <?php echo ($controller == 'Proveedores' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
+                    <a href="<?php echo $this->Url->build('/Proveedores/index'); ?>">
+                        <i class="fa fa-circle-o"></i> <span>Proveedores</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="<?php echo $this->Url->build('/Productos/index'); ?>">
+                        <i class="fa fa-circle-o"></i> <span>Set de Cirugías</span>
+                    </a>
+                </li>
                 <li class=" <?php echo ($controller == 'TipoDocumentos' && ($action == 'index' || $action == '') ? ' active' : ''); ?>">
                     <a href="<?php echo $this->Url->build('/TipoDocumentos/index'); ?>">
                         <i class="fa fa-circle-o"></i> Tipo de Documentos
                     </a>
                 </li>
-                <li>
-                    <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-                        <i class="fa fa-circle-o"></i> <span>Productos</span>
 
-                    </a>
-                </li>
             </ul>
         </li>
     <?php } ?>
@@ -124,7 +147,7 @@ $action =   $this->request->getParam('action');
         </a>
     </li>
 
-    <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Cliente </li>
+    <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Cliente </li>
 
     <li class="treeview">
         <a href="#">
@@ -178,7 +201,7 @@ $action =   $this->request->getParam('action');
         ?>
         <li class=" <?php echo $active  ?>">
             <a href="<?php echo $this->Url->build('/Productos/catalogoCliente'); ?>">
-                <i class="fa fa-fw fa-medkit"></i> <span>Productos</span>
+                <i class="fa fa-fw fa-medkit"></i> <span>Set de Cirugías</span>
             </a>
         </li>
     <?php } ?>
@@ -188,7 +211,7 @@ $action =   $this->request->getParam('action');
     <li>
         <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
             <i class="fa fa-fw fa-shopping-cart"></i>
-            <span>Mis compras</span></a>
+            <span>Mis pedidos</span></a>
     </li>
     <?php //}
     ?>

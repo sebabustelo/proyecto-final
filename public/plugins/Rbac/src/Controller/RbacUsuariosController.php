@@ -53,8 +53,6 @@ class RbacUsuariosController extends RbacController
             try {
                 $rbacUsuario = $this->RbacUsuarios->newEntity($this->getRequest()->getData(), ['associated' => ['RbacPerfiles']]);
 
-                //$rbacUsuario = $this->RbacUsuarios->patchEntity($rbacUsuario, $this->getRequest()->getData(),['associated'=>['RbacPerfiles','PerfilDefault']]);
-                $params = Configure::read('params');
                 $seed = md5(rand(0, 9999));
                 $rbacUsuario['seed'] = $seed;
 
@@ -82,8 +80,7 @@ class RbacUsuariosController extends RbacController
                     $datos['aplicacion'] = "IPMAGNA";
                     $datos['template']   = 'registrarse';
                     $datos['email']      = $this->getRequest()->getData('usuario');
-                    //$this->RbacUsuarios->getConnection()->commit();
-                    $error = 0;
+
                     if ($RbacToken->save($rbacToken)) {
                         if ($this->sendEmail($datos)) {
                             $this->RbacUsuarios->getConnection()->commit();
@@ -91,15 +88,10 @@ class RbacUsuariosController extends RbacController
                         } else {
                             $this->RbacUsuarios->getConnection()->rollback();
                             $this->Flash->error('No se pudo enviar el email de confirmación de nuevo usuario');
-                            $error = 1;
                         }
                     } else {
-                        $this->RbacUsuarios->getConnection()->rollback();
+                        $RbacToken->getConnection()->rollback();
                         $this->Flash->error('No se pudo generar token antes de enviar confirmación del nuevo usuario');
-                        $error = 1;
-                    }
-                    if (!$error) {
-                        return $this->redirect(array('action' => 'index'));
                     }
                 } else {
                     $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
@@ -114,59 +106,6 @@ class RbacUsuariosController extends RbacController
         $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
         $this->set('rbacPerfiles', $rbacPerfiles);
         $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
-    }
-
-    private function sendEmail($datos)
-    {
-        //s $confVals = Configure::read('configVals');
-        // $emailConfig = [
-        //     'className' => 'Smtp',
-        //     'port' => env('EMAIL_PORT', 465),
-        //     'host' => env('EMAIL_HOST', 'ssl://smtp.mrecic.gov.ar'),
-        //     'username' => $confVals['app_email'],
-        //     'password' => $this->secured_decrypt($confVals['app_email_pass_enc']),
-        //     'persistent' => env('EMAIL_SOCKET_PERSISTENT', false),
-        //     'transport' => env('EMAIL_TRANSPORT', 'Mail'),
-        //     'timeout' => env('EMAIL_TIMEOUT', 30),
-        //     'tls' => filter_var(env('EMAIL_TLS', true), FILTER_VALIDATE_BOOLEAN),
-        //     'context' => [
-        //         'ssl' => [
-        //             'verify_peer' => filter_var(env('EMAIL_SSL_VERIFY_PEER', false), FILTER_VALIDATE_BOOLEAN),
-        //             'verify_peer_name' => filter_var(env('EMAIL_SSL_PEER_NAME', false), FILTER_VALIDATE_BOOLEAN),
-        //             'allow_self_signed' => filter_var(env('EMAIL_SSL_ALLOW_SELF_SIGNED', true), FILTER_VALIDATE_BOOLEAN),
-        //             'ciphers' => env('EMAIL_SSL_CIPHERS', 'DEFAULT:!DH')
-        //         ]
-        //     ],
-        //     'client' => env('EMAIL_CLIENT', 'IPMagna'),
-        //     'charset' => env('EMAIL_CHARSET', 'utf-8'),
-        //     'headerCharset' => env('EMAIL_HEADER_CHARSET', 'utf-8'),
-        //     'log' => filter_var(env('EMAIL_LOG', false), FILTER_VALIDATE_BOOLEAN),
-        // ];
-
-        $mailer = new Mailer('default');
-        try {
-            $mailer->setFrom(['sebabustelo@gmail.com' => 'IPMAGNA'])
-                ->setTo($datos['email'])
-                ->setSubject($datos['subject'])
-                ->setEmailFormat('html')
-                ->setViewVars(['url' => @$datos['url']])
-                ->viewBuilder()
-                ->setTemplate($datos['template'])
-                ->setPlugin('Rbac');
-
-            $mailer->deliver();
-
-            // $this->Flash->success('Correo enviado con éxito.');
-            return true;
-        } catch (MissingActionException $e) {
-            Log::error('Error al enviar el correo: ' . $e->getMessage());
-            // Error al encontrar la acción del correo (plantilla faltante, etc.)
-            $this->Flash->error('Error en el envío: ' . $e->getMessage());
-        } catch (\Exception $e) {
-            Log::error('Error al enviar el correo: ' . $e->getMessage());
-            // Cualquier otro tipo de error
-            $this->Flash->error('Se produjo un error inesperado: ' . $e->getMessage());
-        }
     }
 
     /**
@@ -239,6 +178,33 @@ class RbacUsuariosController extends RbacController
         }
     }
 
+    private function sendEmail($datos)
+    {
+        $mailer = new Mailer('default');
+        try {
+            $mailer->setFrom(['ipmagna-noreply@gmail.com' => 'IPMAGNA'])
+                ->setTo($datos['email'])
+                ->setSubject($datos['subject'])
+                ->setEmailFormat('html')
+                ->setViewVars(['url' => @$datos['url']])
+                ->viewBuilder()
+                ->setTemplate($datos['template'])
+                ->setPlugin('Rbac');
+
+            $mailer->deliver();
+
+            return true;
+        } catch (MissingActionException $e) {
+            Log::error('Error al enviar el correo: ' . $e->getMessage());
+            // Error al encontrar la acción del correo (plantilla faltante, etc.)
+            $this->Flash->error('Error en el envío: ' . $e->getMessage());
+        } catch (\Exception $e) {
+            Log::error('Error al enviar el correo: ' . $e->getMessage());
+            // Cualquier otro tipo de error
+            $this->Flash->error('Se produjo un error inesperado: ' . $e->getMessage());
+        }
+    }
+
     private function getConditions()
     {
         $data = $this->getRequest()->getQuery();
@@ -279,21 +245,18 @@ class RbacUsuariosController extends RbacController
         $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
         $this->set('captcha', $configuracionCaptcha->valor);
 
-        $captchaPublic       = $configuraciones->findByClave('reCaptchaPublic')->first();
-        $this->set('captchaPublic', $captchaPublic->valor);
-
         if ($this->getRequest()->is('Post')) {
 
             //validación de captcha
             if ($configuracionCaptcha->valor == 'Si') {
 
-                $captchaSecret        = $configuraciones->findByClave('reCaptchaSecret')->first();
+               // $captchaSecret        = $configuraciones->findByClave('reCaptchaSecret')->first();
                 $recaptcha = $this->request->getData('g-recaptcha-response');
-                $secret = $captchaSecret->valor;
+               // $secret =  env('RECAPTCHA_CLAVE_SECRETA');//$captchaSecret->valor;
 
                 $http = new Client();
                 $response = $http->post('https://www.google.com/recaptcha/api/siteverify', [
-                    'secret' => $secret,
+                    'secret' => env('RECAPTCHA_CLAVE_SECRETA'),
                     'response' => $recaptcha,
                 ]);
                 $result = json_decode($response->getBody(), true);
@@ -334,7 +297,6 @@ class RbacUsuariosController extends RbacController
                             return $this->redirect("/" . $controllerRedirect . "/" . $actionRedirect);
                         }
 
-                        //                        return $this->redirect($redirectParams);
                     } else {
                         $this->Flash->error('Usuario y/o contraseña incorrecta.');
                     }
@@ -345,7 +307,7 @@ class RbacUsuariosController extends RbacController
                     $this->Flash->error('Usuario y/o contraseña incorrecta.');
                 }
             } else {
-                $this->Flash->error(__('reCAPTCHA no válido.'));
+                $this->Flash->error(__('CAPTCHA no válido.'));
             }
         }
     }
@@ -367,8 +329,7 @@ class RbacUsuariosController extends RbacController
         $this->set(compact('rbacUsuario'));
         if ($this->getRequest()->is('post')) {
 
-
-            //poner como perfil por defecto Cliente
+            //El usuario que se registra tiene el perfil por defecto [Cliente]
             $perfilCliente        = $configuraciones->findByClave('Perfil Cliente')->first();
             $data = $this->getRequest()->getData();
             $data['perfil_id'] = $perfilCliente->valor;
@@ -511,7 +472,7 @@ class RbacUsuariosController extends RbacController
     /**
      * Si el usuario ovlido su contraseña, el sistema envia un mail con un token (24 horas) que permite crear una nueva contreseña.
      */
-    public function recoverPassword()
+    public function forgetPassword()
     {
         $configuraciones = $this->fetchTable('Rbac.Configuraciones');
         $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
@@ -621,11 +582,9 @@ class RbacUsuariosController extends RbacController
             }
 
             $user['RbacUsuario']['password'] = hash('sha256', $seed . $contraseniaNueva);
-            //$user['RbacUsuario']['contraseniaOld'] = $contrasenia;
 
             if ($this->RbacUsuarios->saveAll($user)) {
                 $this->Flash->success('La contraseña fue modificada correctamente.');
-                //$this->redirect(array('controller' => 'rbac_usuarios', 'action' => 'index'));
                 $this->redirect($this->referer());
             }
         } else {
@@ -641,7 +600,6 @@ class RbacUsuariosController extends RbacController
         $p['id']              = $perfilAcciones->id;
         $p['descripcion']     = $perfilAcciones->descripcion;
         $perfilesPorUsuario[] = $p;
-        // debug($perfilAcciones);die;
 
         foreach ($perfilAcciones->rbac_acciones as $accion) {
             $controller = Inflector::camelize($accion['controller']);

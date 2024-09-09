@@ -132,6 +132,7 @@ use Cake\Core\Configure; ?>
         </div>
         <!-- /.col -->
     </div>
+
 </form>
 <br>
 <div class="row">

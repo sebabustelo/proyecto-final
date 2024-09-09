@@ -38,7 +38,7 @@ if (isset($user)) { ?>
     </div>
 </form>
 <div class="callout callout-info">
-    <p><i class="icon fa fa-info"></i> El password debe contener como minimo 8 carácteres y al menos una mayúscula, un número y un carácter especial.</p>
+    <p><i class="icon fa fa-info"></i> El password debe contener como minimo 6 carácteres, al menos una mayúscula y un carácter especial.</p>
 </div>
 <div class="row">
     <div class="col-xs-12">
