@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query\SelectQuery;
-use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
@@ -83,12 +81,42 @@ class ProveedoresTable extends Table
 
         $validator
             ->scalar('cuit')
-            ->maxLength('cuit', 20)
+            ->maxLength('cuit', 11, 'El CUIT debe tener 11 caracteres')
             ->requirePresence('cuit', 'create')
-            ->notEmptyString('cuit');
+            ->notEmptyString('cuit', 'El CUIT es obligatorio')
+            ->add('cuit', 'validFormat', [
+                'rule' => [$this, 'validarCuit'],
+                'message' => 'El CUIT no es válido.',
+            ]);
 
 
 
         return $validator;
+    }
+
+    /**
+     * Valida que el CUIT tenga un formato correcto y que pase la verificación del dígito verificador.
+     *
+     * @param string $cuit El CUIT a validar.
+     * @return bool True si el CUIT es válido, False en caso contrario.
+     */
+    public function validarCuit($cuit): bool
+    {
+        // El CUIT debe tener exactamente 11 dígitos
+        if (!preg_match('/^\d{11}$/', $cuit)) {
+            return false;
+        }
+
+        // Cálculo del dígito verificador
+        $multiplicadores = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2];
+        $suma = 0;
+        for ($i = 0; $i < 10; $i++) {
+            $suma += intval($cuit[$i]) * $multiplicadores[$i];
+        }
+
+        $verificador = (11 - ($suma % 11)) % 11;
+
+        // Verificamos si el dígito calculado coincide con el último dígito del CUIT
+        return intval($cuit[10]) === $verificador;
     }
 }
