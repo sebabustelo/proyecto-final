@@ -32,9 +32,8 @@ class TipoDocumentosController extends AppController
     {
         $tipoDocumento = $this->TipoDocumentos->newEmptyEntity();
         if ($this->request->is('post')) {
-            $data = $this->request->getData();
-            $data['descripcion'] = strtoupper($data['descripcion']);
-            $tipoDocumento = $this->TipoDocumentos->patchEntity($tipoDocumento, $data);
+
+            $tipoDocumento = $this->TipoDocumentos->patchEntity($tipoDocumento,  $this->request->getData());
 
             if ($this->TipoDocumentos->save($tipoDocumento)) {
                 $this->Flash->success(__('El Tipo de Documento se guardo correctamente.'));

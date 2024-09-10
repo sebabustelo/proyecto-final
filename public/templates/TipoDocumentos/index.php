@@ -12,8 +12,8 @@
         Administración
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-credit-card"></i> Tipo de Documentos</a></li>
-        <li class="active">index</li>
+        <li><a href="#"> Tipos de Documentos</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Listado</li>
     </ol>
 </section>
 <section id="TipoDocumentosList" class="content">
@@ -33,7 +33,7 @@
                         action="/TipoDocumentos/index">
                         <div class="form-row">
                             <div class="form-group col-md-10">
-                                <input type="text" name="descripcion" placeholder="descripcion"  style = 'text-transform: uppercase;' class="form-control"
+                                <input type="text" name="descripcion" placeholder="descripción"  style = 'text-transform: uppercase;' class="form-control"
                                     id="descripcion" aria-label="descripcion"
                                     value="<?php echo (isset($filters['descripcion'])) ? $filters['descripcion'] : '' ?>">
                             </div>
@@ -92,11 +92,11 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-credit-card"></span> Tipos de Documentos</h3>
+                    <h3 class="box-title"> <span class="fa fa-list"></span> Tipos de Documentos</h3>
                     <div class="box-tools pull-right">
                         <?php if (!empty($accionesPermitidas['TipoDocumentos']['add'])) { ?>
                             <a href="/TipoDocumentos/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
-                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nuevo
+                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText  hidden-xs">Nuevo
                                     Tipo de Documento</span></a>
                         <?php } ?>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i

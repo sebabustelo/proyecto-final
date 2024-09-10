@@ -41,7 +41,7 @@
                                 <?php } ?>
 
                             </div>
-                            <div class="form-group col-sm-4">
+                            <div class="form-group col-sm-2">
                                 <label for="cuit">CUIT</label>
                                 <input required type="number" maxlength="11" id="cuit" placeholder="Ingrese el CUIT"
                                     class="form-control" name="cuit" oninvalid="this.setCustomValidity('Debe completar el CUIT')" oninput="this.setCustomValidity('')">

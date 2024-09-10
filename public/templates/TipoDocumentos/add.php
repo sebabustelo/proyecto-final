@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\TipoDocumento $tipoDocumento
@@ -7,10 +8,10 @@
 <!-- Main content -->
 <section class="content-header">
     <h1>
-        Administración de Tipo de Documentos
+        Administración
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-credit-card"></i> Tipo de Documentos</a></li>
+        <li><a href="#"> Tipos de Documentos</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Agregar</li>
     </ol>
 </section>
@@ -19,10 +20,12 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-credit-card fa-lg"></span> Nuevo Tipo de Documento</h3>
+                    <h3 class="box-title"> <span class="fa fa-plus fa-lg"></span> Tipo de Documento</h3>
                     <div class="box-tools pull-right">
-                        <a href="/TipoDocumentos/index/" id="agregarUsuario" class="btn btn-sm btn-primary ">
-                            <span class="fa fa-list"></span> Tipo de Documento</a>
+                        <a title="Listado de Tipos de Documentos" href="/TipoDocumentos/index/" id="agregarUsuario" class="btn btn-sm btn-primary ">
+                            <span class="fa fa-list "></span><span class="buttonText  hidden-xs">
+                                Tipos de Documentos
+                            </span></a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
@@ -34,7 +37,7 @@
 
                             <div class="form-group col-sm-12">
                                 <label for="direccion">Descripción</label>
-                                <input style = 'text-transform: uppercase;' required type="text" maxlength="200" placeholder="Ingrese la descripción" class="form-control" name="descripcion" oninvalid="this.setCustomValidity('Debe completar la descripción')" oninput="this.setCustomValidity('')">
+                                <input style='text-transform: uppercase;' required type="text" maxlength="200" placeholder="Ingrese la descripción" class="form-control" name="descripcion" oninvalid="this.setCustomValidity('Debe completar la descripción')" oninput="this.setCustomValidity('')">
                             </div>
 
                             <?php

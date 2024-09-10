@@ -15,10 +15,12 @@
                     <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/rbac/RbacAcciones/index">
                         <div class="form-row">
                             <div class="form-group col-md-6">
-                                <input type="text" name="controller" placeholder="Controlador" class="form-control" id="apellido" aria-label="Controlador" value="<?php echo (isset($filters['controller'])) ? $filters['apellido'] : '' ?>">
+                                <input type="text" name="controller" placeholder="Controlador" class="form-control" id="apellido"
+                                aria-label="Controlador" value="<?php echo (isset($filters['controller'])) ? $filters['controller'] : '' ?>">
                             </div>
                             <div class="form-group col-md-6">
-                                <input type="text" name="action" placeholder="Acción" class="form-control" id="nombre" aria-label="Acción" value="<?php echo (isset($filters['action'])) ? $filters['action'] : '' ?>">
+                                <input type="text" name="action" placeholder="Acción" class="form-control" id="nombre" aria-label="Acción"
+                                value="<?php echo (isset($filters['action'])) ? $filters['action'] : '' ?>">
                             </div>
 
                         </div>
@@ -77,7 +79,9 @@
                                 <tr>
                                     <th class="col-sm-4">Controlador
                                     </th>
-                                    <th class="col-sm-7">Acción
+                                    <th class="col-sm-5">Acción
+                                    </th>
+                                    <th class="col-sm-2">Publica
                                     </th>
                                     <th class="col-sm-1">Acciones</th>
                             </thead>
@@ -96,23 +100,32 @@
                                         $i++;
                                 ?>
                                         <tr id="headerTable" <?php echo $treeGrid; ?>>
-                                            <td colspan="3"><?php echo  $rbacAccion['controller']; ?></td>
-                                            <?php $num++; ?>
-                                        </tr>
-                                    <?php } //else { ?>
-                                        <?php
-                                        $treeGrid =  'class="treegrid-parent-' . ($i - 1) . '"';
-                                        ?>
-                                        <tr id="headerTable" <?php echo $treeGrid; ?>>
-                                            <td></td>
-                                            <td><?php echo $rbacAccion['action']; ?></td>
-                                            <td>
-                                                <button class="btn-xs btn-danger" onclick="eliminar(<?php echo $rbacAccion['id']; ?>,'<?php echo $rbacAccion['action']; ?>');">
-                                                    <i class="fa fa-fw fa-remove"></i>
-                                                </button>
+                                            <td colspan="3">
+                                                <?php echo  $rbacAccion['controller']; ?>
                                             </td>
                                             <?php $num++; ?>
                                         </tr>
+                                    <?php } //else {
+                                    ?>
+                                    <?php
+                                    $treeGrid =  'class="treegrid-parent-' . ($i - 1) . '"';
+                                    ?>
+                                    <tr id="headerTable" <?php echo $treeGrid; ?>>
+                                        <td></td>
+                                        <td>
+                                            <?php echo $rbacAccion['action']; ?>
+                                        </td>
+                                        <td>
+                                            <input type="checkbox" id="" class="btn-sm requiere-login"
+                                                data-id="<?php echo $rbacAccion['id']; ?>" <?php echo ($rbacAccion['publico'] == 1) ? ' checked' : ''; ?>>
+                                        </td>
+                                        <td>
+                                            <button class="btn-xs btn-danger" onclick="eliminar(<?php echo $rbacAccion['id']; ?>,'<?php echo $rbacAccion['action']; ?>');">
+                                                <i class="fa fa-fw fa-remove"></i>
+                                            </button>
+                                        </td>
+                                        <?php $num++; ?>
+                                    </tr>
                                 <?php //}
                                 endforeach; ?>
                             </tbody>
@@ -199,100 +212,84 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Resultado</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalMessage">
+                <!-- Aquí se insertará el mensaje -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal"><i class="fa fa-close"></i> Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <script type="text/javascript">
     $(function() {
 
         $('.tree').treegrid({
             'initialState': 'collapsed'
         });
-        //$('#headerTable input[type="checkbox"]').checkbox();
+        // Inicializar bootstrap switch en los checkbox
+        // $(".publico-switch").bootstrapSwitch({
+        //     onText: 'Sí',
+        //     offText: 'No',
+        //     onColor: 'success',
+        //     offColor: 'default',
+        //     state: $(this).is(':checked')
+        // });
 
-        //$('#headerTable .switch').bootstrapSwitch();
-        //desactivar_filas();
+        // Detectar cambios en los switches y enviar los datos por AJAX
+        $('.requiere-login').on('change', function() {
+            var accionId = $(this).data('id'); // ID de la acción
+            var nuevoEstado = $(this).is(':checked') ? 1 : 0; // Estado del checkbox
 
-
-    });
-
-    function desactivar_filas() {
-        $('input#heredado').each(function() {
-            var myFila = $(this).closest('td').attr('class');
-            var myOpcion = ($(this).is(":checked"));
-            $('td.' + myFila + ' input').each(function() {
-                if ($(this).attr('id') != 'heredado') {
-                    //$(this).checkbox({enabled: myOpcion});
-                    if (myOpcion) $(this).attr("disabled", false);
-                }
-            });
-        });
-    }
-
-    function desactivar_filas_here(mifila, opcion) {
-        $('td.' + mifila + ' input').each(function() {
-            if ($(this).attr('id') != 'heredado') {
-                $(this).attr('disabled', opcion);
-                /*if (opcion) {
-                	$(this).checkbox({enabled: false});
-                } else {
-                	$(this).checkbox({enabled: true});
-                }*/
-            }
-        });
-
-    }
-
-    $('#headerTable input[type="checkbox"]').click(function() {
-        var valor = $(this).is(":checked");
-        var accion_id = $(this).attr('dataid');
-        var atributo_id = $(this).attr('id');
-        var pariente = $(this).attr('parentid');
-        var miFila = $(this).closest('td').attr('class');
-        actualizar(accion_id, atributo_id, (valor) ? 1 : 0);
-        //if (atributo_id != 'oculto') {
-        if (atributo_id == 'heredado' && valor === true) {
-            $('tr.treegrid-parent-' + pariente + ' td.' + miFila + ' input').each(function() {
-                var myId = $(this).attr('id');
-                if (myId != undefined && myId != 'heredado') {
-                    var myAccion = $(this).attr('dataid');
-                    var myValor = $('tr.treegrid-' + pariente + ' td input#' + myId).is(":checked");
-                    var myId = $(this).attr('id');
-                    $(this).attr("checked", (myValor) ? 0 : 1);
-                    //$(this).checkbox({checked: (myValor)?1:0});
-                    actualizar(myAccion, myId, (myValor) ? 0 : 1);
-                    desactivar_filas_here(miFila, true);
-                }
-            });
-            //console.log('1');
-        } else if (atributo_id == 'heredado' && valor === false) {
-            desactivar_filas_here(miFila, false);
-            //console.log('2');
-        } else {
-            if ($(this).closest('tr').hasClass('treegrid-expanded')) {
-                $('tr.treegrid-parent-' + pariente + ' td input#' + atributo_id).each(function() {
-                    var idFila = $(this).closest('td').attr('class');
-                    var myId = $(this).attr('id');
-                    if (myId != undefined && myId != 'heredado') {
-                        //alert(idFila+" - "+$('tr.treegrid-parent-'+pariente+' td.'+idFila).find('input#heredado').is(":checked"));
-                        if (!$('tr.treegrid-parent-' + pariente + ' td.' + idFila).find('input#heredado').is(":checked")) {
-                            var myAccion = $(this).attr('dataid');
-                            $(this).attr("checked", valor);
-                            //$(this).checkbox({checked: valor});
-                            actualizar(myAccion, atributo_id, (valor) ? 1 : 0);
-                        }
+            // Enviar la actualización por AJAX
+            $.ajax({
+                url: '/rbac/rbac_acciones/requireLogin/',
+                type: 'POST',
+                dataType: 'json',
+                headers: {
+                    'X-CSRF-Token': "<?php echo $this->request->getAttribute('csrfToken'); ?>"
+                },
+                data: {
+                    accion_id: accionId,
+                    atributo_id: 'publico',
+                    valor: nuevoEstado
+                },
+                success: function(response) {
+                    // Verifica si la respuesta contiene el resultado
+                    if (response && response.result !== undefined) {
+                        // Actualiza el mensaje del modal
+                        $('#modalMessage').text(response.message);
+                        // Muestra el modal
+                        $('#responseModal').modal('show');
+                    } else {
+                        // Si no hay resultado, muestra un error genérico
+                        $('#modalMessage').text('Ocurrió un error inesperado.');
+                        $('#responseModal').modal('show');
                     }
-                });
-                //console.log('3');
-            } else {
-                if (atributo_id != 'heredado') {
-                    var myAccion = $(this).attr('dataid');
-                    $(this).attr("checked", valor);
-                    //$(this).checkbox({checked: (valor)?1:0});
-                    actualizar(myAccion, atributo_id, (valor) ? 1 : 0);
+                },
+                error: function() {
+                    // En caso de error en la petición AJAX
+                    $('#modalMessage').text('Error en la solicitud. Intente de nuevo.');
+                    $('#responseModal').modal('show');
                 }
-                //console.log('4');
-            }
-        }
-        //}
+            });
+        });
     });
+
+
+
 
 
     function actualizar(accion_id, atributo_id, valor) {

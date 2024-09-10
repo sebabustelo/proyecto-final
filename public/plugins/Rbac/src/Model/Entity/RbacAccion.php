@@ -36,13 +36,7 @@ class RbacAccion extends Entity
         'plugin' => true,
         'controller' => true,
         'action' => true,
-        'solo_lectura' => true,
-        'carga_publica' => true,
-        'carga_login_publica' => true,
-        'carga_login_interna' => true,
-        'carga_administracion' => true,
-        'heredado' => true,
-        'oculto' => true,
-        'rbac_perfiles' => true
+        'rbac_perfiles' => true,
+        'publico' => true
     ];
 }
