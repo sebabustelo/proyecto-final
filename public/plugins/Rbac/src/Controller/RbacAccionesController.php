@@ -24,21 +24,20 @@ class RbacAccionesController extends RbacController
 
     public function delete($id)
     {
-        $this->viewBuilder()->setLayout(null);
-        if ($id) {
-            $rbacAccion = $this->RbacAcciones->get($id, contain: ['RbacPerfiles']);
 
-            if (isset($rbacAccion) && $rbacAccion['rbac_perfiles'][0]['accion_default_id'] != $id) {
-                if ($this->RbacAcciones->delete($rbacAccion)) {
-                    $this->Flash->success('La Acción con identificador ' . $id . ' ha sido eliminada correctamente.');
-                } else {
-                    $this->Flash->error('No pudo eliminar esta accion con identificador ' . $id . ' correctamente.');
-                }
+        $this->request->allowMethod(['post', 'delete']);
+        $rbacAccion = $this->RbacAcciones->get($id,contain: ['RbacPerfiles']);
+        if (isset($rbacAccion) && $rbacAccion['rbac_perfiles'][0]['accion_default_id'] != $id) {
+            if ($this->RbacAcciones->delete($rbacAccion)) {
+                $this->Flash->success(__('La acción ha sido eliminada.'));
             } else {
-                $this->Flash->error('La acción ' . $id . ' no puede ser eliminada debido que esta asociada a un perfil');
+                $this->Flash->error(__('No se pudo eliminar la acción. Por favor, inténtalo de nuevo.'));
             }
+        } else {
+            $this->Flash->error('La acción ' . $id . ' no puede ser eliminada debido que esta asociada a un perfil');
         }
-        $this->redirect(array('action' => 'index'));
+
+        return $this->redirect(['action' => 'index']);
     }
 
     public function requireLogin()

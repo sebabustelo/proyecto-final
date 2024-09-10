@@ -16,11 +16,11 @@
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <input type="text" name="controller" placeholder="Controlador" class="form-control" id="apellido"
-                                aria-label="Controlador" value="<?php echo (isset($filters['controller'])) ? $filters['controller'] : '' ?>">
+                                    aria-label="Controlador" value="<?php echo (isset($filters['controller'])) ? $filters['controller'] : '' ?>">
                             </div>
                             <div class="form-group col-md-6">
                                 <input type="text" name="action" placeholder="Acción" class="form-control" id="nombre" aria-label="Acción"
-                                value="<?php echo (isset($filters['action'])) ? $filters['action'] : '' ?>">
+                                    value="<?php echo (isset($filters['action'])) ? $filters['action'] : '' ?>">
                             </div>
 
                         </div>
@@ -105,11 +105,8 @@
                                             </td>
                                             <?php $num++; ?>
                                         </tr>
-                                    <?php } //else {
-                                    ?>
-                                    <?php
-                                    $treeGrid =  'class="treegrid-parent-' . ($i - 1) . '"';
-                                    ?>
+                                    <?php } ?>
+                                    <?php $treeGrid =  'class="treegrid-parent-' . ($i - 1) . '"'; ?>
                                     <tr id="headerTable" <?php echo $treeGrid; ?>>
                                         <td></td>
                                         <td>
@@ -119,11 +116,18 @@
                                             <input type="checkbox" id="" class="btn-sm requiere-login"
                                                 data-id="<?php echo $rbacAccion['id']; ?>" <?php echo ($rbacAccion['publico'] == 1) ? ' checked' : ''; ?>>
                                         </td>
-                                        <td>
-                                            <button class="btn-xs btn-danger" onclick="eliminar(<?php echo $rbacAccion['id']; ?>,'<?php echo $rbacAccion['action']; ?>');">
-                                                <i class="fa fa-fw fa-remove"></i>
-                                            </button>
+                                        <td class="remove">
+                                            <?= $this->Form->postLink(
+                                                __('<i class="fa fa-remove"></i>'),
+                                                ['action' => 'delete', $rbacAccion->id],
+                                                [
+                                                    'confirm' => __('¿Esta seguro de eliminar la acción {0}?', $rbacAccion->action),
+                                                    'class' => 'btn btn-danger btn-xs pencil',
+                                                    'escape' => false
+                                                ]
+                                            ) ?>
                                         </td>
+
                                         <?php $num++; ?>
                                     </tr>
                                 <?php //}
@@ -165,28 +169,19 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    if (isset($rbacNuevos) && count($rbacNuevos)) {
-                                        foreach ($rbacNuevos as $rbac) :
-                                            if (isset($rbac['action']) && !empty($rbac['action'])) {
-                                                //foreach ($rbac['action'] as $accion):
-                                    ?>
+                                    <?php if (isset($rbacNuevos) && count($rbacNuevos)) { ?>
+                                        <?php foreach ($rbacNuevos as $rbac) : ?>
+                                            <?php if (isset($rbac['action']) && !empty($rbac['action'])) { ?>
                                                 <tr id="headerTable2">
-                                                    <td><?php
-
-                                                        echo  $rbac['controller']; ?></td>
-                                                    <?php //debug($rbac['action']);
-                                                    ?>
-                                                    <td><?php echo ($rbac['action'] == '_null') ? 'NULO' : $rbac['action']; //echo ($accion=='_null')?'NULO':$accion;
-                                                        ?></td>
+                                                    <td><?php echo  $rbac['controller']; ?></td>
+                                                    <td><?php echo $rbac['action']; ?></td>
                                                     <td>
                                                         <input class="checkbox" name="valores[]" type="checkbox" data-action="<?php echo $rbac['action']; ?>" data-controller="<?php echo $rbac['controller']; ?>" data-plugin="<?php echo $rbac['plugin']; ?>" value="1" />
                                                     </td>
                                                 </tr>
-                                        <?php //endforeach;
-                                            }
-                                        endforeach;
-                                    } else { ?>
+                                            <?php } ?>
+                                        <?php endforeach; ?>
+                                    <?php } else { ?>
                                         <tr>
                                             <td colspan="3">
                                                 <h3 style="text-align:center;">No hay nuevas acciones...</h3>
@@ -212,7 +207,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal Cambio de Acciona Publica/No Publica -->
 <div class="modal fade" id="responseModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -239,14 +234,6 @@
         $('.tree').treegrid({
             'initialState': 'collapsed'
         });
-        // Inicializar bootstrap switch en los checkbox
-        // $(".publico-switch").bootstrapSwitch({
-        //     onText: 'Sí',
-        //     offText: 'No',
-        //     onColor: 'success',
-        //     offColor: 'default',
-        //     state: $(this).is(':checked')
-        // });
 
         // Detectar cambios en los switches y enviar los datos por AJAX
         $('.requiere-login').on('change', function() {
@@ -288,10 +275,6 @@
         });
     });
 
-
-
-
-
     function actualizar(accion_id, atributo_id, valor) {
         if (accion_id != null) {
             $.ajax({
@@ -311,14 +294,6 @@
                 }
             });
         }
-    }
-
-    function eliminar(id, accion) {
-        bootbox.confirm("Está seguro de eliminar la Acción " + accion + "?", function(result) {
-            if (result) {
-                document.location.href = "/rbac/RbacAcciones/eliminar/" + id;
-            }
-        });
     }
 
     function sincronizar() {
@@ -357,9 +332,5 @@
                 }
             });
         }
-    }
-
-    function limpiar() {
-        document.location.href = "/rbac/rbac_acciones/index";
     }
 </script>

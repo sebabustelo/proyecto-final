@@ -15,12 +15,12 @@
             <div class="box box-primary">
                 <div class="box-header  with-border">
                     <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> </h3>
-                   
+
                 </div>
                 <!-- /.box-header -->
                 <div class="box-body">
                     <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/productos/search">
-                        
+
                         <div class="form-row text-center">
                             <div class="input-group col-md-6 col-md-offset-3 ">
                                 <input type="text" name="message" placeholder=" Buscar productos... " class="form-control">
@@ -28,7 +28,7 @@
                                     <button type="submit" class="btn btn-primary btn-flat"> <span class="glyphicon glyphicon-search"></span></button>
                                 </span>
                             </div>
-                           
+
                             <!-- <div class="form-group col-md-4 ">
                                 <button type="button" id="limpiar" class="btn btn-default">
                                     <span class="glyphicon glyphicon-trash"></span>
@@ -37,7 +37,7 @@
                                     <span class="glyphicon glyphicon-search"></span>
                                     Buscar</button>
 
-                              
+
                                 <script>
                                     $(function() {
                                         $('#limpiar').on('click', function() {
@@ -70,13 +70,14 @@
         <!-- /.col -->
     </div>
     <div class="row">
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-2">
             <div class="thumbnail product-item">
                 <img src="/img/productos/fassier-duval.jpg" alt="Producto 1">
                 <div class="caption">
-                    <h3>Bisturí Descartable</h3>
+                    <h4>Bisturí Descartable</h4>
                     <p>Precio: $100</p>
-                    <p><a href="#" class="btn btn-success" role="button">Comprar</a>
+                    <p><a href="#" class="btn btn-success" role="button">Alquilar</a>
+                        <a href="#" class="btn btn-warning" role="button">Detalles</a>
                         <button type="submit" class="btn btn-primary">
                             <span class="fa fa-shopping-cart"></span>
                         </button>
@@ -84,30 +85,30 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-2">
             <div class="thumbnail product-item">
                 <img src="/img/productos/fin_short.jpg" alt="Producto 2">
                 <div class="caption">
-                    <h3>Guantes Quirúrgicos</h3>
+                    <h4>Guantes Quirúrgicos</h4>
                     <p>Precio: $200</p>
-                    <p><a href="#" class="btn btn-success" role="button">Comprar</a>
-
+                    <p><a href="#" class="btn btn-success" role="button">Alquilar</a>
+                        <a href="#" class="btn btn-warning" role="button">Detalles</a>
                         <button type="submit" class="btn btn-primary">
                             <span class="fa fa-shopping-cart"></span>
                         </button>
-
                     </p>
 
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-2">
             <div class="thumbnail product-item">
                 <img src="/img/productos/k-mono.jpg" alt="Producto 3">
                 <div class="caption">
-                    <h3>Mascarillas N95</h3>
+                    <h4>Mascarillas N95</h4>
                     <p>Precio: $150</p>
-                    <p><a href="#" class="btn btn-success" role="button">Comprar</a>
+                    <p><a href="#" class="btn btn-success" role="button">Alquilar</a>
+                        <a href="#" class="btn btn-warning" role="button">Detalles</a>
                         <button type="submit" class="btn btn-primary">
                             <span class="fa fa-shopping-cart"></span>
                         </button>
@@ -115,57 +116,18 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-3">
+        <div class="col-sm-6 col-md-2">
             <div class="thumbnail product-item">
                 <img src="/img/productos/kmod-rev.jpg" alt="Producto 4">
                 <div class="caption">
-                    <h3>Jeringas Descartables</h3>
+                    <h4>Jeringas Descartables</h4>
                     <p>Precio: $50</p>
-                    <p><a href="#" class="btn btn-success" role="button">Comprar</a>
+                    <p><a href="#" class="btn btn-success" role="button">Alquilar</a>
+                        <a href="#" class="btn btn-warning" role="button">Detalles</a>
                         <button type="submit" class="btn btn-primary">
                             <span class="fa fa-shopping-cart"></span>
                         </button>
                     </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="thumbnail product-item">
-                <img src="/img/productos/fassier-duval.jpg" alt="Producto 1">
-                <div class="caption">
-                    <h3>Bisturí Descartable</h3>
-                    <p>Precio: $100</p>
-                    <p><a href="#" class="btn btn-success" role="button">Comprar</a></p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="thumbnail product-item">
-                <img src="/img/productos/fin_short.jpg" alt="Producto 2">
-                <div class="caption">
-                    <h3>Guantes Quirúrgicos</h3>
-                    <p>Precio: $200</p>
-                    <p><a href="#" class="btn btn-success" role="button">Comprar</a></p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="thumbnail product-item">
-                <img src="/img/productos/k-mono.jpg" alt="Producto 3">
-                <div class="caption">
-                    <h3>Mascarillas N95</h3>
-                    <p>Precio: $150</p>
-                    <p><a href="#" class="btn btn-success" role="button">Comprar</a></p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="thumbnail product-item">
-                <img src="/img/productos/kmod-rev.jpg" alt="Producto 4">
-                <div class="caption">
-                    <h3>Jeringas Descartables</h3>
-                    <p>Precio: $50</p>
-                    <p><a href="#" class="btn btn-success" role="button">Comprar</a></p>
                 </div>
             </div>
         </div>
