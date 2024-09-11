@@ -13,13 +13,15 @@ use Cake\Core\Configure; ?>
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   <!-- Bootstrap 3.3.7 -->
   <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap/dist/css/bootstrap.min'); ?>
-  <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap/dist/css/bootstrap.min'); ?>
+  <!-- Bootstrap-fileinput -->
   <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap-fileinput/css/fileinput.min'); ?>
+  <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap-fileinput/themes/explorer-fa4/theme.css'); ?>
   <!-- Font Awesome -->
   <?php echo $this->Html->css('AdminLTE./bower_components/font-awesome/css/font-awesome.min'); ?>
   <!-- Ionicons -->
   <?php echo $this->Html->css('AdminLTE./bower_components/Ionicons/css/ionicons.min'); ?>
-  <?php //echo $this->Html->css('AdminLTE./bower_commponents/jquery-treegrid/dist/css/jquery.treegrid'); ?>
+  <?php //echo $this->Html->css('AdminLTE./bower_commponents/jquery-treegrid/dist/css/jquery.treegrid'); 
+  ?>
   <?php echo $this->Html->css('jquery.treegrid'); ?>
   <!-- Theme style -->
   <?php echo $this->Html->css('AdminLTE.AdminLTE.min'); ?>
@@ -28,20 +30,22 @@ use Cake\Core\Configure; ?>
        folder instead of downloading all of them to reduce the load. -->
   <?php echo $this->Html->css('AdminLTE.skins/skin-' . Configure::read('Theme.skin') . '.min'); ?>
 
-
-
-
-
   <!-- jQuery 3 -->
   <?php echo $this->Html->script('AdminLTE./bower_components/jquery/dist/jquery.min'); ?>
   <?php echo $this->Html->script('jquery.bootstrap-duallistbox'); ?>
   <?php echo $this->Html->script('jquery.treegrid'); ?>
-  <?php //echo $this->Html->script('AdminLTE./bower_components/jquery-treegrid/dist/js/jquery.treegrid'); ?>
+  <?php //echo $this->Html->script('AdminLTE./bower_components/jquery-treegrid/dist/js/jquery.treegrid'); 
+  ?>
 
   <!-- Bootstrap 3.3.7 -->
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap/dist/js/bootstrap.min'); ?>
-  <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput//js/fileinput'); ?>
-
+  <!-- Bootstrap-fileinput -->
+  
+  <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/js/fileinput.min'); ?>
+  <?php //echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/themes/explorer-fa4/theme.js'); ?>
+  <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/themes/fa4/theme.js'); ?>
+  <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/js/locales/es.js'); ?>
+  
   <!-- AdminLTE App -->
   <?php echo $this->Html->script('AdminLTE.adminlte.min'); ?>
   <!-- Slimscroll -->
@@ -73,7 +77,7 @@ use Cake\Core\Configure; ?>
 
     <header class="main-header">
       <!-- Logo -->
-      <a href="<?php echo $this->Url->build('/'); ?>" class="logo" >
+      <a href="<?php echo $this->Url->build('/'); ?>" class="logo">
         <!-- mini logo for sidebar mini 50x50 pixels -->
         <span class="logo-mini"><?php echo Configure::read('Theme.logo.mini'); ?></span>
         <!-- logo for regular state and mobile devices -->
@@ -165,4 +169,3 @@ use Cake\Core\Configure; ?>
   })
   // })
 </script>
-

@@ -37,10 +37,10 @@ class Upload extends Entity
         'hash_archivo' => true,
         'extension_archivo' => true,
         'hash_llave' => true,
-        'subdir_zero' => true,
+        'kit_cirugia_id' => true,
         'created' => true,
-        'modified' => true,
-        'modified_by' => true,
-        'created_by' => true,
+        'modified' => true,        
+        'productos' => true,
+        'es_principal' => true,
     ];
 }

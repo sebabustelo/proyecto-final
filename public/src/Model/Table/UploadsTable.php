@@ -44,11 +44,10 @@ class UploadsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
-
-        $this->belongsToMany('Resoluciones', [
-            'targetForeignKey' => 'resolucion_id',
-            'foreignKey' => 'upload_id',
-            'joinTable' => 'uploads_resoluciones',
+       
+        $this->belongsTo('Productos', [
+            'foreignKey' => 'kit_cirugia_id',
+            'joinType' => 'INNER'
         ]);
     }
 
@@ -89,20 +88,6 @@ class UploadsTable extends Table
             ->maxLength('hash_llave', 64)
             ->requirePresence('hash_llave', 'create')
             ->notEmptyString('hash_llave');
-
-        $validator
-            ->scalar('subdir_zero')
-            ->maxLength('subdir_zero', 10)
-            ->allowEmptyString('subdir_zero');
-
-        $validator
-            ->integer('modified_by')
-            ->allowEmptyString('modified_by');
-
-        $validator
-            ->integer('created_by')
-            ->requirePresence('created_by', 'create')
-            ->notEmptyString('created_by');
 
         return $validator;
     }

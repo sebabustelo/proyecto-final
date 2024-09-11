@@ -35,16 +35,15 @@ class Producto extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
+        'id' => true,
         'nombre' => true,
         'descripcion' => true,
         'categoria_id' => true,
-        'proveedor_id' => true,
-        'imagen' => true,
+        'proveedor_id' => true,       
         'stock' => true,
+        'precio' => true,
         'created' => true,
-        'modified' => true,
-        'created_by' => true,
-        'modified_by' => true,
+        'modified' => true,       
         'categoria' => true,
         'proveedore' => true,
     ];

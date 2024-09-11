@@ -13,13 +13,15 @@
  * @var \App\Model\Entity\Estado $estado
  */
 ?>
+
+
 <section class="content-header">
     <h1>
         Administración
     </h1>
-    <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-circle-o"></i> Kit de Cirugías</a></li>
-        <li class="active">agregar</li>
+    <ol class="breadcrumb">        
+        <li><a href="#"> Kit de Cirugías</a></li> <i class="fa fa-arrow-right"></i> 
+        <li class="active">Agregar</li>
     </ol>
 </section>
 <section id="ProductosAddForm" class="content">
@@ -40,8 +42,7 @@
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <div class="form-group col-sm-4">
                                 <label for="nombre">Nombre</label>
-                                <input style='text-transform: uppercase;' required type="text" maxlength="150" placeholder="Ingrese el nombre"
-                                    class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')" oninput="this.setCustomValidity('')">
+                                <input required type="text" maxlength="150" placeholder="Ingrese el nombre" class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('nombre')) { ?>
                                     <?php foreach ($producto->getError('nombre') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -68,8 +69,8 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="stock">Stock</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock"
-                                    class="form-control" onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')">
+                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock" 
+                                class="form-control" onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -78,8 +79,8 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="stock">Precio</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio"
-                                    class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
+                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio" 
+                                class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -88,16 +89,14 @@
                             </div>
                             <div class="form-group col-sm-12">
                                 <label for="descripcion">Descripción</label>
-                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción"
-                                    class="form-control" name="descripcion" oninvalid="this.setCustomValidity('Debe completar la descripción')"
-                                    oninput="this.setCustomValidity('')"></textarea>
+                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción" class="form-control" name="descripcion" oninvalid="this.setCustomValidity('Debe completar la descripción')" oninput="this.setCustomValidity('')"></textarea>
                                 <?php if ($producto->getError('descripcion')) { ?>
                                     <?php foreach ($producto->getError('descripcion') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
                                     <?php } ?>
                                 <?php } ?>
                             </div>
-                            <div class="col-sm-4 ">
+                            <div class="col-sm-3">
                                 <div class="verify-sub-box">
                                     <div class="file-loading">
                                         <input id="imagen-principal" name="imagen-principal" type="file" required>
@@ -107,7 +106,7 @@
                                     <small>La imagen debe ser menor a < 1500 KB</small>
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-9">
                                 <div class="verify-sub-box">
                                     <div class="file-loading">
                                         <input id="imagenes-secundarias" type="file" accept=".jpg,.gif,.png" multiple name="imagenes[]">
@@ -131,8 +130,6 @@
                             }
                             ?>
 
-
-
                             <div class="form-group col-sm-12 text-center" style="margin-top:25px;">
                                 <a href="<?php echo $url; ?>" class="btn btn-danger">
                                     <span class="fa fa-remove"></span> Cancelar</a>
@@ -141,6 +138,11 @@
                                     Guardar</button>
                             </div>
                         </form>
+
+                        <div class="form-row form-group col-sm-12 callout callout-info" role="alert">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            La imagen principal se mostrará en la vista de kits de cirugías del cliente, y las imágenes secundarias serán visibles al ingresar en el detalle del mismo.
+                        </div>
                     </div>
                 </div>
             </div>
@@ -155,8 +157,10 @@
             event.preventDefault();
         }
     }
+    // theme: "explorer-fa4",
     $("#imagen-principal").fileinput({
-        'theme': 'fa',
+        language: "es",
+        theme: "fa4",
         'uploadUrl': '#',
         maxFileSize: 1500,
         showRemove: false,
@@ -172,23 +176,15 @@
         fileActionSettings: {
             showUpload: false,
             showRotate: false,
-            //   showZoom: false,
-            removeIcon: "<i class='fa fa-times'></i>",
+            allowFullScreen: false,
+            zoomIcon: '<i class="fa fa-search-plus"></i> ',
+            removeIcon: '<i class="fa fa-trash-o"></i> ',
         },
-        previewZoomButtonIcons: {
-            prev: '<i class="bi-caret-left-fill"></i>',
-            next: '<i class="bi-caret-right-fill"></i>',
-            rotate: false,
-            toggleheader: false,
-            fullscreen: false,
-            borderless: '<i class="bi-arrows-angle-expand"></i>',
-            //close: '<i class="bi-x-lg"></i>'
-        }
-
-
     });
+
     $("#imagenes-secundarias").fileinput({
-        'theme': 'fa',
+        language: "es",
+        theme: "fa4",
         'uploadUrl': '#',
         maxFileSize: 1500,
         showRemove: false,
@@ -196,7 +192,6 @@
         showZoom: false,
         showCaption: false,
         maxFileCount: 4,
-
 
         browseClass: "btn btn-success",
         browseLabel: "Imagenes Secundarias",
@@ -207,27 +202,10 @@
         fileActionSettings: {
             showUpload: false,
             showRotate: false,
-
-            allowFullScreen:false,
-            zoomIcon: '<i class="fa fa-search-plus"></i> ',
             //   showZoom: false,
-
-            removeIcon: '<i class="fa fa-trash-o"></i> ',
-
-
+            // removeIcon: "<i class='fa fa-times'></i>",
         },
-        previewZoomButtonIcons: {
-            prev: '<i class="fa fa-caret-left"></i>',
-            next: '<i class="fa fa-caret-right"></i>',
-            //rotate: false,
-            //toggleheader: false,
-            showCaption: false,
-            showToggleheader: false,
-            //fullscreen: false,
-            borderless: '<i class="bi-arrows-angle-expand"></i>',
-            //showRotate: false,
 
-            close: '<i class="fa fa-close"></i>'
-        }
+
     });
 </script>

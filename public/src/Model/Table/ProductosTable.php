@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -56,6 +57,9 @@ class ProductosTable extends Table
             'foreignKey' => 'proveedor_id',
             'joinType' => 'INNER',
         ]);
+        $this->hasMany('Uploads', [
+            'foreignKey' => 'kit_cirugia_id',
+        ]);
     }
 
     /**
@@ -86,23 +90,13 @@ class ProductosTable extends Table
             ->notEmptyString('proveedor_id');
 
         $validator
-            ->scalar('imagen')
-            ->maxLength('imagen', 255)
-            ->allowEmptyString('imagen');
-
-        $validator
             ->integer('stock')
             ->allowEmptyString('stock');
 
         $validator
-            ->scalar('created_by')
-            ->maxLength('created_by', 100)
-            ->allowEmptyString('created_by');
+            ->decimal('precio')
+            ->notEmptyString('precio');
 
-        $validator
-            ->scalar('modified_by')
-            ->maxLength('modified_by', 100)
-            ->allowEmptyString('modified_by');
 
         return $validator;
     }

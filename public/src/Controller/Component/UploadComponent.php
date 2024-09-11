@@ -24,15 +24,25 @@ class UploadComponent extends Component
         $defaultSettings = [
             'allowedExtensions' => ['pdf', 'tif'],
             'maxSize' => 5 * 1024 * 1024, // 1 MB en bytes
-            'folder' => ''
+            'folder' => '',
+            'field' => 'attachments'
         ];
 
         // Combinar configuración predeterminada con la personalizada
         $settings = array_merge($defaultSettings, $settings);
 
+        $field =  $this->getController()->getRequest()->getData($settings['field']);
+
+        if ($field->getClientFilename()) {
+            //es un solo archivo
+            $attachment[] =  $field;
+        } else {
+            $attachment =  $field;
+        }
+
         // Verificar si hay error en la subida del archivo
-        foreach ($_FILES['attachments']['error'] as $k => $error) {
-            if ($error  !== UPLOAD_ERR_OK) {
+        foreach ($attachment as $k => $error) {
+            if ($error->getError()  !== UPLOAD_ERR_OK) {
                 $this->getController()->Flash->error('Error de configuración del servidor para la subida de archivos, por favor intente con uno de menor tamaño y/o contacte a soporte');
                 return;
             }
@@ -40,7 +50,8 @@ class UploadComponent extends Component
 
 
         // Generar directorios de guardado
-        $output_dir = ROOT . DS . "uploads" . DS . $settings['folder'];
+        $output_dir = ROOT . DS . "webroot" . DS . "img" . DS . "productos" . DS . $settings['folder'];
+
         if (!file_exists($output_dir)) {
             if (!mkdir($output_dir, 0755, true)) {
                 $this->getController()->Flash->error('No se pudo crear el directorio de destino para la subida del archivo.');
@@ -49,11 +60,9 @@ class UploadComponent extends Component
         }
 
         $uploads = [];
-        foreach ($this->getController()->getRequest()->getData('attachments') as $k => $file) {
+        foreach ($attachment as $k => $file) {
 
             $nombre_fichero = $file->getStream()->getMetadata('uri');
-
-
             //$nombre_fichero = $file[$]["tmp_name"];
 
             $tmp = explode('.', $file->getClientFilename());
@@ -75,6 +84,7 @@ class UploadComponent extends Component
 
             // Verificar la extensión y el tamaño del archivo
             if (in_array($extensionArchivo, $settings['allowedExtensions']) && $size <= $settings['maxSize']) {
+
                 if (move_uploaded_file($nombre_fichero, $output_dir . DS . $nombre_archivo . '.' . $extensionArchivo)) {
                     $upload = [
                         'nombre_archivo' => $nombre_archivo,
@@ -82,8 +92,8 @@ class UploadComponent extends Component
                         'hash_archivo' => $hash_archivo,
                         'extension_archivo' => $extensionArchivo,
                         'hash_llave' => $hash_llave,
-                        'created_by' => $usuario['id'],
-                        'modified_by' => $usuario['id']
+                        'kit_cirugia_id'   => $settings['producto_id'],
+                        'es_principal'  => $settings['principal']
                     ];
 
                     $entityUpload = $this->Upload->newEntity($upload);
@@ -92,9 +102,7 @@ class UploadComponent extends Component
                     $uploads[] =  $entityUpload->id;
                     //return $entityUpload->id;
                 } else {
-                    $error[] = 'Error al mover el archivo subido.';
-                    // $this->getController()->Flash->error('Error al mover el archivo subido.');
-                    // return null;
+                    $error[] = 'Error al mover el archivo subido.';                    
                 }
             } else {
                 if (!in_array($extensionArchivo, $settings['allowedExtensions'])) {
@@ -390,7 +398,7 @@ class UploadComponent extends Component
             return false;
         }
 
-        $zipFileName =  ROOT . DS . "uploads" . DS .'/archivos.zip';
+        $zipFileName =  ROOT . DS . "uploads" . DS . '/archivos.zip';
         $zip = new ZipArchive();
 
         if ($zip->open($zipFileName, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
@@ -419,7 +427,7 @@ class UploadComponent extends Component
                     $filename = ROOT . DS . "uploads" . DS . $settings['folder'] . DS . $nombre_archivo . '.' . $extension_archivo;
 
                     if (file_exists($filename)) {
-                       
+
 
                         // $mime = $this->detectFileMimeType($filename);
                         $fileNameOriginal = $nombre_original . '.' . $extension_archivo;

@@ -1,41 +1,221 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Producto $producto
- * @var string[]|\Cake\Collection\CollectionInterface $categorias
- * @var string[]|\Cake\Collection\CollectionInterface $proveedores
+ * @var \Cake\Collection\CollectionInterface|string[] $categorias
+ * @var \Cake\Collection\CollectionInterface|string[] $proveedores
  */
 ?>
-<div class="row">
-    <aside class="column">
-        <div class="side-nav">
-            <h4 class="heading"><?= __('Actions') ?></h4>
-            <?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $producto->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $producto->id), 'class' => 'side-nav-item']
-            ) ?>
-            <?= $this->Html->link(__('List Productos'), ['action' => 'index'], ['class' => 'side-nav-item']) ?>
-        </div>
-    </aside>
-    <div class="column column-80">
-        <div class="productos form content">
-            <?= $this->Form->create($producto) ?>
-            <fieldset>
-                <legend><?= __('Edit Producto') ?></legend>
-                <?php
-                    echo $this->Form->control('nombre');
-                    echo $this->Form->control('descripcion');
-                    echo $this->Form->control('categoria_id', ['options' => $categorias]);
-                    echo $this->Form->control('proveedor_id', ['options' => $proveedores]);
-                    echo $this->Form->control('imagen');
-                    echo $this->Form->control('stock');
-                    echo $this->Form->control('created_by');
-                    echo $this->Form->control('modified_by');
-                ?>
-            </fieldset>
-            <?= $this->Form->button(__('Submit')) ?>
-            <?= $this->Form->end() ?>
+
+<section class="content-header">
+    <h1>
+        Administración
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"> Kit de Cirugías</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Editar</li>
+    </ol>
+</section>
+<section class="content">
+    <div class="row">
+        <div class="col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header  with-border">
+                    <h3 class="box-title"> <span class="fa fa-refresh fa-lg"></span> Editar Kit de Cirugía</h3>
+                    <div class="box-tools pull-right">
+                        <a href="/Productos/index/" class="btn btn-sm btn-primary ">
+                            <span class="fa fa-list"></span> Kits de Cirugías</a>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="form-row">
+                        <form id="ProductosAddForm" name="ProductosEditForm" role="form" action="/Productos/edit/<?php echo $producto->id; ?>" method="POST" enctype="multipart/form-data">
+                            <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
+                            <div class="form-group col-sm-4">
+                                <label for="nombre">Nombre</label>
+                                <input required type="text" maxlength="150" placeholder="Ingrese el nombre" class="form-control" name="nombre" value="<?php echo $producto->nombre; ?>">
+                                <?php if ($producto->getError('nombre')) { ?>
+                                    <?php foreach ($producto->getError('nombre') as $error) { ?>
+                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Categoría</label><br>
+                                <select required name="categoria_id" class="form-control">
+                                    <option value="">Seleccione una categoría</option>
+                                    <?php foreach ($categorias as $id => $categoria) : ?>
+                                        <?php if ($id ==  $producto->categoria_id) { ?>
+                                            <option selected value="<?php echo $id; ?>"><?php echo $categoria; ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $id; ?>"><?php echo $categoria; ?></option>
+                                        <?php } ?>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Proveedores</label><br>
+                                <select required name="proveedor_id" class="form-control">
+                                    <option value="">Seleccione un proveedor</option>
+                                    <?php foreach ($proveedores as $id => $proveedor) : ?>
+                                        <?php if ($id ==  $producto->proveedor_id) { ?>
+                                            <option selected value="<?php echo $id; ?>"><?php echo $proveedor; ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $id; ?>"><?php echo $proveedor; ?></option>
+                                        <?php } ?>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label for="stock">Stock</label>
+                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock" class="form-control" value="<?php echo $producto->stock; ?>">
+                                <?php if ($producto->getError('stock')) { ?>
+                                    <?php foreach ($producto->getError('stock') as $error) { ?>
+                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label for="stock">Precio</label>
+                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio" class="form-control" value="<?php echo $producto->precio; ?>">
+                                <?php if ($producto->getError('precio')) { ?>
+                                    <?php foreach ($producto->getError('precio') as $error) { ?>
+                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
+                            <div class="form-group col-sm-12">
+                                <label for="descripcion">Descripción</label>
+                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción" class="form-control" name="descripcion"><?php echo $producto->descripcion; ?></textarea>
+                                <?php if ($producto->getError('descripcion')) { ?>
+                                    <?php foreach ($producto->getError('descripcion') as $error) { ?>
+                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
+                            <div class="col-sm-3">
+                                <div class="verify-sub-box">
+                                    <div class="file-loading">
+                                        <input id="imagen-principal" name="imagen-principal" type="file" required>
+                                    </div>
+                                </div>
+                                <div class="kv-avatar-hint">
+                                    <small>La imagen debe ser menor a < 1500 KB</small>
+                                </div>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="verify-sub-box">
+                                    <div class="file-loading">
+                                        <input id="imagenes-secundarias" type="file" accept=".jpg,.gif,.png" multiple name="imagenes[]">
+                                    </div>
+                                </div>
+                                <div class="kv-avatar-hint">
+                                    <small>Las imagenes debe ser menor a < 1500 KB</small>
+                                </div>
+                            </div>
+
+                            <?php
+                            if ($this->request->getSession()->check('previousUrl')) {
+                                $url = $this->request->getSession()->read('previousUrl');
+                                if (strpos($url, "Estados") !== false) {
+                                    $url = $this->request->getSession()->read('previousUrl');
+                                } else {
+                                    $url = "/Estados/index/";
+                                }
+                            } else {
+                                $url = '/Estados/index';
+                            }
+                            ?>
+
+                            <div class="form-group col-sm-12 text-center" style="margin-top:25px;">
+                                <a href="<?php echo $url; ?>" class="btn btn-danger">
+                                    <span class="fa fa-remove"></span> Cancelar</a>
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="fa  fa-check-square-o"></span>
+                                    Guardar</button>
+                            </div>
+                        </form>
+
+                        <div class="form-row form-group col-sm-12 callout callout-info" role="alert">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            La imagen principal se mostrará en la vista de kits de cirugías del cliente, y las imágenes secundarias serán visibles al ingresar en el detalle del mismo.
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<script>
+    function preventInvalidInput(event) {
+        const invalidChars = ['e', 'E', '+', '-']; // caracteres que quieres restringir
+        if (invalidChars.includes(event.key)) {
+            event.preventDefault();
+        }
+    }
+    // theme: "explorer-fa4",
+    $("#imagen-principal").fileinput({
+        language: "es",
+        theme: "fa4",
+        'uploadUrl': '#',
+        maxFileSize: 1500,
+        showRemove: false,
+        showUpload: false,
+        showClose: false,
+        showCaption: false,
+
+        browseClass: "btn btn-success",
+        browseLabel: "Imagen Principal",
+        browseIcon: "<i class='fa fa-plus'></i>",
+        allowedFileExtensions: ["jpg", "png", "gif"],
+
+        fileActionSettings: {
+            showUpload: false,
+            showRotate: false,
+            allowFullScreen: false,
+            zoomIcon: '<i class="fa fa-search-plus"></i> ',
+            removeIcon: '<i class="fa fa-trash-o"></i> ',
+        },
+        initialPreview: [
+            // IMAGE DATA
+            '<img src="/img/productos/<?php echo $producto->uploads[0]['nombre_archivo'] . "." . $producto->uploads[0]['extension_archivo']; ?>" class="file-preview-image kv-preview-data" title="fin_short.jpg" alt="fin_short.jpg" style="width: auto; height: auto; max-width: 100%; max-height: 100%; image-orientation: from-image;">'
+            
+
+
+        ],
+        initialPreviewConfig: [
+        {caption: "Desert.jpg", description: "<h5>The Desert</h5> This is a representative description number one for this image.", size: 827000, width: "120px", url: "http://ipmagna.local/img/productos/<?php echo $producto->uploads[0]['nombre_archivo'] . "." . $producto->uploads[0]['extension_archivo']; ?>", key: 1},
+       
+    ],
+    });
+
+    $("#imagenes-secundarias").fileinput({
+        language: "es",
+        theme: "fa4",
+        'uploadUrl': '#',
+        maxFileSize: 1500,
+        showRemove: false,
+        showUpload: false,
+        showZoom: false,
+        showCaption: false,
+        maxFileCount: 4,
+
+        browseClass: "btn btn-success",
+        browseLabel: "Imagenes Secundarias",
+        browseIcon: "<i class='fa fa-plus'></i>",
+        // overwriteInitial: false,
+        // initialPreviewAsData: true,
+        allowedFileExtensions: ["jpg", "png", "gif"],
+        fileActionSettings: {
+            showUpload: false,
+            showRotate: false,
+            //   showZoom: false,
+            // removeIcon: "<i class='fa fa-times'></i>",
+        },
+
+
+    });
+</script>
