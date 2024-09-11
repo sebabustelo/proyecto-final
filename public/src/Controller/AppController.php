@@ -65,6 +65,11 @@ class AppController extends Controller
     public function beforeRender(EventInterface $event)
     {
         parent::beforeRender($event);
+
+        $categoriasTable = $this->fetchTable('Categorias');
+        $categorias = $categoriasTable->find('list')->toArray();
+        $this->set('categoriasMenu', $categorias);
+
         $session = $this->request->getSession();
 
         $perfilDefault = $session->read('PerfilDefault');
@@ -183,4 +188,6 @@ class AppController extends Controller
             return $data;
         return false;
     }
+
+
 }

@@ -38,18 +38,6 @@ class ProductosController extends AppController
         $this->set(compact('productos'));
     }
 
-    /**
-     * View method
-     *
-     * @param string|null $id Producto id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $producto = $this->Productos->get($id, contain: ['Categorias', 'Proveedores']);
-        $this->set(compact('producto'));
-    }
 
     /**
      * Add method
@@ -60,6 +48,8 @@ class ProductosController extends AppController
     {
         $producto = $this->Productos->newEmptyEntity();
         if ($this->request->is('post')) {
+            debug($_FILES);
+            debug($this->request->getData());die;
             $producto = $this->Productos->patchEntity($producto, $this->request->getData());
             if ($this->Productos->save($producto)) {
                 $this->Flash->success(__('The producto has been saved.'));

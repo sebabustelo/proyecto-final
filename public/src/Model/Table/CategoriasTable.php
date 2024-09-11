@@ -94,7 +94,7 @@ class CategoriasTable extends Table
 
     /**
      * Modifies the entity before saving it to the database.
-     * Converts the 'nombre' field to uppercase before the save operation.
+     * Converts the 'nombre' field to uppercase the first letter before the save operation.
      *
      * @param \Cake\Event\EventInterface $event The event object.
      * @param \Cake\ORM\Entity $entity The entity being saved.
@@ -103,8 +103,7 @@ class CategoriasTable extends Table
      */
     public function beforeSave(EventInterface $event, Entity $entity, $options)
     {
-        if ($entity->isNew() || $entity->isDirty('nombre')) {
-            $entity->nombre = strtoupper($entity->nombre);
-        }
+        $entity->nombre = ucfirst($entity->nombre);
     }
+
 }

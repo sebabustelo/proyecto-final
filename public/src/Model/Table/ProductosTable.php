@@ -42,7 +42,7 @@ class ProductosTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('set_cirugias');
+        $this->setTable('kit_cirugias');
         $this->setDisplayField('nombre');
         $this->setPrimaryKey('id');
 

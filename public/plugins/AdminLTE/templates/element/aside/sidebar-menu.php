@@ -66,7 +66,7 @@ $action =   $this->request->getParam('action');
         (isset($accionesPermitidas['Categorias']['index']) && $accionesPermitidas['Categorias']['index']) ||
         (isset($accionesPermitidas['Proveedores']['index']) && $accionesPermitidas['Proveedores']['index'])
     ) {
-        $menu_sistema = array("TipoDocumentos","Categorias","Proveedores");
+        $menu_sistema = array("TipoDocumentos", "Categorias", "Proveedores");
         if (in_array($controller, $menu_sistema) and $action != 'detail') {
             $active = "active";
             $menu_open = "menu-open";
@@ -157,34 +157,11 @@ $action =   $this->request->getParam('action');
             </span>
         </a>
         <ul class="treeview-menu">
-            <li><a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-                    <i class="fa fa-circle-o"></i>Cadera</a>
-            </li>
-            <li>
-                <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-                    <i class="fa fa-circle-o"></i> <span>Columna</span>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-                    <i class="fa fa-circle-o"></i> <span>Complementos</span>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-                    <i class="fa fa-circle-o"></i> <span>Pediátricos</span>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-                    <i class="fa fa-circle-o"></i> <span>Rodilla</span>
-                </a>
-            </li>
-            <li>
-                <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-                    <i class="fa fa-circle-o"></i> <span>Trauma</span>
-                </a>
-            </li>
+            <?php foreach ($categoriasMenu as $id => $categoria): ?>
+                <li><a href="<?php echo $this->Url->build(['controller' => 'Categorias', 'action' => 'view', $id]); ?>">
+                        <i class="fa fa-circle-o"></i> <?php echo h($categoria); ?>
+                    </a></li>
+            <?php endforeach; ?>
         </ul>
 
     </li>
