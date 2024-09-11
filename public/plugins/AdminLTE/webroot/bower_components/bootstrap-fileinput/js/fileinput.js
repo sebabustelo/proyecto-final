@@ -1952,7 +1952,7 @@
         '      <h6 class="modal-title kv-zoom-title" id="' +
         tModalLabel +
         '"><span class="kv-zoom-caption"></span> <span class="kv-zoom-size"></span></h6>\n' +
-        '      <div class="kv-zoom-actions">{rotate}{toggleheader}{fullscreen}{borderless}{close}</div>\n' +
+        '      <div class="kv-zoom-actions">{close}</div>\n' +
         "    </div>\n" +
         '    <div class="floating-buttons"></div>\n' +
         '    <div class="kv-zoom-body file-zoom-content {zoomFrameClass}"></div>\n' +
@@ -7178,7 +7178,7 @@
       if (typeof option === "object") {
         options = $.extend(true, {}, $.fn.fileinput.defaults, option);
         optObj = option;
-      } 
+      }
       var self = $(this),
         data = self.data("fileinput"),
         theme = options.theme || self.data("theme") || $.fn.fileinput.defaults.theme,

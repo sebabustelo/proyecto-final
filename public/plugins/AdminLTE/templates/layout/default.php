@@ -40,7 +40,7 @@ use Cake\Core\Configure; ?>
 
   <!-- Bootstrap 3.3.7 -->
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap/dist/js/bootstrap.min'); ?>
-  <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput//js/fileinput.min'); ?>
+  <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput//js/fileinput'); ?>
 
   <!-- AdminLTE App -->
   <?php echo $this->Html->script('AdminLTE.adminlte.min'); ?>

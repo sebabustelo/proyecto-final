@@ -195,6 +195,8 @@
         showUpload: false,
         showZoom: false,
         showCaption: false,
+        maxFileCount: 4,
+
 
         browseClass: "btn btn-success",
         browseLabel: "Imagenes Secundarias",
@@ -205,17 +207,27 @@
         fileActionSettings: {
             showUpload: false,
             showRotate: false,
+
+            allowFullScreen:false,
+            zoomIcon: '<i class="fa fa-search-plus"></i> ',
             //   showZoom: false,
-            removeIcon: "<i class='fa fa-times'></i>",
+
+            removeIcon: '<i class="fa fa-trash-o"></i> ',
+
+
         },
         previewZoomButtonIcons: {
-            prev: '<i class="bi-caret-left-fill"></i>',
-            next: '<i class="bi-caret-right-fill"></i>',
-            rotate: false,
-            toggleheader: false,
-            fullscreen: false,
+            prev: '<i class="fa fa-caret-left"></i>',
+            next: '<i class="fa fa-caret-right"></i>',
+            //rotate: false,
+            //toggleheader: false,
+            showCaption: false,
+            showToggleheader: false,
+            //fullscreen: false,
             borderless: '<i class="bi-arrows-angle-expand"></i>',
-            //close: '<i class="bi-x-lg"></i>'
+            //showRotate: false,
+
+            close: '<i class="fa fa-close"></i>'
         }
     });
 </script>
