@@ -19,8 +19,8 @@
     <h1>
         Administración
     </h1>
-    <ol class="breadcrumb">        
-        <li><a href="#"> Kit de Cirugías</a></li> <i class="fa fa-arrow-right"></i> 
+    <ol class="breadcrumb">
+        <li><a href="#"> Kit de Cirugías</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Agregar</li>
     </ol>
 </section>
@@ -69,8 +69,8 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="stock">Stock</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock" 
-                                class="form-control" onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')">
+                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock"
+                                    class="form-control" onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -79,8 +79,8 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="stock">Precio</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio" 
-                                class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
+                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio"
+                                    class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -96,7 +96,7 @@
                                     <?php } ?>
                                 <?php } ?>
                             </div>
-                            <div class="col-sm-3">
+                            <!-- <div class="col-sm-3">
                                 <div class="verify-sub-box">
                                     <div class="file-loading">
                                         <input id="imagen-principal" name="imagen-principal" type="file" required>
@@ -105,11 +105,11 @@
                                 <div class="kv-avatar-hint">
                                     <small>La imagen debe ser menor a < 1500 KB</small>
                                 </div>
-                            </div>
-                            <div class="col-md-9">
+                            </div> -->
+                            <div class="col-md-12">
                                 <div class="verify-sub-box">
                                     <div class="file-loading">
-                                        <input id="imagenes-secundarias" type="file" accept=".jpg,.gif,.png" multiple name="imagenes[]">
+                                        <input id="imagenes" type="file" accept=".jpg,.gif,.png" multiple name="imagenes[]">
                                     </div>
                                 </div>
                                 <div class="kv-avatar-hint">
@@ -158,53 +158,48 @@
         }
     }
     // theme: "explorer-fa4",
-    $("#imagen-principal").fileinput({
+    // $("#imagen-principal").fileinput({
+    //     language: "es",
+    //     theme: "fa4",
+    //     'uploadUrl': '#',
+    //     maxFileSize: 1500,
+    //     showRemove: false,
+    //     showUpload: false,
+    //     showClose: false,
+    //     showCaption: false,
+
+    //     browseClass: "btn btn-success",
+    //     browseLabel: "Imagen Principal",
+    //     browseIcon: "<i class='fa fa-plus'></i>",
+    //     allowedFileExtensions: ["jpg", "png", "gif"],
+
+    //     fileActionSettings: {
+    //         showUpload: false,
+    //         showRotate: false,
+    //         allowFullScreen: false,
+    //         zoomIcon: '<i class="fa fa-search-plus"></i> ',
+    //         removeIcon: '<i class="fa fa-trash-o"></i> ',
+    //     },
+    // });
+
+    $("#imagenes").fileinput({
         language: "es",
         theme: "fa4",
         'uploadUrl': '#',
-        maxFileSize: 1500,
+        // maxFileSize: 1500,
         showRemove: false,
         showUpload: false,
-        showClose: false,
-        showCaption: false,
-
-        browseClass: "btn btn-success",
-        browseLabel: "Imagen Principal",
-        browseIcon: "<i class='fa fa-plus'></i>",
-        allowedFileExtensions: ["jpg", "png", "gif"],
-
-        fileActionSettings: {
-            showUpload: false,
-            showRotate: false,
-            allowFullScreen: false,
-            zoomIcon: '<i class="fa fa-search-plus"></i> ',
-            removeIcon: '<i class="fa fa-trash-o"></i> ',
-        },
-    });
-
-    $("#imagenes-secundarias").fileinput({
-        language: "es",
-        theme: "fa4",
-        'uploadUrl': '#',
-        maxFileSize: 1500,
-        showRemove: false,
-        showUpload: false,
-        showZoom: false,
-        showCaption: false,
+         showZoom: false,
+         showCaption: false,
         maxFileCount: 4,
 
         browseClass: "btn btn-success",
-        browseLabel: "Imagenes Secundarias",
+        browseLabel: "Imagenes",
         browseIcon: "<i class='fa fa-plus'></i>",
         // overwriteInitial: false,
         // initialPreviewAsData: true,
         allowedFileExtensions: ["jpg", "png", "gif"],
-        fileActionSettings: {
-            showUpload: false,
-            showRotate: false,
-            //   showZoom: false,
-            // removeIcon: "<i class='fa fa-times'></i>",
-        },
+
 
 
     });

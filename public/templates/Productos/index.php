@@ -131,7 +131,7 @@
                                             <tr>
                                                 <!-- Columna Imagen -->
                                                 <td>
-                                                    <img src="/img/productos/<?php echo $producto->uploads[0]['nombre_archivo'] . "." . $producto->uploads[0]['extension_archivo']; ?>" alt="Imagen" class="img-thumbnail" style="width: 90%;">
+                                                    <img src="/img/productos/<?php //echo $producto->uploads[0]['nombre_archivo'] . "." . $producto->uploads[0]['extension_archivo']; ?>" alt="Imagen" class="img-thumbnail" style="width: 90%;">
                                                 </td>
 
                                                 <td>

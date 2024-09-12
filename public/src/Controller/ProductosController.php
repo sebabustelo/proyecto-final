@@ -25,7 +25,7 @@ class ProductosController extends AppController
     public function index()
     {
         $query = $this->Productos->find()
-            ->contain(['Categorias', 'Proveedores','Uploads']);
+            ->contain(['Categorias', 'Proveedores', 'ProductosArchivos']);
         $productos = $this->paginate($query);
 
         $this->set(compact('productos'));
@@ -55,48 +55,32 @@ class ProductosController extends AppController
     {
         $producto = $this->Productos->newEmptyEntity();
         if ($this->request->is('post')) {
-           
-            $producto = $this->Productos->patchEntity($producto,$this->request->getData());
-          
-           
+           // debug( count($_FILES['imagenes']['name']));
+            debug($_FILES);
+            debug($this->request->getData());
+            die;
+            $producto = $this->Productos->patchEntity($producto, $this->request->getData());
+
             if ($this->Productos->save($producto)) {
 
-                $data = $this->request->getData();
-                $file = $_FILES['imagen-principal'];
-                // Verificar si se ha subido un archivo y su tamaño
-                if ($file && $file['error'] != UPLOAD_ERR_NO_FILE) {
-                    // Verificar si hubo algún error al subir el archivo
-                    //foreach ($file['error'] as $k => $error) {
-                    if ($file['error']   !== UPLOAD_ERR_OK) {
-                        $this->Flash->error(__('Error al subir el archivo. Por favor, intente nuevamente.'));
-                        return;
+                $files = $this->request->getData('imagenes');
+                $result = $this->Upload->uploadMultiple($files, WWW_ROOT . 'img/productos/');
+
+                if ($result['status']) {
+                    foreach ($result['files'] as $file) {
+                        $upload = $this->Uploads->newEmptyEntity();
+                        $upload->product_id = $producto->id;
+                        $upload->file_name = $file['file_name'];
+                        $upload->file_extension = $file['file_extension'];
+                        $upload->file_size = $file['file_size'];
+                        $upload->file_path = $file['file_path'];
+                        $this->Productos->ProductosArchivos->save($upload);
                     }
-                    // }
-    
-                    // Verificar el tamaño del archivo (1.5 MB en bytes)
-                    $tamañoMaximo = 1.5 * 1024 * 1024;
-                    //foreach ($file['size'] as $k => $size) {
-                    if ($file['size'] > $tamañoMaximo) {
-                        $this->Flash->error(__('El archivo es demasiado grande. Debe ser menor a 5 MB.'));
-                        return;
-                    }
-                    //}
-    
-                    $settings = [
-                        'allowedExtensions' => ['gif', 'jpg', 'png'],
-                        'maxSize' => 5 * 1024 * 1024, 
-                        'field' => 'imagen-principal',
-                        'producto_id' => $producto->id,
-                        'principal' => true
-                        //'folder' => date('Y')
-                    ];
-                    // Asignar el ID de la subida
-                    $data['uploads'] = $this->Upload->upload($settings);
+                    $this->Flash->success(__('El kit se guardo correctamente.'));
+                    return $this->redirect(['action' => 'index']);
+                } else {
+                    $this->Flash->error($result['error']);
                 }
-
-                $this->Flash->success(__('El kit se guardo correctamente.'));
-
-                return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('El kit no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
         }

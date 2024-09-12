@@ -119,13 +119,13 @@
                             <?php
                             if ($this->request->getSession()->check('previousUrl')) {
                                 $url = $this->request->getSession()->read('previousUrl');
-                                if (strpos($url, "Estados") !== false) {
+                                if (strpos($url, "Productos") !== false) {
                                     $url = $this->request->getSession()->read('previousUrl');
                                 } else {
-                                    $url = "/Estados/index/";
+                                    $url = "/Productos/index/";
                                 }
                             } else {
-                                $url = '/Estados/index';
+                                $url = '/Productos/index';
                             }
                             ?>
 
@@ -182,13 +182,13 @@
         initialPreview: [
             // IMAGE DATA
             '<img src="/img/productos/<?php echo $producto->uploads[0]['nombre_archivo'] . "." . $producto->uploads[0]['extension_archivo']; ?>" class="file-preview-image kv-preview-data" title="fin_short.jpg" alt="fin_short.jpg" style="width: auto; height: auto; max-width: 100%; max-height: 100%; image-orientation: from-image;">'
-            
+
 
 
         ],
         initialPreviewConfig: [
-        {caption: "Desert.jpg", description: "<h5>The Desert</h5> This is a representative description number one for this image.", size: 827000, width: "120px", url: "http://ipmagna.local/img/productos/<?php echo $producto->uploads[0]['nombre_archivo'] . "." . $producto->uploads[0]['extension_archivo']; ?>", key: 1},
-       
+        {caption: "Desert.jpg", size: 827000, width: "120px", url: "http://ipmagna.local/img/productos/<?php echo $producto->uploads[0]['nombre_archivo'] . "." . $producto->uploads[0]['extension_archivo']; ?>", key: 1},
+
     ],
     });
 

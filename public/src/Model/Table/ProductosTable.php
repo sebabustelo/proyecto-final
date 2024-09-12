@@ -57,8 +57,8 @@ class ProductosTable extends Table
             'foreignKey' => 'proveedor_id',
             'joinType' => 'INNER',
         ]);
-        $this->hasMany('Uploads', [
-            'foreignKey' => 'kit_cirugia_id',
+        $this->hasMany('ProductosArchivos', [
+            'foreignKey' => 'producto_id',
         ]);
     }
 

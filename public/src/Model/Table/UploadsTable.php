@@ -44,7 +44,7 @@ class UploadsTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
-       
+
         $this->belongsTo('Productos', [
             'foreignKey' => 'kit_cirugia_id',
             'joinType' => 'INNER'
@@ -72,22 +72,10 @@ class UploadsTable extends Table
             ->notEmptyString('nombre_original');
 
         $validator
-            ->scalar('hash_archivo')
-            ->maxLength('hash_archivo', 64)
-            ->requirePresence('hash_archivo', 'create')
-            ->notEmptyString('hash_archivo');
-
-        $validator
             ->scalar('extension_archivo')
             ->maxLength('extension_archivo', 10)
             ->requirePresence('extension_archivo', 'create')
             ->notEmptyString('extension_archivo');
-
-        $validator
-            ->scalar('hash_llave')
-            ->maxLength('hash_llave', 64)
-            ->requirePresence('hash_llave', 'create')
-            ->notEmptyString('hash_llave');
 
         return $validator;
     }

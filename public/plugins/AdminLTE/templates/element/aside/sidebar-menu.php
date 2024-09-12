@@ -19,6 +19,12 @@ $action =   $this->request->getParam('action');
     </li>
 
     <li>
+        <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+            <i class="fa fa-files-o"></i>
+            <span>Pedidos</span></a>
+    </li>
+
+    <li>
         <a href="<?php echo $this->Url->build('/Productos/index'); ?>">
             <i class="fa fa-fw fa-medkit"></i> <span>Kit de Cirugías</span>
         </a>
@@ -200,7 +206,7 @@ $action =   $this->request->getParam('action');
     </li>
 
 
-    <li class="treeview">
+    <!-- <li class="treeview">
         <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Layout Options</span>
@@ -283,7 +289,7 @@ $action =   $this->request->getParam('action');
             <li><a href="<?php echo $this->Url->build('/pages/tables/simple'); ?>"><i class="fa fa-circle-o"></i> Simple tables</a></li>
             <li><a href="<?php echo $this->Url->build('/pages/tables/data'); ?>"><i class="fa fa-circle-o"></i> Data tables</a></li>
         </ul>
-    </li>
+    </li> -->
 
     <!-- <li>
         <a href="<?php echo $this->Url->build('/pages/mailbox/mailbox'); ?>">
