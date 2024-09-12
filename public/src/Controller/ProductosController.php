@@ -56,9 +56,9 @@ class ProductosController extends AppController
         $producto = $this->Productos->newEmptyEntity();
         if ($this->request->is('post')) {
            // debug( count($_FILES['imagenes']['name']));
-            debug($_FILES);
-            debug($this->request->getData());
-            die;
+            // debug($_FILES);
+           //  debug($this->request->getData());
+           // die;
             $producto = $this->Productos->patchEntity($producto, $this->request->getData());
 
             if ($this->Productos->save($producto)) {
@@ -68,7 +68,7 @@ class ProductosController extends AppController
 
                 if ($result['status']) {
                     foreach ($result['files'] as $file) {
-                        $upload = $this->Uploads->newEmptyEntity();
+                        $upload = $this->Productos->ProductosArchivos->newEmptyEntity();
                         $upload->product_id = $producto->id;
                         $upload->file_name = $file['file_name'];
                         $upload->file_extension = $file['file_extension'];
@@ -102,11 +102,11 @@ class ProductosController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $producto = $this->Productos->patchEntity($producto, $this->request->getData());
             if ($this->Productos->save($producto)) {
-                $this->Flash->success(__('The producto has been saved.'));
+                $this->Flash->success(__('El producto se actualizo correctamente.'));
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('The producto could not be saved. Please, try again.'));
+            $this->Flash->error(__('No se pudo eliminar el producto. Por favor, inténtalo de nuevo.'));
         }
         $categorias = $this->Productos->Categorias->find('list', limit: 200)->all();
         $proveedores = $this->Productos->Proveedores->find('list', limit: 200)->all();
@@ -125,9 +125,9 @@ class ProductosController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $producto = $this->Productos->get($id);
         if ($this->Productos->delete($producto)) {
-            $this->Flash->success(__('The producto has been deleted.'));
+            $this->Flash->success(__('El producto ha sido eliminado.'));
         } else {
-            $this->Flash->error(__('The producto could not be deleted. Please, try again.'));
+            $this->Flash->error(__('No se pudo eliminar el producto. Por favor, inténtalo de nuevo.'));
         }
 
         return $this->redirect(['action' => 'index']);

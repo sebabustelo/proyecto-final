@@ -158,7 +158,7 @@
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $producto->id],
                                                         [
-                                                            'confirm' => __('¿Está seguro de eliminar el producto {0}?', $producto->descripcion),
+                                                            'confirm' => __('¿Está seguro de eliminar el producto {0}?', $producto->nombre),
                                                             'class' => 'btn btn-danger btn-xs pencil',
                                                             'escape' => false
                                                         ]

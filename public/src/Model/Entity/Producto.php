@@ -46,5 +46,6 @@ class Producto extends Entity
         'modified' => true,       
         'categoria' => true,
         'proveedore' => true,
+        'activo' => true,
     ];
 }

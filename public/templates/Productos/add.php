@@ -7,13 +7,6 @@
  * @var \Cake\Collection\CollectionInterface|string[] $proveedores
  */
 ?>
-<?php
-/**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Estado $estado
- */
-?>
-
 
 <section class="content-header">
     <h1>
@@ -24,7 +17,7 @@
         <li class="active">Agregar</li>
     </ol>
 </section>
-<section id="ProductosAddForm" class="content">
+<section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
@@ -41,7 +34,7 @@
                         <form id="ProductosAddForm" name="ProductosAddForm" role="form" action="/Productos/add/" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <div class="form-group col-sm-4">
-                                <label >Nombre</label>
+                                <label>Nombre</label>
                                 <input required type="text" maxlength="150" placeholder="Ingrese el nombre" class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('nombre')) { ?>
                                     <?php foreach ($producto->getError('nombre') as $error) { ?>
@@ -69,8 +62,7 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Stock</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock"
-                                    class="form-control" onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')">
+                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock" class="form-control" onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -79,8 +71,7 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Precio</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio"
-                                    class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
+                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio" class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -96,22 +87,13 @@
                                     <?php } ?>
                                 <?php } ?>
                             </div>
-                            <!-- <div class="col-sm-3">
-                                <div class="verify-sub-box">
-                                    <div class="file-loading">
-                                        <input id="imagen-principal" name="imagen-principal" type="file" required>
-                                    </div>
-                                </div>
-                                <div class="kv-avatar-hint">
-                                    <small>La imagen debe ser menor a < 1500 KB</small>
-                                </div>
-                            </div> -->
+
                             <div class="col-md-12">
-                                <div class="verify-sub-box">
-                                    <div class="file-loading">
-                                        <input class="imagenes" type="file" accept=".jpg,.gif,.png"  multiple name="imagenes[]">
-                                    </div>
-                                </div>
+
+                                <input id="imagenes" name="imagenes[]" accept="image/*" type="file" multiple>
+                                <!-- <input id="imagenes" type="file" name="imagenes[]" multiple> -->
+
+
                                 <div class="kv-avatar-hint">
                                     <small>Las imagenes debe ser menor a < 1500 KB</small>
                                 </div>
@@ -141,7 +123,7 @@
 
                         <div class="form-row form-group col-sm-12 callout callout-info" role="alert">
                             <i class="fa fa-info-circle" aria-hidden="true"></i>
-                            La imagen principal se mostrará en la vista de kits de cirugías del cliente, y las imágenes secundarias serán visibles al ingresar en el detalle del mismo.
+                            La primera imagen aparecera en el listado de productos y las demás imágenes serán visibles al ingresar en el detalle del mismo.
                         </div>
                     </div>
                 </div>
@@ -157,50 +139,103 @@
             event.preventDefault();
         }
     }
-    // theme: "explorer-fa4",
-    // $("#imagen-principal").fileinput({
-    //     language: "es",
-    //     theme: "fa4",
-    //     'uploadUrl': '#',
-    //     maxFileSize: 1500,
-    //     showRemove: false,
-    //     showUpload: false,
-    //     showClose: false,
-    //     showCaption: false,
+    $(document).ready(function() {
+        $("#imagenes").fileinput({
+            language: "es",
+            showUploadedThumbs: false,
+            theme: "fa4",
 
-    //     browseClass: "btn btn-success",
-    //     browseLabel: "Imagen Principal",
-    //     browseIcon: "<i class='fa fa-plus'></i>",
-    //     allowedFileExtensions: ["jpg", "png", "gif"],
+            'uploadUrl': '#',
+            overwriteInitial: false,
+            initialPreviewAsData: false,
+            //browseOnZoneClick: "true",
+            maxFileSize: 1500,
+            showRemove: false,
+            showUpload: false,
+            // showZoom: false,
 
-    //     fileActionSettings: {
-    //         showUpload: false,
-    //         showRotate: false,
-    //         allowFullScreen: false,
-    //         zoomIcon: '<i class="fa fa-search-plus"></i> ',
-    //         removeIcon: '<i class="fa fa-trash-o"></i> ',
-    //     },
-    // });
+            showCaption: false,
+            maxFileCount: 4,
+            fileActionSettings: {
+                showUpload: false,
+                showRotate: false,
 
-    $(".imagenes").fileinput({
-       // language: "es",
-       // theme: "fa4",
-        'uploadUrl': '#',
-        // maxFileSize: 1500,
-        //showRemove: false,
-        showUpload: false,
-        // showZoom: false,
-        // showCaption: false,
-        maxFileCount: 4,
+                //showDrag:true,
+                //dragIcon:"<i class='fa fa-plus'></i>",
+                allowFullScreen: false,
 
-        browseClass: "btn btn-success",
-        browseLabel: "Imagenes",
-        browseIcon: "<i class='fa fa-plus'></i>",
-        // overwriteInitial: false,
-        // initialPreviewAsData: true,
-        allowedFileExtensions: ["jpg", "png", "gif"],
+                //zoomIcon: '<i class="fa fa-search-plus"></i> ',
+                //removeIcon: '<i class="fa fa-trash-o"></i> ',
+            },
 
+            browseClass: "btn btn-success",
+            browseLabel: "Imagenes",
+            browseIcon: "<i class='fa fa-plus'></i>",
+            allowedFileExtensions: ["jpg", "png", "gif"],
+        });
 
+        $('#ProductosAddForm').on('submit', function(event) {
+            event.preventDefault(); // Evita el envío automático del formulario
 
-    });
+            let formElement = document.getElementById('ProductosAddForm');
+
+            let myFormData = new FormData(formElement); // Recoge todos los datos del formulario
+
+            // Elimina los archivos previamente agregados en el FormData
+            myFormData.delete('imagenes[]');
+
+            // Obtén la lista de archivos seleccionados del plugin fileinput
+            let filesObject = $('#imagenes').fileinput('getFileStack');
+
+            // Convierte el objeto en un array de archivos
+            let filesArray = Object.values(filesObject);
+
+            // Añade los archivos al FormData
+            filesArray.forEach(function(fileObj) {
+                myFormData.append('imagenes[]', fileObj.file);
+            });
+
+            // Crea un formulario temporal para enviar los datos de FormData
+            let tempForm = document.createElement('form');
+            tempForm.method = 'POST';
+            tempForm.action = formElement.action;
+            tempForm.enctype = 'multipart/form-data';
+
+            // Añade el CSRF Token
+            let csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = '_csrfToken';
+            csrfToken.value = formElement.querySelector('input[name="_csrfToken"]').value;
+            tempForm.appendChild(csrfToken);
+
+            // Añade los datos de FormData al formulario temporal
+            for (let [key, value] of myFormData.entries()) {
+                if (value instanceof File) {
+                    let inputFile = document.createElement('input');
+                    inputFile.type = 'file';
+                    inputFile.name = key;
+                    inputFile.files = new DataTransfer().files; // Necesario para los archivos
+                    let dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(value);
+                    inputFile.files = dataTransfer.files;
+                    tempForm.appendChild(inputFile);
+                } else {
+                    let input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = key;
+                    input.value = value;
+                    tempForm.appendChild(input);
+                }
+            }
+
+            // Añade el formulario temporal al documento y envíalo
+            document.body.appendChild(tempForm);
+            tempForm.submit();
+
+            // Elimina el formulario temporal del documento
+            document.body.removeChild(tempForm);
+
+        });
+
+    })
 </script>

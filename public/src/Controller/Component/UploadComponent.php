@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller\Component;
 
 use Cake\Controller\Component;
@@ -32,29 +33,32 @@ class UploadComponent extends Component
     public function uploadMultiple($files, $destination)
     {
         $uploadedFiles = [];
-        debug($_FILES);
-        debug($files);die;
+
         foreach ($files as $file) {
-            if ($file['error'] != 0) {
+           
+            //debug($file->getError());die;
+            if ($file->getError() != 0) {
                 return ['status' => false, 'error' => 'Error uploading one or more files'];
             }
 
-            $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+            $extension = strtolower(pathinfo($file->getClientFilename(), PATHINFO_EXTENSION));
             if (!in_array($extension, $this->allowedExtensions)) {
                 return ['status' => false, 'error' => 'Invalid file type'];
             }
 
-            $newFileName = time() . '_' . $file['name'];
+            $newFileName = time() . '_' . $file->getClientFilename();
             $filePath = $destination . $newFileName;
 
-            if (move_uploaded_file($file['tmp_name'], $filePath)) {
+            // Mueve el archivo al destino deseado
+            try {
+                $file->moveTo($filePath);
                 $uploadedFiles[] = [
                     'file_name' => $newFileName,
                     'file_extension' => $extension,
-                    'file_size' => $file['size'],
+                    'file_size' => $file->getSize(),
                     'file_path' => $filePath
                 ];
-            } else {
+            } catch (\Exception $e) {
                 return ['status' => false, 'error' => 'Unable to save one or more files'];
             }
         }
