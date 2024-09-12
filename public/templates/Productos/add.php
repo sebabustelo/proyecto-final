@@ -41,7 +41,7 @@
                         <form id="ProductosAddForm" name="ProductosAddForm" role="form" action="/Productos/add/" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <div class="form-group col-sm-4">
-                                <label for="nombre">Nombre</label>
+                                <label >Nombre</label>
                                 <input required type="text" maxlength="150" placeholder="Ingrese el nombre" class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('nombre')) { ?>
                                     <?php foreach ($producto->getError('nombre') as $error) { ?>
@@ -68,7 +68,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label for="stock">Stock</label>
+                                <label>Stock</label>
                                 <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock"
                                     class="form-control" onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('stock')) { ?>
@@ -78,7 +78,7 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label for="stock">Precio</label>
+                                <label>Precio</label>
                                 <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio"
                                     class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('precio')) { ?>
@@ -88,7 +88,7 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-12">
-                                <label for="descripcion">Descripción</label>
+                                <label>Descripción</label>
                                 <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción" class="form-control" name="descripcion" oninvalid="this.setCustomValidity('Debe completar la descripción')" oninput="this.setCustomValidity('')"></textarea>
                                 <?php if ($producto->getError('descripcion')) { ?>
                                     <?php foreach ($producto->getError('descripcion') as $error) { ?>
@@ -109,7 +109,7 @@
                             <div class="col-md-12">
                                 <div class="verify-sub-box">
                                     <div class="file-loading">
-                                        <input id="imagenes" type="file" accept=".jpg,.gif,.png" multiple name="imagenes[]">
+                                        <input class="imagenes" type="file" accept=".jpg,.gif,.png"  multiple name="imagenes[]">
                                     </div>
                                 </div>
                                 <div class="kv-avatar-hint">
@@ -182,15 +182,15 @@
     //     },
     // });
 
-    $("#imagenes").fileinput({
-        language: "es",
-        theme: "fa4",
+    $(".imagenes").fileinput({
+       // language: "es",
+       // theme: "fa4",
         'uploadUrl': '#',
         // maxFileSize: 1500,
-        showRemove: false,
+        //showRemove: false,
         showUpload: false,
-         showZoom: false,
-         showCaption: false,
+        // showZoom: false,
+        // showCaption: false,
         maxFileCount: 4,
 
         browseClass: "btn btn-success",
