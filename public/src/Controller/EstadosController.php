@@ -46,7 +46,7 @@ class EstadosController extends AppController
             if ($this->Estados->save($estado)) {
                 $this->Flash->success(__('El estado se guardo correctamente.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect('/Estados/index');
             }
             $this->Flash->error(__('El estado no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
         }
@@ -68,7 +68,7 @@ class EstadosController extends AppController
             if ($this->Estados->save($estado)) {
                 $this->Flash->success(__('El estado se actualizo correctamente.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect('/Estados/index');
             }
             $this->Flash->error(__('El estado no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
         }
@@ -92,7 +92,7 @@ class EstadosController extends AppController
             $this->Flash->error(__('No se pudo eliminar el estado. Por favor, inténtalo de nuevo.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect('/Estados/index');
     }
 
     /**

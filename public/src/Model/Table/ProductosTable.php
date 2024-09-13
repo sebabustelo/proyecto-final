@@ -43,7 +43,7 @@ class ProductosTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('kit_cirugias');
+        // $this->setTable('kit_cirugias');
         $this->setDisplayField('nombre');
         $this->setPrimaryKey('id');
 
@@ -77,9 +77,14 @@ class ProductosTable extends Table
             ->notEmptyString('nombre');
 
         $validator
-            ->scalar('descripcion')
-            ->requirePresence('descripcion', 'create')
-            ->notEmptyString('descripcion');
+            ->scalar('descripcion_breve')
+            ->requirePresence('descripcion_breve', 'create')
+            ->notEmptyString('descripcion_breve');
+
+        $validator
+            ->scalar('descripcion_larga')
+            ->requirePresence('descripcion_larga', 'create')
+            ->allowEmptyString('descripcion_larga');
 
         $validator
             ->integer('categoria_id')

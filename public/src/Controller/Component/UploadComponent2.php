@@ -20,7 +20,7 @@ class UploadComponent extends Component
 
     public function upload($settings = [])
     {
-        // Configuración predeterminada      
+        // Configuración predeterminada
         $defaultSettings = [
             'allowedExtensions' => ['pdf', 'tif'],
             'maxSize' => 5 * 1024 * 1024, // 1 MB en bytes
@@ -70,8 +70,6 @@ class UploadComponent extends Component
 
             $hash_archivo = Security::hash($nombre_fichero  . date("YmdHis"), 'sha1', true);
 
-            $created = date('now');
-            $hash_llave = hash('sha256', $hash_archivo . $created);
 
             $nombre_archivo = substr($hash_archivo, 4, strlen($hash_archivo) - 4);
 
@@ -89,9 +87,7 @@ class UploadComponent extends Component
                     $upload = [
                         'nombre_archivo' => $nombre_archivo,
                         'nombre_original' => $nombreArchivoSinExtension,
-                        'hash_archivo' => $hash_archivo,
                         'extension_archivo' => $extensionArchivo,
-                        'hash_llave' => $hash_llave,
                         'kit_cirugia_id'   => $settings['producto_id'],
                         'es_principal'  => $settings['principal']
                     ];
@@ -102,7 +98,7 @@ class UploadComponent extends Component
                     $uploads[] =  $entityUpload->id;
                     //return $entityUpload->id;
                 } else {
-                    $error[] = 'Error al mover el archivo subido.';                    
+                    $error[] = 'Error al mover el archivo subido.';
                 }
             } else {
                 if (!in_array($extensionArchivo, $settings['allowedExtensions'])) {
@@ -120,7 +116,7 @@ class UploadComponent extends Component
 
     public function uploadEncrypt($settings = [])
     {
-        // Configuración predeterminada      
+        // Configuración predeterminada
         $defaultSettings = [
             'allowedExtensions' => ['pdf', 'tif'],
             'maxSize' => 5 * 1024 * 1024, // 1 MB en bytes
@@ -231,7 +227,7 @@ class UploadComponent extends Component
             //$this->getController()->Flash->error('No tenia datos asociados');
         }
 
-        // Configuración predeterminada      
+        // Configuración predeterminada
         $defaultSettings = [
             'allowedExtensions' => ['pdf'],
             'maxSize' => 5 * 1024 * 1024, // 1 MB en bytes
@@ -247,7 +243,7 @@ class UploadComponent extends Component
 
         if (file_exists($output_dir . $nombre_archivo . '.' . $extension_archivo)) {
             if (unlink($output_dir . $nombre_archivo . '.' . $extension_archivo)) {
-                //$this->getController()->Flash->error('Arhivo asociado anteriormente eliminado.');               
+                //$this->getController()->Flash->error('Arhivo asociado anteriormente eliminado.');
                 return true;
             } else {
                 return false;
@@ -354,7 +350,7 @@ class UploadComponent extends Component
             $extension_archivo = $upload->extension_archivo;
             $nombre_archivo = substr($hash_archivo, 4);
 
-            // Configuración predeterminada      
+            // Configuración predeterminada
             $defaultSettings = [
                 'allowedExtensions' => ['pdf'],
                 'maxSize' => 5 * 1024 * 1024, // 1 MB en bytes
@@ -414,7 +410,7 @@ class UploadComponent extends Component
                     $extension_archivo = $upload->extension_archivo;
                     $nombre_archivo = substr($hash_archivo, 4);
 
-                    // Configuración predeterminada      
+                    // Configuración predeterminada
                     $defaultSettings = [
                         'allowedExtensions' => ['pdf'],
                         'maxSize' => 5 * 1024 * 1024, // 1 MB en bytes

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -10,6 +11,12 @@ namespace App\Controller;
  */
 class ObrasSocialesController extends AppController
 {
+    protected array $paginate = [
+        'limit' => 10,
+        'order' => [
+            'ObrasSociales.nombre' => 'asc',
+        ],
+    ];
     /**
      * Index method
      *
@@ -17,23 +24,13 @@ class ObrasSocialesController extends AppController
      */
     public function index()
     {
-        $query = $this->ObrasSociales->find();
-        $obrasSociales = $this->paginate($query);
+        $conditions = $this->getConditions();
+        $obrasSociales = $this->ObrasSociales->find()
+            ->where($conditions['where'])
+            ->contain($conditions['contain']);
 
-        $this->set(compact('obrasSociales'));
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Obras Sociale id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $obrasSociale = $this->ObrasSociales->get($id, contain: []);
-        $this->set(compact('obrasSociale'));
+        $this->set('filters', $this->getRequest()->getQuery());
+        $this->set('obrasSociales', $this->paginate($obrasSociales));
     }
 
     /**
@@ -43,17 +40,17 @@ class ObrasSocialesController extends AppController
      */
     public function add()
     {
-        $obrasSociale = $this->ObrasSociales->newEmptyEntity();
+        $obraSocial = $this->ObrasSociales->newEmptyEntity();
         if ($this->request->is('post')) {
-            $obrasSociale = $this->ObrasSociales->patchEntity($obrasSociale, $this->request->getData());
-            if ($this->ObrasSociales->save($obrasSociale)) {
-                $this->Flash->success(__('The obras sociale has been saved.'));
+            $obraSocial = $this->ObrasSociales->patchEntity($obraSocial, $this->request->getData());
+            if ($this->ObrasSociales->save($obraSocial)) {
+                $this->Flash->success(__('La obra social se guardo correctamente.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect('/ObrasSociales/index');
             }
-            $this->Flash->error(__('The obras sociale could not be saved. Please, try again.'));
+            $this->Flash->error(__('La obra social no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
         }
-        $this->set(compact('obrasSociale'));
+        $this->set(compact('obraSocial'));
     }
 
     /**
@@ -65,17 +62,17 @@ class ObrasSocialesController extends AppController
      */
     public function edit($id = null)
     {
-        $obrasSociale = $this->ObrasSociales->get($id, contain: []);
+        $obraSocial = $this->ObrasSociales->get($id, contain: []);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $obrasSociale = $this->ObrasSociales->patchEntity($obrasSociale, $this->request->getData());
-            if ($this->ObrasSociales->save($obrasSociale)) {
-                $this->Flash->success(__('The obras sociale has been saved.'));
+            $obraSocial = $this->ObrasSociales->patchEntity($obraSocial, $this->request->getData());
+            if ($this->ObrasSociales->save($obraSocial)) {
+                $this->Flash->success(__('La obra social se actualizo correctamente.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect('/ObrasSociales/index');
             }
-            $this->Flash->error(__('The obras sociale could not be saved. Please, try again.'));
+            $this->Flash->error(__('La obra social no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
         }
-        $this->set(compact('obrasSociale'));
+        $this->set(compact('obraSocial'));
     }
 
     /**
@@ -88,13 +85,49 @@ class ObrasSocialesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $obrasSociale = $this->ObrasSociales->get($id);
-        if ($this->ObrasSociales->delete($obrasSociale)) {
-            $this->Flash->success(__('The obras sociale has been deleted.'));
+        $obraSocial = $this->ObrasSociales->get($id);
+        if ($this->ObrasSociales->delete($obraSocial)) {
+            $this->Flash->success(__('La obra social ha sido eliminada.'));
         } else {
-            $this->Flash->error(__('The obras sociale could not be deleted. Please, try again.'));
+            $this->Flash->error(__('No se pudo eliminar la obra social. Por favor, inténtalo de nuevo.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect('/ObrasSociales/index');
+    }
+
+    /**
+     * getCondition method
+     *
+     * @param string|null $data Data send by the Form .
+     * @return array $conditions Conditions for search filters with $conditions['where'], $conditions['contain'] and $conditions['matching'] to find.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    private function getConditions()
+    {
+        $data = $this->getRequest()->getQuery();
+        $conditions['where'] = [];
+        $conditions['contain'] = [];
+
+        if (isset($data['cuit']) and !empty($data['email'])) {
+            $conditions['where'][] = ['ObrasSociales.cuit LIKE ' => '%' . $data['cuit'] . '%'];
+        }
+
+        if (isset($data['nombre']) and !empty($data['nombre'])) {
+            $conditions['where'][] = ['ObrasSociales.nombre LIKE' => '%' . $data['nombre'] . '%'];
+        }
+
+        if (isset($data['email']) and !empty($data['email'])) {
+            $conditions['where'][] = ['ObrasSociales.email LIKE ' => '%' . $data['email'] . '%'];
+        }
+
+        if (isset($data['activo'])) {
+            $conditions['where'][] = ['ObrasSociales.activo' => $data['activo']];
+        } else {
+            $conditions['where'][] = ['ObrasSociales.activo' => 1];
+        }
+
+        $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
+
+        return $conditions;
     }
 }

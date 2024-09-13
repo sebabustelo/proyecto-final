@@ -31,10 +31,10 @@
                 </div>
                 <div class="box-body">
                     <div class="form-row">
-                        <form id="ProductosAddForm" name="ProductosEditForm" role="form" action="/Productos/edit/<?php echo $producto->id; ?>" method="POST" enctype="multipart/form-data">
+                        <form id="ProductosEditForm" name="ProductosEditForm" role="form" action="/Productos/edit/<?php echo $producto->id; ?>" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <div class="form-group col-sm-4">
-                                <label for="nombre">Nombre</label>
+                                <label>Nombre</label>
                                 <input required type="text" maxlength="150" placeholder="Ingrese el nombre" class="form-control" name="nombre" value="<?php echo $producto->nombre; ?>">
                                 <?php if ($producto->getError('nombre')) { ?>
                                     <?php foreach ($producto->getError('nombre') as $error) { ?>
@@ -69,7 +69,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label for="stock">Stock</label>
+                                <label>Stock</label>
                                 <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock" class="form-control" value="<?php echo $producto->stock; ?>">
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
@@ -78,7 +78,7 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label for="stock">Precio</label>
+                                <label>Precio</label>
                                 <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio" class="form-control" value="<?php echo $producto->precio; ?>">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
@@ -87,34 +87,26 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-12">
-                                <label for="descripcion">Descripción</label>
-                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción" class="form-control" name="descripcion"><?php echo $producto->descripcion; ?></textarea>
-                                <?php if ($producto->getError('descripcion')) { ?>
-                                    <?php foreach ($producto->getError('descripcion') as $error) { ?>
+                                <label>Descripción</label>
+                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción"
+                                    class="form-control" name="descripcion_breve"><?php echo $producto->descripcion_breve; ?></textarea>
+                                <?php if ($producto->getError('descripcion_breve')) { ?>
+                                    <?php foreach ($producto->getError('descripcion_breve') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
                                     <?php } ?>
                                 <?php } ?>
                             </div>
-                            <div class="col-sm-3">
+                            <div class="col-sm-12">
                                 <div class="verify-sub-box">
                                     <div class="file-loading">
-                                        <input id="imagen-principal" name="imagen-principal" type="file" required>
+                                        <input id="imagenes" name="imagenes[]" accept=".jpg, .jpeg, .png, .gif" type="file" multiple>
                                     </div>
                                 </div>
                                 <div class="kv-avatar-hint">
                                     <small>La imagen debe ser menor a < 1500 KB</small>
                                 </div>
                             </div>
-                            <div class="col-md-9">
-                                <div class="verify-sub-box">
-                                    <div class="file-loading">
-                                        <input id="imagenes-secundarias" type="file" accept=".jpg,.gif,.png" multiple name="imagenes[]">
-                                    </div>
-                                </div>
-                                <div class="kv-avatar-hint">
-                                    <small>Las imagenes debe ser menor a < 1500 KB</small>
-                                </div>
-                            </div>
+
 
                             <?php
                             if ($this->request->getSession()->check('previousUrl')) {
@@ -157,7 +149,7 @@
         }
     }
     // theme: "explorer-fa4",
-    $("#imagen-principal").fileinput({
+    $("#imagenes").fileinput({
         language: "es",
         theme: "fa4",
         'uploadUrl': '#',
@@ -168,9 +160,12 @@
         showCaption: false,
 
         browseClass: "btn btn-success",
-        browseLabel: "Imagen Principal",
+        browseLabel: "Imagenes",
         browseIcon: "<i class='fa fa-plus'></i>",
         allowedFileExtensions: ["jpg", "png", "gif"],
+
+        overwriteInitial: false,
+
 
         fileActionSettings: {
             showUpload: false,
@@ -181,41 +176,96 @@
         },
         initialPreview: [
             // IMAGE DATA
-            '<img src="/img/productos/<?php echo $producto->uploads[0]['nombre_archivo'] . "." . $producto->uploads[0]['extension_archivo']; ?>" class="file-preview-image kv-preview-data" title="fin_short.jpg" alt="fin_short.jpg" style="width: auto; height: auto; max-width: 100%; max-height: 100%; image-orientation: from-image;">'
-
-
+            <?php
+            foreach ($producto->productos_archivos as $k => $producto_archivo) { ?> '<img src="/img/productos/<?php echo $producto_archivo['file_name']; ?>" class="file-preview-image kv-preview-data" alt="fin_short.jpg" >',
+            <?php }        ?>
 
         ],
-        initialPreviewConfig: [
-        {caption: "Desert.jpg", size: 827000, width: "120px", url: "http://ipmagna.local/img/productos/<?php echo $producto->uploads[0]['nombre_archivo'] . "." . $producto->uploads[0]['extension_archivo']; ?>", key: 1},
+       // initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
+        initialPreviewFileType: 'image', // image is the default and can be overridden in config below
 
-    ],
+        initialPreviewConfig: [{
+                caption: "Desert.jpg",
+                description: "<h5>The Desert</h5> This is a representative description number one for this image.",
+                size: 827000,
+                width: "120px",
+                url: "/file-upload-batch/2",
+                key: 1
+            },
+            {
+                caption: "Lighthouse.jpg",
+                description: "<h5>The Lighthouse</h5> This is a representative description number two for this image.",
+                size: 549000,
+                width: "120px",
+                url: "/file-upload-batch/2",
+                key: 2
+            },
+
+        ],
+
     });
 
-    $("#imagenes-secundarias").fileinput({
-        language: "es",
-        theme: "fa4",
-        'uploadUrl': '#',
-        maxFileSize: 1500,
-        showRemove: false,
-        showUpload: false,
-        showZoom: false,
-        showCaption: false,
-        maxFileCount: 4,
+    $('#ProductosEditForm').on('submit', function(event) {
+        event.preventDefault(); // Evita el envío automático del formulario
 
-        browseClass: "btn btn-success",
-        browseLabel: "Imagenes Secundarias",
-        browseIcon: "<i class='fa fa-plus'></i>",
-        // overwriteInitial: false,
-        // initialPreviewAsData: true,
-        allowedFileExtensions: ["jpg", "png", "gif"],
-        fileActionSettings: {
-            showUpload: false,
-            showRotate: false,
-            //   showZoom: false,
-            // removeIcon: "<i class='fa fa-times'></i>",
-        },
+        let formElement = document.getElementById('ProductosEditForm');
 
+        let myFormData = new FormData(formElement); // Recoge todos los datos del formulario
+
+        // Elimina los archivos previamente agregados en el FormData
+        myFormData.delete('imagenes[]');
+
+        // Obtén la lista de archivos seleccionados del plugin fileinput
+        let filesObject = $('#imagenes').fileinput('getFileStack');
+
+        // Convierte el objeto en un array de archivos
+        let filesArray = Object.values(filesObject);
+
+        // Añade los archivos al FormData
+        filesArray.forEach(function(fileObj) {
+            myFormData.append('imagenes[]', fileObj.file);
+        });
+
+        // Crea un formulario temporal para enviar los datos de FormData
+        let tempForm = document.createElement('form');
+        tempForm.method = 'POST';
+        tempForm.action = formElement.action;
+        tempForm.enctype = 'multipart/form-data';
+
+        // Añade el CSRF Token
+        let csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = '_csrfToken';
+        csrfToken.value = formElement.querySelector('input[name="_csrfToken"]').value;
+        tempForm.appendChild(csrfToken);
+
+        // Añade los datos de FormData al formulario temporal
+        for (let [key, value] of myFormData.entries()) {
+            if (value instanceof File) {
+                let inputFile = document.createElement('input');
+                inputFile.type = 'file';
+                inputFile.name = key;
+                inputFile.files = new DataTransfer().files; // Necesario para los archivos
+                let dataTransfer = new DataTransfer();
+                dataTransfer.items.add(value);
+                inputFile.files = dataTransfer.files;
+                tempForm.appendChild(inputFile);
+            } else {
+                let input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                tempForm.appendChild(input);
+            }
+        }
+
+        // Añade el formulario temporal al documento y envíalo
+        document.body.appendChild(tempForm);
+        tempForm.submit();
+
+        // Elimina el formulario temporal del documento
+        document.body.removeChild(tempForm);
 
     });
 </script>
+<?php debug($producto) ?>

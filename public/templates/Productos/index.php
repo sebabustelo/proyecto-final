@@ -16,7 +16,7 @@
         Administración
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"> Kit de Cirugías</a></li> <i class="fa fa-arrow-right"></i>
+        <li><a href="#"> Productos</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Listado</li>
     </ol>
 </section>
@@ -37,7 +37,7 @@
                                 <input type="text" name="nombre" placeholder="Nombre" class="form-control" id="nombre" aria-label="nombre" value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
                             </div>
                             <div class="form-group col-md-8">
-                                <input type="text" name="descripcion" placeholder="Descripción" class="form-control" id="descripcion" aria-label="descripcion" value="<?php echo (isset($filters['descripcion'])) ? $filters['descripcion'] : '' ?>">
+                                <input type="text" name="descripcion_breve" placeholder="Descripción breve" class="form-control" id="descripcion_breve" aria-label="descripcion_breve" value="<?php echo (isset($filters['descripcion_breve'])) ? $filters['descripcion_breve'] : '' ?>">
                             </div>
                             <div class=" form-group col-sm-2">
                                 <label class="btn btn-default btn-block">
@@ -91,11 +91,11 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-list"></span> Kits de Cirugías</h3>
+                    <h3 class="box-title"> <span class="fa fa-list"></span> Productos</h3>
                     <div class="box-tools pull-right">
                         <?php if (!empty($accionesPermitidas['Productos']['add'])) { ?>
                             <a href="/Productos/add/" id="agregarProducto" class="btn btn-primary btn-sm ">
-                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nuevo Kit de Cirugía
+                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nuevo Producto
                                 </span></a>
                         <?php } ?>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -126,19 +126,20 @@
                                             <th></th>
                                         </tr>
                                     </thead>
+
                                     <tbody>
                                         <?php foreach ($productos as $producto) { ?>
                                             <tr>
                                                 <!-- Columna Imagen -->
                                                 <td>
-                                                    <img src="/img/productos/<?php //echo $producto->uploads[0]['nombre_archivo'] . "." . $producto->uploads[0]['extension_archivo']; ?>" alt="Imagen" class="img-thumbnail" style="width: 90%;">
+                                                    <img src="/img/productos/<?php echo $producto->productos_archivos[0]['file_name'] ; ?>" alt="Imagen" class="img-thumbnail" style="width: 90%;">
                                                 </td>
 
                                                 <td>
                                                     <?php echo $producto->nombre; ?>
                                                 </td>
                                                 <td class=" hidden-xs">
-                                                    <?php echo mostrarResumen($producto->descripcion, 200); ?>
+                                                    <?php echo mostrarResumen($producto->descripcion_breve, 200); ?>
                                                 </td>
                                                 <td class=" hidden-xs">
                                                     <?php echo $this->Time->format($producto->created, 'dd/MM/Y HH:mm:ss'); ?>
@@ -172,7 +173,7 @@
                             </div>
                         <?php } else { ?>
                             <div class="callout callout-info">
-                                <p> <i class="fa-lg fa fa-info" aria-hidden="true"></i> Todavía no se ha cargado ningún Kit de Cirugía.</p>
+                                <p> <i class="fa-lg fa fa-info" aria-hidden="true"></i> Todavía no se ha cargado ningún Producto.</p>
                             </div>
                         <?php } ?>
                     <?php } else {

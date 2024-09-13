@@ -13,7 +13,7 @@
         Administración
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"> Kit de Cirugías</a></li> <i class="fa fa-arrow-right"></i>
+        <li><a href="#"> Productos</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Agregar</li>
     </ol>
 </section>
@@ -22,10 +22,10 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-plus fa-lg"></span> Nuevo Kit de Cirugía</h3>
+                    <h3 class="box-title"> <span class="fa fa-plus fa-lg"></span> Nuevo Producto</h3>
                     <div class="box-tools pull-right">
                         <a href="/Productos/index/" class="btn btn-sm btn-primary ">
-                            <span class="fa fa-list"></span> Kits de Cirugías</a>
+                            <span class="fa fa-list"></span> Productos</a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
@@ -88,27 +88,26 @@
                                 <?php } ?>
                             </div>
 
-                            <div class="col-md-12">
-
-                                <input id="imagenes" name="imagenes[]" accept="image/*" type="file" multiple>
-                                <!-- <input id="imagenes" type="file" name="imagenes[]" multiple> -->
-
-
+                            <div class="col-sm-12">
+                                <div class="verify-sub-box">
+                                    <div class="file-loading">
+                                        <input id="imagenes" name="imagenes[]"  accept=".jpg, .jpeg, .png, .gif"  type="file" multiple>
+                                    </div>
+                                </div>
                                 <div class="kv-avatar-hint">
-                                    <small>Las imagenes debe ser menor a < 1500 KB</small>
+                                    <small>La imagen debe ser menor a < 1500 KB</small>
                                 </div>
                             </div>
-
                             <?php
                             if ($this->request->getSession()->check('previousUrl')) {
                                 $url = $this->request->getSession()->read('previousUrl');
-                                if (strpos($url, "Estados") !== false) {
+                                if (strpos($url, "Productos") !== false) {
                                     $url = $this->request->getSession()->read('previousUrl');
                                 } else {
-                                    $url = "/Estados/index/";
+                                    $url = "/Productos/index/";
                                 }
                             } else {
-                                $url = '/Estados/index';
+                                $url = '/Productos/index';
                             }
                             ?>
 
@@ -142,36 +141,26 @@
     $(document).ready(function() {
         $("#imagenes").fileinput({
             language: "es",
-            showUploadedThumbs: false,
             theme: "fa4",
-
             'uploadUrl': '#',
-            overwriteInitial: false,
-            initialPreviewAsData: false,
-            //browseOnZoneClick: "true",
             maxFileSize: 1500,
             showRemove: false,
             showUpload: false,
-            // showZoom: false,
-
+            showClose: false,
             showCaption: false,
-            maxFileCount: 4,
-            fileActionSettings: {
-                showUpload: false,
-                showRotate: false,
-
-                //showDrag:true,
-                //dragIcon:"<i class='fa fa-plus'></i>",
-                allowFullScreen: false,
-
-                //zoomIcon: '<i class="fa fa-search-plus"></i> ',
-                //removeIcon: '<i class="fa fa-trash-o"></i> ',
-            },
 
             browseClass: "btn btn-success",
             browseLabel: "Imagenes",
             browseIcon: "<i class='fa fa-plus'></i>",
             allowedFileExtensions: ["jpg", "png", "gif"],
+
+            fileActionSettings: {
+                showUpload: false,
+                showRotate: false,
+                allowFullScreen: false,
+                zoomIcon: '<i class="fa fa-search-plus"></i> ',
+                removeIcon: '<i class="fa fa-trash-o"></i> ',
+            },
         });
 
         $('#ProductosAddForm').on('submit', function(event) {

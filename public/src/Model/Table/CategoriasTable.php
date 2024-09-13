@@ -9,6 +9,7 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Event\EventInterface;
 use Cake\ORM\Entity;
+use Cake\ORM\Exception\PersistenceFailedException;
 
 /**
  * Categorias Model
@@ -104,6 +105,17 @@ class CategoriasTable extends Table
     public function beforeSave(EventInterface $event, Entity $entity, $options)
     {
         $entity->nombre = ucfirst($entity->nombre);
+    }
+
+    public function beforeDelete($event, $entity, $options)
+    {
+        $productosCount = $this->Productos->find()
+            ->where(['categoria_id' => $entity->id])
+            ->count();
+
+        if ($productosCount > 0) {
+            throw new PersistenceFailedException($entity, __('No se puede eliminar la categoría porque tiene productos asociados.'));
+        }
     }
 
 }

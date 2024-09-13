@@ -48,7 +48,7 @@ class CategoriasController extends AppController
             if ($this->Categorias->save($categoria)) {
                 $this->Flash->success(__('La categoría se guardo correctamente.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect('/Categorias/index');
             }
             $this->Flash->error(__('La categoría no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
         }
@@ -70,7 +70,7 @@ class CategoriasController extends AppController
             if ($this->Categorias->save($categoria)) {
                 $this->Flash->success(__('La categoría se actualizo correctamente.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect('/Categorias/index');
             }
             $this->Flash->error(__('La categoría no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
         }
@@ -94,7 +94,7 @@ class CategoriasController extends AppController
             $this->Flash->error(__('No se pudo eliminar la categoría. Por favor, inténtalo de nuevo.'));
         }
 
-        return $this->redirect(['action' => 'index']);
+        return $this->redirect('/Categorias/index');
     }
 
     /**

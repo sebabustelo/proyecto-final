@@ -24,11 +24,14 @@ class ProductosController extends AppController
      */
     public function index()
     {
-        $query = $this->Productos->find()
-            ->contain(['Categorias', 'Proveedores', 'ProductosArchivos']);
-        $productos = $this->paginate($query);
+        $conditions = $this->getConditions();
+        $productos = $this->Productos->find()
+            ->where($conditions['where'])
+            ->contain($conditions['contain']);
 
-        $this->set(compact('productos'));
+        $this->set('filters', $this->getRequest()->getQuery());
+        $this->set('productos', $this->paginate($productos));
+
     }
 
     /**
@@ -67,6 +70,8 @@ class ProductosController extends AppController
                 $result = $this->Upload->uploadMultiple($files, WWW_ROOT . 'img/productos/');
 
                 if ($result['status']) {
+                    //La primer imagen es la principal
+                    $principal = true;
                     foreach ($result['files'] as $file) {
                         $upload = $this->Productos->ProductosArchivos->newEmptyEntity();
                         $upload->product_id = $producto->id;
@@ -74,15 +79,20 @@ class ProductosController extends AppController
                         $upload->file_extension = $file['file_extension'];
                         $upload->file_size = $file['file_size'];
                         $upload->file_path = $file['file_path'];
+                        $upload->producto_id = $producto->id;
+                        if($principal){
+                            $upload->es_principal = 1;
+                            $principal = false;
+                        }
                         $this->Productos->ProductosArchivos->save($upload);
                     }
-                    $this->Flash->success(__('El kit se guardo correctamente.'));
+                    $this->Flash->success(__('El producto se guardo correctamente.'));
                     return $this->redirect(['action' => 'index']);
                 } else {
                     $this->Flash->error($result['error']);
                 }
             }
-            $this->Flash->error(__('El kit no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
+            $this->Flash->error(__('El producto no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
         }
         $categorias = $this->Productos->Categorias->find('list', limit: 200)->all();
         $proveedores = $this->Productos->Proveedores->find('list', limit: 200)->all();
@@ -98,9 +108,11 @@ class ProductosController extends AppController
      */
     public function edit($id = null)
     {
-        $producto = $this->Productos->get($id, contain: ['Uploads']);
+        $producto = $this->Productos->get($id, contain: ['ProductosArchivos']);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $producto = $this->Productos->patchEntity($producto, $this->request->getData());
+            debug($producto);
+            debug( $this->request->getData());die;
             if ($this->Productos->save($producto)) {
                 $this->Flash->success(__('El producto se actualizo correctamente.'));
 
@@ -131,5 +143,37 @@ class ProductosController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * getCondition method
+     *
+     * @param string|null $data Data send by the Form .
+     * @return array $conditions Conditions for search filters with $conditions['where'], $conditions['contain'] and $conditions['matching'] to find.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    private function getConditions()
+    {
+        $data = $this->getRequest()->getQuery();
+        $conditions['where'] = [];
+        $conditions['contain'] =['Categorias', 'Proveedores', 'ProductosArchivos'];
+
+        if (isset($data['nombre']) and !empty($data['nombre'])) {
+            $conditions['where'][] = ['Productos.nombre LIKE' => '%' . $data['nombre'] . '%'];
+        }
+
+        if (isset($data['descripcion_breve']) and !empty($data['descripcion_breve'])) {
+            $conditions['where'][] = ['Productos.descripcion_breve LIKE ' => '%' . $data['descripcion_breve'] . '%'];
+        }
+
+        if (isset($data['activo'])) {
+            $conditions['where'][] = ['Productos.activo' => $data['activo']];
+        } else {
+            $conditions['where'][] = ['Productos.activo' => 1];
+        }
+
+        $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
+
+        return $conditions;
     }
 }
