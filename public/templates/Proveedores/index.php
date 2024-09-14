@@ -8,14 +8,14 @@
 
 <section class="content-header">
     <h1>
-        Administración
+        Parámetros del sistema
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"> Proveedores</a></li> <i class="fa fa-arrow-right"></i>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Proveedores</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Listado</li>
     </ol>
 </section>
-<section id="ProveedoresList" class="content">
+<section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
@@ -65,13 +65,13 @@
                             <div class="form-group col-md-12 text-center ">
                                 <button type="button" id="limpiar" class="btn btn-default">
                                     <span class="glyphicon glyphicon-trash"></span>
-                                    Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                    Limpiar
+                                </button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="submit" id="enviar" class="btn btn-primary">
                                     <span class="glyphicon glyphicon-search"></span>
-                                    Buscar</button>
+                                    Buscar
+                                </button>
 
-                                <!--div class="form-group col-md-4"!-->
-                                <!--a href="#" id="limpiar" class="btn btn-default" title=""><span class="glyphicon glyphicon-trash"></span> Limpiar</a!-->
                                 <script>
                                     $(function() {
                                         $('#limpiar').on('click', function() {
@@ -105,9 +105,9 @@
                     <h3 class="box-title"> <span class="fa fa-list"></span> Proveedores</h3>
                     <div class="box-tools pull-right">
                         <?php if (!empty($accionesPermitidas['Proveedores']['add'])) { ?>
-                            <a href="/Proveedores/add/" class="btn btn-primary btn-sm ">
-                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nuevo
-                                Proveedor</span></a>
+                            <a title="Agregar proveedor" href="/Proveedores/add/" class="btn btn-primary btn-sm ">
+                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nuevo Proveedor</span>
+                            </a>
                         <?php } ?>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
                                 class="fa fa-minus"></i></button>
@@ -117,7 +117,7 @@
                     <?php if (isset($proveedores)) { ?>
                         <?php if (count($proveedores) > 0) { ?>
                             <div class="table-responsive">
-                                <table class="table table-hover table-striped table-ajax">
+                                <table class="table table-hover table-striped">
                                     <thead>
                                         <tr>
                                             <th>
@@ -126,17 +126,17 @@
                                             <th>
                                                 <?php echo $this->Paginator->sort('email', 'Correo'); ?>
                                             </th>
-                                            <th>
-                                                <?php echo $this->Paginator->sort('ciut', 'CUIT'); ?>
+                                            <th class="hidden-xs">
+                                                <?php echo $this->Paginator->sort('cuit', 'CUIT'); ?>
                                             </th>
-                                            <th>
+                                            <th class="hidden-xs">
                                                 <?php echo $this->Paginator->sort('telefono', 'Telefóno'); ?>
                                             </th>
-                                            <th>
-                                                <?php echo $this->Paginator->sort('created', 'Alta'); ?>
-                                            </th>
-                                            <th>
-                                                <?php echo $this->Paginator->sort('modified', 'Última modificación'); ?>
+                                            <th class="hidden-xs">
+                                                <?php echo $this->Paginator->sort('created', 'Creación'); ?>
+                                            </th class="hidden-xs">
+                                            <th class="hidden-xs">
+                                                <?php echo $this->Paginator->sort('modified', 'Modificación'); ?>
                                             </th>
                                             <th>
                                             </th>
@@ -153,17 +153,17 @@
                                                 <td>
                                                     <?php echo $proveedor->email; ?>
                                                 </td>
-                                                <td>
+                                                <td class="hidden-xs">
                                                     <?php echo $proveedor->cuit; ?>
                                                 </td>
-                                                <td>
+                                                <td class="hidden-xs">
                                                     <?php echo $proveedor->telefono; ?>
                                                 </td>
-                                                <td>
-                                                <?php echo $this->Time->format($proveedor->created, 'dd/MM/Y HH:mm:ss'); ?>
+                                                <td class="hidden-xs">
+                                                    <?php echo $this->Time->format($proveedor->created, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
-                                                <td>
-                                                <?php echo $this->Time->format($proveedor->modified, 'dd/MM/Y HH:mm:ss'); ?>
+                                                <td class="hidden-xs">
+                                                    <?php echo $this->Time->format($proveedor->modified, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
                                                 <td class="pencil">
                                                     <a href="/Proveedores/edit/<?php echo $proveedor->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
@@ -173,8 +173,9 @@
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $proveedor->id],
                                                         [
-                                                            'confirm' => __('¿Esta seguro de eliminar el proveedor {0}?', $proveedor->descripcion),
+                                                            'confirm' => __('¿Esta seguro de eliminar el proveedor {0}?', $proveedor->nombre),
                                                             'class' => 'btn btn-danger btn-xs pencil',
+                                                            'title' => 'Eliminar',
                                                             'escape' => false
                                                         ]
                                                     ) ?>

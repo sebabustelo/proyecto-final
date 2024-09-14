@@ -18,7 +18,9 @@
 
                             <div class="form-group col-sm-4">
                                 <label id="lblUsuario" for="usuario">Usuario (mail)</label>
-                                <input type="email" name="usuario" required value="<?php echo $rbacUsuario->usuario; ?>" oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')" placeholder="Ingrese el usuario" class="form-control" maxlength="20" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
+                                <input type="email" name="usuario" required value="<?php echo $rbacUsuario->usuario; ?>"
+                                oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
+                                placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
                                 <?php foreach ($rbacUsuario->getError('usuario') as $k => $v) { ?>
                                     <div class="form-group   label label-danger">
                                         <span class=" "> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>

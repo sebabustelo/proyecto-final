@@ -8,10 +8,10 @@
 
 <section class="content-header">
     <h1>
-        Administración
+        Parámetros del sistema
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"> Obras Sociales</a></li> <i class="fa fa-arrow-right"></i>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Obras Sociales</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Listado</li>
     </ol>
 </section>
@@ -100,9 +100,9 @@
                     <h3 class="box-title"> <span class="fa fa-list"></span> Obras Sociales</h3>
                     <div class="box-tools pull-right">
                         <?php if (!empty($accionesPermitidas['ObrasSociales']['add'])) { ?>
-                            <a href="/ObrasSociales/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
-                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nueva
-                                    Obra Social</span></a>
+                            <a  title="Agregar obra social" href="/ObrasSociales/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
+                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nueva Obra Social</span>
+                            </a>
                         <?php } ?>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
                                 class="fa fa-minus"></i></button>
@@ -121,7 +121,7 @@
                                             <th>
                                                 <?php echo $this->Paginator->sort('nombre', 'Nombre'); ?>
                                             </th>
-                                            <th>
+                                            <th >
                                                 <?php echo $this->Paginator->sort('email', 'Email'); ?>
                                             </th>
                                             <th class="hidden-xs">
@@ -160,16 +160,17 @@
                                                 <td class="hidden-xs">
                                                     <?php echo $this->Time->format($obraSocial->modified, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
-                                                <td class="pencil">
+                                                <td >
                                                     <a href="/ObrasSociales/edit/<?php echo $obraSocial->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                                                 </td>
-                                                <td class="remove">
+                                                <td >
                                                     <?= $this->Form->postLink(
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $obraSocial->id],
                                                         [
                                                             'confirm' => __('¿Esta seguro de eliminar la obra social {0}?', $obraSocial->nombre),
                                                             'class' => 'btn btn-danger btn-xs pencil',
+                                                            'title' => 'Eliminar',
                                                             'escape' => false
                                                         ]
                                                     ) ?>

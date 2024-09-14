@@ -7,10 +7,10 @@
 ?>
 <section class="content-header">
     <h1>
-        Administración de Estados de Pedido
+        Parámetros del sistema
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"></i> Proveedores</a></li> <i class="fa fa-arrow-right"></i>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Proveedores</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Agregar</li>
     </ol>
 </section>
@@ -21,8 +21,9 @@
                 <div class="box-header  with-border">
                     <h3 class="box-title"> <span class="fa fa-plus fa-lg"></span> Nuevo Proveedor</h3>
                     <div class="box-tools pull-right">
-                        <a href="/Proveedores/index/" class="btn btn-sm btn-primary ">
-                            <span class="fa fa-list"></span> Proveedores</a>
+                        <a title="Listado de proveedores" href="/Proveedores/index/" class="btn btn-sm btn-primary ">
+                            <span class="fa fa-list"></span> <span class=" hidden-xs">Proveedores</span>
+                        </a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
@@ -51,6 +52,50 @@
                                     <?php } ?>
                                 <?php } ?>
                                 <span id="mensaje-error" style="display: none;" class="badge bg-red"><i class="fa fa-warning"></i> El CUIT es inválido</span>
+
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label>Email</label>
+                                <input  required type="email" maxlength="100" placeholder="Ingrese el email"
+                                    class="form-control" name="email" >
+                                <?php if ($proveedor->getError('email')) { ?>
+                                    <?php foreach ($proveedor->getError('email') as $error) { ?>
+                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                                    <?php } ?>
+                                <?php } ?>
+
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Teléfono</label>
+                                <input  required type="number" maxlength="120" placeholder="Ingrese el teléfono"
+                                    class="form-control" name="telefono" >
+                                <?php if ($proveedor->getError('telefono')) { ?>
+                                    <?php foreach ($proveedor->getError('telefono') as $error) { ?>
+                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                                    <?php } ?>
+                                <?php } ?>
+
+                            </div>
+                            <div class="form-group col-sm-8">
+                                <label>Descripción</label>
+                                <input  type="text" maxlength="500" placeholder="Ingrese una descripción"
+                                    class="form-control" name="descripcion" >
+                                <?php if ($proveedor->getError('descripcion')) { ?>
+                                    <?php foreach ($proveedor->getError('descripcion') as $error) { ?>
+                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                                    <?php } ?>
+                                <?php } ?>
+
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label>Dirección</label>
+                                <input  required type="text" maxlength="255" placeholder="Ingrese la dirección"
+                                    class="form-control" name="direccion" >
+                                <?php if ($proveedor->getError('direccion')) { ?>
+                                    <?php foreach ($proveedor->getError('direccion') as $error) { ?>
+                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                                    <?php } ?>
+                                <?php } ?>
 
                             </div>
                             <?php

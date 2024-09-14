@@ -5,17 +5,16 @@
  * @var iterable<\App\Model\Entity\Categorias> $categorias
  */
 ?>
-
 <section class="content-header">
     <h1>
-        Administración
+        Parámetros del sistema
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-circle-o"></i> Categorías</a></li>
-        <li class="active">index</li>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Categorías</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Listado</li>
     </ol>
 </section>
-<section id="CategoriasList" class="content">
+<section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
@@ -95,9 +94,9 @@
                     <h3 class="box-title"> <span class="fa fa-list"></span> Categorías</h3>
                     <div class="box-tools pull-right">
                         <?php if (!empty($accionesPermitidas['Estados']['add'])) { ?>
-                            <a href="/Categorias/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
-                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nueva
-                                    Categoría</span></a>
+                            <a title="Agregar categoría" href="/Categorias/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
+                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nueva Categoría</span>
+                            </a>
                         <?php } ?>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
                                 class="fa fa-minus"></i></button>
@@ -113,14 +112,14 @@
                                             <th>
                                                 <?php echo $this->Paginator->sort('nombre', 'Nombre'); ?>
                                             </th>
-                                            <th>
+                                            <th class="hidden-xs">
                                                 <?php echo $this->Paginator->sort('descripcion', 'Descripción'); ?>
                                             </th>
-                                            <th>
-                                                <?php echo $this->Paginator->sort('created', 'Alta'); ?>
+                                            <th class="hidden-xs">
+                                                <?php echo $this->Paginator->sort('created', 'Creación'); ?>
                                             </th>
-                                            <th>
-                                                <?php echo $this->Paginator->sort('modified', 'Última modificación'); ?>
+                                            <th class="hidden-xs">
+                                                <?php echo $this->Paginator->sort('modified', 'Modificación'); ?>
                                             </th>
                                             <th>
                                             </th>
@@ -134,16 +133,16 @@
                                                 <td>
                                                     <?php echo $categoria->nombre; ?>
                                                 </td>
-                                                <td>
+                                                <td class="hidden-xs">
                                                     <?php echo $categoria->descripcion; ?>
                                                 </td>
-                                                <td>
-                                                <?php echo $this->Time->format($categoria->created, 'dd/MM/Y HH:mm:ss'); ?>
+                                                <td class="hidden-xs">
+                                                    <?php echo $this->Time->format($categoria->created, 'dd/MM/Y HH:mm:ss'); ?>
+                                                </td>
+                                                <td class="hidden-xs">
+                                                    <?php echo $this->Time->format($categoria->modified, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
                                                 <td>
-                                                <?php echo $this->Time->format($categoria->modified, 'dd/MM/Y HH:mm:ss'); ?>
-                                                </td>
-                                                <td class="pencil">
                                                     <a href="/Categorias/edit/<?php echo $categoria->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                                                 </td>
                                                 <td class="remove">
@@ -151,8 +150,9 @@
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $categoria->id],
                                                         [
-                                                            'confirm' => __('¿Esta seguro de eliminar la categoría {0}?', $categoria->descripcion),
+                                                            'confirm' => __('¿Esta seguro de eliminar la categoría {0}?', $categoria->nombre),
                                                             'class' => 'btn btn-danger btn-xs pencil',
+                                                            'title' => 'Eliminar',
                                                             'escape' => false
                                                         ]
                                                     ) ?>
@@ -167,8 +167,7 @@
                                 <p> <i class="fa-lg fa fa-info" aria-hidden="true"></i> Todavía no se ha cargado ningúna Categoría.</p>
                             </div>
                         <?php } ?>
-                    <?php } else {
-                    ?>
+                    <?php } else { ?>
                         <div class="callout callout-danger">
                             <p> <i class="icon fa fa-warning" aria-hidden="true"></i> No se encontraron resultados que
                                 coincidan con el criterio de búsqueda.</p>

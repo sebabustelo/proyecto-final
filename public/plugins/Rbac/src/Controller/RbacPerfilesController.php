@@ -9,15 +9,19 @@ use Cake\Utility\Inflector;
 class RbacPerfilesController extends RbacController
 {
 
-    public $order = 'descripcion ASC';
+    protected array $paginate = [
+        'limit' => 10,
+        'order' => [
+            'RbacPerfiles.descripcion' => 'asc',
+        ],
+    ];
 
     private $accionesDefaultLogin = array();
 
 
     public function index()
     {
-        $conditions = $this->getConditions($this->getRequest()->getQuery());
-        // debug($conditions);
+        $conditions = $this->getConditions();
         $rbacPerfiles = $this->RbacPerfiles->find()
             ->where($conditions['where'])
             ->contain($conditions['contain']);
@@ -26,97 +30,73 @@ class RbacPerfilesController extends RbacController
         $this->set('filters', $this->getRequest()->getQuery());
     }
 
-    public function getConditions($data)
-    {
-        $filterErrors = array();
-        $conditions['where'] = [];
-        $conditions['contain'] = ['RbacUsuarios'];
-
-        if (isset($data['descripcion']) and !empty($data['descripcion'])) {
-            $conditions['where'][] = ['RbacPerfiles.descripcion LIKE' => '%' . $data['descripcion'] . '%'];
-        }
-
-        $this->set('filterErrors', $filterErrors);
-        $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
-
-        return $conditions;
-    }
-
     public function agregar()
     {
+        $rbacPerfil = $this->RbacPerfiles->newEntity($this->getRequest()->getData(), ['associated' => ['RbacAcciones']]);
         if ($this->getRequest()->is('post')) {
-            $rbacPerfil = $this->RbacPerfiles->newEntity($this->getRequest()->getData(), ['associated' => ['RbacAcciones']]);
             if ($this->RbacPerfiles->save($rbacPerfil)) {
                 $this->Flash->success('Perfil creado correctamente');
                 $usuario = $this->getRequest()->getSession()->read('RbacUsuario');
                 $this->RbacUsuarios = $this->fetchTable('Rbac.RbacUsuarios');
-                $usr = $this->RbacUsuarios->findByUsuario($usuario['usuario'])->contain(['RbacPerfiles' => ['RbacAcciones']])->toArray();
+                $usr = $this->RbacUsuarios
+                    ->findByUsuario($usuario['usuario'])
+                    ->contain(['RbacPerfiles' => ['RbacAcciones']])->toArray();
                 if (isset($usr->rbac_perfiles)) {
                     $this->generarListadoAccionesPorPerfiles($usr->rbac_perfiles);
                 }
 
-                $this->redirect(array('action' => 'index'));
+                return $this->redirect(['plugin'=>'Rbac','controller'=> 'RbacPerfiles','action'=>'index']);
             } else {
                 $this->Flash->error('No pudo crear perfil');
             }
         }
 
-        $acciones    = $this->RbacPerfiles->RbacAcciones->find()->select(['RbacAcciones.id', 'RbacAcciones.controller', 'RbacAcciones.action'])->order(['RbacAcciones.controller' => 'ASC', 'RbacAcciones.action' => 'ASC'])->toArray();
+        $acciones    = $this->RbacPerfiles->RbacAcciones
+            ->find()->select(['RbacAcciones.id', 'RbacAcciones.controller', 'RbacAcciones.action'])
+            ->order(['RbacAcciones.controller' => 'ASC', 'RbacAcciones.action' => 'ASC'])
+            ->toArray();
         $this->set('acciones', $acciones);
     }
 
     public function editar($id = null)
     {
-        if (!$id) {
-            throw new InternalErrorException(__('Accion inválida'));
-        }
-        $rbacPerfil = $this->RbacPerfiles->findById($id)->contain(['RbacAcciones'])->first();
 
-        if (!$rbacPerfil) {
-            throw new InternalErrorException(__('Accion inválida'));
-        }
+        $rbacPerfil = $this->RbacPerfiles
+            ->find()
+            ->where(['id' => $id])
+            ->contain(['RbacAcciones' => [
+                'sort' => [
+                    'RbacAcciones.controller' => 'ASC',
+                    'RbacAcciones.action' => 'ASC'
+                ]
+            ]])
+            ->first();
+
         if ($this->getRequest()->is(['patch', 'post', 'put'])) {
 
             $this->addAccionesPerfil();
             $rbacPerfilNew = $this->RbacPerfiles->patchEntity($rbacPerfil, $this->getRequest()->getData(), ['associated' => ['RbacAcciones']]);
             if ($this->RbacPerfiles->save($rbacPerfilNew)) {
-                $this->Flash->success('Se ha actualizado exitosamente.');
                 /* Actualizar las acciones por perfiles sin cerrar la sesiom  */
-                $usuario = $this->getRequest()->getSession()->read('RbacUsuario');
-                $this->RbacUsuarios = $this->fetchTable('Rbac.RbacUsuarios');
-                $usr = $this->RbacUsuarios->findByUsuario($usuario['usuario'])->contain(['RbacPerfiles' => ['RbacAcciones']])->toArray();
+                // $usuario = $this->getRequest()->getSession()->read('RbacUsuario');
+                // $this->RbacUsuarios = $this->fetchTable('Rbac.RbacUsuarios');
+                // $usr = $this->RbacUsuarios->findByUsuario($usuario['usuario'])->contain(['RbacPerfiles' => ['RbacAcciones']])->toArray();
 
-                /* ------- */
-            } else {
-                $this->Flash->error('No se puede actualizar el perfil');
+                $this->Flash->success(__('El perfil se actualizo correctamente.'));
+
+                return $this->redirect(['plugin'=>'Rbac','controller'=> 'RbacPerfiles','action'=>'index']);
             }
-            return $this->redirect(['action' => 'index']);
-        } else {
-
-            // $permisoVH = $rbacPerfil->permisos_virtual_host;
-            // $permiso = $permisoVH->permiso;
-            // debug($rbacPerfil);
-            // die;
-            //traigo las acciones que el perfil tiene asignadas de la tabla intermedia
-            $accionesAsignadas = array();
-            foreach ($rbacPerfil->rbac_acciones as $accion) {
-                //traigo acciones que no sean null y que no sean las reservadas(acciones default para usuarios)
-                if (($accion->action != '_null') && (!in_array($accion->id, $this->accionesDefaultLogin))) {
-                    $this->accionesDefaultLogin[] = $accion->id;
-                    $accionesAsignadas[]          = $accion;
-                }
-            }
-            usort($accionesAsignadas, function ($a, $b) {
-                return $a['controller'] <= $b['controller'];
-            });
-
-            //acciones asignadas al usuario
-            $this->set('accionesAsignadas', $accionesAsignadas);
-            $accionesPosibles = $this->RbacPerfiles->RbacAcciones->find()->where(['RbacAcciones.id NOT IN' => $this->accionesDefaultLogin, 'RbacAcciones.action <>' => "_null", 'RbacAcciones.publico'  => 0])->all();
-            $this->set('accionesPosibles', $accionesPosibles);
-            $this->set('rbacPerfil', $rbacPerfil);
-
+            $this->Flash->error('No se puede actualizar el perfil');
         }
+
+        $rbacPerfilAccionesNoPublicas = $this->RbacPerfiles->RbacAcciones
+            ->find()
+            ->where(['RbacAcciones.publico <>'  => 1])
+            ->order(['RbacAcciones.controller', 'RbacAcciones.action'])
+            ->all();
+
+        $this->set('rbacPerfilAccionesNoPublicas', $rbacPerfilAccionesNoPublicas);
+        $this->set('rbacPerfil', $rbacPerfil);
     }
 
 
@@ -138,7 +118,7 @@ class RbacPerfilesController extends RbacController
             }
         } catch (InternalErrorException $e) {
             $this->Flash->error('No se puede eliminar el perfil porque tiene usuarios asociados.');
-            $this->redirect(array('action' => 'index'));
+            return $this->redirect(['plugin'=>'Rbac','controller'=> 'RbacPerfiles','action'=>'index']);
         }
     }
 
@@ -220,5 +200,22 @@ class RbacPerfilesController extends RbacController
         $this->getRequest()->getSession()->write('PerfilesPorUsuario', $perfilesPorUsuario);
         $this->getRequest()->getSession()->write('RbacAcciones', $rbacAcciones);
         return $rbacAcciones;
+    }
+
+    private function getConditions()
+    {
+        $data = $this->getRequest()->getQuery();
+        $filterErrors = array();
+        $conditions['where'] = [];
+        $conditions['contain'] = ['RbacUsuarios'];
+
+        if (isset($data['descripcion']) and !empty($data['descripcion'])) {
+            $conditions['where'][] = ['RbacPerfiles.descripcion LIKE' => '%' . $data['descripcion'] . '%'];
+        }
+
+        $this->set('filterErrors', $filterErrors);
+        $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
+
+        return $conditions;
     }
 }

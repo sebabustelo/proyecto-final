@@ -1,20 +1,19 @@
 <!-- Main content -->
 <section class="content-header">
-  <h1>
-    Administración de Perfiles
-
-  </h1>
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-suitcase"></i> Perfil</a></li>
-    <li class="active">index</li>
-  </ol>
+    <h1>
+        Administración - Gestión de Permisos
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"></i> Perfiles</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Agregar</li>
+    </ol>
 </section>
 <section id="RbacPerfilesList" class="content">
   <div class="row">
     <div class="col-xs-12">
       <div class="box box-primary">
         <div class="box-header  with-border">
-          <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> Busqueda</h3>
+          <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> Buscador</h3>
           <div class="box-tools pull-right">
 
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>

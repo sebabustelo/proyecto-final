@@ -1,4 +1,13 @@
-<section id="RbacPerfilesEdit" class="content">
+<section class="content-header">
+    <h1>
+        Administración - Gestión de Permisos
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"></i> Perfiles</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Editar</li>
+    </ol>
+</section>
+<section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
@@ -25,11 +34,11 @@
                                 <div class="controls col-sm-12">
                                     <select id="rbac-acciones-ids" name="rbac_acciones[_ids][]" class="form-control" multiple="multiple">
                                         <!-- Carga automatica-->
-                                        <?php foreach ($accionesPosibles as $accion) : ?>
-                                            <option value="<?php echo $accion->id; ?>"><?php echo $accion->controller . "=>" . $accion->action; ?></option>
+                                        <?php foreach ($rbacPerfilAccionesNoPublicas as $accion) : ?>
+                                            <option value="<?php echo $accion->id; ?>"><?php echo $accion->controller . "&nbsp;&nbsp; =>  &nbsp;&nbsp;" . $accion->action; ?></option>
                                         <?php endforeach; ?>
-                                        <?php foreach ($accionesAsignadas as $accion) : ?>
-                                            <option value="<?php echo $accion->id; ?>" selected><?php echo $accion->controller . "=>" . $accion->action; ?></option>
+                                        <?php foreach ($rbacPerfil->rbac_acciones as $accion) : ?>
+                                            <option value="<?php echo $accion->id; ?>" selected><?php echo $accion->controller . "&nbsp;&nbsp; =>  &nbsp;&nbsp;" . $accion->action; ?></option>
                                         <?php endforeach; ?>
                                     </select>
                                     <br>
@@ -40,11 +49,11 @@
                                 <select id="ca-inicio" name="accion_default_id" class="form-control" required="required">
                                         <!-- Carga automatica segun virtual host-->
                                         <option value="">Seleccionar Página Inicio</option>
-                                        <?php foreach ($accionesAsignadas as $ra) { ?>
+                                        <?php foreach ($rbacPerfil->rbac_acciones as $ra) { ?>
                                             <?php if ($rbacPerfil->accion_default_id == $ra->id) { ?>
-                                                <option selected="selected" value="<?php echo $ra->id; ?>"><?php echo $ra->controller . '=>' . $ra->action; ?></option>
+                                                <option selected="selected" value="<?php echo $ra->id; ?>"><?php echo $ra->controller .  "&nbsp;&nbsp; =>  &nbsp;&nbsp;" . $ra->action; ?></option>
                                             <?php } else { ?>
-                                                <option value="<?php echo $ra->id; ?>"><?php echo $ra->controller . '=>' . $ra->action; ?></option>
+                                                <option value="<?php echo $ra->id; ?>"><?php echo $ra->controller . '      =>  ' . $ra->action; ?></option>
                                             <?php } ?>
                                         <?php } ?>
                                     </select>

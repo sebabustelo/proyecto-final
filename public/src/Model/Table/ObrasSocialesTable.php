@@ -1,29 +1,29 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query\SelectQuery;
-use Cake\ORM\RulesChecker;
+
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * ObrasSociales Model
+ * ObrasSocial Model
  *
- * @method \App\Model\Entity\ObrasSociale newEmptyEntity()
- * @method \App\Model\Entity\ObrasSociale newEntity(array $data, array $options = [])
- * @method array<\App\Model\Entity\ObrasSociale> newEntities(array $data, array $options = [])
- * @method \App\Model\Entity\ObrasSociale get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
- * @method \App\Model\Entity\ObrasSociale findOrCreate($search, ?callable $callback = null, array $options = [])
- * @method \App\Model\Entity\ObrasSociale patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method array<\App\Model\Entity\ObrasSociale> patchEntities(iterable $entities, array $data, array $options = [])
- * @method \App\Model\Entity\ObrasSociale|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method \App\Model\Entity\ObrasSociale saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
- * @method iterable<\App\Model\Entity\ObrasSociale>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\ObrasSociale>|false saveMany(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\ObrasSociale>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\ObrasSociale> saveManyOrFail(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\ObrasSociale>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\ObrasSociale>|false deleteMany(iterable $entities, array $options = [])
- * @method iterable<\App\Model\Entity\ObrasSociale>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\ObrasSociale> deleteManyOrFail(iterable $entities, array $options = [])
+ * @method \App\Model\Entity\ObraSocial newEmptyEntity()
+ * @method \App\Model\Entity\ObraSocial newEntity(array $data, array $options = [])
+ * @method array<\App\Model\Entity\ObraSocial> newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\ObraSocial get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \App\Model\Entity\ObraSocial findOrCreate($search, ?callable $callback = null, array $options = [])
+ * @method \App\Model\Entity\ObraSocial patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method array<\App\Model\Entity\ObraSocial> patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\ObraSocial|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method \App\Model\Entity\ObraSocial saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method iterable<\App\Model\Entity\ObraSocial>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\ObraSocial>|false saveMany(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\ObraSocial>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\ObraSocial> saveManyOrFail(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\ObraSocial>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\ObraSocial>|false deleteMany(iterable $entities, array $options = [])
+ * @method iterable<\App\Model\Entity\ObraSocial>|\Cake\Datasource\ResultSetInterface<\App\Model\Entity\ObraSocial> deleteManyOrFail(iterable $entities, array $options = [])
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
@@ -80,6 +80,10 @@ class ObrasSocialesTable extends Table
             ->maxLength('cuit', 20)
             ->requirePresence('cuit', 'create')
             ->notEmptyString('cuit');
+
+        $validator
+            ->boolean('activo')
+            ->notEmptyString('activo');
 
         return $validator;
     }

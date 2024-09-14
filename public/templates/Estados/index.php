@@ -5,18 +5,16 @@
  * @var iterable<\App\Model\Entity\TipoDocumento> $tipoDocumentos
  */
 ?>
-
-<!-- Main content -->
 <section class="content-header">
     <h1>
-        Administración
+        Parámetros del sistema
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-circle-o"></i> Estados de pedido</a></li>
-        <li class="active">index</li>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Estados de pedido</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Listado</li>
     </ol>
 </section>
-<section id="TipoDocumentosList" class="content">
+<section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
@@ -95,8 +93,8 @@
                     <h3 class="box-title"> <span class="fa fa-list"></span> Estados de pedido</h3>
                     <div class="box-tools pull-right">
                         <?php if (!empty($accionesPermitidas['Estados']['add'])) { ?>
-                            <a href="/Estados/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
-                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nuevo
+                            <a title="Agregar Estado de pedido" href="/Estados/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
+                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nuevo
                                     Estado de pedido</span></a>
                         <?php } ?>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
@@ -110,14 +108,17 @@
                                 <table class="table table-hover table-striped table-ajax">
                                     <thead>
                                         <tr>
-                                            <th>
+                                        <th>
+                                                <?php echo $this->Paginator->sort('nombre', 'Nombre'); ?>
+                                            </th>
+                                            <th class="hidden-xs">
                                                 <?php echo $this->Paginator->sort('descripcion', 'Descripción'); ?>
                                             </th>
-                                            <th>
-                                                <?php echo $this->Paginator->sort('created', 'Alta'); ?>
+                                            <th class="hidden-xs">
+                                                <?php echo $this->Paginator->sort('created', 'Creación'); ?>
                                             </th>
-                                            <th>
-                                                <?php echo $this->Paginator->sort('modified', 'Última modificación'); ?>
+                                            <th class="hidden-xs">
+                                                <?php echo $this->Paginator->sort('modified', 'Modificación'); ?>
                                             </th>
                                             <th>
                                             </th>
@@ -131,13 +132,16 @@
                                                 <td>
                                                     <?php echo $estado->nombre; ?>
                                                 </td>
-                                                <td>
+                                                <td class="hidden-xs">
+                                                    <?php echo $estado->descripcion; ?>
+                                                </td>
+                                                <td class="hidden-xs">
                                                 <?php echo $this->Time->format($estado->created, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
-                                                <td>
+                                                <td class="hidden-xs">
                                                 <?php echo $this->Time->format($estado->modified, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
-                                                <td class="pencil">
+                                                <td >
                                                     <a href="/Estados/edit/<?php echo $estado->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                                                 </td>
                                                 <td class="remove">
@@ -145,8 +149,9 @@
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $estado->id],
                                                         [
-                                                            'confirm' => __('¿Esta seguro de eliminar el documento {0}?', $estado->descripcion),
+                                                            'confirm' => __('¿Esta seguro de eliminar el documento {0}?', $estado->nombre),
                                                             'class' => 'btn btn-danger btn-xs pencil',
+                                                            'title' => 'Eliminar',
                                                             'escape' => false
                                                         ]
                                                     ) ?>

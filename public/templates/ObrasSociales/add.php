@@ -6,10 +6,10 @@
 ?>
 <section class="content-header">
     <h1>
-        Administración de Obras Sociales
+        Parámetros del sistema
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"> Obras Sociales</a></li>  <i class="fa fa-arrow-right"></i>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Obras Sociales</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Agregar</li>
     </ol>
 </section>
@@ -21,7 +21,7 @@
                     <h3 class="box-title"> <span class="fa fa-plus fa-lg"></span> Nueva Obra Social</h3>
                     <div class="box-tools pull-right">
                         <a href="/ObrasSociales/index/" class="btn btn-sm btn-primary ">
-                            <span class="fa fa-list"></span> Obras Sociales</a>
+                            <span class="fa fa-list"></span>  <span class=" hidden-xs">Obras Sociales</span></a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>

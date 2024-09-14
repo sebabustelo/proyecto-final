@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
+use Cake\Datasource\EntityInterface;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Event\EventInterface;
@@ -105,7 +106,7 @@ class TipoDocumentosTable extends Table
      * @param \ArrayObject $options Additional options for the save operation.
      * @return void
      */
-    public function beforeSave(EventInterface $event, Entity $entity, $options)
+    public function beforeSave(EventInterface $event, $entity, $options)
     {
         if ($entity->isNew() || $entity->isDirty('nombre')) {
             $entity->nombre = strtoupper($entity->nombre);

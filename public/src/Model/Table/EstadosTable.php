@@ -8,7 +8,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\Event\EventInterface;
-use Cake\ORM\Entity;
+use Cake\ORM\Exception\PersistenceFailedException;
 
 /**
  * Estados Model
@@ -69,6 +69,15 @@ class EstadosTable extends Table
             ->boolean('activo')
             ->notEmptyString('activo');
 
+        $validator
+        ->scalar('descripcion')
+        ->maxLength('descripcion', 300, 'La descripción no puede ser mayor a 300 caracteres');
+
+        $validator
+            ->boolean('activo')
+            ->notEmptyString('activo');
+
+
         return $validator;
     }
 
@@ -95,10 +104,30 @@ class EstadosTable extends Table
      * @param \ArrayObject $options Additional options for the save operation.
      * @return void
      */
-    public function beforeSave(EventInterface $event, Entity $entity, $options)
+    public function beforeSave(EventInterface $event, $entity, $options)
     {
         if ($entity->isNew() || $entity->isDirty('nombre')) {
             $entity->nombre = strtoupper($entity->nombre);
+        }
+    }
+
+    /**
+     * Modifies the entity before saving it to the database.
+     * Converts the 'nombre' field to uppercase the first letter before the save operation.
+     *
+     * @param \Cake\Event\EventInterface $event The event object.
+     * @param \Cake\ORM\Entity $entity The entity being saved.
+     * @param \ArrayObject $options Additional options for the save operation.
+     * @return void
+     */
+    public function beforeDelete($event, $entity, $options)
+    {
+        $pedidosCount = $this->Pedidos->find()
+            ->where(['estado_id' => $entity->id])
+            ->count();
+
+        if ($pedidosCount > 0) {
+            throw new PersistenceFailedException($entity, __('No se puede eliminar el estado porque tiene pedidos asociados.'));
         }
     }
 }

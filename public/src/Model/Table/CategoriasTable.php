@@ -7,8 +7,6 @@ namespace App\Model\Table;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Cake\Event\EventInterface;
-use Cake\ORM\Entity;
 use Cake\ORM\Exception\PersistenceFailedException;
 
 /**
@@ -48,7 +46,7 @@ class CategoriasTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->hasMany('SetCirugia', [
+        $this->hasMany('Productos', [
             'foreignKey' => 'categoria_id',
         ]);
     }
@@ -102,11 +100,6 @@ class CategoriasTable extends Table
      * @param \ArrayObject $options Additional options for the save operation.
      * @return void
      */
-    public function beforeSave(EventInterface $event, Entity $entity, $options)
-    {
-        $entity->nombre = ucfirst($entity->nombre);
-    }
-
     public function beforeDelete($event, $entity, $options)
     {
         $productosCount = $this->Productos->find()

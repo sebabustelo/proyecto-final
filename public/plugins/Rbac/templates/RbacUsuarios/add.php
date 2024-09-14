@@ -18,7 +18,10 @@
 
                             <div class="form-group col-sm-4">
                                 <label id="lblUsuario" for="usuario">Usuario (mail)</label>
-                                <input type="email" name="usuario" required id="RbacUsuarioUsuario" oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')" placeholder="Ingrese el usuario" class="form-control" maxlength="40" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
+                                <input type="email" name="usuario" required id="RbacUsuarioUsuario"
+                                oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
+                                placeholder="Ingrese el usuario" class="form-control" maxlength="120"
+                                value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
                             </div>
 
                             <div class="form-group col-sm-4">
@@ -46,7 +49,7 @@
                                 <label for="direccion">Dirección</label>
                                 <input required type="text" placeholder="Ingrese la dirección" class="form-control" name="direccion" oninvalid="this.setCustomValidity('Debe completar la dirección')" oninput="this.setCustomValidity('')">
                             </div>
-                           
+
                             <div class="form-group col-sm-4">
                                 <label>Perfil</label><br>
                                 <select required name="perfil_id" class="form-control">
@@ -56,7 +59,7 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            
+
                             <?php
                             if ($this->request->getSession()->check('previousUrl')) {
                                 $url = $this->request->getSession()->read('previousUrl');
@@ -79,7 +82,7 @@
                             <div class="form-group col-sm-12">
                                 <div class="callout callout-info">
                                     <p><i class="icon fa fa-info"></i> El usuario recibirá un mail a su correo con un link donde deberá ingresar una contraseña para poder completar el alta del mismo.
-        
+
                                   </p>
                                 </div>
                             </div>

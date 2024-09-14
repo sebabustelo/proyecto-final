@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Categorias $categoria
@@ -6,22 +7,23 @@
 ?>
 <section class="content-header">
     <h1>
-        Administración de Categorías
+        Parámetros del sistema
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-circle-o"></i> Categorías</a></li>
-        <li class="active">agregar</li>
+        <li><a href="#"><i class="fa fa-dot-circle-o"></i>Categorías</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Agregar</li>
     </ol>
 </section>
-<section id="CategoriasAdd" class="content">
+<section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
                     <h3 class="box-title"> <span class="fa fa-plus fa-lg"></span> Nueva Categoría</h3>
                     <div class="box-tools pull-right">
-                        <a href="/Categorias/index/" class="btn btn-sm btn-primary ">
-                            <span class="fa fa-list"></span> Categorías</a>
+                        <a title="Listado de categorías" href="/Categorias/index/" class="btn btn-sm btn-primary ">
+                            <span class="fa fa-list"></span> <span class=" hidden-xs">Categorías</span>
+                        </a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
@@ -30,7 +32,7 @@
                         <form id="CategoriasAddForm" name="CategoriasAddForm" role="form" action="/Categorias/add/" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <div class="form-group col-sm-2">
-                                <label for="direccion">Nombre</label>
+                                <label>Nombre</label>
                                 <input style='text-transform: uppercase;' required type="text" maxlength="100" placeholder="Ingrese el nombre"
                                     class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')" oninput="this.setCustomValidity('')">
                                 <?php if ($categoria->getError('nombre')) { ?>
@@ -41,7 +43,7 @@
 
                             </div>
                             <div class="form-group col-sm-10">
-                                <label for="direccion">Descripción</label>
+                                <label>Descripción</label>
                                 <input type="text" maxlength="300" placeholder="Ingrese la descripción" class="form-control" name="descripcion">
                                 <?php if ($categoria->getError('descripcion')) { ?>
                                     <?php foreach ($categoria->getError('descripcion') as $error) { ?>

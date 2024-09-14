@@ -26,9 +26,11 @@ class Estado extends Entity
      */
     protected array $_accessible = [
         'nombre' => true,
+        'descripcion' => true,
         'pedidos' => true,
         'created' => true,
         'modified' => true,
         'activo' => true,
+
     ];
 }

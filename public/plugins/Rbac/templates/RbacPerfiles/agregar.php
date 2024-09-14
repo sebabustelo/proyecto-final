@@ -1,4 +1,13 @@
-<section id="RbacPerfilesEdit" class="content">
+<section class="content-header">
+    <h1>
+        Administración - Gestión de Permisos
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"></i> Perfiles</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Listado</li>
+    </ol>
+</section>
+<section  class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
@@ -13,7 +22,7 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="form-row">
-                        <form class="form-horizontal" id="RbacPerfilesAddForm" name="RbacPerfilesAddForm" role="form" action="/rbac/RbacPerfiles/agregar/" method="POST">
+                        <form class="form-horizontal" id="RbacPerfilesEditForm" name="RbacPerfilesAddForm" role="form" action="/rbac/RbacPerfiles/agregar/" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
 
                             <div class="form-group col-sm-12">

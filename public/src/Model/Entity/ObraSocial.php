@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Entity;
@@ -6,7 +7,7 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * ObrasSociale Entity
+ * ObrasSocial Entity
  *
  * @property int $id
  * @property string $nombre
@@ -36,5 +37,6 @@ class ObraSocial extends Entity
         'cuit' => true,
         'created' => true,
         'modified' => true,
+        'activo' => true,
     ];
 }
