@@ -154,13 +154,37 @@
         maxFileSize: 1500, // Tamaño máximo de archivo
         allowedFileExtensions: ["jpg", "jpeg", "png", "gif"], // Extensiones permitidas
         overwriteInitial: false,
+
+        showRemove: false,
+        showUpload: false,
+        showClose: false,
+        showCaption: false,
+
+        browseClass: "btn btn-success",
+        browseLabel: "Imagenes",
+        browseIcon: "<i class='fa fa-plus'></i>",
+        allowedFileExtensions: ["jpg", "png", "gif"],
+
+        fileActionSettings: {
+            showUpload: false,
+            showRotate: false,
+            allowFullScreen: false,
+            zoomIcon: '<i class="fa fa-search-plus"></i> ',
+            removeIcon: '<i class="fa fa-trash-o"></i> ',
+        },
+
         initialPreview: [
             <?php foreach ($producto->productos_archivos as $archivo) : ?> '<img src="/img/productos/<?php echo $archivo['file_name']; ?>" class="file-preview-image kv-preview-data">',
             <?php endforeach; ?>
         ],
         initialPreviewConfig: [
-            <?php foreach ($producto->productos_archivos as $archivo) : ?> {
-                    caption: "<?php echo $archivo['file_name']; ?>",
+
+            <?php foreach ($producto->productos_archivos as $archivo) : ?>
+                <?php
+                $underscorePos = strpos($archivo['file_name'], '_');
+                $nombreOriginal = substr($archivo['file_name'], $underscorePos + 1);
+                ?> {
+                    caption: "<?php echo $nombreOriginal; ?>",
                     size: <?php echo $archivo['file_size']; ?>,
                     url: "/ProductosArchivos/delete/<?php echo $archivo['id']; ?>",
                     key: "<?php echo $archivo['id']; ?>"
@@ -175,7 +199,7 @@
         uploadExtraData: function() {
             return {
                 '_csrfToken': '<?php echo $this->request->getAttribute('csrfToken'); ?>',
-                'producto_id':'<?php echo $producto->id; ?>'
+                'producto_id': '<?php echo $producto->id; ?>'
             };
         }
     });
