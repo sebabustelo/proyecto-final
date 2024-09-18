@@ -9,7 +9,7 @@
 ?>
 <section class="content-header">
     <h1>
-    <i class="fa fa-fw fa-medkit"></i> Gestión de Productos
+        <i class="fa fa-fw fa-medkit"></i> Gestión de Productos
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Productos</a></li> <i class="fa fa-arrow-right"></i>
@@ -87,8 +87,7 @@
                             </div>
                             <div class="form-group col-sm-12">
                                 <label>Descripción</label>
-                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción"
-                                    class="form-control" name="descripcion_breve"><?php echo $producto->descripcion_breve; ?></textarea>
+                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción" class="form-control" name="descripcion_breve"><?php echo $producto->descripcion_breve; ?></textarea>
                                 <?php if ($producto->getError('descripcion_breve')) { ?>
                                     <?php foreach ($producto->getError('descripcion_breve') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -151,57 +150,38 @@
     $("#imagenes").fileinput({
         language: "es",
         theme: "fa4",
-        'uploadUrl': '#',
-        maxFileSize: 1500,
-        showRemove: false,
-        showUpload: false,
-        showClose: false,
-        showCaption: false,
-
-        browseClass: "btn btn-success",
-        browseLabel: "Imagenes",
-        browseIcon: "<i class='fa fa-plus'></i>",
-        allowedFileExtensions: ["jpg", "png", "gif"],
-
+        uploadUrl: "/ProductosArchivos/add", // URL donde se procesan los archivos
+        maxFileSize: 1500, // Tamaño máximo de archivo
+        allowedFileExtensions: ["jpg", "jpeg", "png", "gif"], // Extensiones permitidas
         overwriteInitial: false,
-
-
-        fileActionSettings: {
-            showUpload: false,
-            showRotate: false,
-            allowFullScreen: false,
-            zoomIcon: '<i class="fa fa-search-plus"></i> ',
-            removeIcon: '<i class="fa fa-trash-o"></i> ',
-        },
         initialPreview: [
-            // IMAGE DATA
-            <?php
-            foreach ($producto->productos_archivos as $k => $producto_archivo) { ?> '<img src="/img/productos/<?php echo $producto_archivo['file_name']; ?>" class="file-preview-image kv-preview-data" alt="fin_short.jpg" >',
-            <?php }        ?>
-
+            <?php foreach ($producto->productos_archivos as $archivo) : ?> '<img src="/img/productos/<?php echo $archivo['file_name']; ?>" class="file-preview-image kv-preview-data">',
+            <?php endforeach; ?>
         ],
-       // initialPreviewAsData: true, // identify if you are sending preview data only and not the raw markup
-        initialPreviewFileType: 'image', // image is the default and can be overridden in config below
-
-        initialPreviewConfig: [{
-                caption: "Desert.jpg",
-                description: "<h5>The Desert</h5> This is a representative description number one for this image.",
-                size: 827000,
-                width: "120px",
-                url: "/file-upload-batch/2",
-                key: 1
-            },
-            {
-                caption: "Lighthouse.jpg",
-                description: "<h5>The Lighthouse</h5> This is a representative description number two for this image.",
-                size: 549000,
-                width: "120px",
-                url: "/file-upload-batch/2",
-                key: 2
-            },
-
+        initialPreviewConfig: [
+            <?php foreach ($producto->productos_archivos as $archivo) : ?> {
+                    caption: "<?php echo $archivo['file_name']; ?>",
+                    size: <?php echo $archivo['file_size']; ?>,
+                    url: "/ProductosArchivos/delete/<?php echo $archivo['id']; ?>",
+                    key: "<?php echo $archivo['id']; ?>"
+                },
+            <?php endforeach; ?>
         ],
+        ajaxDeleteSettings: {
+            headers: {
+                'X-CSRF-Token': '<?php echo $this->request->getAttribute('csrfToken'); ?>'
+            }
+        },
+        uploadExtraData: function() {
+            return {
+                '_csrfToken': '<?php echo $this->request->getAttribute('csrfToken'); ?>',
+                'producto_id':'<?php echo $producto->id; ?>'
+            };
+        }
+    });
 
+    $('#ProductosEditForm').on('submit', function(event) {
+        // No es necesario manejar manualmente los archivos, el plugin fileinput lo hace por ti.
     });
 
     $('#ProductosEditForm').on('submit', function(event) {
@@ -267,4 +247,3 @@
 
     });
 </script>
-<?php debug($producto) ?>

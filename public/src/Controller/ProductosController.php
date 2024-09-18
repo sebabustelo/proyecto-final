@@ -111,8 +111,7 @@ class ProductosController extends AppController
         $producto = $this->Productos->get($id, contain: ['ProductosArchivos']);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $producto = $this->Productos->patchEntity($producto, $this->request->getData());
-            debug($producto);
-            debug( $this->request->getData());die;
+          
             if ($this->Productos->save($producto)) {
                 $this->Flash->success(__('El producto se actualizo correctamente.'));
 
@@ -134,6 +133,7 @@ class ProductosController extends AppController
      */
     public function delete($id = null)
     {
+       
         $this->request->allowMethod(['post', 'delete']);
         $producto = $this->Productos->get($id);
         if ($this->Productos->delete($producto)) {
