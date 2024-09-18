@@ -1,7 +1,14 @@
-<!-- Main content -->
+<?php
+
+/**
+ * @var \App\View\AppView $this
+ * @var iterable<\App\Model\Entity\RbacPerfiles> $rbacPerfiles
+ */
+use Cake\Core\Configure;
+?>
 <section class="content-header">
     <h1>
-        Administración - Gestión de Permisos
+    <?php echo Configure::read('Menu.GestionPermisos') ?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"></i> Perfiles</a></li> <i class="fa fa-arrow-right"></i>
@@ -68,8 +75,8 @@
         <div class="box-header  with-border">
           <h3 class="box-title"> <span class="fa fa-suitcase fa-lg"></span> Perfiles</h3>
           <div class="box-tools pull-right">
-            <?php if (!empty($accionesPermitidas['RbacPerfiles']['agregar'])) { ?>
-              <a href="/rbac/rbacPerfiles/agregar/" id="agregarUsuario" class="btn btn-primary btn-sm ">
+            <?php if (!empty($accionesPermitidas['RbacPerfiles']['add'])) { ?>
+              <a href="/rbac/rbacPerfiles/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
                 <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nuevo Perfil</span></a>
             <?php } ?>
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -103,10 +110,10 @@
                       </td>
 
                       <td class="pencil">
-                      <a href="/rbac/RbacPerfiles/editar/<?php echo $perfil->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                      <a href="/rbac/RbacPerfiles/edit/<?php echo $perfil->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                       </td>
                       <td class="remove">
-                      <a href="/rbac/RbacPerfiles/eliminar/<?php echo $perfil->id; ?>" class="editar btn btn-danger btn-xs pencil" title="Eliminar" target="_self"><i class="fa fa-remove"></i></a>
+                      <a href="/rbac/RbacPerfiles/delete/<?php echo $perfil->id; ?>" class="editar btn btn-danger btn-xs pencil" title="Eliminar" target="_self"><i class="fa fa-remove"></i></a>
                       </td>
                     </tr>
                   <?php } ?>
@@ -119,33 +126,6 @@
               <p> <i class="icon fa fa-warning" aria-hidden="true"></i> No se encontraron resultados que coincidan con el criterio de búsqueda.</p>
             </div>
           <?php } ?>
-          <?php
-          //debug($rbacPerfiles)    ;
-          // if (isset($rbacPerfiles)) {
-          //   $this->DiticHtml->generateReportTable(
-          //     $rbacPerfiles,
-          //     array(
-          //       'RbacPerfil.descripcion'              => array('truncate', 'sort', 'title' => 'Descripción'),
-          //       'RbacPerfil.es_default'              => array('show-status', 'no-sort', 'title' => 'Perfil default'),
-          //       'RbacPerfil.permisos_virtual_host.permiso'              => array('truncate', 'no-sort', 'title' => 'Virtual Host'),
-          //       'edit'                          => array(
-          //         'no-sort',
-          //         'edit-action' => 'editar',
-          //         'tooltip'       => 'Editar',
-          //         'class' => 'pencil'
-          //       ),
-          //       'eliminar'                        => array(
-          //         'confirm'       => '¿Está seguro de que quiere borrar el Perfil?',
-          //         'tooltip'       => 'Eliminar',
-          //         'class'         => 'remove'
-          //       )
-          //     )
-          //   );
-          // }
-
-
-          ?>
-
         </div>
         <!-- /.box-body -->
       </div>

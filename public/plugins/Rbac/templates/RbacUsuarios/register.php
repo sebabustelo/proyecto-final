@@ -109,7 +109,7 @@ use Cake\Core\Configure; ?>
         </div>
     </div>
 
-    <?php if (isset($captcha) && $captcha == 'Si') { ?>
+    <?php if (isset($captcha) && $captcha == 'Ssadsfdi') { ?>
 
         <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
         <script src="https://www.google.com/recaptcha/api.js?render=<?php echo env('RECAPTCHA_CLAVE_PUBLICA'); ?>"></script>

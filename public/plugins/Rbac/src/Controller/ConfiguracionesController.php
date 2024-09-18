@@ -6,9 +6,6 @@ use Cake\Http\Exception\MethodNotAllowedException;
 
 class ConfiguracionesController extends RbacController
 {
-    public function _null()
-    {
-    }
 
     public function index($downloadLog = NULL)
     {
@@ -75,7 +72,7 @@ class ConfiguracionesController extends RbacController
         $this->set('configuraciones', $this->paginate());
     }
 
-    public function agregar()
+    public function add()
     {
 
         if ($this->getRequest()->is('post')) {
@@ -92,9 +89,7 @@ class ConfiguracionesController extends RbacController
         }
     }
 
-
-
-    public function editar($id = null)
+    public function edit($id = null)
     {
 
         if (!$id) {
@@ -132,7 +127,7 @@ class ConfiguracionesController extends RbacController
         }
     }
 
-    public function eliminar($id)
+    public function delete($id)
     {
 
         $configuracion = $this->Configuraciones->get($id);

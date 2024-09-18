@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -14,6 +15,7 @@ declare(strict_types=1);
  * @since     3.3.0
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App;
 
 use Cake\Core\Configure;
@@ -101,19 +103,16 @@ class Application extends BaseApplication
      * @return void
      * @link https://book.cakephp.org/4/en/development/dependency-injection.html#dependency-injection
      */
-    public function services(ContainerInterface $container): void
-    {
-    }
+    public function services(ContainerInterface $container): void {}
 
     protected function bootstrapCli(): void
     {
         $this->addOptionalPlugin('Cake/Repl');
         $this->addOptionalPlugin('Bake');
-        $this->addOptionalPlugin('AdminLTE');
+        $this->addPlugin('AdminLTE');
         $this->addOptionalPlugin('Rbac');
         $this->addPlugin('Migrations');
         //$this->addPlugin('Authorization');
         // Load more plugins here
     }
-
 }

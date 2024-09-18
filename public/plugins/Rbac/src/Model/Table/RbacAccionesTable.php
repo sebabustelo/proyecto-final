@@ -4,6 +4,9 @@ namespace Rbac\Model\Table;
 
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\Event\EventInterface;
+use Cake\ORM\Exception\PersistenceFailedException;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
 /**
  * RbacAcciones Model
@@ -44,6 +47,11 @@ class RbacAccionesTable extends Table
             'targetForeignKey' => 'rbac_perfil_id',
             'joinTable'        => 'rbac_acciones_rbac_perfiles',
         ]);
+
+        $this->hasMany('RbacPerfiles', [
+            'className'        => 'Rbac.RbacPerfiles',
+            'foreignKey' => 'accion_default_id',
+        ]);
     }
 
     /**
@@ -78,87 +86,30 @@ class RbacAccionesTable extends Table
         return $validator;
     }
 
-    /**
-     * Verifica los permisos para los virtual host, si tiene permiso para leer la accion devuelve verdadero,
-     *  en caso contrario devuelve falso
-     * @param string  $controlador
-     * @param string  $accion
-     * @param array['carga_administracion','carga_login_interna',
-     *              'carga_login_publica','carga_publica','solo_lectura'] $virtualHost
-     * @return boolean
-     */
-    public function isValidActionVH($controlador, $accion, $virtualHost)
+    public function beforeDelete(EventInterface $event, $entity, $options)
     {
-        if (is_null($virtualHost)) {
-            $virtualHost = 'carga_administracion';
+        // Verificar si existen registros en rbac_perfiles que referencian a esta acción
+        $perfilesRelacinados = $this->RbacPerfiles->find()
+            ->where(['accion_default_id' => $entity->id])
+            ->count();
+
+        // Si existen referencias, cancelar la eliminación
+        if ($perfilesRelacinados > 0) {
+            $event->stopPropagation();
+            throw new PersistenceFailedException($entity, __('No se puede eliminar la acción, ya que está asociada a perfiles.'));
         }
-
-        $vh_valido = $this->find(
-            'all',
-            fields: ['RbacAccion.id'],
-            conditions: [
-                'controller' => $controlador,
-                'action'       => $accion,
-                "$virtualHost" => 1
-            ],
-
-        )->count();
-        return $vh_valido > 0;
     }
 
+
     /**
-     * Verifica los permisos para los virtual host publicos ('solo_lectura','carga_publica'),si  tiene permiso para leer
-     * la accion devuelve verdadero en caso contrario retorna false
+     * Verifica los permisos ,si  tiene permiso para leer la accion devuelve verdadero en caso contrario retorna false
      * @param string $controlador
      * @param string $accion
      * @return boolean
      */
     public function isPublicAction($controlador, $accion)
     {
-
-        $vh_valido = $this->find()->where(['controller' => $controlador, 'action' => $accion, 'publico' => '1'])->count();
-        
-
-        return $vh_valido > 0;
-    }
-
-    /**
-     * Obtiene todas las acciones que estan permitidas en el virtual host
-     * @param string $virtualHost
-     * @return array
-     */
-    public function getAccionesByVirtualHost($virtualHost)
-    {
-        $acciones_vh = $this->find()->select(['RbacAcciones.id', 'RbacAcciones.controller', 'RbacAcciones.action'])->where(['RbacAcciones.action <>' => '_null',  "$virtualHost" => 1])->order(['RbacAcciones.controller' => 'ASC', 'RbacAcciones.action' => 'ASC']);
-
-        return $acciones_vh->toArray();
-    }
-
-    /**
-     * Obtiene todas las acciones que estan permitidas en el virtual host
-     * @param string $virtualHost
-     * @return array
-     */
-    public function getAccionesByVirtualHostNull($virtualHost)
-    {
-
-        $acciones_vh_null = $this->find(
-            'all',
-            array(
-                'fields'     => array('RbacAcciones.id', 'RbacAcciones.controller', 'RbacAcciones.action'),
-                'conditions' => array(
-                    'oculto'       => '1',
-                    //'NOT' => array('RbacAcciones.id' => array(17,18,19,20,21,26)),
-                    "$virtualHost" => 1,
-                ),
-                'order'      => array('controller', 'action'),
-            )
-        )->toArray();
-        //debug($acciones_vh_null);die;
-        return $acciones_vh_null;
-        //$q = "SELECT id, controller, action FROM rbac_acciones WHERE {$virtualHost} = 1 ORDER BY controller, action ASC";
-        //$r = $this->query($q);
-
-        //return $r;
+        $isPublicAction = $this->find()->where(['controller' => $controlador, 'action' => $accion, 'publico' => '1'])->count();
+        return $isPublicAction > 0;
     }
 }

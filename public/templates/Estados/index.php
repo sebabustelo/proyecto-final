@@ -4,10 +4,11 @@
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\TipoDocumento> $tipoDocumentos
  */
+use Cake\Core\Configure;
 ?>
 <section class="content-header">
     <h1>
-        Parámetros del sistema
+        <?php echo Configure::read('Menu.ParamatrosSistema') ?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Estados de pedido</a></li> <i class="fa fa-arrow-right"></i>

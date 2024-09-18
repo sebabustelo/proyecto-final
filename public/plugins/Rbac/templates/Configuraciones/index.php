@@ -1,12 +1,21 @@
+<?php
+
+/**
+ * @var \App\View\AppView $this
+ * @var iterable<\App\Model\Entity\Configuracion> $configuraciones
+ */
+use Cake\Core\Configure;
+?>
 <section class="content-header">
     <h1>
-        Administración
+      <?php echo Configure::read('Menu.GestionPermisos') ?>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-wrench fa-lg"></i> Configuraciones</a></li>
-        <li class="active">Agregar</li>
+        <li><a href="#"><i class="fa fa-wrench "></i>Configuraciones</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Listado</li>
     </ol>
 </section>
+
 <section id="ConfiguracionesList" class="content">
   <div class="row">
     <div class="col-xs-12">
@@ -14,8 +23,8 @@
         <div class="box-header  with-border">
           <h3 class="box-title"> <span class="fa fa-wrench fa-lg"></span> Configuraciones</h3>
           <div class="box-tools pull-right">
-            <?php if (!empty($accionesPermitidas['Configuraciones']['agregar'])) { ?>
-              <a href="/rbac/configuraciones/agregar/" id="agregarConfiguracion" class="btn btn-sm btn-primary ">
+            <?php if (!empty($accionesPermitidas['Configuraciones']['add'])) { ?>
+              <a href="/rbac/configuraciones/add/" class="btn btn-sm btn-primary ">
                 <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText"> Nueva Configuración</span></a>
             <?php } ?>
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
@@ -53,10 +62,10 @@
                       </td>
 
                       <td class="pencil">
-                      <a href="/rbac/Configuraciones/editar/<?php echo $configuracion->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                      <a href="/rbac/Configuraciones/edit/<?php echo $configuracion->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                       </td>
                       <td class="remove">
-                      <a href="/rbac/Configuraciones/eliminar/<?php echo $configuracion->id; ?>" class="editar btn btn-danger btn-xs pencil" title="Eliminar" target="_self"><i class="fa fa-remove"></i></a>
+                      <a href="/rbac/Configuraciones/delete/<?php echo $configuracion->id; ?>" class="editar btn btn-danger btn-xs pencil" title="Eliminar" target="_self"><i class="fa fa-remove"></i></a>
 
                       </td>
                     </tr>

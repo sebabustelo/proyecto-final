@@ -12,7 +12,7 @@
   <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap/dist/css/bootstrap.min'); ?>
   <!-- Font Awesome -->
   <?php echo $this->Html->css('AdminLTE./bower_components/font-awesome/css/font-awesome.min'); ?>
-  
+
   <!-- Theme style -->
   <?php echo $this->Html->css('AdminLTE.AdminLTE.min'); ?>
 
@@ -42,7 +42,7 @@
     <?php endif; ?>
 
     <?php if (Configure::read('Theme.login.show_remember')): ?>
-      <a href="/recoverPassword">Olvide mi contraseña</a><br>
+      <a href="/forgetPassword">Olvide mi contraseña</a><br>
     <?php endif; ?>
     <?php if (Configure::read('Theme.login.show_register')): ?>
       <a href="/register" class="text-center">Registrarme</a>

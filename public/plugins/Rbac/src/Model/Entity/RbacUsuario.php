@@ -11,9 +11,6 @@ use Cake\ORM\Entity;
  * @property string $usuario
  * @property string|null $nombre
  * @property string|null $apellido
- * @property string $valida_ldap
- * @property string|null $password
- * @property string|null $seed
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  *
@@ -36,12 +33,10 @@ class RbacUsuario extends Entity
         'usuario' => true,
         'nombre' => true,
         'apellido' => true,
-        'direccion' => true,
         'tipo_documento_id' => true,
         'documento' => true,
         'direccion' => true,
         'celular' => true,
-        'password' => true,
         'seed' => true,
         'activo' => true,
         'created' => true,
@@ -51,6 +46,7 @@ class RbacUsuario extends Entity
         'rbac_perfil' => true,
         'tipo_documento' => true,
         'perfil_id' => true,
+        'password' => true,
         'password_confirm'=>true
     ];
 

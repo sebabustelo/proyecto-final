@@ -4,11 +4,11 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\TipoDocumento $tipoDocumento
  */
+use Cake\Core\Configure;
 ?>
-<!-- Main content -->
 <section class="content-header">
     <h1>
-        Administración
+        <?php echo Configure::read('Menu.ParamatrosSistema') ?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"> Tipos de Documentos</a></li> <i class="fa fa-arrow-right"></i>

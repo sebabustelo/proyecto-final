@@ -18,9 +18,13 @@ class TipoDocumentosController extends AppController
      */
     public function index()
     {
-        $query = $this->TipoDocumentos->find();
-        $tipoDocumentos = $this->paginate($query);
-        $this->set(compact('tipoDocumentos'));
+        $conditions = $this->getConditions();
+        $tipoDocumentos = $this->TipoDocumentos->find()
+            ->where($conditions['where'])
+            ->contain($conditions['contain']);
+
+        $this->set('filters', $this->getRequest()->getQuery());
+        $this->set('tipoDocumentos', $this->paginate($tipoDocumentos));
     }
 
     /**
@@ -92,5 +96,33 @@ class TipoDocumentosController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * getCondition method
+     *
+     * @param string|null $data Data send by the Form .
+     * @return array $conditions Conditions for search filters with $conditions['where'], $conditions['contain'] and $conditions['matching'] to find.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    private function getConditions()
+    {
+        $data = $this->getRequest()->getQuery();
+        $conditions['where'] = [];
+        $conditions['contain'] = [];
+
+        if (isset($data['descripcion']) and !empty($data['descripcion'])) {
+            $conditions['where'][] = ['TipoDocumentos.descripcion LIKE ' => '%' . $data['descripcion'] . '%'];
+        }
+
+        if (isset($data['activo'])) {
+            $conditions['where'][] = ['TipoDocumentos.activo' => $data['activo']];
+        } else {
+            $conditions['where'][] = ['TipoDocumentos.activo' => 1];
+        }
+
+        $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
+
+        return $conditions;
     }
 }

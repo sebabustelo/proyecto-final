@@ -30,21 +30,18 @@ class PermisosComponent extends Component
 		$accion = $this->Controller->getRequest()->getParam('action');
 		$isPublicAction = $this->RbacAccion->isPublicAction($controlador, $accion);
 
+
 		if (!$isPublicAction) {
 
 			if (is_null($session->read('RbacUsuario'))) {
 				//Si no esta logueado solo puede accedeer a las acciones definidas en el array $this->accionesNoPublicasPermitidasSinLogin
-				if (!in_array($accion, $this->accionesNoPublicasPermitidasSinLogin)) {
-					$this->Controller->render('/element/ajaxreturn');
+				//if (!in_array($accion, $this->accionesNoPublicasPermitidasSinLogin)) {
 					return $this->Controller->redirect(array('plugin' => 'rbac', 'controller' => 'rbacUsuarios', 'action' => 'login'));
-				}
+				//}
 			} else {
 				$accionesPermitidasPorPerfiles = $session->read('RbacAcciones');
+                //debug($accionesPermitidasPorPerfiles);die;
 				$tienePermiso = (bool) FALSE;
-				// debug($controlador);
-				// debug($accion);
-				// debug($accionesPermitidasPorPerfiles);die;
-
 
 				if (isset($accionesPermitidasPorPerfiles[$controlador][$accion])) {
 					$tienePermiso = (bool) ($accionesPermitidasPorPerfiles[$controlador][$accion] == 1);

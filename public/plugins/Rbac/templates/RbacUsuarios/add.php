@@ -1,4 +1,21 @@
-<section id="RbacUsuariosAdd" class="content">
+<?php
+
+/**
+ * @var \App\View\AppView $this
+ * @var iterable<\App\Model\Entity\RbacUsuarios> $rbacUsuario
+ */
+use Cake\Core\Configure;
+?>
+<section class="content-header">
+    <h1>
+    <?php echo Configure::read('Menu.GestionPermisos') ?>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-users"></i> Usuarios</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Agregar</li>
+    </ol>
+</section>
+<section  class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">

@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "bootstrap-fileinput": "^5.5.4"
+    "bootstrap-fileinput": "^5.5.4",
+    "dual-listbox": "^2.0.0"
   }
 }

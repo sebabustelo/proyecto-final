@@ -40,7 +40,7 @@ CREATE TABLE `categorias` (
 
 LOCK TABLES `categorias` WRITE;
 /*!40000 ALTER TABLE `categorias` DISABLE KEYS */;
-INSERT INTO `categorias` VALUES (3,'Columna','set para columnas','2024-09-09 18:57:10','2024-09-10 16:09:07',1),(5,'Complementos','set de complementos','2024-09-10 20:06:21','2024-09-10 16:09:07',1),(6,'Pediátricos','set pediátricos','2024-09-10 20:06:56','2024-09-10 16:09:07',1),(7,'Rodilla','set rodilla','2024-09-10 20:07:09','2024-09-10 16:09:07',1),(8,'Trauma','set trauma','2024-09-10 20:07:18','2024-09-10 16:09:07',1),(9,'Cadera','set para caderas','2024-09-10 21:03:22','2024-09-10 21:09:46',1);
+INSERT INTO `categorias` VALUES (3,'Columna','set para columnas','2024-09-09 18:57:10','2024-09-10 16:09:07',1),(5,'Complementos','set de complementos','2024-09-10 20:06:21','2024-09-10 16:09:07',1),(6,'Pediátricos','set pediátricos','2024-09-10 20:06:56','2024-09-10 16:09:07',1),(7,'Rodilla','set rodilla','2024-09-10 20:07:09','2024-09-10 16:09:07',1),(8,'Trauma','set trauma','2024-09-10 20:07:18','2024-09-10 16:09:07',1),(9,'Cadera','set para caderas','2024-09-10 21:03:22','2024-09-14 00:18:28',1);
 /*!40000 ALTER TABLE `categorias` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -65,7 +65,7 @@ CREATE TABLE `configuracion` (
 
 LOCK TABLES `configuracion` WRITE;
 /*!40000 ALTER TABLE `configuracion` DISABLE KEYS */;
-INSERT INTO `configuracion` VALUES (3,'Mostrar Captcha','No'),(5,'skin_admin','black-light'),(16,'app_email','ipmagna@gmail.com'),(24,'Perfil Cliente','8');
+INSERT INTO `configuracion` VALUES (3,'Mostrar Captcha','Si'),(5,'skin_admin','black-light'),(16,'app_email','ipmagna@gmail.com'),(24,'Perfil Cliente','8');
 /*!40000 ALTER TABLE `configuracion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -133,9 +133,10 @@ DROP TABLE IF EXISTS `estados`;
 CREATE TABLE `estados` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(100) NOT NULL,
-  `created` datetime DEFAULT current_timestamp(),
-  `modified` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `descripcion` varchar(300) DEFAULT NULL,
   `activo` tinyint(1) NOT NULL DEFAULT 1,
+  `created` datetime NOT NULL DEFAULT current_timestamp(),
+  `modified` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
   UNIQUE KEY `nombre_UNIQUE` (`nombre`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -147,7 +148,7 @@ CREATE TABLE `estados` (
 
 LOCK TABLES `estados` WRITE;
 /*!40000 ALTER TABLE `estados` DISABLE KEYS */;
-INSERT INTO `estados` VALUES (1,'EN_CAMINO','2024-09-09 18:59:53','2024-09-09 18:59:53',1),(2,'PENDIENTE','2024-09-09 19:00:01','2024-09-09 19:05:53',1),(3,'EN_PROCESO','2024-09-09 19:00:08','2024-09-09 19:00:20',1);
+INSERT INTO `estados` VALUES (1,'EN_CAMINO',NULL,1,'2024-09-09 18:59:53','2024-09-09 18:59:53'),(2,'PENDIENTE','Estado inicial',1,'2024-09-09 19:00:01','2024-09-13 23:32:25'),(3,'EN_PROCESO',NULL,1,'2024-09-09 19:00:08','2024-09-09 19:00:20');
 /*!40000 ALTER TABLE `estados` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -167,8 +168,9 @@ CREATE TABLE `obras_sociales` (
   `cuit` varchar(20) NOT NULL,
   `created` datetime DEFAULT current_timestamp(),
   `modified` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `activo` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -177,6 +179,7 @@ CREATE TABLE `obras_sociales` (
 
 LOCK TABLES `obras_sociales` WRITE;
 /*!40000 ALTER TABLE `obras_sociales` DISABLE KEYS */;
+INSERT INTO `obras_sociales` VALUES (2,'Osde','trelles 2552, caba','123134','osde@gmail.com','204567893','2024-09-13 11:39:50','2024-09-13 11:43:28',1);
 /*!40000 ALTER TABLE `obras_sociales` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -224,19 +227,19 @@ CREATE TABLE `productos` (
   `nombre` varchar(150) NOT NULL,
   `categoria_id` int(11) NOT NULL,
   `proveedor_id` int(11) NOT NULL,
-  `descripcion_larga` text DEFAULT NULL,
   `descripcion_breve` varchar(300) NOT NULL,
+  `descripcion_larga` text DEFAULT NULL,
   `stock` int(11) NOT NULL DEFAULT 0,
   `precio` decimal(10,0) NOT NULL DEFAULT 0,
-  `created` datetime DEFAULT current_timestamp(),
+  `created` datetime NOT NULL DEFAULT current_timestamp(),
   `modified` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `activo` tinyint(1) NOT NULL DEFAULT 0,
+  `activo` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`),
   KEY `fk_categoria` (`categoria_id`),
   KEY `fk_proveedor` (`proveedor_id`),
   CONSTRAINT `fk_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_proveedor` FOREIGN KEY (`proveedor_id`) REFERENCES `proveedores` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -245,7 +248,7 @@ CREATE TABLE `productos` (
 
 LOCK TABLES `productos` WRITE;
 /*!40000 ALTER TABLE `productos` DISABLE KEYS */;
-INSERT INTO `productos` VALUES (6,'FIN Short Info del pro',9,1,NULL,'El tallo corto recto FIN SHORT ofrece una alternativa a las técnicas de revestimiento femoral, manteniendo las características propias de estabilidad que han diferenciado al vástago FIN durante los últimos 30 años.',10,50000,'2024-09-11 20:22:15','2024-09-11 20:22:15',1),(7,'SMR',9,1,NULL,'El tallo de revisión para cadera SMR es un sistema modular diseñado para la reimplantación de prótesis de cadera en casos de pérdida ósea grave (tipos II, III y IV de la società italiana riprotesizzazione-GIR y tipos II y III de Paprosky).',10,60000,'2024-09-11 20:38:51','2024-09-11 20:38:51',1);
+INSERT INTO `productos` VALUES (34,'FIN SHORT ',9,1,'El tallo corto recto FIN SHORT ofrece una alternativa a las técnicas de revestimiento femoral, manteniendo las características propias de estabilidad que han diferenciado al vástago FIN durante los últimos 30 años.',NULL,10,50000,'2024-09-13 01:35:12','2024-09-12 21:07:02',1);
 /*!40000 ALTER TABLE `productos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -268,8 +271,8 @@ CREATE TABLE `productos_archivos` (
   `es_principal` tinyint(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   KEY `producto_id` (`producto_id`),
-  CONSTRAINT `productos_archivos_ibfk_1` FOREIGN KEY (`producto_id`) REFERENCES `kit_cirugias` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  CONSTRAINT `fk_productos` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -278,7 +281,7 @@ CREATE TABLE `productos_archivos` (
 
 LOCK TABLES `productos_archivos` WRITE;
 /*!40000 ALTER TABLE `productos_archivos` DISABLE KEYS */;
-INSERT INTO `productos_archivos` VALUES (1,NULL,'1726180293_kuyen.png','png',1802,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1726180293_kuyen.png','2024-09-13 00:31:33','2024-09-13 00:31:33',0),(2,NULL,'1726180293_gatito 1.png','png',630358,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1726180293_gatito 1.png','2024-09-13 00:31:33','2024-09-13 00:31:33',0),(3,NULL,'1726180293_plaza almendra.png','png',328071,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1726180293_plaza almendra.png','2024-09-13 00:31:33','2024-09-13 00:31:33',0);
+INSERT INTO `productos_archivos` VALUES (7,34,'1726184112_fin_short.jpg','jpg',21307,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1726184112_fin_short.jpg','2024-09-13 01:35:12','2024-09-13 01:35:12',1),(8,34,'1726184112_gatito 1.png','png',630358,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1726184112_gatito 1.png','2024-09-13 01:35:12','2024-09-13 01:35:12',0);
 /*!40000 ALTER TABLE `productos_archivos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -299,9 +302,9 @@ CREATE TABLE `proveedores` (
   `cuit` varchar(20) NOT NULL,
   `created` datetime DEFAULT current_timestamp(),
   `modified` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
-  `activo` tinyint(1) DEFAULT 1,
+  `activo` tinyint(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -310,7 +313,7 @@ CREATE TABLE `proveedores` (
 
 LOCK TABLES `proveedores` WRITE;
 /*!40000 ALTER TABLE `proveedores` DISABLE KEYS */;
-INSERT INTO `proveedores` VALUES (1,'test','test','test','432432','seba@f.com','2028999186','2024-09-09 16:42:10','2024-09-09 16:42:10',1);
+INSERT INTO `proveedores` VALUES (1,'DIRT','test','test','432432','seba@f.com','20289991868','2024-09-09 16:42:10','2024-09-14 03:26:56',1),(2,'PVE','sdfsf','Agustín García 1854','01140876458','sebabustelo@gmail.com','20289991868','2024-09-14 03:16:53','2024-09-14 03:17:14',1);
 /*!40000 ALTER TABLE `proveedores` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -326,10 +329,10 @@ CREATE TABLE `rbac_acciones` (
   `plugin` varchar(100) DEFAULT NULL,
   `controller` varchar(100) NOT NULL,
   `action` varchar(100) DEFAULT NULL,
-  `publico` int(1) DEFAULT NULL,
+  `publico` int(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `controller` (`controller`,`action`)
-) ENGINE=InnoDB AUTO_INCREMENT=293 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=303 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -338,7 +341,7 @@ CREATE TABLE `rbac_acciones` (
 
 LOCK TABLES `rbac_acciones` WRITE;
 /*!40000 ALTER TABLE `rbac_acciones` DISABLE KEYS */;
-INSERT INTO `rbac_acciones` VALUES (1,'Rbac','RbacUsuarios','index',0),(2,'Rbac','RbacUsuarios','add',0),(3,'Rbac','RbacUsuarios','edit',0),(4,'Rbac','RbacUsuarios','eliminar',0),(5,'Rbac','RbacPerfiles','index',0),(6,'Rbac','RbacPerfiles','agregar',0),(7,'Rbac','RbacPerfiles','editar',0),(8,'Rbac','RbacPerfiles','eliminar',0),(9,'Rbac','RbacPerfiles','getAccionesByVirtualHost',0),(10,'Rbac','RbacAcciones','index',0),(12,'Rbac','RbacAcciones','sincronizar',0),(13,'Rbac','RbacAcciones','switchAccion',0),(16,'Rbac','RbacUsuarios','validarLoginDB',0),(17,'Rbac','RbacUsuarios','login',1),(18,'Rbac','RbacUsuarios','changePass',0),(20,'Rbac','RbacUsuarios','recuperar',0),(21,'Rbac','RbacUsuarios','recuperarPass',1),(27,'Rbac','Configuraciones','index',0),(28,'Rbac','Configuraciones','editar',0),(114,NULL,'Pages','display',NULL),(124,NULL,'Pages','home2',0),(145,'Rbac','Configuraciones','settings',NULL),(148,'Rbac','RbacPerfiles','getConditions',NULL),(150,'Rbac','RbacUsuarios','getConditions',NULL),(151,'Rbac','RbacUsuarios','clear_cache',NULL),(154,'Rbac','RbacUsuarios','delete',NULL),(176,'Rbac','Configuraciones','eliminar',NULL),(177,'Rbac','Configuraciones','agregar',NULL),(229,'Rbac','RbacUsuarios','logout',0),(250,'Rbac','RbacUsuarios','register',1),(251,'Rbac','RbacUsuarios','detail',NULL),(252,'','TipoDocumentos','index',NULL),(253,'','TipoDocumentos','view',NULL),(254,'','TipoDocumentos','add',NULL),(255,'','TipoDocumentos','edit',NULL),(256,'','TipoDocumentos','delete',NULL),(257,'Rbac','RbacUsuarios','registerPassword',1),(258,'','Productos','index',NULL),(259,'','Productos','view',NULL),(260,'','Productos','add',NULL),(261,'','Productos','edit',NULL),(262,'','Productos','delete',NULL),(263,'','Productos','catalogoCliente',NULL),(264,'','Informes','index',NULL),(265,'Rbac','RbacUsuarios','recoverPassword',1),(266,'Rbac','RbacUsuarios','changePassword',1),(267,'','Categorias','index',NULL),(268,'','Categorias','add',NULL),(269,'','Categorias','edit',NULL),(270,'','Categorias','delete',NULL),(271,'','Consultas','index',NULL),(273,'','Estados','index',NULL),(274,'','Estados','add',NULL),(275,'','Estados','edit',NULL),(276,'','Estados','delete',NULL),(277,'','Proveedores','index',NULL),(278,'','Proveedores','add',NULL),(279,'','Proveedores','edit',NULL),(280,'','Proveedores','delete',NULL),(281,'Rbac','RbacAcciones','requireLogin',NULL),(282,'','Consultas','add',NULL),(283,'','Consultas','edit',NULL),(284,'','Consultas','delete',NULL),(285,'','ObrasSociales','index',NULL),(286,'','ObrasSociales','add',NULL),(287,'','ObrasSociales','edit',NULL),(288,'','ObrasSociales','delete',NULL),(289,'Rbac','RbacAcciones','delete',NULL),(290,'Rbac','RbacUsuarios','forgetPassword',NULL),(292,'','Pedidos','misPedidos',NULL);
+INSERT INTO `rbac_acciones` VALUES (1,'Rbac','RbacUsuarios','index',0),(2,'Rbac','RbacUsuarios','add',0),(3,'Rbac','RbacUsuarios','edit',0),(5,'Rbac','RbacPerfiles','index',0),(10,'Rbac','RbacAcciones','index',0),(12,'Rbac','RbacAcciones','sincronizar',0),(13,'Rbac','RbacAcciones','switchAccion',0),(16,'Rbac','RbacUsuarios','validarLoginDB',0),(17,'Rbac','RbacUsuarios','login',1),(18,'Rbac','RbacUsuarios','changePass',0),(20,'Rbac','RbacUsuarios','recuperar',0),(21,'Rbac','RbacUsuarios','recuperarPass',1),(27,'Rbac','Configuraciones','index',0),(114,NULL,'Pages','display',0),(124,NULL,'Pages','home2',0),(151,'Rbac','RbacUsuarios','clear_cache',0),(154,'Rbac','RbacUsuarios','delete',0),(229,'Rbac','RbacUsuarios','logout',0),(250,'Rbac','RbacUsuarios','register',1),(251,'Rbac','RbacUsuarios','detail',0),(252,'','TipoDocumentos','index',0),(254,'','TipoDocumentos','add',0),(255,'','TipoDocumentos','edit',0),(256,'','TipoDocumentos','delete',0),(257,'Rbac','RbacUsuarios','registerPassword',1),(258,'','Productos','index',0),(259,'','Productos','view',0),(260,'','Productos','add',0),(261,'','Productos','edit',0),(262,'','Productos','delete',0),(263,'','Productos','catalogoCliente',0),(264,'','Informes','index',0),(266,'Rbac','RbacUsuarios','changePassword',1),(267,'','Categorias','index',0),(268,'','Categorias','add',0),(269,'','Categorias','edit',0),(270,'','Categorias','delete',0),(271,'','Consultas','index',0),(273,'','Estados','index',0),(274,'','Estados','add',0),(275,'','Estados','edit',0),(276,'','Estados','delete',0),(277,'','Proveedores','index',0),(278,'','Proveedores','add',0),(279,'','Proveedores','edit',0),(280,'','Proveedores','delete',0),(281,'Rbac','RbacAcciones','requireLogin',0),(282,'','Consultas','add',0),(283,'','Consultas','edit',0),(284,'','Consultas','delete',0),(285,'','ObrasSociales','index',0),(286,'','ObrasSociales','add',0),(287,'','ObrasSociales','edit',0),(288,'','ObrasSociales','delete',0),(289,'Rbac','RbacAcciones','delete',0),(290,'Rbac','RbacUsuarios','forgetPassword',1),(292,'','Pedidos','misPedidos',0),(293,'Rbac','Configuraciones','add',0),(294,'Rbac','Configuraciones','edit',0),(295,'Rbac','Configuraciones','delete',0),(296,'Rbac','RbacPerfiles','add',0),(297,'Rbac','RbacPerfiles','edit',0),(298,'Rbac','RbacPerfiles','delete',0),(302,'','Consultas','view',0);
 /*!40000 ALTER TABLE `rbac_acciones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -358,7 +361,7 @@ CREATE TABLE `rbac_acciones_rbac_perfiles` (
   KEY `fk_ap_perfil_idx` (`rbac_perfil_id`),
   CONSTRAINT `fk_acion` FOREIGN KEY (`rbac_accion_id`) REFERENCES `rbac_acciones` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_perfil` FOREIGN KEY (`rbac_perfil_id`) REFERENCES `rbac_perfiles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3513 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3531 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -367,7 +370,7 @@ CREATE TABLE `rbac_acciones_rbac_perfiles` (
 
 LOCK TABLES `rbac_acciones_rbac_perfiles` WRITE;
 /*!40000 ALTER TABLE `rbac_acciones_rbac_perfiles` DISABLE KEYS */;
-INSERT INTO `rbac_acciones_rbac_perfiles` VALUES (3070,28,1),(3071,27,1),(3095,5,1),(3096,6,1),(3097,7,1),(3102,16,1),(3103,2,1),(3104,4,1),(3106,1,1),(3107,3,1),(3138,21,1),(3156,17,1),(3157,18,1),(3159,20,1),(3278,114,1),(3322,145,1),(3325,148,1),(3327,150,1),(3328,151,1),(3331,154,1),(3346,176,1),(3347,177,1),(3443,229,1),(3457,10,1),(3462,8,1),(3464,250,1),(3465,17,8),(3466,114,8),(3468,124,8),(3469,229,8),(3470,12,1),(3471,251,1),(3472,252,1),(3473,253,1),(3474,254,1),(3475,255,1),(3476,256,1),(3477,257,1),(3478,258,1),(3479,259,1),(3480,260,1),(3481,261,1),(3482,262,1),(3483,263,1),(3484,264,1),(3485,265,1),(3486,266,1),(3487,267,1),(3488,268,1),(3489,269,1),(3490,270,1),(3491,271,1),(3493,273,1),(3494,274,1),(3495,275,1),(3496,276,1),(3497,277,1),(3498,278,1),(3499,279,1),(3500,280,1),(3501,281,1),(3502,282,1),(3503,283,1),(3504,284,1),(3505,285,1),(3506,286,1),(3507,287,1),(3508,288,1),(3509,289,1),(3510,290,1),(3512,292,1);
+INSERT INTO `rbac_acciones_rbac_perfiles` VALUES (3071,27,1),(3095,5,1),(3102,16,1),(3103,2,1),(3106,1,1),(3107,3,1),(3138,21,1),(3156,17,1),(3157,18,1),(3159,20,1),(3278,114,1),(3328,151,1),(3331,154,1),(3443,229,1),(3457,10,1),(3464,250,1),(3465,17,8),(3466,114,8),(3468,124,8),(3469,229,8),(3470,12,1),(3471,251,1),(3472,252,1),(3474,254,1),(3475,255,1),(3476,256,1),(3477,257,1),(3478,258,1),(3479,259,1),(3480,260,1),(3481,261,1),(3482,262,1),(3483,263,1),(3484,264,1),(3486,266,1),(3487,267,1),(3488,268,1),(3489,269,1),(3490,270,1),(3491,271,1),(3494,274,1),(3495,275,1),(3496,276,1),(3497,277,1),(3498,278,1),(3499,279,1),(3500,280,1),(3501,281,1),(3502,282,1),(3503,283,1),(3504,284,1),(3505,285,1),(3506,286,1),(3507,287,1),(3508,288,1),(3509,289,1),(3510,290,1),(3512,292,1),(3515,293,1),(3516,294,1),(3517,295,1),(3518,296,1),(3519,297,1),(3520,298,1),(3522,273,1),(3523,302,1),(3527,263,8),(3528,268,8);
 /*!40000 ALTER TABLE `rbac_acciones_rbac_perfiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -395,7 +398,7 @@ CREATE TABLE `rbac_perfiles` (
 
 LOCK TABLES `rbac_perfiles` WRITE;
 /*!40000 ALTER TABLE `rbac_perfiles` DISABLE KEYS */;
-INSERT INTO `rbac_perfiles` VALUES (1,'Administrador',258),(8,'Cliente',124);
+INSERT INTO `rbac_perfiles` VALUES (1,'Administrador',258),(8,'Cliente',263);
 /*!40000 ALTER TABLE `rbac_perfiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -408,14 +411,16 @@ DROP TABLE IF EXISTS `rbac_token`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `rbac_token` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
+  `rbac_usuario_id` int(11) NOT NULL,
   `token` varchar(500) NOT NULL,
-  `usuario_id` int(11) NOT NULL,
-  `created` datetime DEFAULT NULL,
-  `modified` datetime DEFAULT NULL,
+  `created` datetime DEFAULT current_timestamp(),
+  `modified` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `validez` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `IDX_TOKEN` (`token`)
-) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  KEY `IDX_TOKEN` (`token`),
+  KEY `fk_rbac_usuario_idx` (`rbac_usuario_id`),
+  CONSTRAINT `fk_rbac_usuarios` FOREIGN KEY (`rbac_usuario_id`) REFERENCES `rbac_usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -424,7 +429,7 @@ CREATE TABLE `rbac_token` (
 
 LOCK TABLES `rbac_token` WRITE;
 /*!40000 ALTER TABLE `rbac_token` DISABLE KEYS */;
-INSERT INTO `rbac_token` VALUES (14,'MQ3xmCQitRywvdfpvarXVSQ2',2936,'2024-09-04 19:35:40','2024-09-04 19:35:40',1440),(18,'UHMsmmVcqyFvwafN931y-W-4',2923,NULL,NULL,1440),(19,'tv8-L5hziU-yosrvjnfmdI7p',2923,NULL,NULL,1440),(20,'lO25JWYyEOJFQFV4oqn7V-1R',2923,NULL,NULL,1440);
+INSERT INTO `rbac_token` VALUES (43,2966,'XSBlD3cCVlard0OjYqD7hIxJ','2024-09-18 12:55:15','2024-09-18 12:55:15',1440);
 /*!40000 ALTER TABLE `rbac_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -458,7 +463,7 @@ CREATE TABLE `rbac_usuarios` (
   KEY `FK_tipo_documento` (`tipo_documento_id`),
   CONSTRAINT `FK_rbac_usuarios_rbac_perfiles` FOREIGN KEY (`perfil_id`) REFERENCES `rbac_perfiles` (`id`),
   CONSTRAINT `FK_tipo_documento` FOREIGN KEY (`tipo_documento_id`) REFERENCES `tipo_documentos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2939 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2967 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -467,7 +472,7 @@ CREATE TABLE `rbac_usuarios` (
 
 LOCK TABLES `rbac_usuarios` WRITE;
 /*!40000 ALTER TABLE `rbac_usuarios` DISABLE KEYS */;
-INSERT INTO `rbac_usuarios` VALUES (2901,1,'flor@gmail.com','Florencia','Tigani',1,'30215654','Tinogasta 987',NULL,'bdb402fd82aee66e477e15f0d31b6cac806896cc42bbdfe02eedd7e23b5c3b0d','1f4477bad7af3616c1f933a02bfabe4e',1,'2019-10-28 14:50:04','2024-08-30 18:01:45',NULL,'2923'),(2902,1,'facu@gmail.com','Facundo','Ramirez',1,'38025652','Camargo 1512',NULL,'','5c151c2a9b76f9ef26d7e0f0d00c9a89',1,NULL,'2024-08-30 18:01:13',NULL,'2923'),(2923,1,'sebabustelo@gmail.com','Sebastian','Bustelo',1,'28999186','Juan Agustín Garcia 1854',NULL,'561dfe66b045305d0462693148c03140a89914d8f6ef08f88c8f4b284e24be35','79514e888b8f2acacc68738d0cbb803e',1,'2024-08-30 14:29:31','2024-08-30 14:29:31','2907','2907'),(2936,8,'zebabustelo@gmail.com','Sebastian','Bustelo',1,'28999186','Padilla 752',NULL,NULL,NULL,1,'2024-09-04 19:35:40','2024-09-04 22:57:17',NULL,'2923');
+INSERT INTO `rbac_usuarios` VALUES (2901,1,'flor@gmail.com','Florencia','Tigani',1,'30215654','Tinogasta 987',NULL,'bdb402fd82aee66e477e15f0d31b6cac806896cc42bbdfe02eedd7e23b5c3b0d','1f4477bad7af3616c1f933a02bfabe4e',1,'2019-10-28 14:50:04','2024-08-30 18:01:45',NULL,'2923'),(2902,1,'facu@gmail.com','Facundo','Ramirez',1,'38025652','Camargo 1512',NULL,'','5c151c2a9b76f9ef26d7e0f0d00c9a89',1,NULL,'2024-08-30 18:01:13',NULL,'2923'),(2923,1,'sebabustelo@gmail.com','Sebastian','Bustelo',1,'28999186','Juan Agustín Garcia 1854',NULL,'561dfe66b045305d0462693148c03140a89914d8f6ef08f88c8f4b284e24be35','79514e888b8f2acacc68738d0cbb803e',1,'2024-08-30 14:29:31','2024-08-30 14:29:31','2907','2907'),(2966,8,'zebabustelo@gmail.com','Walter Sebastian','Bustelo',1,'28999186','padilla 752','2342342','23c3b7b5bdd600601f685f89e6bb28e55735380f355233bc4acfe935d0aad657',NULL,1,'2024-09-18 12:01:22','2024-09-18 12:07:10',NULL,NULL);
 /*!40000 ALTER TABLE `rbac_usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -542,4 +547,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-12 19:39:24
+-- Dump completed on 2024-09-18  9:34:56

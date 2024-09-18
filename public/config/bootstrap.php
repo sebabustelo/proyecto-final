@@ -35,8 +35,6 @@ require CORE_PATH . 'config' . DS . 'bootstrap.php';
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
 use Cake\Core\Configure\Engine\PhpConfig;
-use Cake\Database\Type\StringType;
-use Cake\Database\TypeFactory;
 use Cake\Datasource\ConnectionManager;
 use Cake\Error\ErrorTrap;
 use Cake\Error\ExceptionTrap;
@@ -46,6 +44,16 @@ use Cake\Mailer\Mailer;
 use Cake\Mailer\TransportFactory;
 use Cake\Routing\Router;
 use Cake\Utility\Security;
+
+
+if (!Configure::check('Menu.ParamatrosSistema')) {
+    Configure::write('Menu.ParamatrosSistema', '<i class="fa fa-laptop"></i>Parámetros del sistema');
+}
+
+if (!Configure::check('Menu.GestionPermisos')) {
+    Configure::write('Menu.GestionPermisos', '<i class="fa fa-gears"></i> Gestión de Permisos');
+}
+
 
 /**
  * Load global functions.
@@ -66,21 +74,6 @@ require CAKE . 'functions.php';
  * security risks. See https://github.com/josegonzalez/php-dotenv#general-security-information
  * for more information for recommended practices.
 */
-/*if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
-     $dotenv = new \josegonzalez\Dotenv\Loader([CONFIG . '.env']);
-     $dotenv->parse()
-         ->putenv()
-         ->toEnv()
-         ->toServer();
- }*/
-
-/* if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
-     $dotenv = new \josegonzalez\Dotenv\Loader([CONFIG . '.env']);
-     $dotenv->parse()
-         ->putenv(true)
-         ->toEnv()
-         ->toServer();
- }*/
 
 $overwrite = true;
 if (!env('APP_NAME') && file_exists(CONFIG . '.env')) {
@@ -209,7 +202,7 @@ ServerRequest::addDetector('tablet', function ($request) {
 
     return $detector->isTablet();
 });
-define("PAGINATION_LIMIT", 10);
+
 /*
  * You can enable default locale format parsing by adding calls
  * to `useLocaleParser()`. This enables the automatic conversion of
@@ -267,3 +260,4 @@ define('FORMAT_DATETIME_VIEW', 'd/m/Y H:m');
 define('FORMAT_DATE_VIEW', 'd/m/Y');
 define('FORMAT_TIME_VIEW', 'HH:mm');
 define('FORMAT_DATE_VIEW_DOT', 'dd.MM.yyyy');
+define("PAGINATION_LIMIT", 10);

@@ -8,6 +8,7 @@ class RbacAccionesController extends RbacController
 {
     public function index()
     {
+        //debug(ini_get('session.save_path'));
         $conditions = $this->getConditions();
         $rbacAcciones = $this->RbacAcciones->find()
             ->where($conditions['where'])
@@ -26,16 +27,14 @@ class RbacAccionesController extends RbacController
     {
 
         $this->request->allowMethod(['post', 'delete']);
-        $rbacAccion = $this->RbacAcciones->get($id,contain: ['RbacPerfiles']);
-        if (isset($rbacAccion) && $rbacAccion['rbac_perfiles'][0]['accion_default_id'] != $id) {
-            if ($this->RbacAcciones->delete($rbacAccion)) {
-                $this->Flash->success(__('La acción ha sido eliminada.'));
-            } else {
-                $this->Flash->error(__('No se pudo eliminar la acción. Por favor, inténtalo de nuevo.'));
-            }
+        $rbacAccion = $this->RbacAcciones->get($id, contain: ['RbacPerfiles']);
+
+        if ($this->RbacAcciones->delete($rbacAccion)) {
+            $this->Flash->success(__('La acción ha sido eliminada.'));
         } else {
-            $this->Flash->error('La acción ' . $id . ' no puede ser eliminada debido que esta asociada a un perfil');
+            $this->Flash->error(__('No se pudo eliminar la acción. Por favor, inténtalo de nuevo.'));
         }
+
 
         return $this->redirect(['action' => 'index']);
     }
@@ -116,57 +115,45 @@ class RbacAccionesController extends RbacController
     public function sincronizar()
     {
         $this->viewBuilder()->setLayout(null);
-        $result = FALSE;
+        $result = false;
 
-        $miArray = $this->getRequest()->getData('miArray');
-        $i = 0;
+        // Obtener los datos enviados desde el formulario
+        $accionesSincronizar = $this->getRequest()->getData('accionesSincronizar');
 
-        $perfilDefault = $this->getRequest()->getSession()->read('PerfilDefault');
-
-        if ($perfilDefault == 1) {
-            foreach ($miArray as $item) {
+        // Verificar si hay datos para sincronizar
+        if (!empty($accionesSincronizar)) {
+            $data = [];
+            foreach ($accionesSincronizar as $item) {
+                // Dividir los datos por ';'
                 $datos = explode(';', $item);
 
-                $data['plugin'] = $datos[0];
-                $data['controller'] = $datos[1];
-                $data['action'] = $datos[2];
-                $data['carga_administracion'] = 1;
+                // Estructurar el array de datos
+                $data[] = [
+                    'plugin'     => $datos[0] ?? null,
+                    'controller' => $datos[1] ?? null,
+                    'action'     => $datos[2] ?? null,
+                    'publico'    => 0 // Asumimos que siempre es 0
+                ];
+            }
 
-                $rbacAccion = $this->RbacAcciones->newEntity($data);
-                if ($this->RbacAcciones->save($rbacAccion)) {
-                    $accion_id = $rbacAccion->id;
-                    $this->RbacAcciones->getConnection()->execute("INSERT INTO rbac_acciones_rbac_perfiles
-		        				(rbac_accion_id,rbac_perfil_id) VALUES (" . $accion_id . ",1)");
-                    $result = TRUE;
+            // Solo continuar si se han recopilado datos válidos
+            if (!empty($data)) {
+                // Crear entidades en masa
+                $rbacAcciones = $this->RbacAcciones->newEntities($data);
+
+                // Intentar guardar todas las acciones
+                if ($this->RbacAcciones->saveMany($rbacAcciones)) {
+                    $result = true;
+                    $this->Flash->success('Ha sido grabado correctamente', 'flash_custom');
                 } else {
-                    $result = FALSE;
-                    $this->Flash->error('Error, no pudo grabar correctamente.');
-                    break;
+                    $this->Flash->error('Error, no se pudo grabar correctamente.');
                 }
             }
         } else {
-            foreach ($miArray as $item) {
-                $datos = explode(';', $item);
-
-                $data['plugin'] = $datos[0];
-                $data[$i]['controller'] = $datos[1];
-                $data[$i]['action'] = $datos[2];
-                $data[$i]['carga_administracion'] = 1;
-
-                $i++;
-            }
-            if ($data) {
-                $rbacAccion = $this->RbacAcciones->newEntity($data);
-                if (!$this->RbacAcciones->saveAll($rbacAccion)) {
-                    $result = FALSE;
-                    $this->Flash->error('Error, no pudo grabar correctamente.');
-                } else {
-                    $result = TRUE;
-                    $this->Flash->success('Ha sido grabado correctamente', 'flash_custom');
-                }
-            }
+            $this->Flash->error('No se recibieron datos para sincronizar.');
         }
+
         $this->set('data', $result);
-        $this->render('/element/ajaxreturn');
+        return $this->render('/element/ajaxreturn');
     }
 }

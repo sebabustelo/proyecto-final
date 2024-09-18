@@ -16,11 +16,12 @@ use Cake\Core\Configure; ?>
   <!-- Bootstrap-fileinput -->
   <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap-fileinput/css/fileinput.min'); ?>
   <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap-fileinput/themes/explorer-fa4/theme.css'); ?>
+  <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap-duallistbox/dist/bootstrap-duallistbox.min.css'); ?>
   <!-- Font Awesome -->
   <?php echo $this->Html->css('AdminLTE./bower_components/font-awesome/css/font-awesome.min'); ?>
   <!-- Ionicons -->
   <?php echo $this->Html->css('AdminLTE./bower_components/Ionicons/css/ionicons.min'); ?>
-  <?php //echo $this->Html->css('AdminLTE./bower_commponents/jquery-treegrid/dist/css/jquery.treegrid'); 
+  <?php //echo $this->Html->css('AdminLTE./bower_commponents/jquery-treegrid/dist/css/jquery.treegrid');
   ?>
   <?php echo $this->Html->css('jquery.treegrid'); ?>
   <!-- Theme style -->
@@ -32,20 +33,22 @@ use Cake\Core\Configure; ?>
 
   <!-- jQuery 3 -->
   <?php echo $this->Html->script('AdminLTE./bower_components/jquery/dist/jquery.min'); ?>
-  <?php echo $this->Html->script('jquery.bootstrap-duallistbox'); ?>
+  <?php //echo $this->Html->script('jquery.bootstrap-duallistbox'); ?>
   <?php echo $this->Html->script('jquery.treegrid'); ?>
-  <?php //echo $this->Html->script('AdminLTE./bower_components/jquery-treegrid/dist/js/jquery.treegrid'); 
+  <?php //echo $this->Html->script('AdminLTE./bower_components/jquery-treegrid/dist/js/jquery.treegrid');
   ?>
 
   <!-- Bootstrap 3.3.7 -->
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap/dist/js/bootstrap.min'); ?>
   <!-- Bootstrap-fileinput -->
-  
+
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/js/fileinput.min'); ?>
   <?php //echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/themes/explorer-fa4/theme.js'); ?>
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/themes/fa4/theme.js'); ?>
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/js/locales/es.js'); ?>
-  
+  <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-duallistbox/dist/jquery.bootstrap-duallistbox.min'); ?>
+
+
   <!-- AdminLTE App -->
   <?php echo $this->Html->script('AdminLTE.adminlte.min'); ?>
   <!-- Slimscroll -->

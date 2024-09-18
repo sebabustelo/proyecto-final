@@ -5,10 +5,9 @@
  * @var iterable<\App\Model\Entity\Categorias> $categorias
  */
 ?>
-
 <section class="content-header">
     <h1>
-        Parámetros del sistema
+    <i class="fa fa-heartbeat"></i> Gestión de Obras Sociales
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Obras Sociales</a></li> <i class="fa fa-arrow-right"></i>
@@ -115,7 +114,7 @@
                                 <table class="table table-hover table-striped table-ajax">
                                     <thead>
                                         <tr>
-                                            <th>
+                                            <th class="hidden-xs">
                                                 <?php echo $this->Paginator->sort('cuit', 'CUIT'); ?>
                                             </th>
                                             <th>
@@ -128,10 +127,10 @@
                                                 <?php echo $this->Paginator->sort('direccion', 'Dirección'); ?>
                                             </th>
                                             <th class="hidden-xs">
-                                                <?php echo $this->Paginator->sort('created', 'Alta'); ?>
+                                                <?php echo $this->Paginator->sort('created', 'Creación'); ?>
                                             </th>
                                             <th class="hidden-xs">
-                                                <?php echo $this->Paginator->sort('modified', 'Última modificación'); ?>
+                                                <?php echo $this->Paginator->sort('modified', 'Modificación'); ?>
                                             </th>
                                             <th>
                                             </th>
@@ -142,7 +141,7 @@
                                     <tbody>
                                         <?php foreach ($obrasSociales as $obraSocial) {  ?>
                                             <tr>
-                                                <td>
+                                                <td class="hidden-xs">
                                                     <?php echo $obraSocial->cuit; ?>
                                                 </td>
                                                 <td>

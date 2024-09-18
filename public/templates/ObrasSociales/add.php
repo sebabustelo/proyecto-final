@@ -6,7 +6,7 @@
 ?>
 <section class="content-header">
     <h1>
-        Parámetros del sistema
+    <i class="fa fa-heartbeat"></i> Gestión de Obras Sociales
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Obras Sociales</a></li> <i class="fa fa-arrow-right"></i>

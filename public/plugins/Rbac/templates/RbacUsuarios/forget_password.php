@@ -1,11 +1,11 @@
-<?php $this->layout = 'Rbac.recover_password';
+<?php $this->layout = 'Rbac.forget_password';
 
 
 use Cake\Core\Configure;
 ?>
 <div>
 
-    <form id="formRecoverPassword" class="well" role="form" action="/rbac/RbacUsuarios/recoverPassword/" method="POST">
+    <form id="formForgetPassword" class="well" role="form" action="/rbac/RbacUsuarios/forgetPassword/" method="POST">
 
         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
         <div class="register-logo">

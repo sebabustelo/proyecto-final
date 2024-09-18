@@ -10,17 +10,16 @@
         vertical-align: middle;
     }
 </style>
-
 <section class="content-header">
     <h1>
-        Administración
+    <i class="fa fa-fw fa-medkit"></i> Gestión de Productos
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"> Productos</a></li> <i class="fa fa-arrow-right"></i>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Productos</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Listado</li>
     </ol>
 </section>
-<section id="ProductosList" class="content">
+<section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
@@ -117,10 +116,10 @@
                                                 <?php echo $this->Paginator->sort('descripcion', 'Descripción'); ?>
                                             </th>
                                             <th class="col-sm-2 hidden-xs">
-                                                <?php echo $this->Paginator->sort('created', 'Alta'); ?>
+                                                <?php echo $this->Paginator->sort('created', 'Creación'); ?>
                                             </th>
                                             <th class="col-sm-2 hidden-xs">
-                                                <?php echo $this->Paginator->sort('modified', 'Última modificación'); ?>
+                                                <?php echo $this->Paginator->sort('modified', 'Modificación'); ?>
                                             </th>
                                             <th></th>
                                             <th></th>

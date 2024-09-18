@@ -7,13 +7,12 @@
  * @var \Cake\Collection\CollectionInterface|string[] $proveedores
  */
 ?>
-
 <section class="content-header">
     <h1>
-        Administración
+    <i class="fa fa-fw fa-medkit"></i> Gestión de Productos
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"> Kit de Cirugías</a></li> <i class="fa fa-arrow-right"></i>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Productos</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Editar</li>
     </ol>
 </section>
@@ -22,10 +21,10 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-refresh fa-lg"></span> Editar Kit de Cirugía</h3>
+                    <h3 class="box-title"> <span class="fa fa-refresh fa-lg"></span> Editar Producto</h3>
                     <div class="box-tools pull-right">
                         <a href="/Productos/index/" class="btn btn-sm btn-primary ">
-                            <span class="fa fa-list"></span> Kits de Cirugías</a>
+                            <span class="fa fa-list"></span> Productos</a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>

@@ -5,10 +5,9 @@
  * @var iterable<\App\Model\Entity\Proveedor> $proveedor
  */
 ?>
-
 <section class="content-header">
     <h1>
-        Parámetros del sistema
+    <i class="fa fa-cubes"></i> Gestión de Proveedores
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Proveedores</a></li> <i class="fa fa-arrow-right"></i>

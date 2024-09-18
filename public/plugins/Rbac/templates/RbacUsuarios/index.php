@@ -1,12 +1,19 @@
-<!-- Main content -->
+<?php
+
+/**
+ * @var \App\View\AppView $this
+ * @var iterable<\App\Model\Entity\RbacUsuarios> $rbacUsuarios
+ */
+use Cake\Core\Configure;
+?>
 <section class="content-header">
-  <h1>
-    Administración de Usuarios
-  </h1>
-  <ol class="breadcrumb">
-    <li><a href="#"><i class="fa fa-users"></i> Usuarios</a></li>
-    <li class="active">index</li>
-  </ol>
+    <h1>
+    <?php echo Configure::read('Menu.GestionPermisos') ?>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-users"></i> Usuarios</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Listado</li>
+    </ol>
 </section>
 <section id="RbacUsuariosList" class="content">
   <div class="row">
@@ -98,7 +105,7 @@
           <div class="box-tools pull-right">
             <?php if (!empty($accionesPermitidas['RbacUsuarios']['add'])) { ?>
               <a href="/rbac/rbacUsuarios/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
-                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText">Nuevo
+                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nuevo
                   Usuario</span></a>
             <?php } ?>
             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
@@ -115,16 +122,16 @@
               <table class="table table-hover table-striped table-ajax">
                 <thead>
                   <tr>
-                    <th>
+                    <th class="hidden-xs">
                       <?php echo $this->Paginator->sort('apellido'); ?>
                     </th>
-                    <th>
+                    <th class="hidden-xs">
                       <?php echo $this->Paginator->sort('nombre'); ?>
                     </th>
                     <th>
                       <?php echo $this->Paginator->sort('usuario'); ?>
                     </th>
-                    <th>
+                    <th class="hidden-xs">
                       <?php echo $this->Paginator->sort('RbacUsuarios.Perfil', 'Perfil'); ?>
                     </th>
                     <th>
@@ -136,16 +143,16 @@
                 <tbody>
                   <?php foreach ($rbacUsuarios as $k => $usuario) {  ?>
                     <tr>
-                      <td>
+                      <td class="hidden-xs">
                         <?php echo $usuario->apellido; ?>
                       </td>
-                      <td>
+                      <td class="hidden-xs">
                         <?php echo $usuario->nombre; ?>
                       </td>
                       <td>
                         <?php echo $usuario->usuario; ?>
                       </td>
-                      <td>
+                      <td class="hidden-xs">
                         <?php echo $usuario->rbac_perfil->descripcion; ?>
                       </td>
                       <td class="pencil">
@@ -153,7 +160,7 @@
                       </td>
                       <td class="remove">
                       <a href="/rbac/RbacUsuarios/delete/<?php echo $usuario->id; ?>" class="editar btn btn-danger btn-xs pencil" title="Eliminar" target="_self"><i class="fa fa-remove"></i></a>
-                        
+
                       </td>
                     </tr>
                   <?php } ?>

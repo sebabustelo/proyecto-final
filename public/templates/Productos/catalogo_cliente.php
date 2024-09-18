@@ -70,7 +70,7 @@
         <!-- /.col -->
     </div>
     <div class="row">
-        <div class="col-sm-6 col-md-2">
+        <div class="col-sm-6 col-md-3">
             <div class="thumbnail product-item">
                 <img src="/img/productos/fassier-duval.jpg" alt="Producto 1">
                 <div class="caption">
@@ -85,7 +85,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-2">
+        <div class="col-sm-6 col-md-3">
             <div class="thumbnail product-item">
                 <img src="/img/productos/fin_short.jpg" alt="Producto 2">
                 <div class="caption">
@@ -101,7 +101,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-2">
+        <div class="col-sm-6 col-md-3">
             <div class="thumbnail product-item">
                 <img src="/img/productos/k-mono.jpg" alt="Producto 3">
                 <div class="caption">
@@ -116,7 +116,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-sm-6 col-md-2">
+        <div class="col-sm-6 col-md-3">
             <div class="thumbnail product-item">
                 <img src="/img/productos/kmod-rev.jpg" alt="Producto 4">
                 <div class="caption">

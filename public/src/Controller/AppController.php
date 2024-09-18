@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Controller\Controller;
-use Cake\Core\Configure;
 use Cake\Event\EventInterface;
 
 use Cake\View\JsonView;
@@ -35,8 +34,6 @@ class AppController extends Controller
 
         $this->loadComponent('Flash');
         $this->loadComponent('Rbac.Permisos');
-
-
 
         // Configurar el componente de autenticación
         // $this->loadComponent('Auth', [
@@ -72,8 +69,6 @@ class AppController extends Controller
 
         $session = $this->request->getSession();
 
-        $perfilDefault = $session->read('PerfilDefault');
-        $perfilesPorUsuario      = $this->getRequest()->getSession()->read('PerfilesPorUsuario');
         $accionesPermitidasPorPerfiles = $session->read('RbacAcciones');
         $usuario = $session->read('RbacUsuario');
 
@@ -83,35 +78,21 @@ class AppController extends Controller
             $accionesPermitidas = NULL;
         }
 
-        $session->write('permitidas', $accionesPermitidas);
         $this->set('accionesPermitidas', $accionesPermitidas);
-        $this->set('perfilDefault', $perfilDefault);
         $this->set('usuario', $usuario);
-        $this->set('perfilesPorUsuario', $perfilesPorUsuario);
-
         $this->viewBuilder()->setTheme('AdminLTE');
 
         $controller = Inflector::camelize($this->getRequest()->getParam('controller'));
         $action = Inflector::underscore($this->getRequest()->getParam('action'));
 
         if ($this->getRequest()->is('ajax')) {
-
             $this->viewBuilder()->setLayout('ajax');
         } else {
-
-            //Si es login tiene el layout de login
-            if ($this->getRequest()->getParam('action') == 'login') {
-                //$this->viewBuilder()->setLayout('Rbac.login');
-            } elseif (isset($accionesPermitidas[$controller][$action]) == 1) {
-
-                if ($action == 'exportar') {
-                    $this->viewBuilder()->setLayout('informe_excel');
-                } else {
-
-                    $this->viewBuilder()->setLayout('default');
-                }
+            if ($action == 'exportar') {
+                $this->viewBuilder()->setLayout('informe_excel');
+            } else {
+                $this->viewBuilder()->setLayout('AdminLTE.default');
             }
-
         }
     }
 
@@ -126,29 +107,6 @@ class AppController extends Controller
             return true;
         else
             return false;
-    }
-
-    public function generateToken($length = 24)
-    {
-        if (function_exists('openssl_random_pseudo_bytes')) {
-            $token = base64_encode(openssl_random_pseudo_bytes($length, $strong));
-            if ($strong == TRUE) {
-                return strtr(substr($token, 0, $length), '+/=', '-_,');
-            }
-        }
-
-        //php < 5.3 or no openssl
-        $characters = '0123456789';
-        $characters .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+';
-        $charactersLength = strlen($characters) - 1;
-        $token            = '';
-
-        //select some random characters
-        for ($i = 0; $i < $length; $i++) {
-            $token .= $characters[mt_rand(0, $charactersLength)];
-        }
-
-        return $token;
     }
 
 
@@ -188,6 +146,4 @@ class AppController extends Controller
             return $data;
         return false;
     }
-
-
 }

@@ -10,10 +10,10 @@
 
 <section class="content-header">
     <h1>
-        Administración
+    <i class="fa fa-fw fa-medkit"></i> Gestión de Productos
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"> Productos</a></li> <i class="fa fa-arrow-right"></i>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Productos</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Agregar</li>
     </ol>
 </section>

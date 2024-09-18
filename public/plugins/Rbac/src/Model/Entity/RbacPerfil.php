@@ -9,9 +9,7 @@ use Cake\ORM\Entity;
  *
  * @property int $id
  * @property string $descripcion
- * @property string|null $es_default
  * @property string|resource|null $usa_area_representacion
- * @property int|null $permiso_virtual_host_id
  * @property int|null $accion_default_id
  * @property int|null $perfil_publico
  *
@@ -33,7 +31,7 @@ class RbacPerfil extends Entity
      */
     protected array $_accessible = [
         'id' => true,
-        'descripcion' => true,        
+        'descripcion' => true,
         'accion_default_id' => true,
         'rbac_acciones' => true,
         'rbac_usuarios' => true,

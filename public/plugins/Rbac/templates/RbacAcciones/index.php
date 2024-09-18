@@ -1,5 +1,21 @@
-<!-- Main content -->
-<section id="RbacAccionesList" class="content">
+<?php
+
+/**
+ * @var \App\View\AppView $this
+ * @var iterable<\App\Model\Entity\RbacPerfiles> $rbacPerfiles
+ */
+use Cake\Core\Configure;
+?>
+<section class="content-header">
+    <h1>
+    <?php echo Configure::read('Menu.GestionPermisos') ?>
+    </h1>
+    <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-lock"></i> Permisos</a></li> <i class="fa fa-arrow-right"></i>
+        <li class="active">Listado</li>
+    </ol>
+</section>
+<section  class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
@@ -305,7 +321,7 @@
         var atributo_id;
         var accion_id;
         var grabado;
-        var miArray = [];
+        var accionesSincronizar = [];
         $('#headerTable2 .checkbox:checked').each(function() {
             if (this.checked) {
                 plugin = $(this).attr('data-plugin');
@@ -313,16 +329,16 @@
                 accion_id = $(this).attr('data-action');
                 valor = $(this).val();
                 var item = plugin + ";" + atributo_id + ";" + accion_id + ";" + valor;
-                miArray.push(item);
+                accionesSincronizar.push(item);
             }
         });
-        if (miArray) {
+        if (accionesSincronizar) {
             $.ajax({
                 url: "/rbac/RbacAcciones/sincronizar/",
                 type: 'POST',
                 dataType: 'json',
                 data: {
-                    'miArray': miArray
+                    'accionesSincronizar': accionesSincronizar
                 },
                 headers: {
                     'X-CSRF-Token': "<?php echo $this->request->getAttribute('csrfToken'); ?>"

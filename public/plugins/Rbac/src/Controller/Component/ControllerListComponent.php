@@ -29,7 +29,7 @@ class ControllerListComponent extends Component
         ];
 
         foreach ($plugins as $plugin) {
-            //$isLoaded = Plugin::isLoaded($plugin);            
+            //$isLoaded = Plugin::isLoaded($plugin);
             if (!in_array($plugin, $ignoreList) && $plugin != 'DebugKit' && $plugin != 'AdminLTE') {
                 //Search in plugin path
                 $files_plugins = scandir('../plugins/' . $plugin . '/src/Controller');
@@ -42,7 +42,7 @@ class ControllerListComponent extends Component
                 }
             }
         }
-        //debug($results);
+
         foreach ($files as $file) {
             if (!in_array($file, $ignoreList)) {
                 $controller = explode('.', $file)[0];
@@ -103,7 +103,7 @@ class ControllerListComponent extends Component
             foreach ($controllers[$controller] as $controllerAccion) {
 
                 for ($n = 0; $n < count($controllerAccion); $n++) {
-                    
+
                     $plugin_controller = explode('.', $controller);
 
                     if (isset($plugin_controller[1])) {
@@ -137,17 +137,11 @@ class ControllerListComponent extends Component
         foreach ($listControlleDB as $value) {
 
             if ($value['plugin'] == $plugin && $value['controller'] == $controller && $value['action'] == $controllerAccion) {
-                /*  debug($value['plugin']);
-                debug($value['controller']);
-                debug($value['action']);                
-                debug($value);
-                debug($controller);
-                debug(($value['plugin']==$plugin && $value['controller'] == $controller && $value['action'] == $controllerAccion));die;*/
                 $existe = TRUE;
                 break;
             }
         }
-        //debug(($value['plugin'] && $value['controller'] == $controller && $value['action'] == $controllerAccion));die;
+
         return $existe;
     }
 }
