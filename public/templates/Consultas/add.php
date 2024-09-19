@@ -26,12 +26,13 @@ use Cake\Core\Configure;
                 </div>
                 <div class="box-body">
                     <div class="form-row">
-                        <form id="CategoriasAddForm" name="CategoriasAddForm" role="form" action="/Consultas/add/" method="POST">
+                        <form id="ConstulasAddForm" name="ConstulasAddForm" role="form" action="/Consultas/add/" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-
+                            <input type="hidden" name="cliente_id" value="<?php echo  $_SESSION['RbacUsuario']['id']; ?>">
+                           
                             <div class="form-group col-sm-12">
                                 <label>Mótivo</label>
-                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese el mótivo de la consulta" class="form-control" name="descripcion" oninvalid="this.setCustomValidity('Debe completar la descripción')" oninput="this.setCustomValidity('')"></textarea>
+                                <textarea required maxlength="2000" rows="5" placeholder="Ingrese el mótivo de la consulta" class="form-control" name="motivo"></textarea>
                                 <?php if ($consulta->getError('motivo')) { ?>
                                     <?php foreach ($consulta->getError('motivo') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
