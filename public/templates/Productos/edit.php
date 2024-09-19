@@ -101,7 +101,7 @@
                                     </div>
                                 </div>
                                 <div class="kv-avatar-hint">
-                                    <small>La imagen debe ser menor a < 1500 KB</small>
+                                    <small>Las imagenes deben ser menor a < 1500 KB para optimizar la carga del portal</small>
                                 </div>
                             </div>
 
@@ -160,18 +160,19 @@
         showClose: false,
         showCaption: false,
 
+
         browseClass: "btn btn-success",
         browseLabel: "Imagenes",
         browseIcon: "<i class='fa fa-plus'></i>",
         allowedFileExtensions: ["jpg", "png", "gif"],
 
-        fileActionSettings: {
-            showUpload: false,
-            showRotate: false,
-            allowFullScreen: false,
-            zoomIcon: '<i class="fa fa-search-plus"></i> ',
-            removeIcon: '<i class="fa fa-trash-o"></i> ',
-        },
+        // fileActionSettings: {
+        //     showUpload: false,
+        //     showRotate: false,
+        //     allowFullScreen: false,
+        //     zoomIcon: '<i class="fa fa-search-plus"></i> ',
+        //     removeIcon: '<i class="fa fa-trash-o"></i> ',
+        // },
 
         initialPreview: [
             <?php foreach ($producto->productos_archivos as $archivo) : ?> '<img src="/img/productos/<?php echo $archivo['file_name']; ?>" class="file-preview-image kv-preview-data">',
@@ -187,7 +188,7 @@
                     caption: "<?php echo $nombreOriginal; ?>",
                     size: <?php echo $archivo['file_size']; ?>,
                     url: "/ProductosArchivos/delete/<?php echo $archivo['id']; ?>",
-                    key: "<?php echo $archivo['id']; ?>"
+                    key: "<?php echo $archivo['es_principal']; ?>"
                 },
             <?php endforeach; ?>
         ],
@@ -201,73 +202,8 @@
                 '_csrfToken': '<?php echo $this->request->getAttribute('csrfToken'); ?>',
                 'producto_id': '<?php echo $producto->id; ?>'
             };
-        }
-    });
-
-    $('#ProductosEditForm').on('submit', function(event) {
-        // No es necesario manejar manualmente los archivos, el plugin fileinput lo hace por ti.
-    });
-
-    $('#ProductosEditForm').on('submit', function(event) {
-        event.preventDefault(); // Evita el envío automático del formulario
-
-        let formElement = document.getElementById('ProductosEditForm');
-
-        let myFormData = new FormData(formElement); // Recoge todos los datos del formulario
-
-        // Elimina los archivos previamente agregados en el FormData
-        myFormData.delete('imagenes[]');
-
-        // Obtén la lista de archivos seleccionados del plugin fileinput
-        let filesObject = $('#imagenes').fileinput('getFileStack');
-
-        // Convierte el objeto en un array de archivos
-        let filesArray = Object.values(filesObject);
-
-        // Añade los archivos al FormData
-        filesArray.forEach(function(fileObj) {
-            myFormData.append('imagenes[]', fileObj.file);
-        });
-
-        // Crea un formulario temporal para enviar los datos de FormData
-        let tempForm = document.createElement('form');
-        tempForm.method = 'POST';
-        tempForm.action = formElement.action;
-        tempForm.enctype = 'multipart/form-data';
-
-        // Añade el CSRF Token
-        let csrfToken = document.createElement('input');
-        csrfToken.type = 'hidden';
-        csrfToken.name = '_csrfToken';
-        csrfToken.value = formElement.querySelector('input[name="_csrfToken"]').value;
-        tempForm.appendChild(csrfToken);
-
-        // Añade los datos de FormData al formulario temporal
-        for (let [key, value] of myFormData.entries()) {
-            if (value instanceof File) {
-                let inputFile = document.createElement('input');
-                inputFile.type = 'file';
-                inputFile.name = key;
-                inputFile.files = new DataTransfer().files; // Necesario para los archivos
-                let dataTransfer = new DataTransfer();
-                dataTransfer.items.add(value);
-                inputFile.files = dataTransfer.files;
-                tempForm.appendChild(inputFile);
-            } else {
-                let input = document.createElement('input');
-                input.type = 'hidden';
-                input.name = key;
-                input.value = value;
-                tempForm.appendChild(input);
-            }
-        }
-
-        // Añade el formulario temporal al documento y envíalo
-        document.body.appendChild(tempForm);
-        tempForm.submit();
-
-        // Elimina el formulario temporal del documento
-        document.body.removeChild(tempForm);
-
-    });
+        },
+    }).on("filebatchselected", function(event, files) {
+        $("#imagenes").fileinput("upload");
+    });;
 </script>

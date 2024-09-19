@@ -152,21 +152,27 @@ class ProductosArchivosController extends AppController
      */
     public function delete($id = null)
     {
+        $this->autoRender = false;
         $this->request->allowMethod(['post', 'delete']);
 
         $productosArchivo = $this->ProductosArchivos->get($id);
 
 
         if ($this->ProductosArchivos->delete($productosArchivo)) {
-            $this->Flash->success(__('The productos archivo has been deleted.'));
+            // $this->Flash->success(__('The productos archivo has been deleted.'));
+            echo json_encode([
+                'delete' => true
+            ]);
         } else {
-            $this->Flash->error(__('The productos archivo could not be deleted. Please, try again.'));
+            // $this->Flash->error(__('The productos archivo could not be deleted. Please, try again.'));
+            echo json_encode([
+                'delete' => false
+            ]);
         }
+        return;
 
 
-        return json_encode([
-            'delete' => true
-        ]);
+
 
         //return $this->redirect(['action' => 'index']);
     }
