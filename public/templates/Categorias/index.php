@@ -94,7 +94,7 @@ use Cake\Core\Configure;
                 <div class="box-header  with-border">
                     <h3 class="box-title"> <span class="fa fa-list"></span> Categorías</h3>
                     <div class="box-tools pull-right">
-                        <?php if (!empty($accionesPermitidas['Estados']['add'])) { ?>
+                        <?php if (!empty($accionesPermitidas['Categorias']['add'])) { ?>
                             <a title="Agregar categoría" href="/Categorias/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
                                 <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nueva Categoría</span>
                             </a>

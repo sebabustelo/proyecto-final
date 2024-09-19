@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -31,7 +32,9 @@ class ConsultasController extends AppController
 
         $this->set('filters', $this->getRequest()->getQuery());
         $this->set('consultas', $this->paginate($consultas));
-    }    
+        $this->set('estados', $this->Consultas->ConsultasEstados->find('all')->all());
+
+    }
 
     /**
      * Add method
@@ -42,7 +45,15 @@ class ConsultasController extends AppController
     {
         $consulta = $this->Consultas->newEmptyEntity();
         if ($this->request->is('post')) {
-            
+            $estadoPendiente = $this->Consultas->ConsultasEstados->find('all')
+                ->where(['ConsultasEstados.nombre' => 'PENDIENTE'])
+                ->first();
+
+            if ($estadoPendiente) {
+                $consulta->consulta_estado_id = $estadoPendiente->id;
+            }
+
+
             $consulta = $this->Consultas->patchEntity($consulta, $this->request->getData());
             if ($this->Consultas->save($consulta)) {
                 $this->Flash->success(__('Su consulta fue enviada correctamente, le responderemos a la brevedad.'));
@@ -65,12 +76,12 @@ class ConsultasController extends AppController
     {
         $consulta = $this->Consultas->get($id, contain: ['Cliente']);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            
-            $consulta->usuario_respuesta_id = $_SESSION['RbacUsuario']['id'];            
+
+            $consulta->usuario_respuesta_id = $_SESSION['RbacUsuario']['id'];
             $consulta = $this->Consultas->patchEntity($consulta, $this->request->getData());
 
-            
-           // debug($consulta);die;
+
+            // debug($consulta);die;
             if ($this->Consultas->save($consulta)) {
                 $this->Flash->success(__('The consulta has been saved.'));
 
@@ -101,7 +112,7 @@ class ConsultasController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
-     /**
+    /**
      * getCondition method
      *
      * @param string|null $data Data send by the Form .
@@ -112,7 +123,7 @@ class ConsultasController extends AppController
     {
         $data = $this->getRequest()->getQuery();
         $conditions['where'] = [];
-        $conditions['contain'] = ['Cliente','UsuarioRespuesta'];
+        $conditions['contain'] = ['Cliente', 'UsuarioRespuesta', 'ConsultasEstados'];
 
         if (isset($data['nombre']) and !empty($data['nombre'])) {
             $conditions['where'][] = ['Consultas.usuario_id LIKE' => '%' . $data['nombre'] . '%'];
@@ -121,7 +132,11 @@ class ConsultasController extends AppController
         if (isset($data['descripcion']) and !empty($data['descripcion'])) {
             $conditions['where'][] = ['Consultas.motivo LIKE ' => '%' . $data['descripcion'] . '%'];
         }
-       
+
+        if (isset($data['consulta_estado_id']) and !empty($data['consulta_estado_id'])) {
+            $conditions['where'][] = ['Consultas.consulta_estado_id ' => $data['consulta_estado_id'] ];
+        }
+
 
         $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
 

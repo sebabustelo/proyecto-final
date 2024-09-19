@@ -49,11 +49,18 @@ class ConsultasTable extends Table
             'className' => 'Rbac.RbacUsuarios', // Indica la clase a la que pertenece
             'foreignKey' => 'cliente_id', // Llave foránea
         ]);
-        
+
         $this->belongsTo('UsuarioRespuesta', [
             'className' => 'Rbac.RbacUsuarios', // Indica la clase a la que pertenece
             'foreignKey' => 'usuario_respuesta_id', // Llave foránea
         ]);
+
+        $this->belongsTo('ConsultasEstados', [
+            'foreignKey' => 'consulta_estado_id',
+            'joinType' => 'INNER',
+        ]);
+
+
     }
 
     /**

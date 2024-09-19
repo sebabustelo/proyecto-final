@@ -27,13 +27,28 @@ use Cake\Core\Configure;
                     </div>
                 </div>
                 <div class="box-body">
-                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/Categorias/index">
+                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/Consultas/index">
                         <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <select class="form-control" name="consulta_estado_id">
+                                    <option value="">Seleccione un estado</option>
+                                    <?php foreach ($estados as $key => $estado) { ?>
+
+                                        <?php if (isset($filters['consulta_estado_id']) and $filters['consulta_estado_id'] == $estado->id) {  ?>
+                                            <option selected value="<?php echo $estado->id; ?>"><?php echo $estado->nombre; ?></option>
+                                        <?php  } else { ?>
+                                            <option value="<?php echo $estado->id; ?>"><?php echo $estado->nombre; ?></option>
+                                        <?php  } ?>
+                                    <?php } ?>
+
+                                </select>
+                            </div>
                             <div class="form-group col-md-2">
                                 <input type="text" name="cliente_id" placeholder="Usuario" class="form-control" id="cliente_id" aria-label="cliente_id" value="<?php echo (isset($filters['cliente_id'])) ? $filters['cliente_id'] : '' ?>">
                             </div>
-                            <div class="form-group col-md-8">
-                                <input type="text" name="motivo" placeholder="motivo" class="form-control" id="motivo" aria-label="motivo" value="<?php echo (isset($filters['motivo'])) ? $filters['motivo'] : '' ?>">
+                            <div class="form-group col-md-6">
+                                <input type="text" name="motivo" placeholder="puede ingresar una parte del mótivo y el sistema buscará coincidencias" class="form-control" id="motivo" aria-label="motivo"
+                                value="<?php echo (isset($filters['motivo'])) ? $filters['motivo'] : '' ?>">
                             </div>
 
                         </div>
@@ -55,9 +70,9 @@ use Cake\Core\Configure;
                                             $('#formOrderFilter').find(
                                                 'input:text, input:password, select, textarea').val('');
                                             $('#formOrderFilter').find(
-                                                'input:radio, input:checkbox:not(#activo)').prop(
+                                                'input:radio, input:checkbox').prop(
                                                 'checked', false);
-                                            document.getElementById("activo").checked = true;
+
 
                                             $('#formOrderFilter').submit();
 
@@ -82,8 +97,10 @@ use Cake\Core\Configure;
                     <h3 class="box-title"> <span class="fa fa-list"></span> Consultas de Clientes desde el Portal</h3>
 
                 </div>
-                <?php //debug($consultas); ?>
+                <?php //debug($consultas);
+                ?>
                 <div class="box-body">
+
                     <?php if (isset($consultas)) { ?>
                         <?php if (count($consultas) > 0) { ?>
                             <div class="table-responsive">
@@ -117,12 +134,11 @@ use Cake\Core\Configure;
                                         <?php foreach ($consultas as $consulta) {  ?>
                                             <tr>
                                                 <td>
-                                                    <?php if ($consulta->created == $consulta->modified) { ?>
-                                                        <small class="label bg-info">Pendiente</small>
-                                                    <?php  } else { ?>
+                                                    <span class="pull-right-container">
+                                                        <span class="label label-warning "><?php echo $consulta->consultas_estado->nombre ?></span>
+                                                    </span>
 
-                                                        <small class="label bg-green">Respondido</small>
-                                                    <?php } ?>
+
                                                 </td>
                                                 <td>
                                                     <?php echo $this->Time->format($consulta->created, 'dd/MM/Y HH:mm:ss'); ?>

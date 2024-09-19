@@ -10,15 +10,7 @@ $action =   $this->request->getParam('action');
     <?php if ($_SESSION['RbacUsuario']['perfil_id'] <> 8) { ?>
         <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Administración </li>
 
-        <li>
-            <a href="<?php echo $this->Url->build('/pages/calendar'); ?>">
-                <i class="fa fa-calendar"></i> <span>Agenda</span>
-                <span class="pull-right-container">
-                    <small class="label pull-right bg-red">3</small>
-                    <small class="label pull-right bg-blue">17</small>
-                </span>
-            </a>
-        </li>
+
         <?php if ((isset($accionesPermitidas['Consultas']['index']) && $accionesPermitidas['Consultas']['index'])) { ?>
             <li>
                 <a href="<?php echo $this->Url->build('Consultas/index'); ?>">
@@ -26,11 +18,62 @@ $action =   $this->request->getParam('action');
                     <span>Gestión de Consultas</span></a>
             </li>
         <?php  } ?>
-        <li>
-            <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
-                <i class="fa fa-files-o"></i>
-                <span>Gestión de Pedidos</span></a>
+
+        <?php
+        // if (
+        //     (isset($accionesPermitidas['Configuraciones']['index']) && $accionesPermitidas['Configuraciones']['index']) ||
+        //     (isset($accionesPermitidas['RbacUsuarios']['index']) && $accionesPermitidas['RbacUsuarios']['index']) ||
+        //     (isset($accionesPermitidas['RbacPerfiles']['index']) && $accionesPermitidas['RbacPerfiles']['index']) ||
+        //     (isset($accionesPermitidas['RbacAcciones']['index']) && $accionesPermitidas['RbacAcciones']['index'])
+
+        // ) {
+        //Preguntar si esta ingresando a algunos de los menus de "Sistema" array $menu_sistema[],
+        //para esto pregunto por el contralador y la accion
+        $menu_permisos = array("Configuraciones", "RbacAcciones", "RbacPerfiles", "RbacPermisos", "RbacUsuarios");
+        if (in_array($controller, $menu_permisos)) {
+            $active = "active";
+            $menu_open = "menu-open";
+        } else {
+            $active = "";
+            $menu_open = "";
+        }
+        ?>
+        <li class="treeview <?php echo $active . " " . $menu_open ?>">
+            <a href="#">
+                <i class="fa fa-files-o"></i> <span>Gestión de Pedidos</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+            <ul class="treeview-menu">
+                <?php //if ((isset($accionesPermitidas['Configuraciones']['index']) && $accionesPermitidas['Configuraciones']['index'])) {
+                ?>
+                <li>
+                    <a href="<?php echo $this->Url->build('/pages/calendar'); ?>">
+                        <i class="fa fa-calendar"></i> <span>Agenda</span>
+                        <span class="pull-right-container">
+                            <small class="label pull-right bg-red">3</small>
+                            <small class="label pull-right bg-blue">17</small>
+                        </span>
+                    </a>
+                </li>
+                <?php //}
+                ?>
+                <?php //if ((isset($accionesPermitidas['RbacUsuarios']['index']) && $accionesPermitidas['RbacUsuarios']['index'])) {
+                ?>
+                <li>
+                    <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+                        <i class="fa fa-files-o"></i>
+                        <span>Listado</span></a>
+                </li>
+                <?php //}
+                ?>
+
+
+            </ul>
         </li>
+        <?php //}
+        ?>
         <?php
         if (
             (isset($accionesPermitidas['Configuraciones']['index']) && $accionesPermitidas['Configuraciones']['index']) ||
@@ -103,20 +146,15 @@ $action =   $this->request->getParam('action');
                 </a>
             </li>
         <?php } ?>
-        <?php if ((isset($accionesPermitidas['Proveedores']['index']) && $accionesPermitidas['Proveedores']['index'])) { ?>
-            <li class=" <?php echo ($controller == 'Proveedores' && ($action == 'index' || $action == ''  || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
-                <a href="<?php echo $this->Url->build('/Proveedores/index'); ?>">
-                    <i class="fa fa-cubes"></i> <span>Proveedores</span>
-                </a>
-            </li>
-        <?php } ?>
+
         <?php
         if (
             (isset($accionesPermitidas['TipoDocumentos']['index']) && $accionesPermitidas['TipoDocumentos']['index']) ||
             (isset($accionesPermitidas['PedidoEstados']['index']) && $accionesPermitidas['PedidoEstados']['index']) ||
+            (isset($accionesPermitidas['ConsultasEstados']['index']) && $accionesPermitidas['ConsultasEstados']['index']) ||
             (isset($accionesPermitidas['Categorias']['index']) && $accionesPermitidas['Categorias']['index'])
         ) {
-            $menu_sistema = array("TipoDocumentos", "Categorias",  "Categorias", "PedidoEstados");
+            $menu_sistema = array("TipoDocumentos", "Categorias",  "Categorias", "PedidosEstados", "ConsultasEstados");
             if (in_array($controller, $menu_sistema) and $action != 'detail') {
                 $active = "active";
                 $menu_open = "menu-open";
@@ -140,9 +178,16 @@ $action =   $this->request->getParam('action');
                             </a>
                         </li>
                     <?php } ?>
-                    <?php if ((isset($accionesPermitidas['PedidoEstados']['index']) && $accionesPermitidas['PedidoEstados']['index'])) { ?>
-                        <li class=" <?php echo ($controller == 'PedidoEstados' && ($action == 'index' || $action == '' || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
-                            <a href="<?php echo $this->Url->build('/PedidoEstados/index'); ?>">
+                    <?php if ((isset($accionesPermitidas['ConsultasEstados']['index']) && $accionesPermitidas['ConsultasEstados']['index'])) { ?>
+                        <li class=" <?php echo ($controller == 'ConsultasEstados' && ($action == 'index' || $action == '' || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
+                            <a href="<?php echo $this->Url->build('/ConsultasEstados/index'); ?>">
+                                <i class="fa fa-circle-o"></i> Estados de consulta
+                            </a>
+                        </li>
+                    <?php } ?>
+                    <?php if ((isset($accionesPermitidas['PedidosEstados']['index']) && $accionesPermitidas['PedidosEstados']['index'])) { ?>
+                        <li class=" <?php echo ($controller == 'PedidosEstados' && ($action == 'index' || $action == '' || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
+                            <a href="<?php echo $this->Url->build('/PedidosEstados/index'); ?>">
                                 <i class="fa fa-circle-o"></i> Estados de pedido
                             </a>
                         </li>
@@ -157,50 +202,59 @@ $action =   $this->request->getParam('action');
                 </ul>
             </li>
         <?php } ?>
-
-    <?php }  ?>
-
-        <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Cliente </li>
-
-        <?php //if ((isset($accionesPermitidas['Categorias']['view']) && $accionesPermitidas['Categorias']['view'])) { ?>
-            <li class="treeview">
-                <a href="#">
-                    <i class="fa fa-fw  fa-cubes"></i> <span>Categorias</span>
-                    <span class="pull-right-container">
-                        <i class="fa fa-angle-left pull-right"></i>
-                    </span>
-                </a>
-                <ul class="treeview-menu">
-                    <?php foreach ($categoriasMenu as $id => $categoria) : ?>
-                        <li><a href="<?php echo $this->Url->build(['controller' => 'Categorias', 'action' => 'view', $id]); ?>">
-                                <i class="fa fa-circle-o"></i> <?php echo h($categoria); ?>
-                            </a></li>
-                    <?php endforeach; ?>
-                </ul>
-            </li>
-        <?php //} ?>
-        <?php if ((isset($accionesPermitidas['Productos']['catalogoCliente']) && $accionesPermitidas['Productos']['catalogoCliente'])) { ?>
-            <li class=" <?php echo ($controller == 'Productos' && ($action == 'catalogoCliente') ? ' active' : ''); ?>">
-                <a href="<?php echo $this->Url->build('/Productos/catalogoCliente'); ?>">
-                    <i class="fa fa-fw fa-medkit"></i> <span>Productos</span>
+        <?php if ((isset($accionesPermitidas['Proveedores']['index']) && $accionesPermitidas['Proveedores']['index'])) { ?>
+            <li class=" <?php echo ($controller == 'Proveedores' && ($action == 'index' || $action == ''  || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
+                <a href="<?php echo $this->Url->build('/Proveedores/index'); ?>">
+                    <i class="fa fa-cubes"></i> <span>Proveedores</span>
                 </a>
             </li>
         <?php } ?>
 
-        <?php if ((isset($accionesPermitidas['Pedidos']['misPedidos']) && $accionesPermitidas['Pedidos']['misPedidos'])) {    ?>
-            <li>
-                <a href="<?php echo $this->Url->build('/Pedidos/misPedidos'); ?>">
-                    <i class="fa fa-fw fa-shopping-cart"></i>
-                    <span>Mis pedidos</span></a>
-            </li>
-        <?php }  ?>
-        <?php if ((isset($accionesPermitidas['Consultas']['add']) && $accionesPermitidas['Consultas']['add'])) { ?>
-            <li>
-                <a href="<?php echo $this->Url->build('/Consultas/add'); ?>">
-                    <i class="fa fa-fw  fa-envelope"></i>
-                    <span>Consultas</span></a>
-            </li>
-        <?php }    ?>
+    <?php }  ?>
+
+    <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Cliente </li>
+
+    <?php //if ((isset($accionesPermitidas['Categorias']['view']) && $accionesPermitidas['Categorias']['view'])) {
+    ?>
+    <li class="treeview">
+        <a href="#">
+            <i class="fa fa-fw  fa-cubes"></i> <span>Categorias</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <?php foreach ($categoriasMenu as $id => $categoria) : ?>
+                <li><a href="<?php echo $this->Url->build(['controller' => 'Categorias', 'action' => 'view', $id]); ?>">
+                        <i class="fa fa-circle-o"></i> <?php echo h($categoria); ?>
+                    </a></li>
+            <?php endforeach; ?>
+        </ul>
+    </li>
+    <?php //}
+    ?>
+    <?php if ((isset($accionesPermitidas['Productos']['catalogoCliente']) && $accionesPermitidas['Productos']['catalogoCliente'])) { ?>
+        <li class=" <?php echo ($controller == 'Productos' && ($action == 'catalogoCliente') ? ' active' : ''); ?>">
+            <a href="<?php echo $this->Url->build('/Productos/catalogoCliente'); ?>">
+                <i class="fa fa-fw fa-medkit"></i> <span>Productos</span>
+            </a>
+        </li>
+    <?php } ?>
+
+    <?php if ((isset($accionesPermitidas['Pedidos']['misPedidos']) && $accionesPermitidas['Pedidos']['misPedidos'])) {    ?>
+        <li>
+            <a href="<?php echo $this->Url->build('/Pedidos/misPedidos'); ?>">
+                <i class="fa fa-fw fa-shopping-cart"></i>
+                <span>Mis pedidos</span></a>
+        </li>
+    <?php }  ?>
+    <?php if ((isset($accionesPermitidas['Consultas']['add']) && $accionesPermitidas['Consultas']['add'])) { ?>
+        <li>
+            <a href="<?php echo $this->Url->build('/Consultas/add'); ?>">
+                <i class="fa fa-fw  fa-envelope"></i>
+                <span>Consultas</span></a>
+        </li>
+    <?php }    ?>
 
     <li class="treeview">
         <a href="#">

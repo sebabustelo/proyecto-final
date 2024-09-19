@@ -6,16 +6,14 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Consulta Entity
+ * Estado Entity
  *
  * @property int $id
- * @property int|null $cliente_id
- * @property int|null $usuario_respuesta_id
- * @property string $motivo
- * @property \Cake\I18n\DateTime|null $created
- * @property \Cake\I18n\DateTime|null $modified
+ * @property string $descripcion
+ *
+ * @property \App\Model\Entity\PedidoEstado[] $pedido_estado
  */
-class Consulta extends Entity
+class PedidoEstado extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().
@@ -27,12 +25,12 @@ class Consulta extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'cliente_id' => true,
-        'usuario_respuesta_id' => true,
-        'consulsta_estado_id' => true,
-        'motivo' => true,
-        'respuesta' => true,
+        'nombre' => true,
+        'descripcion' => true,
+        'pedidos' => true,
         'created' => true,
         'modified' => true,
+        'activo' => true,
+
     ];
 }
