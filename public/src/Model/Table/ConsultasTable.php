@@ -44,6 +44,16 @@ class ConsultasTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->belongsTo('Cliente', [
+            'className' => 'Rbac.RbacUsuarios', // Indica la clase a la que pertenece
+            'foreignKey' => 'cliente_id', // Llave foránea
+        ]);
+        
+        $this->belongsTo('UsuarioRespuesta', [
+            'className' => 'Rbac.RbacUsuarios', // Indica la clase a la que pertenece
+            'foreignKey' => 'usuario_respuesta_id', // Llave foránea
+        ]);
     }
 
     /**
@@ -55,10 +65,33 @@ class ConsultasTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
+            ->integer('cliente_id')
+            ->allowEmptyString('cliente_id');
+
+        $validator
+            ->integer('usuario_respuesta_id')
+            ->allowEmptyString('usuario_respuesta_id');
+
+        $validator
             ->scalar('motivo')
             ->requirePresence('motivo', 'create')
             ->notEmptyString('motivo');
 
         return $validator;
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules): RulesChecker
+    {
+        $rules->add($rules->existsIn(['cliente_id'], 'Cliente'), ['errorField' => 'cliente_id']);
+        $rules->add($rules->existsIn(['usuario_respuesta_id'], 'UsuarioRespuesta'), ['errorField' => 'usuario_respuesta_id']);
+
+        return $rules;
     }
 }

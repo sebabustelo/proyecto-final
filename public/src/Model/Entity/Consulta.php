@@ -9,6 +9,8 @@ use Cake\ORM\Entity;
  * Consulta Entity
  *
  * @property int $id
+ * @property int|null $cliente_id
+ * @property int|null $usuario_respuesta_id
  * @property string $motivo
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
@@ -25,7 +27,10 @@ class Consulta extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
+        'cliente_id' => true,
+        'usuario_respuesta_id' => true,
         'motivo' => true,
+        'respuesta' => true,
         'created' => true,
         'modified' => true,
     ];

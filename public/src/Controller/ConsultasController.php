@@ -10,6 +10,13 @@ namespace App\Controller;
  */
 class ConsultasController extends AppController
 {
+    protected array $paginate = [
+        'limit' => 10,
+        'order' => [
+            'Consultas.created' => 'asc',
+        ],
+    ];
+
     /**
      * Index method
      *
@@ -17,24 +24,14 @@ class ConsultasController extends AppController
      */
     public function index()
     {
-        $query = $this->Consultas->find();
-        $consultas = $this->paginate($query);
+        $conditions = $this->getConditions();
+        $consultas = $this->Consultas->find()
+            ->where($conditions['where'])
+            ->contain($conditions['contain']);
 
-        $this->set(compact('consultas'));
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Consulta id.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view()
-    {
-        //$consulta = $this->Consultas->get($id, contain: []);
-        //$this->set(compact('consulta'));
-    }
+        $this->set('filters', $this->getRequest()->getQuery());
+        $this->set('consultas', $this->paginate($consultas));
+    }    
 
     /**
      * Add method
@@ -45,13 +42,14 @@ class ConsultasController extends AppController
     {
         $consulta = $this->Consultas->newEmptyEntity();
         if ($this->request->is('post')) {
+            
             $consulta = $this->Consultas->patchEntity($consulta, $this->request->getData());
             if ($this->Consultas->save($consulta)) {
-                $this->Flash->success(__('The consulta has been saved.'));
+                $this->Flash->success(__('Su consulta fue enviada correctamente, le responderemos a la brevedad.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => 'add']);
             }
-            $this->Flash->error(__('The consulta could not be saved. Please, try again.'));
+            $this->Flash->error(__('La consulta no pudo ser enviada. Por favor intenete nuevamente.'));
         }
         $this->set(compact('consulta'));
     }
@@ -63,11 +61,16 @@ class ConsultasController extends AppController
      * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function edit($id = null)
+    public function response($id = null)
     {
-        $consulta = $this->Consultas->get($id, contain: []);
+        $consulta = $this->Consultas->get($id, contain: ['Cliente']);
         if ($this->request->is(['patch', 'post', 'put'])) {
+            
+            $consulta->usuario_respuesta_id = $_SESSION['RbacUsuario']['id'];            
             $consulta = $this->Consultas->patchEntity($consulta, $this->request->getData());
+
+            
+           // debug($consulta);die;
             if ($this->Consultas->save($consulta)) {
                 $this->Flash->success(__('The consulta has been saved.'));
 
@@ -96,5 +99,32 @@ class ConsultasController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+
+     /**
+     * getCondition method
+     *
+     * @param string|null $data Data send by the Form .
+     * @return array $conditions Conditions for search filters with $conditions['where'], $conditions['contain'] and $conditions['matching'] to find.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    private function getConditions()
+    {
+        $data = $this->getRequest()->getQuery();
+        $conditions['where'] = [];
+        $conditions['contain'] = ['Cliente','UsuarioRespuesta'];
+
+        if (isset($data['nombre']) and !empty($data['nombre'])) {
+            $conditions['where'][] = ['Consultas.usuario_id LIKE' => '%' . $data['nombre'] . '%'];
+        }
+
+        if (isset($data['descripcion']) and !empty($data['descripcion'])) {
+            $conditions['where'][] = ['Consultas.motivo LIKE ' => '%' . $data['descripcion'] . '%'];
+        }
+       
+
+        $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
+
+        return $conditions;
     }
 }
