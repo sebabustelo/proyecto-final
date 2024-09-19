@@ -113,10 +113,10 @@ $action =   $this->request->getParam('action');
         <?php
         if (
             (isset($accionesPermitidas['TipoDocumentos']['index']) && $accionesPermitidas['TipoDocumentos']['index']) ||
-            (isset($accionesPermitidas['Estados']['index']) && $accionesPermitidas['Estados']['index']) ||
+            (isset($accionesPermitidas['PedidoEstados']['index']) && $accionesPermitidas['PedidoEstados']['index']) ||
             (isset($accionesPermitidas['Categorias']['index']) && $accionesPermitidas['Categorias']['index'])
         ) {
-            $menu_sistema = array("TipoDocumentos", "Categorias",  "Categorias", "Estados");
+            $menu_sistema = array("TipoDocumentos", "Categorias",  "Categorias", "PedidoEstados");
             if (in_array($controller, $menu_sistema) and $action != 'detail') {
                 $active = "active";
                 $menu_open = "menu-open";
@@ -140,9 +140,9 @@ $action =   $this->request->getParam('action');
                             </a>
                         </li>
                     <?php } ?>
-                    <?php if ((isset($accionesPermitidas['Estados']['index']) && $accionesPermitidas['Estados']['index'])) { ?>
-                        <li class=" <?php echo ($controller == 'Estados' && ($action == 'index' || $action == '' || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
-                            <a href="<?php echo $this->Url->build('/Estados/index'); ?>">
+                    <?php if ((isset($accionesPermitidas['PedidoEstados']['index']) && $accionesPermitidas['PedidoEstados']['index'])) { ?>
+                        <li class=" <?php echo ($controller == 'PedidoEstados' && ($action == 'index' || $action == '' || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
+                            <a href="<?php echo $this->Url->build('/PedidoEstados/index'); ?>">
                                 <i class="fa fa-circle-o"></i> Estados de pedido
                             </a>
                         </li>
