@@ -65,6 +65,12 @@ return function (RouteBuilder $routes): void {
       // $builder->connect('/', ['controller' => 'Pages', 'action' => 'display']);
        $builder->connect('/', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login'), array('routeClass' => 'InflectedRoute'));
 
+       $builder->connect('/db/index', array('plugin'=>'Db','controller' => 'Db', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
+
+       $builder->connect('/db/index/*', array('plugin'=>'Db','controller' => 'Db', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
+
+       //$builder->connect('/db/index/*', array('plugin'=>'Db','controller' => 'Db', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
+
 
 
         $builder->connect('/login', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login'), array('routeClass' => 'InflectedRoute'));
@@ -75,6 +81,7 @@ return function (RouteBuilder $routes): void {
         //$builder->connect('/rbac/:controller', array('plugin'=>'Rbac', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
 
         $builder->connect('/rbac/{controller}/{action}/*', array('plugin' => 'Rbac'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/db/{controller}/{action}/*', array('plugin' => 'Db'), array('routeClass' => 'InflectedRoute'));
 
         //$builder->connect('/rbac/rbac_acciones/index', array('plugin'=>'Rbac','controller' => 'RbacAcciones', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
 
