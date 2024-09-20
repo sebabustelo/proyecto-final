@@ -198,10 +198,12 @@ class RbacUsuariosController extends RbacController
             Log::error('Error al enviar el correo: ' . $e->getMessage());
             // Error al encontrar la acción del correo (plantilla faltante, etc.)
             $this->Flash->error('Error en el envío: ' . $e->getMessage());
+            return false;
         } catch (\Exception $e) {
             Log::error('Error al enviar el correo: ' . $e->getMessage());
             // Cualquier otro tipo de error
             $this->Flash->error('Se produjo un error inesperado: ' . $e->getMessage());
+            return false;
         }
     }
 

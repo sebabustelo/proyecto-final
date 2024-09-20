@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Mailer\Mailer;
+use Cake\Mailer\Exception\MissingActionException;
+
 /**
  * Consultas Controller
  *
@@ -33,7 +36,6 @@ class ConsultasController extends AppController
         $this->set('filters', $this->getRequest()->getQuery());
         $this->set('consultas', $this->paginate($consultas));
         $this->set('estados', $this->Consultas->ConsultasEstados->find('all')->all());
-
     }
 
     /**
@@ -77,17 +79,43 @@ class ConsultasController extends AppController
         $consulta = $this->Consultas->get($id, contain: ['Cliente']);
         if ($this->request->is(['patch', 'post', 'put'])) {
 
+            $this->Consultas->getConnection()->begin();
+
             $consulta->usuario_respuesta_id = $_SESSION['RbacUsuario']['id'];
             $consulta = $this->Consultas->patchEntity($consulta, $this->request->getData());
 
+            $estadoRespondido = $this->Consultas->ConsultasEstados->find('all')
+            ->where(['ConsultasEstados.nombre' => 'RESPONDIDO'])
+            ->first();
 
-            // debug($consulta);die;
+            if ($estadoRespondido) {
+                $consulta->consulta_estado_id = $estadoRespondido->id;
+            }
+
             if ($this->Consultas->save($consulta)) {
-                $this->Flash->success(__('The consulta has been saved.'));
+
+                $datos               = array();
+                $datos['subject']    = 'IPMAGNA - Respuesta a su consulta';
+                $datos['motivo']        = $consulta->motivo;
+                $datos['respuesta']        = $consulta->respuesta;
+                $datos['aplicacion'] = "IPMAGNA";
+                $datos['template']   = 'consulta';
+                $datos['email']      = $consulta->cliente->usuario;
+
+                if ($this->sendEmail($datos)) {
+                    $this->Consultas->getConnection()->commit();
+                    $this->Flash->success('Se ha enviado la respuesta al cliente ' .$consulta->cliente->usuario);
+                } else {
+                    $this->Consultas->getConnection()->rollback();
+                    $this->Flash->error('No se pudo enviar el email al cliente');
+                }
 
                 return $this->redirect(['action' => 'index']);
+            } else {
+                $this->Consultas->getConnection()->rollback();
+                $this->Flash->error('No se pudo guardar e enviar la respuesta');
             }
-            $this->Flash->error(__('The consulta could not be saved. Please, try again.'));
+
         }
         $this->set(compact('consulta'));
     }
@@ -134,12 +162,39 @@ class ConsultasController extends AppController
         }
 
         if (isset($data['consulta_estado_id']) and !empty($data['consulta_estado_id'])) {
-            $conditions['where'][] = ['Consultas.consulta_estado_id ' => $data['consulta_estado_id'] ];
+            $conditions['where'][] = ['Consultas.consulta_estado_id ' => $data['consulta_estado_id']];
         }
 
 
         $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
 
         return $conditions;
+    }
+
+    private function sendEmail($datos)
+    {
+        $mailer = new Mailer('default');
+        try {
+            $mailer->setFrom(['ipmagna-noreply@gmail.com' => 'IPMAGNA'])
+                ->setTo($datos['email'])
+                ->setSubject($datos['subject'])
+                ->setEmailFormat('html')
+                ->setViewVars(['motivo' => @$datos['motivo'],'respuesta' => @$datos['respuesta']])
+                ->viewBuilder()
+                ->setTemplate($datos['template'])
+                ->setPlugin('AdminLTE');
+
+            $mailer->deliver();
+
+            return true;
+        } catch (MissingActionException $e) {
+            // Error al encontrar la acción del correo (plantilla faltante, etc.)
+            $this->Flash->error('Error en el envío: ' . $e->getMessage());
+            return false;
+        } catch (\Exception $e) {
+            // Cualquier otro tipo de error
+            $this->Flash->error('Se produjo un error inesperado: ' . $e->getMessage());
+            return false;
+        }
     }
 }

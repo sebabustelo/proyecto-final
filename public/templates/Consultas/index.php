@@ -48,7 +48,7 @@ use Cake\Core\Configure;
                             </div>
                             <div class="form-group col-md-6">
                                 <input type="text" name="motivo" placeholder="puede ingresar una parte del mótivo y el sistema buscará coincidencias" class="form-control" id="motivo" aria-label="motivo"
-                                value="<?php echo (isset($filters['motivo'])) ? $filters['motivo'] : '' ?>">
+                                    value="<?php echo (isset($filters['motivo'])) ? $filters['motivo'] : '' ?>">
                             </div>
 
                         </div>
@@ -108,7 +108,8 @@ use Cake\Core\Configure;
                                     <thead>
                                         <tr>
                                             <th class="col-md-1">
-                                                Estado
+
+                                                <?php  echo $this->Paginator->sort('consultas_estado.nombre', 'Estado'); ?>
                                             </th>
                                             <th class="col-md-2">
                                                 <?php echo $this->Paginator->sort('created', 'Creación'); ?>
@@ -134,9 +135,23 @@ use Cake\Core\Configure;
                                         <?php foreach ($consultas as $consulta) {  ?>
                                             <tr>
                                                 <td>
-                                                    <span class="pull-right-container">
-                                                        <span class="label label-warning "><?php echo $consulta->consultas_estado->nombre ?></span>
-                                                    </span>
+                                                    <?php switch ($consulta->consultas_estado->nombre) {
+                                                        case 'PENDIENTE': ?>
+                                                            <span class="pull-right-container">
+                                                                <span class="label label-warning "><?php echo $consulta->consultas_estado->nombre ?></span>
+                                                            </span>
+                                                        <?php
+                                                        case 'RESPONDIDO':  ?>
+                                                            <span class="pull-right-container">
+                                                                <span class="label label-success "><?php echo $consulta->consultas_estado->nombre ?></span>
+                                                            </span>
+                                                    <?php
+                                                            break;
+                                                        default:
+                                                            # code...
+                                                            break;
+                                                    } ?>
+
 
 
                                                 </td>
