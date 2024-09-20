@@ -12,7 +12,7 @@ $action =   $this->request->getParam('action');
 
         <?php if ((isset($accionesPermitidas['Db']['index']) && $accionesPermitidas['Db']['index'])) { ?>
             <li class=" <?php echo ($controller == 'Db' && ($action == 'index' ) ? ' active' : ''); ?>">
-                <a href="<?php echo $this->Url->build('/Db/Db/index'); ?>">
+                <a href="<?php echo $this->Url->build('/db/db/index'); ?>">
                     <i class="fa fa-database"></i> <span>Consulta DB</span>
                 </a>
             </li>

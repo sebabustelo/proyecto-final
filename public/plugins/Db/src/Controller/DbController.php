@@ -13,6 +13,7 @@ use Cake\Datasource\ConnectionManager;
 use Cake\Http\CallbackStream;
 use Cake\ORM\TableRegistry;
 
+
 class DbController extends AppController
 {
 
@@ -20,12 +21,56 @@ class DbController extends AppController
     public $limiteArchivar = 3; // Cantidad mínima de registros requerida para poder archivar historial
     public $limiteSelect = 25000; // Límite máximo de registros a consultar en un SELECT
 
+    // esta funcion se pone solo para que, en la configuracion de las Acciones del RBAC (dentro del menu del sistema) ponga este simbolo ">" y se haga desplegable
+    public function _null()
+    {
+    }
+    public function beforeFilter(EventInterface $event)
+    {
+        //  $this->data = $this->getRequest()->getData();
+        //  parent::beforeFilter($event);
+        //  $session = $this->request->getSession();
+        //  if (!$session->check('Auth')) {
+        //      $session->write('redirect',$this->getRequest()->getUri('path'));
+        //      $this->Flash->error('Su sesión ha caducado! Vuelva a iniciar sesión');
+        //  }
+    }
 
+
+    // public function beforeRender(EventInterface $event) {
+    // 	parent::beforeRender($event);        
+    //     if ($this->getRequest()->is('ajax')) {
+    //         $this->viewBuilder()->setLayout(null);
+    //     } else {
+    //         if ($this->getRequest()->getParam('action') != 'login') {
+    //             if ($this->getRequest()->getParam('action') != 'recuperar') {
+    //                 $this->viewBuilder()->setLayout('admin');
+    //             }
+    //         } else {
+    //             $this->viewBuilder()->setLayout('Rbac.login');
+    //         }
+    //     }
+    // }
+
+    public function initialize(): void
+    {
+        parent::initialize();
+        // $this->loadComponent('Paginator');
+    }
 
     public function index($exec = null)
     {
         $fileHistorial = 'ABMC.log'; // El nombre del historial vigente
         $verArchivado = false;
+
+        $connection = ConnectionManager::get('default');
+
+        $tablas = $connection->getSchemaCollection()->listTables();
+
+
+
+        // Retornar la lista de tablas, si lo necesitas
+        $this->set(compact('tablas'));
 
 
         // Si esta queriendo consultar un historial archivado, usará el nombre del archivo
@@ -36,14 +81,22 @@ class DbController extends AppController
         }
 
         $clientIP = $this->getClientIP();
-
+        //debug($_SESSION);die;
         if (isset($_SESSION['RbacUsuario']['usuario'])) {
             $usuario = $_SESSION['RbacUsuario']['usuario'];
         }
-
-        // Si esta viniendo del formulario de queries, intentará ejecutarla
-        if (isset($_POST["operacion"])) {
-            $this->ejecutarQuery();
+       
+        if (isset($_POST['consultaManual']) && !empty($_POST['consultaManual'])) {
+            // Procesar consulta manual
+            $consulta = $_POST['consultaManual'];
+            // Aquí ejecutar la consulta (validar, manejar errores, etc.)
+            $resultado = $this->executeQuery($consulta);
+            // Manejar el resultado...
+        } else {
+            // Si esta viniendo del formulario de queries, intentará ejecutarla
+            if (isset($_POST["operacion"])) {
+                $this->ejecutarQuery();
+            }
         }
 
         $filename = $this->logsDir . DS . $fileHistorial;
@@ -143,6 +196,33 @@ class DbController extends AppController
         fclose($fp);
     }
 
+    private function executeQuery($query)
+    {
+        // Obtener la conexión a la base de datos
+        
+        $connection = ConnectionManager::get('default');
+
+        try {
+            // Preparar la consulta
+            $statement = $connection->execute($query);
+            debug($statement->fetchAll('assoc'));die;
+
+            // Si es una consulta SELECT, obtener los resultados
+            if (strpos(trim($query), 'SELECT') === 0) {
+                die;
+                return $statement->fetchAll('assoc'); // Obtener resultados como un array asociativo
+            } else {
+                // Para INSERT, UPDATE o DELETE, obtener el número de filas afectadas
+                return $statement->rowCount();
+            }
+        } catch (\Exception $e) {
+            // Manejo de errores
+            // Puedes registrar el error o lanzar una excepción
+            $this->Flash->error(__('Error al ejecutar la consulta: {0}', $e->getMessage()));
+            return false; // O lanzar una excepción según tu lógica
+        }
+    }
+
     private function ejecutarQuery()
     {
         $clientIP = $this->getClientIP();
@@ -177,7 +257,6 @@ class DbController extends AppController
         $desdeId = intval($_POST["desdeID"]);
         $limit = intval($_POST["limite"]);
         $query = "SELECT * from $tabla WHERE id>=$desdeId LIMIT $limit";
-
         if (!preg_match($patron, $tabla) || $desdeId < 1 || $limit < 1 || $limit > $this->limiteSelect) {
             return array('error', 'Consulta inválida. Verifique valores ingresados y que no se supere el límite de ' . $this->limiteSelect . ' registros');
         }
@@ -275,7 +354,11 @@ class DbController extends AppController
             if ($stringUndo != '') {
                 $stringUndo .= ',';
             }
-            $stringUndo .= $campoName . '=' . '\'' . $campoVal . '\'';
+            if (!is_null($campoVal)) {
+                $stringUndo .= $campoName . '=' . '\'' . $campoVal . '\'';
+            } else {
+                $stringUndo .= $campoName . '=' . 'NULL';
+            }
             $undoFields[] = $campoName;
             $undoVals[] = $campoVal;
         }
@@ -303,7 +386,7 @@ class DbController extends AppController
         }
         foreach ($camposInsert as $x => $campoNombre) {
             if (!preg_match($patron, $campoNombre)) {
-                echo 'Nombre de campo inválido: ' . $camposInsert;
+                echo 'Nombre de campo inválido: ' . $campoInsert;
                 die;
             }
             $Fields[] = $campoNombre;
@@ -348,7 +431,11 @@ class DbController extends AppController
         }
         foreach ($result[0] as $campoNombre => $campoValor) {
             $undoFieldNames[] = $campoNombre;
-            $undoFieldValues[] = '\'' . $campoValor . '\'';
+            if (!is_null($campoValor)) {
+                $undoFieldValues[] = '\'' . $campoValor . '\'';
+            } else {
+                $undoFieldValues[] = 'NULL';
+            }
         }
         $undoQuery = 'INSERT INTO ' . $tabla . ' (' . implode(', ', $undoFieldNames) . ') VALUES (' . implode(', ', $undoFieldValues) . ')';
         $query = 'DELETE FROM ' . $tabla . ' WHERE ID=' . $id2Delete;
