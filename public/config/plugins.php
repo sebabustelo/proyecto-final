@@ -1,19 +1,21 @@
 <?php
+
 return [
     'DebugKit' => [
-        'onlyDebug' => true
+        'onlyDebug' => true,
     ],
     'Bake' => [
         'onlyCli' => true,
-        'optional' => true
+        'optional' => true,
     ],
     'Migrations' => [
-        'onlyCli' => true
+        'onlyCli' => true,
     ],
     'AdminLTE' => [
-        'AdminLTE' => true
+        'AdminLTE' => true,
     ],
     'Rbac' => [
-        'Rbac' => true
-    ]
+        'Rbac' => true,
+    ],
+    'Db' => [],
 ];

@@ -10,7 +10,13 @@ $action =   $this->request->getParam('action');
     <?php if ($_SESSION['RbacUsuario']['perfil_id'] <> 8) { ?>
         <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Administración </li>
 
-
+        <?php if ((isset($accionesPermitidas['Db']['index']) && $accionesPermitidas['Db']['index'])) { ?>
+            <li class=" <?php echo ($controller == 'Db' && ($action == 'index' ) ? ' active' : ''); ?>">
+                <a href="<?php echo $this->Url->build('/Db/Db/index'); ?>">
+                    <i class="fa fa-database"></i> <span>Consulta DB</span>
+                </a>
+            </li>
+        <?php } ?>
         <?php if ((isset($accionesPermitidas['Consultas']['index']) && $accionesPermitidas['Consultas']['index'])) { ?>
             <li>
                 <a href="<?php echo $this->Url->build('Consultas/index'); ?>">

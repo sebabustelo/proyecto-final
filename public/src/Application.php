@@ -50,6 +50,10 @@ class Application extends BaseApplication
         // Call parent to load bootstrap from files.
         parent::bootstrap();
 
+        $this->addPlugin('AdminLTE');
+        $this->addPlugin('Rbac');
+        $this->addPlugin('Db');
+
         if (PHP_SAPI !== 'cli') {
             FactoryLocator::add(
                 'Table',
@@ -109,8 +113,6 @@ class Application extends BaseApplication
     {
         $this->addOptionalPlugin('Cake/Repl');
         $this->addOptionalPlugin('Bake');
-        $this->addPlugin('AdminLTE');
-        $this->addOptionalPlugin('Rbac');
         $this->addPlugin('Migrations');
         //$this->addPlugin('Authorization');
         // Load more plugins here

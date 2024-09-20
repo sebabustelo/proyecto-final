@@ -261,3 +261,4 @@ define('FORMAT_DATE_VIEW', 'd/m/Y');
 define('FORMAT_TIME_VIEW', 'HH:mm');
 define('FORMAT_DATE_VIEW_DOT', 'dd.MM.yyyy');
 define("PAGINATION_LIMIT", 10);
+

@@ -172,7 +172,7 @@ use Cake\Core\Configure;
                                                     <?php if ($consulta->created == $consulta->modified) { ?>
                                                         <a href="/Consultas/response/<?php echo $consulta->id; ?>" class="btn btn-primary btn-xs " title="Responder" target="_self"><i class="fa fa-mail-forward "></i></a>
                                                     <?php  } else { ?>
-                                                        <a href="/Consultas/view/<?php echo $consulta->id; ?>" class="btn btn-success btn-xs " title="Ver" target="_self"><i class="fa  fa-eye "></i></a>
+                                                        <a href="/Consultas/view/<?php echo $consulta->id; ?>" class="btn btn-success btn-xs " title="Detalles" target="_self"><i class="fa  fa-eye "></i></a>
                                                     <?php } ?>
                                                 </td>
                                                 <td>

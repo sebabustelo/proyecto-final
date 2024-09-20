@@ -50,7 +50,7 @@ class ConsultasTable extends Table
             'foreignKey' => 'cliente_id', // Llave foránea
         ]);
 
-        $this->belongsTo('UsuarioRespuesta', [
+        $this->belongsTo('UsuarioRespuestas', [
             'className' => 'Rbac.RbacUsuarios', // Indica la clase a la que pertenece
             'foreignKey' => 'usuario_respuesta_id', // Llave foránea
         ]);

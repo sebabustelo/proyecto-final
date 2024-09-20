@@ -121,6 +121,20 @@ class ConsultasController extends AppController
     }
 
     /**
+     * Edit method
+     *
+     * @param string|null $id Consulta id.
+     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function view($id = null)
+    {
+        $consulta = $this->Consultas->get($id, contain: ['Cliente', 'UsuarioRespuestas', 'ConsultasEstados']);
+
+        $this->set(compact('consulta'));
+    }
+
+    /**
      * Delete method
      *
      * @param string|null $id Consulta id.
@@ -151,7 +165,7 @@ class ConsultasController extends AppController
     {
         $data = $this->getRequest()->getQuery();
         $conditions['where'] = [];
-        $conditions['contain'] = ['Cliente', 'UsuarioRespuesta', 'ConsultasEstados'];
+        $conditions['contain'] = ['Cliente', 'UsuarioRespuestas', 'ConsultasEstados'];
 
         if (isset($data['nombre']) and !empty($data['nombre'])) {
             $conditions['where'][] = ['Consultas.usuario_id LIKE' => '%' . $data['nombre'] . '%'];

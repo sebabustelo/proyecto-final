@@ -20,10 +20,6 @@ class DbController extends AppController
     public $limiteArchivar = 3; // Cantidad mínima de registros requerida para poder archivar historial
     public $limiteSelect = 25000; // Límite máximo de registros a consultar en un SELECT
 
-    // esta funcion se pone solo para que, en la configuracion de las Acciones del RBAC (dentro del menu del sistema) ponga este simbolo ">" y se haga desplegable
-    public function _null()
-    {
-    }
 
 
     public function index($exec = null)
@@ -40,7 +36,7 @@ class DbController extends AppController
         }
 
         $clientIP = $this->getClientIP();
-      
+
         if (isset($_SESSION['RbacUsuario']['usuario'])) {
             $usuario = $_SESSION['RbacUsuario']['usuario'];
         }
@@ -181,7 +177,7 @@ class DbController extends AppController
         $desdeId = intval($_POST["desdeID"]);
         $limit = intval($_POST["limite"]);
         $query = "SELECT * from $tabla WHERE id>=$desdeId LIMIT $limit";
-       
+
         if (!preg_match($patron, $tabla) || $desdeId < 1 || $limit < 1 || $limit > $this->limiteSelect) {
             return array('error', 'Consulta inválida. Verifique valores ingresados y que no se supere el límite de ' . $this->limiteSelect . ' registros');
         }
@@ -307,7 +303,7 @@ class DbController extends AppController
         }
         foreach ($camposInsert as $x => $campoNombre) {
             if (!preg_match($patron, $campoNombre)) {
-                echo 'Nombre de campo inválido: ' . $campoInsert;
+                echo 'Nombre de campo inválido: ' . $camposInsert;
                 die;
             }
             $Fields[] = $campoNombre;
