@@ -11,7 +11,7 @@ $action =   $this->request->getParam('action');
         <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Administración </li>
 
         <?php if ((isset($accionesPermitidas['Db']['index']) && $accionesPermitidas['Db']['index'])) { ?>
-            <li class=" <?php echo ($controller == 'Db' && ($action == 'index' ) ? ' active' : ''); ?>">
+            <li class=" <?php echo ($controller == 'Db' && ($action == 'index') ? ' active' : ''); ?>">
                 <a href="<?php echo $this->Url->build('/db/db/index'); ?>">
                     <i class="fa fa-database"></i> <span>Consulta DB</span>
                 </a>
@@ -138,29 +138,23 @@ $action =   $this->request->getParam('action');
                 </a>
             </li>
         <?php } ?>
-        <?php if ((isset($accionesPermitidas['Informes']['index']) && $accionesPermitidas['Informes']['index'])) { ?>
-            <li class=" <?php echo ($controller == 'Informes' && ($action == 'index' || $action == ''  || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
+        <?php //if ((isset($accionesPermitidas['Informes']['index']) && $accionesPermitidas['Informes']['index'])) { ?>
+            <!-- <li class=" <?php echo ($controller == 'Informes' && ($action == 'index' || $action == ''  || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
                 <a href="<?php echo $this->Url->build('/Informes/index'); ?>">
                     <i class="fa fa-area-chart"></i> <span>Informes</span>
                 </a>
-            </li>
-        <?php } ?>
-        <?php if ((isset($accionesPermitidas['ObrasSociales']['index']) && $accionesPermitidas['ObrasSociales']['index'])) { ?>
-            <li class=" <?php echo ($controller == 'ObrasSociales' && ($action == 'index' || $action == '' || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
-                <a href="<?php echo $this->Url->build('/ObrasSociales/index'); ?>">
-                    <i class="fa fa-heartbeat"></i> <span>Obras Sociales</span>
-                </a>
-            </li>
-        <?php } ?>
-
+            </li> -->
+        <?php //} ?>
         <?php
         if (
             (isset($accionesPermitidas['TipoDocumentos']['index']) && $accionesPermitidas['TipoDocumentos']['index']) ||
             (isset($accionesPermitidas['PedidoEstados']['index']) && $accionesPermitidas['PedidoEstados']['index']) ||
             (isset($accionesPermitidas['ConsultasEstados']['index']) && $accionesPermitidas['ConsultasEstados']['index']) ||
+            (isset($accionesPermitidas['Provincias']['index']) && $accionesPermitidas['Provincias']['index']) ||
+            (isset($accionesPermitidas['Localidades']['index']) && $accionesPermitidas['Localidades']['index']) ||
             (isset($accionesPermitidas['Categorias']['index']) && $accionesPermitidas['Categorias']['index'])
         ) {
-            $menu_sistema = array("TipoDocumentos", "Categorias",  "Categorias", "PedidosEstados", "ConsultasEstados");
+            $menu_sistema = array("TipoDocumentos", "Categorias",  "Categorias", "PedidosEstados", "ConsultasEstados","Provincias","Localidades");
             if (in_array($controller, $menu_sistema) and $action != 'detail') {
                 $active = "active";
                 $menu_open = "menu-open";
@@ -171,7 +165,7 @@ $action =   $this->request->getParam('action');
         ?>
             <li class="treeview <?php echo $active . " " . $menu_open ?>">
                 <a href="#">
-                    <i class="fa fa-laptop"></i> <span>Parámetros del sistema</span>
+                    <i class="fa fa-laptop"></i> <span>Parámetricas</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>
@@ -198,10 +192,24 @@ $action =   $this->request->getParam('action');
                             </a>
                         </li>
                     <?php } ?>
+                    <?php if ((isset($accionesPermitidas['Localidades']['index']) && $accionesPermitidas['Localidades']['index'])) { ?>
+                        <li class=" <?php echo ($controller == 'Localidades' && ($action == 'index' || $action == '' || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
+                            <a href="<?php echo $this->Url->build('/Localidades/index'); ?>">
+                                <i class="fa fa-circle-o"></i> <span>Localidades</span>
+                            </a>
+                        </li>
+                    <?php } ?>
+                    <?php if ((isset($accionesPermitidas['Provincias']['index']) && $accionesPermitidas['Provincias']['index'])) { ?>
+                        <li class=" <?php echo ($controller == 'Provincias' && ($action == 'index' || $action == '' || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
+                            <a href="<?php echo $this->Url->build('/Provincias/index'); ?>">
+                                <i class="fa fa-circle-o"></i> <span>Provincias</span>
+                            </a>
+                        </li>
+                    <?php } ?>
                     <?php if ((isset($accionesPermitidas['TipoDocumentos']['index']) && $accionesPermitidas['TipoDocumentos']['index'])) { ?>
                         <li class=" <?php echo ($controller == 'TipoDocumentos' && ($action == 'index' || $action == '' || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
                             <a href="<?php echo $this->Url->build('/TipoDocumentos/index'); ?>">
-                                <i class="fa fa-circle-o"></i> Tipo de Documentos
+                                <i class="fa fa-circle-o"></i> Tipos de Documentos
                             </a>
                         </li>
                     <?php } ?>
@@ -261,8 +269,8 @@ $action =   $this->request->getParam('action');
                 <span>Consultas</span></a>
         </li>
     <?php }    ?>
-
-    <!-- <li class="treeview">
+<!--
+    <li class="treeview">
         <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Layout Options</span>
@@ -346,8 +354,8 @@ $action =   $this->request->getParam('action');
             <li><a href="<?php echo $this->Url->build('/pages/tables/data'); ?>"><i class="fa fa-circle-o"></i> Data tables</a></li>
         </ul>
     </li> -->
-
-    <!-- <li>
+   <!--
+    <li>
         <a href="<?php echo $this->Url->build('/pages/mailbox/mailbox'); ?>">
             <i class="fa fa-envelope"></i> <span>Mailbox</span>
             <span class="pull-right-container">
@@ -375,7 +383,7 @@ $action =   $this->request->getParam('action');
             <li><a href="<?php echo $this->Url->build('/pages/examples/blank'); ?>"><i class="fa fa-circle-o"></i> Blank Page</a></li>
             <li><a href="<?php echo $this->Url->build('/pages/examples/pace'); ?>"><i class="fa fa-circle-o"></i> Pace Page</a></li>
         </ul>
-    </li> -->
+    </li>  -->
     <!-- <li class="treeview">
     <a href="#">
       <i class="fa fa-share"></i> <span>Multilevel</span>
@@ -408,7 +416,7 @@ $action =   $this->request->getParam('action');
       </li>
       <li><a href="#"><i class="fa fa-circle-o"></i> Level One</a></li>
     </ul>
-  </li> -->
+  </li>
     <!-- <li><a href="https://adminlte.io/docs"><i class="fa fa-book"></i> <span>Documentation</span></a></li> -->
     <?php if (Configure::read('debug')) { ?>
         <li><a href="<?php echo $this->Url->build('/pages/debug'); ?>">

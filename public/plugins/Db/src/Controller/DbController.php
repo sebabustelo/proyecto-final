@@ -18,39 +18,10 @@ class DbController extends AppController
 {
 
     public $logsDir = ROOT . DS . "logs"; // Directorio donde se guardaran el/los archivo/s de historial
-    public $limiteArchivar = 3; // Cantidad mínima de registros requerida para poder archivar historial
+    public $limiteArchivar = 1; // Cantidad mínima de registros requerida para poder archivar historial
     public $limiteSelect = 25000; // Límite máximo de registros a consultar en un SELECT
 
-    // esta funcion se pone solo para que, en la configuracion de las Acciones del RBAC (dentro del menu del sistema) ponga este simbolo ">" y se haga desplegable
-    public function _null()
-    {
-    }
-    public function beforeFilter(EventInterface $event)
-    {
-        //  $this->data = $this->getRequest()->getData();
-        //  parent::beforeFilter($event);
-        //  $session = $this->request->getSession();
-        //  if (!$session->check('Auth')) {
-        //      $session->write('redirect',$this->getRequest()->getUri('path'));
-        //      $this->Flash->error('Su sesión ha caducado! Vuelva a iniciar sesión');
-        //  }
-    }
 
-
-    // public function beforeRender(EventInterface $event) {
-    // 	parent::beforeRender($event);        
-    //     if ($this->getRequest()->is('ajax')) {
-    //         $this->viewBuilder()->setLayout(null);
-    //     } else {
-    //         if ($this->getRequest()->getParam('action') != 'login') {
-    //             if ($this->getRequest()->getParam('action') != 'recuperar') {
-    //                 $this->viewBuilder()->setLayout('admin');
-    //             }
-    //         } else {
-    //             $this->viewBuilder()->setLayout('Rbac.login');
-    //         }
-    //     }
-    // }
 
     public function initialize(): void
     {
@@ -85,12 +56,13 @@ class DbController extends AppController
         if (isset($_SESSION['RbacUsuario']['usuario'])) {
             $usuario = $_SESSION['RbacUsuario']['usuario'];
         }
-       
+
         if (isset($_POST['consultaManual']) && !empty($_POST['consultaManual'])) {
             // Procesar consulta manual
             $consulta = $_POST['consultaManual'];
             // Aquí ejecutar la consulta (validar, manejar errores, etc.)
-            $resultado = $this->executeQuery($consulta);
+            $resultados = $this->executeQuery($consulta);
+            $this->set('resultados',$resultados);
             // Manejar el resultado...
         } else {
             // Si esta viniendo del formulario de queries, intentará ejecutarla
@@ -199,17 +171,17 @@ class DbController extends AppController
     private function executeQuery($query)
     {
         // Obtener la conexión a la base de datos
-        
+
         $connection = ConnectionManager::get('default');
 
         try {
             // Preparar la consulta
             $statement = $connection->execute($query);
-            debug($statement->fetchAll('assoc'));die;
+           // debug($statement->fetchAll('assoc'));die;
 
             // Si es una consulta SELECT, obtener los resultados
             if (strpos(trim($query), 'SELECT') === 0) {
-                die;
+//die;
                 return $statement->fetchAll('assoc'); // Obtener resultados como un array asociativo
             } else {
                 // Para INSERT, UPDATE o DELETE, obtener el número de filas afectadas

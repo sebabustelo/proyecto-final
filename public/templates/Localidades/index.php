@@ -2,15 +2,15 @@
 
 /**
  * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\Categorias> $categorias
+ * @var iterable<\App\Model\Entity\Localidades> $localidades
  */
 ?>
 <section class="content-header">
     <h1>
-    <i class="fa fa-heartbeat"></i> Gestión de Obras Sociales
+        <i class="fa  fa-map"></i> Localidades
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Obras Sociales</a></li> <i class="fa fa-arrow-right"></i>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Localidades</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Listado</li>
     </ol>
 </section>
@@ -27,22 +27,27 @@
                 </div>
                 <div class="box-body">
                     <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter"
-                        action="/ObrasSociales/index">
+                        action="/Localidades/index">
                         <div class="form-row">
-                            <div class="form-group col-md-2">
-                                <input type="text" name="cuit" placeholder="CUIT" class="form-control"
+                            <div class="form-group col-md-4">
+
+                                <select name="provincia_id" class="form-control">
+                                    <option  value="">Seleccione un provincia</option>
+                                    <?php foreach ($provincias as $k => $provincia) { ?>
+                                        <?php if ($filters['provincia_id'] == $k) { ?>
+                                            <option selected value="<?php echo $k ?>"><?php echo $provincia; ?></option>
+                                        <?php  } else { ?>
+                                            <option value="<?php echo $k ?>"><?php echo $provincia; ?></option>
+                                        <?php } ?>
+                                    <?php } ?>
+
+                                </select>
+
+                            </div>
+                            <div class="form-group col-md-6">
+                                <input type="text" name="nombre" placeholder="nombre" class="form-control"
                                     id="cuit" aria-label="cuit"
-                                    value="<?php echo (isset($filters['cuit'])) ? $filters['cuit'] : '' ?>">
-                            </div>
-                            <div class="form-group col-md-3">
-                                <input type="text" name="nombre" placeholder="Nombre" class="form-control"
-                                    id="nombre" aria-label="nombre"
                                     value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
-                            </div>
-                            <div class="form-group col-md-5">
-                                <input type="text" name="email" placeholder="Email" class="form-control"
-                                    id="email" aria-label="email"
-                                    value="<?php echo (isset($filters['email'])) ? $filters['email'] : '' ?>">
                             </div>
                             <div class=" form-group col-sm-2">
                                 <label class="btn btn-default btn-block">
@@ -96,78 +101,82 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-list"></span> Obras Sociales</h3>
+                    <h3 class="box-title"> <span class="fa fa-list"></span> Localidades</h3>
                     <div class="box-tools pull-right">
-                        <?php if (!empty($accionesPermitidas['ObrasSociales']['add'])) { ?>
-                            <a  title="Agregar obra social" href="/ObrasSociales/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
-                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nueva Obra Social</span>
+                        <?php if (!empty($accionesPermitidas['Provincias']['add'])) { ?>
+                            <a title="Agregar localidad" href="/Localidades/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
+                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nueva Localidad</span>
                             </a>
                         <?php } ?>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
                                 class="fa fa-minus"></i></button>
                     </div>
                 </div>
+
                 <div class="box-body">
-                    <?php if (isset($obrasSociales)) { ?>
-                        <?php if (count($obrasSociales) > 0) { ?>
+                    <?php if (isset($localidades)) { ?>
+                        <?php if (count($localidades) > 0) { ?>
                             <div class="table-responsive">
-                                <table class="table table-hover table-striped table-ajax">
+                                <table id="table-responsive" class="table table-hover table-striped table-ajax">
                                     <thead>
                                         <tr>
-                                            <th class="hidden-xs">
-                                                <?php echo $this->Paginator->sort('cuit', 'CUIT'); ?>
+                                            <th>
+                                                <?php echo $this->Paginator->sort('Localidades.provincia_id', 'Provincia') ?>
                                             </th>
                                             <th>
-                                                <?php echo $this->Paginator->sort('nombre', 'Nombre'); ?>
+                                                <?php echo $this->Paginator->sort('Localidades.nombre', 'Localidad'); ?>
                                             </th>
-                                            <th >
-                                                <?php echo $this->Paginator->sort('email', 'Email'); ?>
-                                            </th>
-                                            <th class="hidden-xs">
-                                                <?php echo $this->Paginator->sort('direccion', 'Dirección'); ?>
-                                            </th>
-                                            <th class="hidden-xs">
-                                                <?php echo $this->Paginator->sort('created', 'Creación'); ?>
-                                            </th>
-                                            <th class="hidden-xs">
-                                                <?php echo $this->Paginator->sort('modified', 'Modificación'); ?>
-                                            </th>
+
                                             <th>
                                             </th>
                                             <th>
                                             </th>
                                         </tr>
                                     </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <td>
+                                                <div class="text-center">
+                                                    <ul class="pagination justify-content-center">
+                                                        <li class="page-item">
+                                                            <?php echo $this->Paginator->first('PRIMERO'); ?>
+                                                            <?php echo $this->Paginator->prev('ANTERIOR'); ?>
+                                                        </li>
+                                                        <li class="page-item">
+                                                            <?php echo $this->Paginator->numbers(); ?>
+                                                        </li>
+                                                        <li class="page-item">
+                                                            <?php echo $this->Paginator->next('SIGUIENTE'); ?>
+                                                            <?php echo $this->Paginator->last('ULTIMO'); ?>
+                                                        </li>
+                                                    </ul>
+                                                    <p class="text-center">
+                                                        Página: <?php echo $this->Paginator->counter('{{page}} de {{pages}}, mostrando {{current}} localidades de {{count}}'); ?>
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
+
                                     <tbody>
-                                        <?php foreach ($obrasSociales as $obraSocial) {  ?>
+                                        <?php foreach ($localidades as $localidad) {  ?>
                                             <tr>
-                                                <td class="hidden-xs">
-                                                    <?php echo $obraSocial->cuit; ?>
+                                                <td>
+                                                    <?php echo $localidad->provincia->nombre; ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo $obraSocial->nombre; ?>
+                                                    <?php echo $localidad->nombre; ?>
+                                                </td>
+
+                                                <td>
+                                                    <a href="/Localidades/edit/<?php echo $localidad->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                                                 </td>
                                                 <td>
-                                                    <?php echo $obraSocial->email; ?>
-                                                </td>
-                                                <td class="hidden-xs">
-                                                    <?php echo $obraSocial->direccion; ?>
-                                                </td>
-                                                <td class="hidden-xs">
-                                                    <?php echo $this->Time->format($obraSocial->created, 'dd/MM/Y HH:mm:ss'); ?>
-                                                </td>
-                                                <td class="hidden-xs">
-                                                    <?php echo $this->Time->format($obraSocial->modified, 'dd/MM/Y HH:mm:ss'); ?>
-                                                </td>
-                                                <td >
-                                                    <a href="/ObrasSociales/edit/<?php echo $obraSocial->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
-                                                </td>
-                                                <td >
                                                     <?= $this->Form->postLink(
                                                         __('<i class="fa fa-remove"></i>'),
-                                                        ['action' => 'delete', $obraSocial->id],
+                                                        ['action' => 'delete', $localidad->id],
                                                         [
-                                                            'confirm' => __('¿Esta seguro de eliminar la obra social {0}?', $obraSocial->nombre),
+                                                            'confirm' => __('¿Esta seguro de eliminar la localidad {0}?', $localidad->nombre),
                                                             'class' => 'btn btn-danger btn-xs pencil',
                                                             'title' => 'Eliminar',
                                                             'escape' => false
@@ -181,7 +190,7 @@
                             </div>
                         <?php } else { ?>
                             <div class="callout callout-info">
-                                <p> <i class="fa-lg fa fa-info" aria-hidden="true"></i> Todavía no se ha cargado ningúna obra social.</p>
+                                <p> <i class="fa-lg fa fa-info" aria-hidden="true"></i> Todavía no se ha cargado ningúna localidad.</p>
                             </div>
                         <?php } ?>
                     <?php } else {
@@ -197,3 +206,34 @@
         </div>
     </div>
 </section>
+<script type="text/javascript">
+    // Manejo de paginación con Ajax
+    $(".pag-ajax").on("click", function(event) {
+        event.preventDefault();
+        window.history.pushState("object or string", "Paginacion", $(this).attr("href"));
+        fetch($(this).attr("href"), {
+                method: "GET",
+                headers: {
+                    "X-Requested-With": "XMLHttpRequest"
+                }
+            })
+            .then(response => response.text())
+            .then(response => {
+                jQuery(".content-wrapper").html(response);
+            })
+            .catch(function(err) {
+                console.log(err);
+                fetch("/rbac/rbac_usuarios/login", {
+                        method: "GET",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest"
+                        }
+                    })
+                    .then(response => response.text())
+                    .then(response => {
+                        jQuery("#divDialog").html(response);
+                        $("#myModal").modal("show");
+                    })
+            })
+    });
+</script>

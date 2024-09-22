@@ -18,21 +18,14 @@ use Cake\Core\Configure;
             <div class="box box-primary">
                 <div class="box-header with-border">
                     <h3 class="box-title"> <span class="fa fa-list"></span> Configure la consulta</h3>
-                    <div class="box-tools pull-right">
-                        <?php if (!empty($accionesPermitidas['Categorias']['add'])) { ?>
-                            <a title="Agregar categoría" href="/Categorias/add/" id="agregarUsuario" class="btn btn-primary btn-sm ">
-                                <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nueva Categoría</span>
-                            </a>
-                        <?php } ?>
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
-                    </div>
+
                 </div>
                 <div class="box-body">
                     <?php
                     $session = $this->getRequest()->getSession();
                     $accionesPermitidas = @$session->read('permitidas');
                     ?>
-                    
+
                     <span id="mensajes"></span>
                     <style>
                         .infoCell {
@@ -43,7 +36,7 @@ use Cake\Core\Configure;
                     <br />
                     <form action="" method="post">
                         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-                        
+
                         <!-- Opción para elegir cómo armar la consulta -->
                         <div class="row">
                             <div class="col-xs-12">
@@ -54,6 +47,7 @@ use Cake\Core\Configure;
                                 </select>
                             </div>
                         </div>
+
                         <br />
 
                         <!-- Formulario asistente -->
@@ -143,16 +137,58 @@ use Cake\Core\Configure;
                             <div class="row">
                                 <div class="col-xs-12">
                                     <label class="control-label">Ingrese su consulta SQL:</label>
-                                    <textarea name="consultaManual" class="form-control" rows="5"></textarea>
+                                    <textarea id="consultaManual" name="consultaManual"  class="form-control" rows="5" cols="50" oninput="mostrarSugerencias(event)"></textarea>
+
+                                    <div id="sugerencias" style="border: 1px solid #ccc; display: none;"></div>
                                 </div>
                             </div>
                         </div>
-
+                        <div id="resultadoSQL"></div>
                         <br />
                         <div class="row text-center">
                             <input type="submit" value="ENVIAR CONSULTA" class="btn btn-primary">
                         </div>
                     </form>
+                    <hr />
+                    <?php
+                    debug($resultados);
+                    if (isset($resultados) && !empty($resultados)) : ?>
+                        <h3>Resultados de la consulta</h3>
+                        <?php if (is_array($resultados) && isset($resultados[0]) && is_array($resultados[0])) : ?>
+                            <!-- Si los resultados son un array asociativo (por ejemplo, de una consulta SELECT) -->
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
+                                    <thead>
+                                        <tr>
+                                            <?php foreach (array_keys($resultados[0]) as $header) : ?>
+                                                <th><?php echo h($header); ?></th>
+                                            <?php endforeach; ?>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php foreach ($resultados as $fila) : ?>
+                                            <tr>
+                                                <?php foreach ($fila as $dato) : ?>
+                                                    <td class="infoCell"><?php echo h($dato); ?></td>
+                                                <?php endforeach; ?>
+                                            </tr>
+                                        <?php endforeach; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php else : ?>
+                            <!-- Si es una consulta que no devuelve filas (por ejemplo, INSERT, UPDATE o DELETE) -->
+                            <div class="alert alert-success">
+                                <strong>Consulta ejecutada con éxito.</strong> Filas afectadas: <?php echo h($resultados); ?>
+                            </div>
+                        <?php endif; ?>
+                    <?php elseif (isset($resultados) && $resultados === false) : ?>
+                        <!-- Si hubo un error en la ejecución de la consulta -->
+                        <div class="alert alert-danger">
+                            <strong>Error:</strong> No se pudo ejecutar la consulta.
+                        </div>
+                    <?php endif; ?>
+
                     <hr /><br />
                     <div class="alert alert-info">
                         <H4>AYUDA</H4>
@@ -187,15 +223,15 @@ use Cake\Core\Configure;
                                     </tr>
                                 </thead>
                                 <tbody>
-                                <?php
-                                foreach ($listado as $registro) {
-                                    $undoBT = 'No disponible';
-                                    if ($registro["undoQuery"] != '') {
-                                        if (!$verArchivado) {
-                                            $undoBT = '<a href="/db/index/' . $registro['id'] . '" alt="Ejecutar undo">Undo</a>';
+                                    <?php
+                                    foreach ($listado as $registro) {
+                                        $undoBT = 'No disponible';
+                                        if ($registro["undoQuery"] != '') {
+                                            if (!$verArchivado) {
+                                                $undoBT = '<a href="/db/index/' . $registro['id'] . '" alt="Ejecutar undo">Undo</a>';
+                                            }
                                         }
-                                    }
-                                    echo '<tr>
+                                        echo '<tr>
                                             <td>' . h($registro['fecha']) . '</td>
                                             <td>' . h($registro['usuario']) . '</td>
                                             <td>' . h($registro['ip']) . '</td>
@@ -203,8 +239,8 @@ use Cake\Core\Configure;
                                             <td>' . h($registro['query']) . '</td>
                                             <td>' . $undoBT . '</td>
                                           </tr>';
-                                }
-                                ?>
+                                    }
+                                    ?>
                                 </tbody>
                             </table>
                         </div>
@@ -213,6 +249,7 @@ use Cake\Core\Configure;
                         echo '<div class="alert alert-warning">No hay registros en el historial.</div>';
                     }
                     ?>
+
                 </div>
             </div>
         </div>
@@ -228,6 +265,69 @@ use Cake\Core\Configure;
         } else {
             document.getElementById("formAsistente").style.display = "none";
             document.getElementById("formManual").style.display = "block";
+        }
+    }
+</script>
+<script>
+    const palabrasClave = [
+        "SELECT", "FROM", "WHERE", "JOIN", "ON", "INSERT INTO", "VALUES",
+        "UPDATE", "SET", "DELETE FROM", "CREATE TABLE", "DROP TABLE",
+        "ALTER TABLE", "TRUNCATE TABLE", "AND", "OR", "NOT", "LIKE", "BETWEEN",
+        "IN", "ORDER BY", "GROUP BY"
+    ];
+
+    function mostrarSugerencias(event) {
+        const input = event.target.value;
+        const sugerenciasDiv = document.getElementById("sugerencias");
+        const resultadoDiv = document.getElementById("resultado");
+
+        sugerenciasDiv.innerHTML = "";
+
+        // Validar sintaxis
+        validarSintaxisSQL(input);
+
+        if (!input) {
+            sugerenciasDiv.style.display = "none";
+            return;
+        }
+
+        const coincidencias = palabrasClave.filter(palabra =>
+            palabra.toLowerCase().startsWith(input.toLowerCase())
+        );
+
+        if (coincidencias.length > 0) {
+            sugerenciasDiv.style.display = "block";
+            coincidencias.forEach(palabra => {
+                const item = document.createElement("div");
+                item.textContent = palabra;
+                item.onclick = () => seleccionarSugerencia(palabra);
+                sugerenciasDiv.appendChild(item);
+            });
+        } else {
+            sugerenciasDiv.style.display = "none";
+        }
+    }
+
+    function seleccionarSugerencia(palabra) {
+        const textarea = document.getElementById("consultaManual");
+        textarea.value += (textarea.value ? " " : "") + palabra + " ";
+        document.getElementById("sugerencias").style.display = "none";
+        textarea.focus();
+        validarSintaxisSQL(textarea.value); // Validar después de agregar la sugerencia
+    }
+
+    function validarSintaxisSQL(sql) {
+        const resultadoDiv = document.getElementById("resultadoSQL");
+
+        // Expresión regular avanzada con soporte para JOIN
+        const sqlRegex = /^(SELECT|INSERT\s+INTO|UPDATE|DELETE\s+FROM|CREATE\s+(TABLE|DATABASE)|DROP\s+(TABLE|DATABASE)|ALTER\s+TABLE|TRUNCATE\s+TABLE)\s+[\s\S]+(JOIN\s+[\s\S]+\s+ON\s+[\s\S]+)?;?$/i;
+
+        if (sql && sqlRegex.test(sql)) {
+            resultadoDiv.textContent = "Consulta SQL válida.";
+            resultadoDiv.style.color = "green";
+        } else {
+            resultadoDiv.textContent = "Error de sintaxis: La consulta no tiene el formato correcto.";
+            resultadoDiv.style.color = "red";
         }
     }
 </script>

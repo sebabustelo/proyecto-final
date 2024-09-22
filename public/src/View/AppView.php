@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 /**
@@ -13,6 +14,7 @@ declare(strict_types=1);
  * @since     3.0.0
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App\View;
 
 use Cake\View\View;
@@ -37,5 +39,13 @@ class AppView extends View
      */
     public function initialize(): void
     {
+        $this->loadHelper('Paginator');
+        $this->Paginator->setTemplates([
+            'number' => '<li><a class="pag-ajax page-link" href="{{url}}">{{text}}</a></li>',
+            'first' => '<li><a class="pag-ajax page-link" href="{{url}}">{{text}}</a></li>',
+            'last' => '<li><a class="pag-ajax page-link" href="{{url}}">{{text}}</a></li>',
+            'prevActive' => '<li><a class="pag-ajax page-link" href="{{url}}">{{text}}</a></li>',
+            'nextActive' => '<li><a class="pag-ajax page-link" href="{{url}}">{{text}}</a></li>'
+        ]);
     }
 }
