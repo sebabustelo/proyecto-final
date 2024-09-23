@@ -23,14 +23,14 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="col-xs-4">
-                        <img src="/admin_l_t_e/img/photo2.png" alt="Photo" class="img-responsive pad">
+                        <img src="/img/productos/fassier-duval.jpg" alt="Photo" class="img-responsive pad">
                     </div>
                     <div class="col-xs-8">
                         <br>
                         <div class="comment-text">
                             <span class="btn btn-success btn-xs ">Entregado</span><br>
                             Se entrego el 11 de Julio <br>
-                            Silla Playera Plegable Verde
+                            Producto 1
                         </div>
                         <div class="comment-text pull-right">
                             <button type="button" class="btn btn-block btn-primary">Ver detalles</button>
@@ -49,14 +49,14 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="col-xs-4">
-                        <img src="/admin_l_t_e/img/photo2.png" alt="Photo" class="img-responsive pad">
+                        <img src="/img/productos/fin_short.jpg" alt="Photo" class="img-responsive pad">
                     </div>
                     <div class="col-xs-8">
                         <br>
                         <div class="comment-text">
                             <span class="btn btn-info btn-xs ">En camino</span><br>
-                            Se entrego el 11 de Julio <br>
-                            Silla Playera Plegable Verde
+                            Llega el 21 Octubre <br>
+                            Producto 2
                         </div>
                         <div class="comment-text pull-right">
                             <button type="button" class="btn btn-block btn-primary">Ver detalles</button>
@@ -75,14 +75,14 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="col-xs-4">
-                        <img src="/admin_l_t_e/img/photo2.png" alt="Photo" class="img-responsive pad">
+                        <img src="/img/productos/k-mono.jpg" alt="Photo" class="img-responsive pad">
                     </div>
                     <div class="col-xs-8">
                         <br>
                         <div class="comment-text">
                             <span class="btn btn-info btn-xs ">En camino</span><br>
-                            Se entrego el 11 de Julio <br>
-                            Silla Playera Plegable Verde
+                            Llega 11 de Julio <br>
+                            Producto 3
                         </div>
                         <div class="comment-text pull-right">
                             <button type="button" class="btn btn-block btn-primary">Ver detalles</button>
@@ -101,14 +101,14 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="col-xs-4">
-                        <img src="/admin_l_t_e/img/photo2.png" alt="Photo" class="img-responsive pad">
+                        <img src="/img/productos/kmod-rev.jpg" alt="Photo" class="img-responsive pad">
                     </div>
                     <div class="col-xs-8">
                         <br>
                         <div class="comment-text">
                             <span class="btn btn-warning btn-xs ">En proceso</span><br>
-                            Se entrego el 11 de Julio <br>
-                            Silla Playera Plegable Verde
+                            En proceso de validación<br>
+                            Producto 4
                         </div>
                         <div class="comment-text pull-right">
                             <button type="button" class="btn btn-block btn-primary">Ver detalles</button>

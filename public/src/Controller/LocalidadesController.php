@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Http\Response;
+
 /**
  * Localidades Controller
  *
@@ -34,7 +36,7 @@ class LocalidadesController extends AppController
             ->contain($conditions['contain'])
             // ->orderBy($conditions['order'])
         ;
-        $provincias = $this->Localidades->Provincias->find('list',[ 'order' => ['Provincias.nombre' => 'ASC']])->all();
+        $provincias = $this->Localidades->Provincias->find('list')->orderBy(['Provincias.nombre' => 'ASC'])->all();
         $this->set('provincias', $provincias);
 
         $this->set('filters', $this->getRequest()->getQuery());
@@ -107,6 +109,23 @@ class LocalidadesController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+    public function localidades($provinciaId)
+    {
+        $this->viewBuilder()->disableAutoLayout();
+        // $this->viewBuilder()->setLayout(null);
+        $result = false;
+        $localidades = $this->Localidades->find('all')
+            ->where(['provincia_id' => $provinciaId])
+            ->select(['id', 'nombre'])->all(); // Asegúrate de seleccionar los campos correctos
+
+        $jsonData = json_encode($localidades, JSON_PRETTY_PRINT);
+
+        $response = new Response();
+        $response = $response->withType('application/json')->withStringBody($jsonData);
+        return $response;
+    }
+
+
     /**
      * getCondition method
      *
@@ -120,9 +139,6 @@ class LocalidadesController extends AppController
         $conditions['where'] = [];
         $conditions['contain'] = ['Provincias'];
         $conditions['order'] = [];
-
-        //$conditions['order'] = [isset($data['sort']) ? $data['sort'] : 'Provincias.nombre' => isset($data['direction']) ? $data['direction'] : 'ASC'];
-
 
         if (isset($data['provincia_id']) and !empty($data['provincia_id'])) {
             $conditions['where'][] = ['Localidades.provincia_id ' => $data['provincia_id']];

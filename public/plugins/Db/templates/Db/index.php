@@ -7,9 +7,9 @@ use Cake\Core\Configure;
         <i class="fa fa-database"></i> Consultas DB
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-dot-circle-o"></i>Categorías</a></li>
+        <li><a href="#"><i class="fa fa-dot-circle-o"></i>Db</a></li>
         <i class="fa fa-arrow-right"></i>
-        <li class="active">Listado</li>
+        <li class="active">Consulta</li>
     </ol>
 </section>
 <section class="content">
@@ -151,7 +151,7 @@ use Cake\Core\Configure;
                     </form>
                     <hr />
                     <?php
-                    debug($resultados);
+                    //debug($resultados);
                     if (isset($resultados) && !empty($resultados)) : ?>
                         <h3>Resultados de la consulta</h3>
                         <?php if (is_array($resultados) && isset($resultados[0]) && is_array($resultados[0])) : ?>
@@ -190,7 +190,7 @@ use Cake\Core\Configure;
                     <?php endif; ?>
 
                     <hr /><br />
-                    <div class="alert alert-info">
+                    <!-- <div class="alert alert-info">
                         <H4>AYUDA</H4>
                         <strong>Para operaciones de UPDATE E INSERT:</strong> Los campos y los valores deben ir separados por doble coma y sin utilizar comillas. Ejemplo de campos: nombre,,apellido. Ejemplo de valores: John,,Doe<br />
                         <strong>UNDO EN UN CLICK:</strong> Disponible para operaciones de UPDATE, INSERT Y DELETE<br />
@@ -250,7 +250,7 @@ use Cake\Core\Configure;
                     }
                     ?>
 
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

@@ -86,9 +86,45 @@ use Cake\Core\Configure; ?>
         </div>
     </div>
     <div class="form-group has-feedback">
-        <input name="direccion" required type="text" class="form-control" placeholder="Dirección">
-        <span class="glyphicon fa fa-lg fa-home form-control-feedback"></span>
+        <select id="provincia_id" required name="provincia_id" class="form-control">
+            <option selected value="">Seleccione una provincia</option>
+            <?php foreach ($provincias as $k => $provincia) { ?>
+                <?php if ($localidad['provincia_id'] == $k) { ?>
+                    <option value="<?php echo $k ?>"><?php echo $provincia; ?></option>
+                <?php  } else { ?>
+                    <option value="<?php echo $k ?>"><?php echo $provincia; ?></option>
+                <?php } ?>
+            <?php } ?>
+        </select>
+
+
     </div>
+    <div class="form-group has-feedback">
+        <select required id="localidad_id" name="direcciones[][localidad_id]" class="form-control">
+
+            <option selected value="">Seleccione una localidad</option>
+
+        </select>
+    </div>
+    <div class="form-group has-feedback">
+        <input name="direcciones[0][calle]" required type="text" class="form-control" placeholder="Calle">
+        <span class="glyphicon fa fa-lg fa-road form-control-feedback"></span>
+    </div>
+
+    <div class="form-group has-feedback">
+        <div class="row">
+            <div class="col-xs-4">
+                <input name="direcciones[0][numero]" required type="number" class="form-control" placeholder="Número">
+            </div>
+            <div class="col-xs-4">
+                <input name="direcciones[0][piso]" type="text" class="form-control" placeholder="Piso">
+            </div>
+            <div class="col-xs-4">
+                <input name="direcciones[0][departamento]" type="text" class="form-control" placeholder="Depto">
+            </div>
+        </div>
+    </div>
+
     <div class="form-group has-feedback">
         <input name="celular" required type="number" step="1" min="8" class="form-control" placeholder="Celular" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
         <span class="glyphicon fa fa-lg fa-mobile-phone form-control-feedback"></span>
@@ -140,3 +176,33 @@ use Cake\Core\Configure; ?>
         <?= $this->Flash->render() ?>
     </div>
 </div>
+<!-- Otros contenidos del formulario -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var provinciaSelect = document.getElementById('provincia_id');
+        var localidadSelect = document.getElementById('localidad_id');
+
+        provinciaSelect.addEventListener('change', function() {
+            var provinciaId = this.value;
+
+
+            if (provinciaId) {
+
+                fetch('/localidades/localidades/' + provinciaId)
+
+                    .then(response => response.json())
+                    .then(data => {
+                        localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
+
+                        data.forEach(function(localidad) {
+
+                            localidadSelect.innerHTML += '<option value="' + localidad.id + '">' + localidad.nombre + '</option>';
+                        });
+                    })
+                    .catch(error => console.error('Error al cargar localidades:', error));
+            } else {
+                localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
+            }
+        });
+    });
+</script>

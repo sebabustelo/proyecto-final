@@ -34,9 +34,16 @@ class RbacUsuariosTable extends Table
                 'propertyName' => 'rbac_perfil'
             ]
         );
+
         $this->belongsTo('TipoDocumentos', [
             'foreignKey' => 'tipo_documento_id',
         ]);
+
+        $this->hasMany('Direcciones', [
+            'className'        => 'Rbac.Direcciones',
+            'foreignKey' => 'rbac_usuario_id',
+        ]);
+
     }
 
     /**

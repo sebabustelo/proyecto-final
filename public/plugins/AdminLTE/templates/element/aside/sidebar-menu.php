@@ -13,7 +13,8 @@ $action =   $this->request->getParam('action');
         <?php if ((isset($accionesPermitidas['Db']['index']) && $accionesPermitidas['Db']['index'])) { ?>
             <li class=" <?php echo ($controller == 'Db' && ($action == 'index') ? ' active' : ''); ?>">
                 <a href="<?php echo $this->Url->build('/db/db/index'); ?>">
-                    <i class="fa fa-database"></i> <span>Consulta DB</span>
+                    <i class="fa fa-fw fa-database"></i>
+                    <span>Consulta DB</span>
                 </a>
             </li>
         <?php } ?>
@@ -21,7 +22,8 @@ $action =   $this->request->getParam('action');
             <li>
                 <a href="<?php echo $this->Url->build('Consultas/index'); ?>">
                     <i class="fa fa-fw  fa-envelope"></i>
-                    <span>Gestión de Consultas</span></a>
+                    <span>Gestión de Consultas</span>
+                </a>
             </li>
         <?php  } ?>
 
@@ -46,7 +48,7 @@ $action =   $this->request->getParam('action');
         ?>
         <li class="treeview <?php echo $active . " " . $menu_open ?>">
             <a href="#">
-                <i class="fa fa-files-o"></i> <span>Gestión de Pedidos</span>
+                <i class="fa fa-truck"></i> <span>Gestión de Pedidos</span>
                 <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                 </span>
@@ -138,13 +140,15 @@ $action =   $this->request->getParam('action');
                 </a>
             </li>
         <?php } ?>
-        <?php //if ((isset($accionesPermitidas['Informes']['index']) && $accionesPermitidas['Informes']['index'])) { ?>
-            <!-- <li class=" <?php echo ($controller == 'Informes' && ($action == 'index' || $action == ''  || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
+        <?php //if ((isset($accionesPermitidas['Informes']['index']) && $accionesPermitidas['Informes']['index'])) {
+        ?>
+        <!-- <li class=" <?php echo ($controller == 'Informes' && ($action == 'index' || $action == ''  || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
                 <a href="<?php echo $this->Url->build('/Informes/index'); ?>">
                     <i class="fa fa-area-chart"></i> <span>Informes</span>
                 </a>
             </li> -->
-        <?php //} ?>
+        <?php //}
+        ?>
         <?php
         if (
             (isset($accionesPermitidas['TipoDocumentos']['index']) && $accionesPermitidas['TipoDocumentos']['index']) ||
@@ -154,7 +158,7 @@ $action =   $this->request->getParam('action');
             (isset($accionesPermitidas['Localidades']['index']) && $accionesPermitidas['Localidades']['index']) ||
             (isset($accionesPermitidas['Categorias']['index']) && $accionesPermitidas['Categorias']['index'])
         ) {
-            $menu_sistema = array("TipoDocumentos", "Categorias",  "Categorias", "PedidosEstados", "ConsultasEstados","Provincias","Localidades");
+            $menu_sistema = array("TipoDocumentos", "Categorias",  "Categorias", "PedidosEstados", "ConsultasEstados", "Provincias", "Localidades");
             if (in_array($controller, $menu_sistema) and $action != 'detail') {
                 $active = "active";
                 $menu_open = "menu-open";
@@ -219,7 +223,7 @@ $action =   $this->request->getParam('action');
         <?php if ((isset($accionesPermitidas['Proveedores']['index']) && $accionesPermitidas['Proveedores']['index'])) { ?>
             <li class=" <?php echo ($controller == 'Proveedores' && ($action == 'index' || $action == ''  || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
                 <a href="<?php echo $this->Url->build('/Proveedores/index'); ?>">
-                    <i class="fa fa-cubes"></i> <span>Proveedores</span>
+                    <i class="fa fa-folder"></i> <span>Proveedores</span>
                 </a>
             </li>
         <?php } ?>
@@ -269,7 +273,7 @@ $action =   $this->request->getParam('action');
                 <span>Consultas</span></a>
         </li>
     <?php }    ?>
-<!--
+
     <li class="treeview">
         <a href="#">
             <i class="fa fa-files-o"></i>
@@ -353,8 +357,8 @@ $action =   $this->request->getParam('action');
             <li><a href="<?php echo $this->Url->build('/pages/tables/simple'); ?>"><i class="fa fa-circle-o"></i> Simple tables</a></li>
             <li><a href="<?php echo $this->Url->build('/pages/tables/data'); ?>"><i class="fa fa-circle-o"></i> Data tables</a></li>
         </ul>
-    </li> -->
-   <!--
+    </li>
+    <!--
     <li>
         <a href="<?php echo $this->Url->build('/pages/mailbox/mailbox'); ?>">
             <i class="fa fa-envelope"></i> <span>Mailbox</span>

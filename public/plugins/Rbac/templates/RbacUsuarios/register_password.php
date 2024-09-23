@@ -19,12 +19,12 @@ if (isset($user)) { ?>
 
     <div class="form-group has-feedback">
         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-        <input name="password" id="password" required type="password" class="form-control" placeholder="Contraseña">
+        <input minlength="6" name="password" id="password" required type="password" class="form-control" placeholder="Contraseña">
         <span class="fa fa-lock fa-lg form-control-feedback"></span>
         <?php $user->getErrors() ?>
     </div>
     <div class="form-group has-feedback">
-        <input name="password_confirm" id="password_confirm" required type="password" class="form-control" placeholder="Repita la contraseña">
+        <input minlength="6" name="password_confirm" id="password_confirm" required type="password" class="form-control" placeholder="Repita la contraseña">
         <span class="fa fa-lock fa-lg form-control-feedback"></span>
     </div>
 

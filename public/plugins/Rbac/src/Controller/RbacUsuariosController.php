@@ -135,7 +135,14 @@ class RbacUsuariosController extends RbacController
 
     public function detail($id = null)
     {
-        $rbacUsuario = $this->RbacUsuarios->findById($id)->contain(['RbacPerfiles', 'TipoDocumentos'])->first();
+        $rbacUsuario = $this->RbacUsuarios->findById($id)
+            ->contain([
+                'RbacPerfiles',
+                'TipoDocumentos',
+                'Direcciones' => [
+                    'Localidades' => ['Provincias']
+                ]
+            ])->first();
         if ($this->getRequest()->is(['patch', 'post', 'put'])) {
             $rbacUsuario = $this->RbacUsuarios->patchEntity($rbacUsuario, $this->getRequest()->getData(), ['associated' => ['RbacPerfiles']]);
             if ($this->RbacUsuarios->save($rbacUsuario)) {
@@ -342,7 +349,8 @@ class RbacUsuariosController extends RbacController
             $data['perfil_id'] = $perfilCliente->valor;
             //Hasta que no valide el mail el usuario esta inactivo
             $data['activo'] = 0;
-            $rbacUsuario = $this->RbacUsuarios->newEntity($data, ['associated' => ['RbacPerfiles']]);
+            $rbacUsuario = $this->RbacUsuarios->newEntity($data, ['associated' => ['RbacPerfiles', 'Direcciones']]);
+
             if ($rbacUsuario->getErrors()) {
                 foreach ($rbacUsuario->getErrors() as $field => $errors) {
                     foreach ($errors as $error) {
@@ -372,8 +380,6 @@ class RbacUsuariosController extends RbacController
                         $datos['template']   = 'register';
                         $datos['email']      = $this->getRequest()->getData('usuario');
 
-
-
                         if ($rbacTokenTable->save($rbacToken)) {
                             if ($this->sendEmail($datos)) {
                                 $this->RbacUsuarios->getConnection()->commit();
@@ -398,6 +404,7 @@ class RbacUsuariosController extends RbacController
             }
         }
         $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
+        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->order('nombre')->all());
     }
 
     /**
@@ -443,13 +450,15 @@ class RbacUsuariosController extends RbacController
                         }
                     }
                 } else {
-                    $seed = $user->seed;
+                    //$seed = $user->seed;
+                    $seed = hash('sha256', 'ipmagna');
                     $password =  hash('sha256', $seed . $this->getRequest()->getData('password'));
                     $passwordConfirm =   hash('sha256', $seed . $this->getRequest()->getData('password_confirm'));
                     $this->RbacUsuarios->getConnection()->begin();
                     $user = $this->RbacUsuarios->patchEntity($user, [
                         'password' =>   $password,
                         'password_confirm' =>   $passwordConfirm,
+                        'seed' => $seed,
                         'activo' => 1
                     ]);
                     //debug($user);die;

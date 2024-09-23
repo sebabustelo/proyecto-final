@@ -29,7 +29,7 @@ use Cake\Core\Configure;
                         <form id="ConstulasAddForm" name="ConstulasAddForm" role="form" action="/Consultas/add/" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <input type="hidden" name="cliente_id" value="<?php echo  $_SESSION['RbacUsuario']['id']; ?>">
-                           
+
                             <div class="form-group col-sm-12">
                                 <label>Mótivo</label>
                                 <textarea required maxlength="2000" rows="5" placeholder="Ingrese el mótivo de la consulta" class="form-control" name="motivo"></textarea>
@@ -39,24 +39,12 @@ use Cake\Core\Configure;
                                     <?php } ?>
                                 <?php } ?>
                             </div>
-                            <?php
-                            if ($this->request->getSession()->check('previousUrl')) {
-                                $url = $this->request->getSession()->read('previousUrl');
-                                if (strpos($url, "Consultas") !== false) {
-                                    $url = $this->request->getSession()->read('previousUrl');
-                                } else {
-                                    $url = "/Consultas/index/";
-                                }
-                            } else {
-                                $url = '/Consultas/index';
-                            }
-                            ?>
+
                             <div class="form-group col-sm-12 text-center">
-                                <a href="<?php echo $url; ?>" class="btn btn-danger">
-                                    <span class="fa fa-remove"></span> Cancelar</a>
+
                                 <button type="submit" class="btn btn-primary">
                                     <span class="fa  fa-check-square-o"></span>
-                                    Guardar</button>
+                                    Enviar</button>
                             </div>
                         </form>
                     </div>

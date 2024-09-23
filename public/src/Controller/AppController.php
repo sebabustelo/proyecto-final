@@ -64,7 +64,7 @@ class AppController extends Controller
         parent::beforeRender($event);
 
         $categoriasTable = $this->fetchTable('Categorias');
-        $categorias = $categoriasTable->find('list')->toArray();
+        $categorias = $categoriasTable->find('list')->where(['Categorias.activo'=>1])->toArray();
         $this->set('categoriasMenu', $categorias);
 
         $session = $this->request->getSession();

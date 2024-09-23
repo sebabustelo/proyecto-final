@@ -35,7 +35,6 @@ class RbacUsuario extends Entity
         'apellido' => true,
         'tipo_documento_id' => true,
         'documento' => true,
-        'direccion' => true,
         'celular' => true,
         'seed' => true,
         'activo' => true,
@@ -47,7 +46,8 @@ class RbacUsuario extends Entity
         'tipo_documento' => true,
         'perfil_id' => true,
         'password' => true,
-        'password_confirm'=>true
+        'password_confirm'=>true,
+        'direcciones'=>true
     ];
 
     protected function password_confirm()
