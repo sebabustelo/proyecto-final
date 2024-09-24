@@ -89,11 +89,7 @@ use Cake\Core\Configure; ?>
         <select id="provincia_id" required name="provincia_id" class="form-control">
             <option selected value="">Seleccione una provincia</option>
             <?php foreach ($provincias as $k => $provincia) { ?>
-                <?php if ($localidad['provincia_id'] == $k) { ?>
                     <option value="<?php echo $k ?>"><?php echo $provincia; ?></option>
-                <?php  } else { ?>
-                    <option value="<?php echo $k ?>"><?php echo $provincia; ?></option>
-                <?php } ?>
             <?php } ?>
         </select>
 
@@ -145,7 +141,7 @@ use Cake\Core\Configure; ?>
         </div>
     </div>
 
-    <?php if (isset($captcha) && $captcha == 'Ssadsfdi') { ?>
+    <?php if (isset($captcha) && $captcha == 'Si') { ?>
 
         <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
         <script src="https://www.google.com/recaptcha/api.js?render=<?php echo env('RECAPTCHA_CLAVE_PUBLICA'); ?>"></script>
@@ -159,8 +155,7 @@ use Cake\Core\Configure; ?>
             });
         </script>
         <br>
-    <?php }
-    ?>
+    <?php }  ?>
     <div class="row">
         <!-- /.col -->
         <div class="col-xs-12">

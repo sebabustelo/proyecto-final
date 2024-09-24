@@ -1,4 +1,5 @@
 <?php $this->layout = 'AdminLTE.register_password';
+
 use Cake\Core\Configure; ?>
 <?php
 if (isset($user)) { ?>
@@ -27,12 +28,26 @@ if (isset($user)) { ?>
         <input minlength="6" name="password_confirm" id="password_confirm" required type="password" class="form-control" placeholder="Repita la contraseña">
         <span class="fa fa-lock fa-lg form-control-feedback"></span>
     </div>
+    <?php if (isset($captcha) && $captcha == 'Si') { ?>
 
+        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+        <script src="https://www.google.com/recaptcha/api.js?render=<?php echo env('RECAPTCHA_CLAVE_PUBLICA'); ?>"></script>
+        <script>
+            grecaptcha.ready(function() {
+                grecaptcha.execute('<?php echo env('RECAPTCHA_CLAVE_PUBLICA'); ?>', {
+                    action: 'login'
+                }).then(function(token) {
+                    document.getElementById('g-recaptcha-response').value = token;
+                });
+            });
+        </script>
+        <br>
+    <?php }  ?>
 
     <div class="row">
         <!-- /.col -->
         <div class="col-xs-12">
-            <button id="submitButton" type="submit" class="btn btn-primary btn-block ">Confirmar</button>
+            <button id="submitButton" type="submit" class="btn btn-lg btn-primary btn-block">Confirmar</button>
         </div>
         <!-- /.col -->
     </div>
@@ -45,72 +60,29 @@ if (isset($user)) { ?>
         <?= $this->Flash->render() ?>
     </div>
 </div>
+<script>
+    document.getElementById('formRegisterPassword').addEventListener('submit', function(event) {
+        // Obtener los valores de los campos de contraseña
+        const password = document.getElementById('password').value;
+        const password_confirm = document.getElementById('password_confirm').value;
 
-<script type="text/javascript">
-    $(function() {
-        inicialize();
-    });
+        // Definir la expresión regular para la validación
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
 
-    function inicialize() {
-        $.validator.addMethod('alfanumerico', function(value, element, param) {
-            var vsExprReg = /(([\d]+[A-Za-z]+)|[A-Za-z]+[\d]+$)/;
-            return vsExprReg.test(value);
-        });
-
-        $('#formRegisterPassword').validate({
-            rules: {
-
-                'password': {
-                    minlength: 8,
-                    maxlength: 24,
-                    alfanumerico: true,
-                    required: true
-                },
-                'password_repeat': {
-                    minlength: 8,
-                    maxlength: 24,
-                    alfanumerico: true,
-                    required: true
-                }
-            },
-            messages: {
-                'password': {
-                    alfanumerico: "La contraseña debe ser tener al menos un número y una letra",
-                    minlength: "Por favor, ingrese al menos 8 caracteres",
-                    maxlength: "Como máximo solo puede ingresar 24 caracteres"
-                },
-                'password_repeat': {
-                    alfanumerico: "La contraseña debe ser tener al menos un número y una letra",
-                    minlength: "Por favor, ingrese al menos 8 caracteres",
-                    maxlength: "Como máximo solo puede ingresar 24 caracteres"
-                }
-            },
-            highlight: function(element) {
-                $(element).closest('.control-group').removeClass('success').addClass('error');
-            },
-            success: function(element) {
-                element
-                    .text('OK!').addClass('valid')
-                    .closest('.control-group').removeClass('error').addClass('success');
-            }
-        });
-    }
-
-    function cambiar() {
-        if ($('#formRegisterPassword').valid()) {
-            if ($('#password').val() != $('#password_confirm').val()) {
-                var validator = $("#formRegisterPassword").validate();
-                validator.showErrors({
-                    "contraseniaNuevaConfirm": "Los paswords deben ser iguales"
-                });
-            } else {
-                bootbox.confirm("¿Está seguro de que desea cambiar contraseña de usuario?", function(result) {
-                    if (result) {
-                        $('#formRegisterPassword').submit();
-                        //alert('lalala');
-                    }
-                });
-            }
+        // Validar si las contraseñas coinciden
+        if (password !== password_confirm) {
+            alert('Las contraseñas no coinciden.');
+            event.preventDefault(); // Detener el envío del formulario
+            return;
         }
-    }
+
+        // Validar si las contraseñas cumplen con los requisitos
+        if (!passwordRegex.test(password)) {
+            alert('La contraseña debe tener al menos 6 caracteres, una mayúscula y un carácter especial.');
+            event.preventDefault(); // Detener el envío del formulario
+            return;
+        }
+
+        // Si todo es válido, permitir el envío del formulario
+    });
 </script>
