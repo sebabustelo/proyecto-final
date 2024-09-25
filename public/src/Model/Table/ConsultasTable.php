@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
@@ -45,14 +44,14 @@ class ConsultasTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Cliente', [
-            'className' => 'Rbac.RbacUsuarios', // Indica la clase a la que pertenece
-            'foreignKey' => 'cliente_id', // Llave foránea
+        $this->belongsTo('UsuarioConsultas', [
+            'className' => 'Rbac.RbacUsuarios',
+            'foreignKey' => 'usuario_consulta_id',
         ]);
 
         $this->belongsTo('UsuarioRespuestas', [
-            'className' => 'Rbac.RbacUsuarios', // Indica la clase a la que pertenece
-            'foreignKey' => 'usuario_respuesta_id', // Llave foránea
+            'className' => 'Rbac.RbacUsuarios',
+            'foreignKey' => 'usuario_respuesta_id',
         ]);
 
         $this->belongsTo('ConsultasEstados', [
@@ -72,8 +71,8 @@ class ConsultasTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->integer('cliente_id')
-            ->allowEmptyString('cliente_id');
+            ->integer('usuario_consulta_id')
+            ->allowEmptyString('usuario_consulta_id');
 
         $validator
             ->integer('usuario_respuesta_id')
@@ -96,8 +95,8 @@ class ConsultasTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['cliente_id'], 'Cliente'), ['errorField' => 'cliente_id']);
-        $rules->add($rules->existsIn(['usuario_respuesta_id'], 'UsuarioRespuesta'), ['errorField' => 'usuario_respuesta_id']);
+        //$rules->add($rules->existsIn(['usuario_consulta_id'], 'UsuarioConsulta'), ['errorField' => 'usuario_consulta_id']);
+        //$rules->add($rules->existsIn(['usuario_respuesta_id'], 'UsuarioRespuesta'), ['errorField' => 'usuario_respuesta_id']);
 
         return $rules;
     }

@@ -7,7 +7,6 @@ use Cake\Event\Event;
 use Cake\ORM\Behavior;
 use Cake\Datasource\EntityInterface;
 use Cake\Routing\Router;
-use Cake\Log\Log;
 
 class AuditBehavior extends Behavior
 {

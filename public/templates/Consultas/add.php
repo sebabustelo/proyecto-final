@@ -28,7 +28,7 @@ use Cake\Core\Configure;
                     <div class="form-row">
                         <form id="ConstulasAddForm" name="ConstulasAddForm" role="form" action="/Consultas/add/" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-                            <input type="hidden" name="cliente_id" value="<?php echo  $_SESSION['RbacUsuario']['id']; ?>">
+                            <input type="hidden" name="usuario_consulta_id" value="<?php echo  $_SESSION['RbacUsuario']['id']; ?>">
 
                             <div class="form-group col-sm-12">
                                 <label>Mótivo</label>

@@ -57,6 +57,7 @@ class ConsultasController extends AppController
 
 
             $consulta = $this->Consultas->patchEntity($consulta, $this->request->getData());
+           // debug($consulta);die;
             if ($this->Consultas->save($consulta)) {
                 $this->Flash->success(__('Su consulta fue enviada correctamente, le responderemos a la brevedad.'));
 
@@ -76,7 +77,7 @@ class ConsultasController extends AppController
      */
     public function response($id = null)
     {
-        $consulta = $this->Consultas->get($id, contain: ['Cliente']);
+        $consulta = $this->Consultas->get($id, contain: ['UsuarioConsultas']);
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $this->Consultas->getConnection()->begin();
@@ -100,11 +101,11 @@ class ConsultasController extends AppController
                 $datos['respuesta']        = $consulta->respuesta;
                 $datos['aplicacion'] = "IPMAGNA";
                 $datos['template']   = 'consulta';
-                $datos['email']      = $consulta->cliente->usuario;
+                $datos['email']      = $consulta->usuario_consulta->usuario;
 
                 if ($this->sendEmail($datos)) {
                     $this->Consultas->getConnection()->commit();
-                    $this->Flash->success('Se ha enviado la respuesta al cliente ' .$consulta->cliente->usuario);
+                    $this->Flash->success('Se ha enviado la respuesta al cliente ' .$consulta->usuario_consulta->usuario);
                 } else {
                     $this->Consultas->getConnection()->rollback();
                     $this->Flash->error('No se pudo enviar el email al cliente');
@@ -129,7 +130,7 @@ class ConsultasController extends AppController
      */
     public function view($id = null)
     {
-        $consulta = $this->Consultas->get($id, contain: ['Cliente', 'UsuarioRespuestas', 'ConsultasEstados']);
+        $consulta = $this->Consultas->get($id, contain: ['UsuarioConsultas', 'UsuarioRespuestas', 'ConsultasEstados']);
 
         $this->set(compact('consulta'));
     }
@@ -146,9 +147,9 @@ class ConsultasController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $consulta = $this->Consultas->get($id);
         if ($this->Consultas->delete($consulta)) {
-            $this->Flash->success(__('The consulta has been deleted.'));
+            $this->Flash->success(__('The consulta fue eliminada correctamente.'));
         } else {
-            $this->Flash->error(__('The consulta could not be deleted. Please, try again.'));
+            $this->Flash->error(__('La consulta no puedo ser eliminada. Por favor intente nuevamente.'));
         }
 
         return $this->redirect(['action' => 'index']);
@@ -165,7 +166,7 @@ class ConsultasController extends AppController
     {
         $data = $this->getRequest()->getQuery();
         $conditions['where'] = [];
-        $conditions['contain'] = ['Cliente', 'UsuarioRespuestas', 'ConsultasEstados'];
+        $conditions['contain'] = ['UsuarioConsultas', 'UsuarioRespuestas', 'ConsultasEstados'];
 
         if (isset($data['nombre']) and !empty($data['nombre'])) {
             $conditions['where'][] = ['Consultas.usuario_id LIKE' => '%' . $data['nombre'] . '%'];

@@ -27,9 +27,9 @@ class Consulta extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'cliente_id' => true,
+        'usuario_consulta_id' => true,
         'usuario_respuesta_id' => true,
-        'consulsta_estado_id' => true,
+        'consulta_estado_id' => true,
         'motivo' => true,
         'respuesta' => true,
         'created' => true,

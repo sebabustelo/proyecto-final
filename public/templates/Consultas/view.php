@@ -22,7 +22,7 @@ use Cake\Core\Configure;
         <div class="col-xs-12">
             <div class="box box-primary  direct-chat direct-chat-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-fw  fa-envelope"></span> Consulta de Cliente <?php echo $consulta->cliente->usuario; ?></h3>
+                    <h3 class="box-title"> <span class="fa fa-fw  fa-envelope"></span> Consulta de Cliente <?php echo $consulta->usuario_consulta->usuario; ?></h3>
                     <div class="box-tools pull-right">
                         <a title="Listado de Consultas" href="/Consultas/index/" class="btn btn-sm btn-primary ">
                             <span class="fa fa-list"></span> <span class=" hidden-xs">Consultas</span>
@@ -36,13 +36,13 @@ use Cake\Core\Configure;
                 <div class="box-body">
                     <form id="ConstulasAddForm" name="ConstulasAddForm" role="form" action="/Consultas/response/<?php echo $consulta->id; ?>" method="POST">
                         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-                        <input type="hidden" name="cliente_id" value="<?php echo  $consulta->cliente->id; ?>">
+                        <input type="hidden" name="cliente_id" value="<?php echo  $consulta->usuario_consulta->id; ?>">
 
                         <div class="direct-chat-messages">
 
                             <div class="direct-chat-msg">
                                 <div class="direct-chat-info clearfix">
-                                    <span class="direct-chat-name pull-left"><?php echo "Consulta realizada por ".$consulta->cliente->usuario ?></span>
+                                    <span class="direct-chat-name pull-left"><?php echo "Consulta realizada por ".$consulta->usuario_consulta->usuario ?></span>
                                     <span class="direct-chat-timestamp pull-right"> <?php echo "Fecha " . $this->Time->format($consulta->created, 'dd/MM/Y HH:mm:ss') ?></span>
                                 </div>
                                 <img src="/img/user-profile.png" alt="Message User Image" class="direct-chat-img"><!-- /.direct-chat-img -->

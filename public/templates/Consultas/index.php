@@ -44,7 +44,7 @@ use Cake\Core\Configure;
                                 </select>
                             </div>
                             <div class="form-group col-md-2">
-                                <input type="text" name="cliente_id" placeholder="Usuario" class="form-control" id="cliente_id" aria-label="cliente_id" value="<?php echo (isset($filters['cliente_id'])) ? $filters['cliente_id'] : '' ?>">
+                                <input type="text" name="usuarios_consulta_id" placeholder="Usuario" class="form-control" id="cliente_id" aria-label="usuarios_consulta_id" value="<?php echo (isset($filters['cliente_id'])) ? $filters['cliente_id'] : '' ?>">
                             </div>
                             <div class="form-group col-md-6">
                                 <input type="text" name="motivo" placeholder="puede ingresar una parte del mótivo y el sistema buscará coincidencias" class="form-control" id="motivo" aria-label="motivo"
@@ -95,12 +95,8 @@ use Cake\Core\Configure;
             <div class="box box-primary">
                 <div class="box-header  with-border">
                     <h3 class="box-title"> <span class="fa fa-list"></span> Consultas de Clientes desde el Portal</h3>
-
                 </div>
-                <?php //debug($consultas);
-                ?>
                 <div class="box-body">
-
                     <?php if (isset($consultas)) { ?>
                         <?php if (count($consultas) > 0) { ?>
                             <div class="table-responsive">
@@ -119,7 +115,7 @@ use Cake\Core\Configure;
                                                 <?php echo $this->Paginator->sort('modified', 'Modificación'); ?>
                                             </th>
                                             <th class="col-md-3">
-                                                <?php echo $this->Paginator->sort('cliente.usuario', 'Usuario'); ?>
+                                                <?php echo $this->Paginator->sort('usuario_consulta.usuario', 'Usuario'); ?>
                                             </th>
                                             <th class="hidden-xs col-md-4">
                                                 <?php echo $this->Paginator->sort('motivo', 'Mótivo'); ?>
@@ -141,19 +137,15 @@ use Cake\Core\Configure;
                                                                 <span class="label label-warning "><?php echo $consulta->consultas_estado->nombre ?></span>
                                                             </span>
                                                         <?php
+                                                         break;
                                                         case 'RESPONDIDO':  ?>
                                                             <span class="pull-right-container">
                                                                 <span class="label label-success "><?php echo $consulta->consultas_estado->nombre ?></span>
                                                             </span>
                                                     <?php
                                                             break;
-                                                        default:
-                                                            # code...
-                                                            break;
+
                                                     } ?>
-
-
-
                                                 </td>
                                                 <td>
                                                     <?php echo $this->Time->format($consulta->created, 'dd/MM/Y HH:mm:ss'); ?>
@@ -162,7 +154,7 @@ use Cake\Core\Configure;
                                                     <?php echo $this->Time->format($consulta->modified, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo $consulta->cliente->usuario; ?>
+                                                    <?php echo $consulta->usuario_consulta->usuario; ?>
                                                 </td>
                                                 <td class="hidden-xs">
                                                     <?php echo $consulta->motivo; ?>
@@ -181,7 +173,7 @@ use Cake\Core\Configure;
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $consulta->id],
                                                         [
-                                                            'confirm' => __('¿Esta seguro de eliminar la consulta de {0}?', $consulta->cliente->usuario),
+                                                            'confirm' => __('¿Esta seguro de eliminar la consulta de {0}?', $consulta->usuario_consulta->usuario),
                                                             'class' => 'btn btn-danger btn-xs pencil',
                                                             'title' => 'Eliminar',
                                                             'escape' => false
