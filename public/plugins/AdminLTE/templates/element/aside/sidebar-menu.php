@@ -56,7 +56,7 @@ $action =   $this->request->getParam('action');
             <ul class="treeview-menu">
                 <?php //if ((isset($accionesPermitidas['Configuraciones']['index']) && $accionesPermitidas['Configuraciones']['index'])) {
                 ?>
-                <li>
+                <!-- <li>
                     <a href="<?php echo $this->Url->build('/pages/calendar'); ?>">
                         <i class="fa fa-calendar"></i> <span>Agenda</span>
                         <span class="pull-right-container">
@@ -64,7 +64,7 @@ $action =   $this->request->getParam('action');
                             <small class="label pull-right bg-blue">17</small>
                         </span>
                     </a>
-                </li>
+                </li> -->
                 <?php //}
                 ?>
                 <?php //if ((isset($accionesPermitidas['RbacUsuarios']['index']) && $accionesPermitidas['RbacUsuarios']['index'])) {

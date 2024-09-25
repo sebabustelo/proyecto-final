@@ -65,7 +65,7 @@ CREATE TABLE `configuracion` (
 
 LOCK TABLES `configuracion` WRITE;
 /*!40000 ALTER TABLE `configuracion` DISABLE KEYS */;
-INSERT INTO `configuracion` VALUES (3,'Mostrar Captcha','No'),(5,'skin_admin','black-light'),(16,'app_email','ipmagna@gmail.com'),(24,'Perfil Cliente','8');
+INSERT INTO `configuracion` VALUES (3,'Mostrar Captcha','Si'),(5,'skin_admin','black-light'),(16,'app_email','ipmagna@gmail.com'),(24,'Perfil Cliente','8');
 /*!40000 ALTER TABLE `configuracion` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -146,11 +146,11 @@ CREATE TABLE `detalles_pedidos` (
   `pedido_id` int(11) NOT NULL,
   `producto_id` int(11) NOT NULL,
   `cantidad` int(11) NOT NULL,
-  `precio_unitario` decimal(10,2) NOT NULL,
-  `total_linea` decimal(10,2) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `pedido_id` (`pedido_id`),
-  CONSTRAINT `detalles_pedidos_ibfk_1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE
+  KEY `fk_producto_id_idx` (`producto_id`),
+  CONSTRAINT `detalles_pedidos_ibfk_1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `fk_producto_id` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -184,7 +184,7 @@ CREATE TABLE `direcciones` (
   KEY `FK_direcciones_localidades_idx` (`localidad_id`),
   CONSTRAINT `FK_direcciones_localidades` FOREIGN KEY (`localidad_id`) REFERENCES `localidades` (`id`) ON UPDATE NO ACTION,
   CONSTRAINT `FK_direcciones_usuarios` FOREIGN KEY (`rbac_usuario_id`) REFERENCES `rbac_usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,7 +193,7 @@ CREATE TABLE `direcciones` (
 
 LOCK TABLES `direcciones` WRITE;
 /*!40000 ALTER TABLE `direcciones` DISABLE KEYS */;
-INSERT INTO `direcciones` VALUES (3,2970,'padilla','752','11','E',289,NULL);
+INSERT INTO `direcciones` VALUES (4,2971,'padilla','752','11','E',289,NULL);
 /*!40000 ALTER TABLE `direcciones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -226,6 +226,38 @@ INSERT INTO `localidades` VALUES (1,1,'25 de Mayo',1),(2,1,'3 de febrero',1),(3,
 UNLOCK TABLES;
 
 --
+-- Table structure for table `ordenes_medicas`
+--
+
+DROP TABLE IF EXISTS `ordenes_medicas`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `ordenes_medicas` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pedido_id` int(11) DEFAULT NULL,
+  `descripcion` varchar(500) DEFAULT '0',
+  `file_name` varchar(255) DEFAULT NULL,
+  `file_extension` varchar(10) DEFAULT NULL,
+  `file_size` int(11) DEFAULT NULL,
+  `file_path` varchar(255) DEFAULT NULL,
+  `created` datetime DEFAULT current_timestamp(),
+  `modified` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `pedido_id` (`pedido_id`),
+  CONSTRAINT `fk_pedidos` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `ordenes_medicas`
+--
+
+LOCK TABLES `ordenes_medicas` WRITE;
+/*!40000 ALTER TABLE `ordenes_medicas` DISABLE KEYS */;
+/*!40000 ALTER TABLE `ordenes_medicas` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `pedidos`
 --
 
@@ -235,9 +267,8 @@ DROP TABLE IF EXISTS `pedidos`;
 CREATE TABLE `pedidos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cliente_id` int(11) NOT NULL,
-  `fecha_pedido` datetime NOT NULL,
   `estado_id` int(11) NOT NULL,
-  `total` decimal(10,2) NOT NULL,
+  `fecha_pedido` datetime NOT NULL,
   `created` datetime DEFAULT current_timestamp(),
   `modified` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
@@ -458,7 +489,7 @@ CREATE TABLE `rbac_acciones_rbac_perfiles` (
   KEY `fk_ap_perfil_idx` (`rbac_perfil_id`),
   CONSTRAINT `fk_acion` FOREIGN KEY (`rbac_accion_id`) REFERENCES `rbac_acciones` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_perfil` FOREIGN KEY (`rbac_perfil_id`) REFERENCES `rbac_perfiles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3560 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3561 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -467,7 +498,7 @@ CREATE TABLE `rbac_acciones_rbac_perfiles` (
 
 LOCK TABLES `rbac_acciones_rbac_perfiles` WRITE;
 /*!40000 ALTER TABLE `rbac_acciones_rbac_perfiles` DISABLE KEYS */;
-INSERT INTO `rbac_acciones_rbac_perfiles` VALUES (3071,27,1),(3095,5,1),(3102,16,1),(3103,2,1),(3106,1,1),(3107,3,1),(3138,21,1),(3156,17,1),(3157,18,1),(3159,20,1),(3278,114,1),(3328,151,1),(3331,154,1),(3443,229,1),(3457,10,1),(3464,250,1),(3465,17,8),(3466,114,8),(3468,124,8),(3469,229,8),(3470,12,1),(3471,251,1),(3472,252,1),(3474,254,1),(3475,255,1),(3476,256,1),(3477,257,1),(3478,258,1),(3479,259,1),(3480,260,1),(3481,261,1),(3482,262,1),(3483,263,1),(3484,264,1),(3486,266,1),(3487,267,1),(3488,268,1),(3489,269,1),(3490,270,1),(3491,271,1),(3497,277,1),(3498,278,1),(3499,279,1),(3500,280,1),(3501,281,1),(3502,282,1),(3503,283,1),(3504,284,1),(3509,289,1),(3510,290,1),(3512,292,1),(3515,293,1),(3516,294,1),(3517,295,1),(3518,296,1),(3519,297,1),(3520,298,1),(3523,302,1),(3527,263,8),(3528,268,8),(3531,303,1),(3532,304,1),(3533,305,1),(3534,306,1),(3535,307,1),(3536,308,1),(3537,309,1),(3538,310,1),(3539,311,1),(3540,312,1),(3541,313,1),(3542,314,1),(3543,315,1),(3544,316,1),(3545,317,1),(3546,318,1),(3547,319,1),(3548,320,1),(3549,321,1),(3550,322,1),(3551,323,1),(3552,324,1),(3553,325,1),(3554,326,1),(3555,327,1),(3556,328,1),(3557,329,1),(3558,330,1),(3559,292,8);
+INSERT INTO `rbac_acciones_rbac_perfiles` VALUES (3071,27,1),(3095,5,1),(3102,16,1),(3103,2,1),(3106,1,1),(3107,3,1),(3138,21,1),(3156,17,1),(3157,18,1),(3159,20,1),(3278,114,1),(3328,151,1),(3331,154,1),(3443,229,1),(3457,10,1),(3464,250,1),(3465,17,8),(3466,114,8),(3468,124,8),(3469,229,8),(3470,12,1),(3471,251,1),(3472,252,1),(3474,254,1),(3475,255,1),(3476,256,1),(3477,257,1),(3478,258,1),(3479,259,1),(3480,260,1),(3481,261,1),(3482,262,1),(3483,263,1),(3484,264,1),(3486,266,1),(3487,267,1),(3488,268,1),(3489,269,1),(3490,270,1),(3491,271,1),(3497,277,1),(3498,278,1),(3499,279,1),(3500,280,1),(3501,281,1),(3502,282,1),(3503,283,1),(3504,284,1),(3509,289,1),(3510,290,1),(3512,292,1),(3515,293,1),(3516,294,1),(3517,295,1),(3518,296,1),(3519,297,1),(3520,298,1),(3523,302,1),(3527,263,8),(3528,268,8),(3531,303,1),(3532,304,1),(3533,305,1),(3534,306,1),(3535,307,1),(3536,308,1),(3537,309,1),(3538,310,1),(3539,311,1),(3540,312,1),(3541,313,1),(3542,314,1),(3543,315,1),(3544,316,1),(3545,317,1),(3546,318,1),(3547,319,1),(3548,320,1),(3549,321,1),(3550,322,1),(3551,323,1),(3552,324,1),(3553,325,1),(3554,326,1),(3555,327,1),(3556,328,1),(3557,329,1),(3558,330,1),(3559,292,8),(3560,251,8);
 /*!40000 ALTER TABLE `rbac_acciones_rbac_perfiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -517,7 +548,7 @@ CREATE TABLE `rbac_token` (
   KEY `IDX_TOKEN` (`token`),
   KEY `fk_rbac_usuario_idx` (`rbac_usuario_id`),
   CONSTRAINT `fk_rbac_usuarios` FOREIGN KEY (`rbac_usuario_id`) REFERENCES `rbac_usuarios` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=48 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=52 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -526,6 +557,7 @@ CREATE TABLE `rbac_token` (
 
 LOCK TABLES `rbac_token` WRITE;
 /*!40000 ALTER TABLE `rbac_token` DISABLE KEYS */;
+INSERT INTO `rbac_token` VALUES (51,2971,'ife4UlQPZqy4he7BfQT4IYZ6','2024-09-24 19:03:02','2024-09-24 19:03:02',1440);
 /*!40000 ALTER TABLE `rbac_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -559,7 +591,7 @@ CREATE TABLE `rbac_usuarios` (
   KEY `FK_tipo_documento` (`tipo_documento_id`),
   CONSTRAINT `FK_rbac_usuarios_rbac_perfiles` FOREIGN KEY (`perfil_id`) REFERENCES `rbac_perfiles` (`id`),
   CONSTRAINT `FK_tipo_documento` FOREIGN KEY (`tipo_documento_id`) REFERENCES `tipo_documentos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2971 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2972 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -568,7 +600,7 @@ CREATE TABLE `rbac_usuarios` (
 
 LOCK TABLES `rbac_usuarios` WRITE;
 /*!40000 ALTER TABLE `rbac_usuarios` DISABLE KEYS */;
-INSERT INTO `rbac_usuarios` VALUES (2901,1,'florenciatigani@hotmail.com','María Florencia','Tigani',1,'María Florencia',NULL,NULL,'33a47f95b1fca05597aec141e7a3221e90a20dac6e73c3e38b09931229212713','d57edf2d2082b0865e15d11edaecdb20',1,'2019-10-28 14:50:04','2024-08-30 18:01:45',NULL,'2923'),(2923,1,'sebabustelo@gmail.com','Sebastian','Bustelo',1,'28999186',NULL,NULL,'561dfe66b045305d0462693148c03140a89914d8f6ef08f88c8f4b284e24be35','79514e888b8f2acacc68738d0cbb803e',1,'2024-08-30 14:29:31','2024-08-30 14:29:31','2907','2907'),(2970,8,'zebabustelo@gmail.com','Walter Sebastian','Bustelo',1,'28999186',NULL,2147483647,'d685328db63350ce310941e16d676d09b88bd3e8630c334a883edf0ee0f8d4fa','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-09-23 18:54:10','2024-09-23 18:54:47',NULL,NULL);
+INSERT INTO `rbac_usuarios` VALUES (2901,1,'florenciatigani@hotmail.com','María Florencia','Tigani',1,'María Florencia',NULL,NULL,'33a47f95b1fca05597aec141e7a3221e90a20dac6e73c3e38b09931229212713','d57edf2d2082b0865e15d11edaecdb20',1,'2019-10-28 14:50:04','2024-08-30 18:01:45',NULL,'2923'),(2923,1,'sebabustelo@gmail.com','Sebastian','Bustelo',1,'28999186',NULL,NULL,'561dfe66b045305d0462693148c03140a89914d8f6ef08f88c8f4b284e24be35','79514e888b8f2acacc68738d0cbb803e',1,'2024-08-30 14:29:31','2024-08-30 14:29:31','2907','2907'),(2971,8,'zebabustelo@gmail.com','Walter Sebastian','Bustelo',1,'28999186',NULL,1140876458,'66f35bfdcc1ec10b11e0de2537e8df5816732d929891c3ac1018b82343876b6e','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-09-24 17:08:56','2024-09-24 18:36:41',NULL,NULL);
 /*!40000 ALTER TABLE `rbac_usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -609,4 +641,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-09-23 15:41:40
+-- Dump completed on 2024-09-24 17:44:25

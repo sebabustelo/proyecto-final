@@ -218,9 +218,9 @@ return [
     'EmailTransport' => [
         'default' => [
             'className' => 'Smtp',
-            'host' => env('EMAIL_HOST',null),
-            'port' => env('EMAIL_PORT',null),
-            'timeout' => env('EMAIL_TIMEOUT',null),
+            'host' => env('EMAIL_HOST', null),
+            'port' => env('EMAIL_PORT', null),
+            'timeout' => env('EMAIL_TIMEOUT', null),
             'username' => env('EMAIL_USERNAME', 'sebabustelo@gmail.com'),
             'password' => env('EMAIL_PASSWORD', null),
             'client' => null,
@@ -408,7 +408,10 @@ return [
      * To use database sessions, load the SQL file located at config/schema/sessions.sql
      */
     'Session' => [
-        'defaults' => 'php',
+        'defaults' => 'cache',
+        // 'ini' => [
+        //     'session.save_path' => '../tmp/sessions'
+        // ]
     ],
 
     'EmailTransport' => [
