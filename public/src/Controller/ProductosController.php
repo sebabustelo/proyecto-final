@@ -124,6 +124,21 @@ class ProductosController extends AppController
         $this->set(compact('producto', 'categorias', 'proveedores'));
     }
 
+    
+    /**
+     * Categorias method
+     *
+     * @param string|null $id Categosrias id.
+     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function categorias($id = null)
+    {
+        $categoria = $this->Productos->Categorias->get($id);
+        $productos = $this->Productos->find()->where(['categoria_id'=>$id])->contain(['Categorias','ProductosArchivos'])->all();
+        $this->set(compact('productos','categoria'));
+    }
+
     /**
      * Delete method
      *

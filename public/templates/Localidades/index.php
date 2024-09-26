@@ -21,18 +21,16 @@
                 <div class="box-header  with-border">
                     <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> Buscador</h3>
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
                 <div class="box-body">
-                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter"
-                        action="/Localidades/index">
+                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/Localidades/index">
                         <div class="form-row">
                             <div class="form-group col-md-4">
 
                                 <select name="provincia_id" class="form-control">
-                                    <option  value="">Seleccione un provincia</option>
+                                    <option value="">Seleccione un provincia</option>
                                     <?php foreach ($provincias as $k => $provincia) { ?>
                                         <?php if ($filters['provincia_id'] == $k) { ?>
                                             <option selected value="<?php echo $k ?>"><?php echo $provincia; ?></option>
@@ -45,9 +43,7 @@
 
                             </div>
                             <div class="form-group col-md-6">
-                                <input type="text" name="nombre" placeholder="nombre" class="form-control"
-                                    id="cuit" aria-label="cuit"
-                                    value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
+                                <input type="text" name="nombre" placeholder="nombre" class="form-control" id="cuit" aria-label="cuit" value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
                             </div>
                             <div class=" form-group col-sm-2">
                                 <label class="btn btn-default btn-block">
@@ -108,8 +104,7 @@
                                 <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nueva Localidad</span>
                             </a>
                         <?php } ?>
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
 
@@ -120,34 +115,34 @@
                                 <table id="table-responsive" class="table table-hover table-striped table-ajax">
                                     <thead>
                                         <tr>
-                                            <th>
+                                            <th class="col-md-2">
                                                 <?php echo $this->Paginator->sort('Localidades.provincia_id', 'Provincia') ?>
                                             </th>
-                                            <th>
+                                            <th class="col-md-6">
                                                 <?php echo $this->Paginator->sort('Localidades.nombre', 'Localidad'); ?>
                                             </th>
 
-                                            <th>
+                                            <th class=" col-md-2">
                                             </th>
-                                            <th>
+                                            <th class=" col-md-2">
                                             </th>
                                         </tr>
                                     </thead>
                                     <tfoot>
-                                        <tr>
-                                            <td>
+                                        <tr >
+                                            <td colspan="12" >
                                                 <div class="text-center">
                                                     <ul class="pagination justify-content-center">
                                                         <li class="page-item">
-                                                            <?php echo $this->Paginator->first('PRIMERO'); ?>
-                                                            <?php echo $this->Paginator->prev('ANTERIOR'); ?>
+                                                            <?php echo $this->Paginator->first('<<'); ?>
+                                                            <?php echo $this->Paginator->prev('<'); ?>
                                                         </li>
                                                         <li class="page-item">
-                                                            <?php echo $this->Paginator->numbers(); ?>
+                                                            <?php echo $this->Paginator->numbers(['modulus'=>4]); ?>
                                                         </li>
                                                         <li class="page-item">
-                                                            <?php echo $this->Paginator->next('SIGUIENTE'); ?>
-                                                            <?php echo $this->Paginator->last('ULTIMO'); ?>
+                                                            <?php echo $this->Paginator->next('>'); ?>
+                                                            <?php echo $this->Paginator->last('>>'); ?>
                                                         </li>
                                                     </ul>
                                                     <p class="text-center">
@@ -161,17 +156,17 @@
                                     <tbody>
                                         <?php foreach ($localidades as $localidad) {  ?>
                                             <tr>
-                                                <td>
+                                                <td class="col-md-2">
                                                     <?php echo $localidad->provincia->nombre; ?>
                                                 </td>
-                                                <td>
+                                                <td class="col-md-6">
                                                     <?php echo $localidad->nombre; ?>
                                                 </td>
 
-                                                <td>
+                                                <td class="col-md-2">
                                                     <a href="/Localidades/edit/<?php echo $localidad->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                                                 </td>
-                                                <td>
+                                                <td class="col-md-">
                                                     <?= $this->Form->postLink(
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $localidad->id],

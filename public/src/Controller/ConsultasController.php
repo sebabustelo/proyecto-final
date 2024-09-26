@@ -31,11 +31,12 @@ class ConsultasController extends AppController
         $conditions = $this->getConditions();
         $consultas = $this->Consultas->find()
             ->where($conditions['where'])
-            ->contain($conditions['contain']);
+            ->contain($conditions['contain']);          
 
         $this->set('filters', $this->getRequest()->getQuery());
         $this->set('consultas', $this->paginate($consultas));
         $this->set('estados', $this->Consultas->ConsultasEstados->find('all')->all());
+       
     }
 
     /**

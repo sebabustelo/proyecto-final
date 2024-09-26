@@ -232,25 +232,32 @@ $action =   $this->request->getParam('action');
 
     <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Cliente </li>
 
-    <?php //if ((isset($accionesPermitidas['Categorias']['view']) && $accionesPermitidas['Categorias']['view'])) {
-    ?>
-    <li class="treeview">
-        <a href="#">
-            <i class="fa fa-fw  fa-cubes"></i> <span>Categorias</span>
-            <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-            </span>
-        </a>
-        <ul class="treeview-menu">
-            <?php foreach ($categoriasMenu as $id => $categoria) : ?>
-                <li><a href="<?php echo $this->Url->build(['controller' => 'Categorias', 'action' => 'view', $id]); ?>">
-                        <i class="fa fa-circle-o"></i> <?php echo h($categoria); ?>
-                    </a></li>
-            <?php endforeach; ?>
-        </ul>
-    </li>
-    <?php //}
-    ?>
+    <?php if ((isset($accionesPermitidas['Productos']['categorias']) && $accionesPermitidas['Productos']['categorias'])) { ?>
+        <li class="treeview <?php echo ($controller == 'Productos' && ($action == 'categorias') ? ' active' : ''); ?>">
+            <a href="#">
+                <i class="fa fa-fw  fa-cubes"></i> <span>Categorias</span>
+                <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                </span>
+            </a>
+
+            <ul class="treeview-menu">
+                <?php foreach ($categoriasMenu as $id => $categoria) : ?>
+                    <?php
+                    if ($controller == 'Productos' and $action == 'categorias') {
+                        $active = ($id == $this->request->getParam('pass')[0]) ? ' active' : '';
+                    } else {
+                        $active = '';
+                    } ?>
+                    <li class="<?php echo $active; ?>">
+                        <a href="<?php echo $this->Url->build(['controller' => 'Productos', 'action' => 'categorias', $id]); ?>">
+                            <i class="fa fa-circle-o"></i> <?php echo h($categoria); ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </li>
+    <?php }   ?>
     <?php if ((isset($accionesPermitidas['Productos']['catalogoCliente']) && $accionesPermitidas['Productos']['catalogoCliente'])) { ?>
         <li class=" <?php echo ($controller == 'Productos' && ($action == 'catalogoCliente') ? ' active' : ''); ?>">
             <a href="<?php echo $this->Url->build('/Productos/catalogoCliente'); ?>">
