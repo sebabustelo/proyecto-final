@@ -366,7 +366,9 @@ class RbacUsuariosController extends RbacController
                 $data['activo'] = 0;
                 $rbacUsuario = $this->RbacUsuarios->newEntity($data, ['associated' => ['RbacPerfiles', 'Direcciones']]);
 
+
                 if ($rbacUsuario->getErrors()) {
+
                     foreach ($rbacUsuario->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {
                             $this->Flash->error(__($error));
@@ -421,7 +423,7 @@ class RbacUsuariosController extends RbacController
         }
 
         $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
-        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->order('nombre')->all());
+        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->where(['activo'=>1])->order('nombre')->all());
     }
 
     /**

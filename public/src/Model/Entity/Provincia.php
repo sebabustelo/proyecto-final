@@ -24,5 +24,6 @@ class Provincia extends Entity
      */
     protected array $_accessible = [
         'nombre' => true,
+        'activo' => true,
     ];
 }

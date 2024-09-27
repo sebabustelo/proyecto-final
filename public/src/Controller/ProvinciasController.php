@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -86,16 +87,26 @@ class ProvinciasController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $provincia = $this->Provincias->get($id);
+
         if ($this->Provincias->delete($provincia)) {
             $this->Flash->success(__('La provincia ha sido eliminada.'));
         } else {
-            $this->Flash->error(__('No se pudo eliminar la provincia. Por favor, inténtalo de nuevo.'));
+            if ($provincia->getErrors()) {
+                foreach ($provincia->getErrors() as $field => $errors) {
+                    foreach ($errors as $error) {
+                        $this->Flash->error(__($error));
+                    }
+                }
+            } else {
+                $this->Flash->error(__('No se pudo eliminar la provincia . Por favor, inténtalo de nuevo.'));
+            }
         }
 
         return $this->redirect(['action' => 'index']);
     }
 
-     /**
+
+    /**
      * getCondition method
      *
      * @param string|null $data Data send by the Form .

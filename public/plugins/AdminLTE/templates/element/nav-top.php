@@ -55,7 +55,7 @@ use Cake\Core\Configure; ?>
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
                 <!-- Messages: style can be found in dropdown.less-->
-                <li class="dropdown messages-menu">
+                <!-- <li class="dropdown messages-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-cart-arrow-down"></i>
                         <span class="label label-success">2</span>
@@ -63,9 +63,8 @@ use Cake\Core\Configure; ?>
                     <ul class="dropdown-menu">
                         <li class="header">Tienes 2 productos</li>
                         <li>
-                            <!-- inner menu: contains the actual data -->
                             <ul class="menu">
-                                <li><!-- start message -->
+                                <li>
                                     <a href="#">
                                         <div class="pull-left">
                                             <?php echo $this->Html->image('productos/kmod-rev.jpg', array('class' => 'img-circle', 'alt' => 'User Image')); ?>
@@ -78,7 +77,6 @@ use Cake\Core\Configure; ?>
 
                                     </a>
                                 </li>
-                                <!-- end message -->
 
                                 <li>
                                     <a href="#">
@@ -95,11 +93,11 @@ use Cake\Core\Configure; ?>
 
                             </ul>
                         </li>
-                        <!-- <li class="footer"><a href="#">Ver todos los mensajes</a></li> -->
+                        <li class="footer"><a href="#">Ver todos los mensajes</a></li> >
                     </ul>
-                </li>
+                </li> -->
                 <!-- Notifications: style can be found in dropdown.less -->
-                <li class="dropdown notifications-menu">
+                <!-- <li class="dropdown notifications-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <i class="fa fa-bell-o"></i>
                         <span class="label label-warning">1</span>
@@ -107,7 +105,7 @@ use Cake\Core\Configure; ?>
                     <ul class="dropdown-menu">
                         <li class="header">Tienes notificaciones</li>
                         <li>
-                            <!-- inner menu: contains the actual data -->
+
                             <ul class="menu" style="overflow: hidden; width: 100%; ">
                                 <li>
                                     <a href="#">
@@ -118,7 +116,7 @@ use Cake\Core\Configure; ?>
                         </li>
 
                     </ul>
-                </li>
+                </li> -->
 
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">

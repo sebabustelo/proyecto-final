@@ -22,7 +22,7 @@ use Cake\Core\Configure;
         <div class="col-xs-12">
             <div class="box box-primary  direct-chat direct-chat-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-fw  fa-envelope"></span> Consulta de Cliente <?php echo $consulta->usuario_consulta->usuario; ?></h3>
+                    <h3 class="box-title"> <span class="fa fa-fw  fa-envelope"></span> Consulta de Cliente <?php echo $consulta->usuario_consultagit ->usuario; ?></h3>
                     <div class="box-tools pull-right">
                         <a title="Listado de Consultas" href="/Consultas/index/" class="btn btn-sm btn-primary ">
                             <span class="fa fa-list"></span> <span class=" hidden-xs">Consultas</span>

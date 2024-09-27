@@ -65,7 +65,7 @@ class AppController extends Controller
 
 
         $categoriasTable = $this->fetchTable('Categorias');
-        $categorias = $categoriasTable->find('list')->where(['Categorias.activo'=>1])->toArray();
+        $categorias = $categoriasTable->find('list')->where(['Categorias.activo'=>1])->orderBy(['nombre'])->toArray();
         $this->set('categoriasMenu', $categorias);
 
         $session = $this->request->getSession();

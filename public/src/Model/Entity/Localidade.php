@@ -26,5 +26,6 @@ class Localidade extends Entity
     protected array $_accessible = [
         'provincia_id' => true,
         'nombre' => true,
+        'activo' => true,
     ];
 }

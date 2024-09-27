@@ -1,12 +1,13 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
 
-use Cake\ORM\Query\SelectQuery;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
+use Cake\ORM\Exception\PersistenceFailedException;
 
 /**
  * Provincias Model
@@ -41,11 +42,14 @@ class ProvinciasTable extends Table
         $this->setDisplayField('nombre');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Localidades', [
+
+
+        $this->hasMany('Localidades', [
             'foreignKey' => 'provincia_id',
             'joinType' => 'INNER',
         ]);
     }
+
 
     /**
      * Default validation rules.
@@ -57,10 +61,14 @@ class ProvinciasTable extends Table
     {
         $validator
             ->scalar('nombre')
-            ->maxLength('nombre', 100)
-            ->requirePresence('nombre', 'create')
-            ->notEmptyString('nombre')
-            ->add('nombre', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->maxLength('nombre', 100, 'El nombre no puede ser mayor a 100 caracteres')
+            ->requirePresence('nombre', 'create', 'El nombre es obligatorio')
+            ->notEmptyString('nombre', 'El nombre no puede ser vació')
+            ->add('nombre', 'unique', ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Ya existe una Provincia con ese nombre. Por favor, elija un nombre diferente.']);
+
+        $validator
+            ->boolean('activo')
+            ->notEmptyString('activo');
 
         return $validator;
     }
@@ -77,5 +85,26 @@ class ProvinciasTable extends Table
         $rules->add($rules->isUnique(['nombre']), ['errorField' => 'nombre']);
 
         return $rules;
+    }
+
+    /**
+     * Modifies the entity before saving it to the database.
+     * Converts the 'nombre' field to uppercase the first letter before the save operation.
+     *
+     * @param \Cake\Event\EventInterface $event The event object.
+     * @param \Cake\ORM\Entity $entity The entity being saved.
+     * @param \ArrayObject $options Additional options for the save operation.
+     * @return void
+     */
+    public function beforeDelete($event, $entity, $options)
+    {
+        $localidadesCount = $this->Localidades->find()
+            ->where(['provincia_id' => $entity->id])
+            ->count();
+
+        if ($localidadesCount > 0) {
+            $entity->setError('delete', __('No se puede eliminar la provincia porque está asociada a una o más localidades.'));
+            return false;
+        }
     }
 }

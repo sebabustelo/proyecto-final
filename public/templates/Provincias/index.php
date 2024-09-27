@@ -104,30 +104,30 @@
                                 <table class="table table-hover table-striped table-ajax">
                                     <thead>
                                         <tr>
-                                            <th>
+                                            <th class="col-md-10">
                                                 <?php echo $this->Paginator->sort('nombre', 'Nombre'); ?>
                                             </th>
-                                            <th>
+                                            <th class="col-md-1">
                                             </th>
-                                            <th>
+                                            <th class="col-md-1">
                                             </th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <td>
+                                            <td colspan="12">
                                                 <div class="text-center">
                                                     <ul class="pagination justify-content-center">
                                                         <li class="page-item">
-                                                            <?php echo $this->Paginator->first('PRIMERO'); ?>
-                                                            <?php echo $this->Paginator->prev('ANTERIOR'); ?>
+                                                            <?php echo $this->Paginator->first('<<'); ?>
+                                                            <?php echo $this->Paginator->prev('<'); ?>
                                                         </li>
                                                         <li class="page-item">
                                                             <?php echo $this->Paginator->numbers(); ?>
                                                         </li>
                                                         <li class="page-item">
-                                                            <?php echo $this->Paginator->next('SIGUIENTE'); ?>
-                                                            <?php echo $this->Paginator->last('ULTIMO'); ?>
+                                                            <?php echo $this->Paginator->next('>'); ?>
+                                                            <?php echo $this->Paginator->last('>>'); ?>
                                                         </li>
                                                     </ul>
                                                     <p class="text-center">
@@ -141,13 +141,13 @@
                                     <tbody>
                                         <?php foreach ($provincias as $provincia) {  ?>
                                             <tr>
-                                                <td>
+                                                <td class="col-md-10">
                                                     <?php echo $provincia->nombre; ?>
                                                 </td>
-                                                <td>
+                                                <td class="col-md-1">
                                                     <a href="/Provincias/edit/<?php echo $provincia->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                                                 </td>
-                                                <td>
+                                                <td class="col-md-1">
                                                     <?= $this->Form->postLink(
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $provincia->id],

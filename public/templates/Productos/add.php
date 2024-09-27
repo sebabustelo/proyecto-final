@@ -71,7 +71,8 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Precio</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio" class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
+                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio"
+                                class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>

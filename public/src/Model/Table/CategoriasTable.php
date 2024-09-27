@@ -61,7 +61,7 @@ class CategoriasTable extends Table
     {
         $validator
             ->scalar('nombre')
-            ->maxLength('nombre', 200, 'El nombre no puede ser mayor a 100 caracteres')
+            ->maxLength('nombre', 200, 'El nombre no puede ser mayor a 200 caracteres')
             ->requirePresence('nombre', 'create', 'El nombre es obligatorio')
             ->notEmptyString('nombre', 'El nombre es obligatorio')
             ->add('nombre', 'unique', ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Ya existe una categoría con ese nombre. Por favor, elija un nombre diferente.']);
@@ -107,7 +107,8 @@ class CategoriasTable extends Table
             ->count();
 
         if ($productosCount > 0) {
-            throw new PersistenceFailedException($entity, __('No se puede eliminar la categoría porque tiene productos asociados.'));
+            $entity->setError('delete', __('No se puede eliminar la categoría porque está asociada a uno o más productos.'));
+            return false;
         }
     }
 

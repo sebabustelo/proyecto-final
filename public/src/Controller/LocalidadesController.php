@@ -99,11 +99,19 @@ class LocalidadesController extends AppController
     public function delete($id = null)
     {
         $this->request->allowMethod(['post', 'delete']);
-        $localidade = $this->Localidades->get($id);
-        if ($this->Localidades->delete($localidade)) {
+        $localidad = $this->Localidades->get($id);
+        if ($this->Localidades->delete($localidad)) {
             $this->Flash->success(__('La localidad ha sido eliminada.'));
         } else {
-            $this->Flash->error(__('No se pudo eliminar la localidad. Por favor, inténtalo de nuevo.'));
+            if ($localidad->getErrors()) {
+                foreach ($localidad->getErrors() as $field => $errors) {
+                    foreach ($errors as $error) {
+                        $this->Flash->error(__($error));
+                    }
+                }
+            } else {
+                $this->Flash->error(__('No se pudo eliminar la localidad. Por favor, inténtalo de nuevo.'));
+            }
         }
 
         return $this->redirect(['action' => 'index']);

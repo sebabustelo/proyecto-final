@@ -69,7 +69,7 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Stock</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock" class="form-control" value="<?php echo $producto->stock; ?>">
+                                <input required type="number" maxlength="3" placeholder="Ingrese el stock" class="form-control" value="<?php echo $producto->stock; ?>">
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -78,7 +78,8 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Precio</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio" class="form-control" value="<?php echo $producto->precio; ?>">
+                                <input required type="number" maxlength="6"
+                                placeholder="Ingrese el precio" name="precio" step="0.01" class="form-control" value="<?php echo $producto->precio; ?>">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -87,7 +88,7 @@
                             </div>
                             <div class="form-group col-sm-12">
                                 <label>Descripción</label>
-                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción" class="form-control" name="descripcion_breve"><?php echo $producto->descripcion_breve; ?></textarea>
+                                <textarea required maxlength="2000" rows="5" placeholder="Ingrese la descripción" class="form-control" name="descripcion_breve"><?php echo $producto->descripcion_breve; ?></textarea>
                                 <?php if ($producto->getError('descripcion_breve')) { ?>
                                     <?php foreach ($producto->getError('descripcion_breve') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
