@@ -2,20 +2,21 @@
 
 /**
  * @var \App\View\AppView $this
- * @var iterable<\App\Model\Entity\RbacUsuarios> $rbacUsuario
+ * @var \Rbac\Model\Entity\RbacUsuarios $rbacUsuario
  */
+
 use Cake\Core\Configure;
 ?>
 <section class="content-header">
     <h1>
-    <?php echo Configure::read('Menu.GestionPermisos') ?>
+        <?php echo Configure::read('Menu.GestionPermisos') ?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa fa-users"></i> Usuarios</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Editar</li>
     </ol>
 </section>
-<section  class="content">
+<section class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
@@ -32,12 +33,9 @@ use Cake\Core\Configure;
                     <div class="form-row">
                         <form id="RbacUsuariosAddForm" name="RbacUsuariosAddForm" role="form" action="/rbac/rbacUsuarios/edit/<?php echo $rbacUsuario->id; ?>" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-
                             <div class="form-group col-sm-4">
                                 <label id="lblUsuario" for="usuario">Usuario (mail)</label>
-                                <input type="email" name="usuario" required value="<?php echo $rbacUsuario->usuario; ?>"
-                                oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
-                                placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
+                                <input type="email" name="usuario" required value="<?php echo $rbacUsuario->usuario; ?>" oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')" placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
                                 <?php foreach ($rbacUsuario->getError('usuario') as $k => $v) { ?>
                                     <div class="form-group   label label-danger">
                                         <span class=" "> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
@@ -85,12 +83,57 @@ use Cake\Core\Configure;
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="documento">Documento</label>
-                                <input required type="text" placeholder="Ingrese el número de documento" class="form-control" value="<?php echo $rbacUsuario->documento; ?>" name="documento" oninvalid="this.setCustomValidity('Debe completar el número de documento')" oninput="this.setCustomValidity('')">
+                                <input required type="text"  placeholder="Ingrese el número de documento"  maxlength="20"
+                                class="form-control" value="<?php echo $rbacUsuario->documento; ?>" name="documento" 
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');"  
+                                onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();" >
+                            </div>
+                           <?php //debug($rbacUsuario->direcciones[0] ) ?>
+                            <div class="form-group col-sm-4">
+                                <label>Provincia</label><br>
+                                <select id="provincia_id" required name="direcciones[0][localidade][provincia][id]" class="form-control">
+                                    <option selected value="">Seleccione una provincia</option>
+                                    <?php foreach ($provincias as $id => $provincia) { ?>
+                                        <?php if ($rbacUsuario->direcciones[0]->localidade['provincia']['id'] == $id) { ?>
+                                            <option selected value="<?php echo $id ?>"><?php echo $provincia; ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $id ?>"><?php echo $provincia; ?></option>
+                                        <?php } ?>
+                                        
+                                    <?php } ?>
+                                </select>
                             </div>
                             <div class="form-group col-sm-4">
-                                <label for="direccion">Dirección</label>
-                                <input required type="text" placeholder="Ingrese el número de documento" class="form-control" name="direccion" value="<?php echo $rbacUsuario->direccion; ?>" oninvalid="this.setCustomValidity('Debe completar la dirección')" oninput="this.setCustomValidity('')">
+                                <label>Localidad</label><br>
+                                <select required id="localidad_id" name="direcciones[0][localidad_id]" class="form-control">
+                                    <option selected value="">Seleccione una localidad</option>
+                                </select>
                             </div>
+                            <div class="form-group col-sm-2">
+                                <label for="direccion">Calle</label>
+                                <input name="direcciones[0][calle]" required 
+                                value="<?php echo $rbacUsuario->direcciones[0]->calle ; ?>" type="text" class="form-control" 
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"                                
+                                 placeholder="Calle" maxlength="100">
+                            </div>
+
+                            <div class="form-group col-sm-2">
+                                <label for="direccion">Número</label>
+                                <input name="direcciones[0][numero]" required type="number" min="1" class="form-control"
+                                value="<?php echo $rbacUsuario->direcciones[0]->numero ?>" placeholder="Número" maxlength="4"
+                                >
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label for="direccion">Piso</label>
+                                <input name="direcciones[0][piso]" type="text" class="form-control"
+                                value="<?php echo $rbacUsuario->direcciones[0]->piso ?>" placeholder="Piso" maxlength="3">
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label for="direccion">Depto</label>
+                                <input name="direcciones[0][departamento]" type="text" class="form-control"
+                                value="<?php echo $rbacUsuario->direcciones[0]->departamento ?>" placeholder="Depto" maxlength="10">
+                            </div>
+
                             <div class="form-group col-sm-3">
                                 <label for="rbac-perfiles-ids">Perfil</label><br>
                                 <select required id="rbac-perfiles-ids" name="rbac_perfiles[_ids][]" class="form-control">
@@ -115,6 +158,7 @@ use Cake\Core\Configure;
                             <?php
                             if ($this->request->getSession()->check('previousUrl')) {
                                 $url = $this->request->getSession()->read('previousUrl');
+                                
                                 if (strpos($url, "Usuarios") !== false or strpos($url, "usuarios") !== false) {
                                     $url = $this->request->getSession()->read('previousUrl');
                                 } else {
@@ -123,7 +167,9 @@ use Cake\Core\Configure;
                             } else {
                                 $url = '/rbac/rbacUsuarios/index';
                             }
+                            
                             ?>
+                            
                             <div class="form-group col-sm-12 text-center">
                                 <a href="<?php echo $url; ?>" class="btn btn-danger">
                                     <span class="glyphicon glyphicon-remove"></span> Cancelar</a>
@@ -141,3 +187,47 @@ use Cake\Core\Configure;
         <!-- /.col -->
     </div>
 </section>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var provinciaSelect = document.getElementById('provincia_id');
+        var localidadSelect = document.getElementById('localidad_id');
+
+        provinciaSelect.addEventListener('change', function() {
+            var provinciaId = this.value;
+
+
+            if (provinciaId) {
+
+                fetch('/localidades/localidades/' + provinciaId)
+
+                    .then(response => response.json())
+                    .then(data => {
+                        localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
+
+                        data.forEach(function(localidad) {
+
+                            localidadSelect.innerHTML += '<option value="' + localidad.id + '">' + localidad.nombre + '</option>';
+                        });
+                    })
+                    .catch(error => console.error('Error al cargar localidades:', error));
+            } else {
+                localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
+            }
+        });
+
+        document.getElementById('provincia_id').dispatchEvent(new Event('change'));
+
+        setTimeout(function() {
+            
+            var localidadId = "<?php echo $rbacUsuario->direcciones[0]->localidad_id ?? ''; ?>";
+            if (localidadId) {
+                document.getElementById('localidad_id').value = localidadId;
+            }
+        }, 1000); // Ajusta el tiempo según sea necesario
+
+
+
+    });
+</script>

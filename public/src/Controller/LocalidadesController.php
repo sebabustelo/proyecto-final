@@ -100,9 +100,11 @@ class LocalidadesController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $localidad = $this->Localidades->get($id);
+        //debug($localidad);die;
         if ($this->Localidades->delete($localidad)) {
             $this->Flash->success(__('La localidad ha sido eliminada.'));
         } else {
+            
             if ($localidad->getErrors()) {
                 foreach ($localidad->getErrors() as $field => $errors) {
                     foreach ($errors as $error) {

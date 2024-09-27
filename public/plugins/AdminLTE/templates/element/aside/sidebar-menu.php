@@ -169,7 +169,7 @@ $action =   $this->request->getParam('action');
         ?>
             <li class="treeview <?php echo $active . " " . $menu_open ?>">
                 <a href="#">
-                    <i class="fa fa-laptop"></i> <span>Parámetricas</span>
+                    <i class="fa fa-laptop"></i> <span>Paramétricas</span>
                     <span class="pull-right-container">
                         <i class="fa fa-angle-left pull-right"></i>
                     </span>

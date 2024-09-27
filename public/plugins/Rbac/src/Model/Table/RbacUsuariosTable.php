@@ -6,7 +6,25 @@ use Cake\ORM\Table;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 
-
+/**
+ * RbacUsuarios Model
+ *
+ * @method \App\Model\Entity\RbacUsuario newEmptyEntity()
+ * @method \App\Model\Entity\RbacUsuario newEntity(array $data, array $options = [])
+ * @method array<\App\Model\Entity\RbacUsuario> newEntities(array $data, array $options = [])
+ * @method \App\Model\Entity\RbacUsuario get(mixed $primaryKey, array|string $finder = 'all', \Psr\SimpleCache\CacheInterface|string|null $cache = null, \Closure|string|null $cacheKey = null, mixed ...$args)
+ * @method \App\Model\Entity\RbacUsuario findOrCreate($search, ?callable $callback = null, array $options = [])
+ * @method \App\Model\Entity\RbacUsuario patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method array<\App\Model\Entity\RbacUsuario> patchEntities(iterable $entities, array $data, array $options = [])
+ * @method \App\Model\Entity\RbacUsuario|false save(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method \App\Model\Entity\RbacUsuario saveOrFail(\Cake\Datasource\EntityInterface $entity, array $options = [])
+ * @method iterable<\Rbac\Model\Entity\RbacUsuario>|\Cake\Datasource\ResultSetInterface<\Rbac\Model\Entity\RbacUsuario>|false saveMany(iterable $entities, array $options = [])
+ * @method iterable<\Rbac\Model\Entity\RbacUsuario>|\Cake\Datasource\ResultSetInterface<\Rbac\Model\Entity\RbacUsuario> saveManyOrFail(iterable $entities, array $options = [])
+ * @method iterable<\Rbac\Model\Entity\RbacUsuario>|\Cake\Datasource\ResultSetInterface<\Rbac\Model\Entity\RbacUsuario>|false deleteMany(iterable $entities, array $options = [])
+ * @method iterable<\Rbac\Model\Entity\RbacUsuario>|\Cake\Datasource\ResultSetInterface<\Rbac\Model\Entity\RbacUsuario> deleteManyOrFail(iterable $entities, array $options = [])
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
+ */
 class RbacUsuariosTable extends Table
 {
 
@@ -43,7 +61,6 @@ class RbacUsuariosTable extends Table
             'className'        => 'Rbac.Direcciones',
             'foreignKey' => 'rbac_usuario_id',
         ]);
-
     }
 
     /**
@@ -100,7 +117,29 @@ class RbacUsuariosTable extends Table
             ->maxLength('modified_by', 16, 'El campo debe ser menor a 16 caracteres.')
             ->allowEmptyString('modified_by');
 
+        $validator
+            ->notEmptyString('documento', 'El documento es obligatorio.')
+            ->add('documento', 'validFormat', [
+                'rule' => 'notBlank',
+                'message' => 'El documento no puede contener caracteres inválidos.'
+            ])
+            ->add('documento', 'validFormat', [
+                'rule' => [$this, 'validarDocumento'],
+                'message' => 'El Documento no es válido, solo puede tener números y letras.',
+            ]);;
+
         return $validator;
+    }
+
+    /**
+     * Valida que el CUIT tenga un formato correcto y que pase la verificación del dígito verificador.
+     *
+     * @param string $cuit El CUIT a validar.
+     * @return bool True si el CUIT es válido, False en caso contrario.
+     */
+    public function validarDocumento($documento): bool
+    {
+        return preg_match('/^[a-zA-Z0-9]*$/', $documento);
     }
 
     public function validationPassword(Validator $validator): Validator

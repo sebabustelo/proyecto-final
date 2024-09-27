@@ -21,12 +21,6 @@
         -moz-appearance: textfield;
     }
 </style>
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-
-    });
-</script>
 <?php $this->layout = 'AdminLTE.register'; ?>
 <?php
 
@@ -37,7 +31,7 @@ use Cake\Core\Configure; ?>
     </div>
     <div class="form-group has-feedback">
         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-        <input name="usuario" required type="email" class="form-control" placeholder="Correo electrónico">
+        <input name="usuario" required type="email" class="form-control" placeholder="Correo electrónico" value="<?php echo $this->request->getData('usuario'); ?>">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
     </div>
     <!-- Select para elegir entre Particular y Obra Social -->
@@ -51,11 +45,11 @@ use Cake\Core\Configure; ?>
     <!-- Campos para Particular -->
     <div id="particularFields">
         <div class="form-group has-feedback">
-            <input name="nombre" required type="text" class="form-control" placeholder="Nombre">
+            <input name="nombre" required type="text" class="form-control" placeholder="Nombre" value="<?php echo $this->request->getData('nombre'); ?>">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
-            <input name="apellido" required type="text" class="form-control" placeholder="Apellido">
+            <input name="apellido" required type="text" class="form-control" placeholder="Apellido" value="<?php echo $this->request->getData('apellido'); ?>">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
@@ -63,14 +57,18 @@ use Cake\Core\Configure; ?>
 
                 <div class="col-xs-6">
                     <select required name="tipo_documento_id" class="form-control">
-                        <option value="">Seleccione un tipo de documento</option>
+                        <option value="">Tipo de Doc.</option>
                         <?php foreach ($tipoDocumentos as $id => $tipoDocumento) : ?>
-                            <option value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
+                            <?php if ($this->request->getData('tipo_documento_id') == $id) { ?>
+                                <option selected value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
+                            <?php } else { ?>
+                                <option value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
+                            <?php } ?>
                         <?php endforeach; ?>
                     </select>
                 </div>
                 <div class="col-xs-6">
-                    <input name="documento" required type="number" step="1" min="8" class="form-control" placeholder="Documento" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    <input required type="text" placeholder="Número de Doc." maxlength="20" class="form-control" value="<?php echo $this->request->getData('documento'); ?>" name="documento" oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');" onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();">
                     <span class="glyphicon fa fa-lg fa-credit-card form-control-feedback" style="margin-right: 14px;"></span>
                 </div>
             </div>
@@ -108,14 +106,14 @@ use Cake\Core\Configure; ?>
         </select>
     </div>
     <div class="form-group has-feedback">
-        <input name="direcciones[0][calle]" required type="text" class="form-control" placeholder="Calle">
+        <input name="direcciones[0][calle]" required type="text" class="form-control" placeholder="Calle" oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');">
         <span class="glyphicon fa fa-lg fa-road form-control-feedback"></span>
     </div>
 
     <div class="form-group has-feedback">
         <div class="row">
             <div class="col-xs-4">
-                <input name="direcciones[0][numero]" required type="number" class="form-control" placeholder="Número">
+                <input name="direcciones[0][numero]" required value="<?php echo !empty($this->request->getData('direcciones')[0]['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>" type="number" class="form-control" placeholder="Número" maxlength="4" min="1"  oninput="this.value = this.value.replace(/[^0-9]/g, '');">
             </div>
             <div class="col-xs-4">
                 <input name="direcciones[0][piso]" type="text" class="form-control" placeholder="Piso" maxlength="10">
@@ -132,19 +130,7 @@ use Cake\Core\Configure; ?>
     </div>
 
 
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="checkbox ">
-                <label>
-                    <input id="acceptTerms" type="checkbox">&nbsp; Acepto los terminos
-                </label>
-            </div>
-            <div id="termsMessage">
-                <p>1 - De acuerdo con la Ley N° 25.326, el titular podrá en cualquier momento solicitar el retiro o bloqueo de su nombre de los bancos de datos a los que se refiere. El titular de los datos personales tiene la facultad de ejercer el derecho de acceso a los mismos en forma gratuita a intervalos no inferiores a seis meses, salvo que se acredite un interés legítimo al efecto conforme lo establecido en el artículo 14, inciso 3 de la Ley N° 25.326.</p>
-                <p>2 - La DIRECCIÓN NACIONAL DE PROTECCIÓN DE DATOS PERSONALES, Órgano de Control de la Ley 25.326, tiene la atribución de atender las denuncias y reclamos que se interpongan con relación al incumplimiento de las normas sobre protección de datos personales.</p>
-            </div>
-        </div>
-    </div>
+    
 
     <?php if (isset($captcha) && $captcha == 'Si') { ?>
 
@@ -224,7 +210,7 @@ use Cake\Core\Configure; ?>
         // Inicializar los campos correctamente al cargar la página
         tipoClienteSelect.dispatchEvent(new Event('change'));
 
-        terminosCondiciones();
+        //terminosCondiciones();
 
 
     });

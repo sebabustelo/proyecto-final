@@ -2,7 +2,7 @@
 
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\Localidade $localidade
+ * @var \App\Model\Entity\Localidad $localidad
  * @var string[]|\Cake\Collection\CollectionInterface $provincias
  */
 ?>

@@ -62,7 +62,8 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Stock</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock" class="form-control" onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')">
+                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock" class="form-control"
+                                 onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')" min="0" >
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -71,7 +72,7 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Precio</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio"
+                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio" min="0"
                                 class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>

@@ -2,8 +2,8 @@
 
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\Localidade $localidade
- * @var \Cake\Collection\CollectionInterface|string[] $localidades
+ * @var \App\Model\Entity\Localidad $localidad
+ * @var \Cake\Collection\CollectionInterface|string[] $localidads
  */
 ?>
 <section class="content-header">

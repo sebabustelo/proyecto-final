@@ -51,7 +51,7 @@ class RbacUsuariosController extends RbacController
         if ($this->getRequest()->is('post')) {
 
             try {
-                $rbacUsuario = $this->RbacUsuarios->newEntity($this->getRequest()->getData(), ['associated' => ['RbacPerfiles']]);
+                $rbacUsuario = $this->RbacUsuarios->newEntity($this->getRequest()->getData(), ['associated' => ['RbacPerfiles','Direcciones']]);
 
                 $seed = md5(rand(0, 9999));
                 $rbacUsuario['seed'] = $seed;
@@ -60,10 +60,10 @@ class RbacUsuariosController extends RbacController
                     $rbacUsuario['password'] = hash('sha256', $seed . $rbacUsuario['password']);
                 }
 
-                $this->RbacUsuarios->getConnection()->begin();
+               // $this->RbacUsuarios->getConnection()->begin();
 
                 if ($this->RbacUsuarios->save($rbacUsuario)) {
-
+                    debug($rbacUsuario->id);die;
                     $id                              = $rbacUsuario->id;
                     $token                           = $this->generateToken();
 
@@ -94,7 +94,16 @@ class RbacUsuariosController extends RbacController
                         $this->Flash->error('No se pudo generar token antes de enviar confirmación del nuevo usuario');
                     }
                 } else {
-                    $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
+                    if ($rbacUsuario->getErrors()) {
+                        foreach ($rbacUsuario->getErrors() as $field => $errors) {
+                            foreach ($errors as $error) {
+                                $this->Flash->error(__($error));
+                            }
+                        }
+                    } else {
+                        $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
+                    }
+                    
                     $this->RbacUsuarios->getConnection()->rollback();
                 }
             } catch (MissingDatasourceException $e) {
@@ -106,6 +115,7 @@ class RbacUsuariosController extends RbacController
         $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
         $this->set('rbacPerfiles', $rbacPerfiles);
         $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
+        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->where(['activo'=>1])->order('nombre')->all());
     }
 
     /**
@@ -117,20 +127,49 @@ class RbacUsuariosController extends RbacController
      */
     public function edit($id = null)
     {
-        $rbacUsuario = $this->RbacUsuarios->findById($id)->contain(['RbacPerfiles', 'TipoDocumentos'])->first();
+        $rbacUsuario = $this->RbacUsuarios->findById($id)->contain(['RbacPerfiles', 'TipoDocumentos','Direcciones'=>['Localidades'=>'Provincias']])->first();
+        
         if ($this->getRequest()->is(['patch', 'post', 'put'])) {
-            $rbacUsuario = $this->RbacUsuarios->patchEntity($rbacUsuario, $this->getRequest()->getData(), ['associated' => ['RbacPerfiles']]);
+            // debug( $rbacUsuario);
+            // debug( $this->getRequest()->getData());
+            $rbacUsuario = $this->RbacUsuarios->patchEntity(
+                $rbacUsuario,
+                $this->getRequest()->getData(),
+                [
+                    'associated' => [
+                        'RbacPerfiles',
+                        'TipoDocumentos',
+                        'Direcciones' => [
+                            'Localidades' => [
+                                'Provincias'
+                            ]
+                        ]
+                    ]
+                ]
+            );
+            //debug($rbacUsuario);die;
             if ($this->RbacUsuarios->save($rbacUsuario)) {
                 $this->Flash->success(__('El Usuario se guardo correctamente.'));
                 $previousUrl = $this->request->getSession()->read('previousUrl');
                 return $this->redirect($previousUrl);
+            }else{
+                if ($rbacUsuario->getErrors()) {
+                    foreach ($rbacUsuario->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                } else {
+                    $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
+                }
             }
-            $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
+           
         }
         $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
         $this->set('rbacPerfiles', $rbacPerfiles);
         $this->set(compact('rbacUsuario'));
         $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
+        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->where(['activo'=>1])->order('nombre')->all());
     }
 
     public function detail($id = null)

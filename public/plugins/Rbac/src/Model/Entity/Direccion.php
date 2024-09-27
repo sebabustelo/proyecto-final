@@ -18,7 +18,7 @@ use Cake\ORM\Entity;
  * @property string|null $codigo_postal
  *
  * @property \Rbac\Model\Entity\RbacUsuario $rbac_usuario
- * @property \Rbac\Model\Entity\Localidade $localidade
+ * @property \Rbac\Model\Entity\Localidad $localidad
  */
 class Direccion extends Entity
 {

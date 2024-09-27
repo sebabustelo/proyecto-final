@@ -6,13 +6,13 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Localidade Entity
+ * Localidad Entity
  *
  * @property int $id
  * @property int $id_provincia
  * @property string $localidad
  */
-class Localidade extends Entity
+class Localidad extends Entity
 {
     /**
      * Fields that can be mass assigned using newEntity() or patchEntity().

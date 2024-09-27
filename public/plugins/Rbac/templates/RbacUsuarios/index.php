@@ -159,9 +159,20 @@ use Cake\Core\Configure;
                       <a href="/rbac/RbacUsuarios/edit/<?php echo $usuario->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
                       </td>
                       <td class="remove">
-                      <a href="/rbac/RbacUsuarios/delete/<?php echo $usuario->id; ?>" class="editar btn btn-danger btn-xs pencil" title="Eliminar" target="_self"><i class="fa fa-remove"></i></a>
-
+                      <a href="/rbac/RbacUsuarios/delete/<?php echo $usuario->id; ?>" class="editar btn btn-danger btn-xs pencil" title="Eliminar" target="_self"><i class="fa fa-remove"></i></a>                    
                       </td>
+                      <td class="remove">
+                                                    <?= $this->Form->postLink(
+                                                        __('<i class="fa fa-remove"></i>'),
+                                                        ['action' => '/rbac/RbacUsuarios/delete/', $usuario->id],
+                                                        [
+                                                            'confirm' => __('¿Esta seguro de eliminar el usuario {0}?', $usuario->usuario),
+                                                            'class' => 'btn btn-danger btn-xs pencil',
+                                                            'title' => 'Eliminar',
+                                                            'escape' => false
+                                                        ]
+                                                    ) ?>
+                                                </td>
                     </tr>
                   <?php } ?>
                 </tbody>
