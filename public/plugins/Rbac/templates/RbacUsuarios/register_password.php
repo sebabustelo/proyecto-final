@@ -67,7 +67,10 @@ if (isset($user)) { ?>
         const password_confirm = document.getElementById('password_confirm').value;
 
         // Definir la expresión regular para la validación
-        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{6,}$/;
+        //const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*=-]{6,}$/;
+//        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]).{6,}$/;
+        //const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~\s]).{6,}$/;
+        const passwordRegex = /^.{6,}$/;
 
         // Validar si las contraseñas coinciden
         if (password !== password_confirm) {

@@ -70,7 +70,7 @@ use Cake\Core\Configure;
                             <div class="form-group col-sm-2">
                                 <label>Tipo de Documento</label><br>
                                 <select required name="tipo_documento_id" class="form-control">
-                                    <option value="">Seleccione un tipo de documento</option>
+                                    <option value="">Seleccione</option>
                                     <?php foreach ($tipoDocumentos as $id => $tipoDocumento) : ?>
                                         <?php if ($rbacUsuario->tipo_documento_id == $id) { ?>
                                             <option selected value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
@@ -83,9 +83,9 @@ use Cake\Core\Configure;
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="documento">Documento</label>
-                                <input required type="text"  placeholder="Ingrese el número de documento"  maxlength="20"
-                                class="form-control" value="<?php echo $rbacUsuario->documento; ?>" name="documento" 
-                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');"  
+                                <input required type="text"  placeholder="Número de Doc."  maxlength="20"
+                                class="form-control" value="<?php echo $rbacUsuario->documento; ?>" name="documento"
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');"
                                 onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();" >
                             </div>
                            <?php //debug($rbacUsuario->direcciones[0] ) ?>
@@ -99,7 +99,7 @@ use Cake\Core\Configure;
                                         <?php } else { ?>
                                             <option value="<?php echo $id ?>"><?php echo $provincia; ?></option>
                                         <?php } ?>
-                                        
+
                                     <?php } ?>
                                 </select>
                             </div>
@@ -111,30 +111,30 @@ use Cake\Core\Configure;
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Calle</label>
-                                <input name="direcciones[0][calle]" required 
-                                value="<?php echo $rbacUsuario->direcciones[0]->calle ; ?>" type="text" class="form-control" 
-                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"                                
+                                <input name="direcciones[0][calle]" required
+                                value="<?php echo isset($rbacUsuario->direcciones[0]->calle)?$rbacUsuario->direcciones[0]->calle:'' ; ?>" type="text" class="form-control"
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
                                  placeholder="Calle" maxlength="100">
                             </div>
 
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Número</label>
                                 <input name="direcciones[0][numero]" required type="number" min="1" class="form-control"
-                                value="<?php echo $rbacUsuario->direcciones[0]->numero ?>" placeholder="Número" maxlength="4"
+                                value="<?php echo isset($rbacUsuario->direcciones[0]->numero)?$rbacUsuario->direcciones[0]->numero:'' ; ?>" placeholder="Número" maxlength="4"
                                 >
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Piso</label>
                                 <input name="direcciones[0][piso]" type="text" class="form-control"
-                                value="<?php echo $rbacUsuario->direcciones[0]->piso ?>" placeholder="Piso" maxlength="3">
+                                value="<?php echo isset($rbacUsuario->direcciones[0]->piso)?$rbacUsuario->direcciones[0]->piso:'' ; ?>" placeholder="Piso" maxlength="3">
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Depto</label>
                                 <input name="direcciones[0][departamento]" type="text" class="form-control"
-                                value="<?php echo $rbacUsuario->direcciones[0]->departamento ?>" placeholder="Depto" maxlength="10">
+                                value="<?php echo isset($rbacUsuario->direcciones[0]->departamento)?$rbacUsuario->direcciones[0]->departamento:'' ; ?>" placeholder="Depto" maxlength="10">
                             </div>
 
-                            <div class="form-group col-sm-3">
+                            <div class="form-group col-sm-2">
                                 <label for="rbac-perfiles-ids">Perfil</label><br>
                                 <select required id="rbac-perfiles-ids" name="rbac_perfiles[_ids][]" class="form-control">
                                     <?php foreach ($rbacPerfiles as $id => $perfil) : ?>
@@ -142,7 +142,7 @@ use Cake\Core\Configure;
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div class="form-group   col-sm-1">
+                            <div class="form-group   col-sm-2">
                                 <label for="">&nbsp;</label><br>
                                 <label class="btn btn-default btn-block">
                                     <input type="hidden" name="activo" value="0">
@@ -158,7 +158,7 @@ use Cake\Core\Configure;
                             <?php
                             if ($this->request->getSession()->check('previousUrl')) {
                                 $url = $this->request->getSession()->read('previousUrl');
-                                
+
                                 if (strpos($url, "Usuarios") !== false or strpos($url, "usuarios") !== false) {
                                     $url = $this->request->getSession()->read('previousUrl');
                                 } else {
@@ -167,9 +167,9 @@ use Cake\Core\Configure;
                             } else {
                                 $url = '/rbac/rbacUsuarios/index';
                             }
-                            
+
                             ?>
-                            
+
                             <div class="form-group col-sm-12 text-center">
                                 <a href="<?php echo $url; ?>" class="btn btn-danger">
                                     <span class="glyphicon glyphicon-remove"></span> Cancelar</a>
@@ -220,7 +220,7 @@ use Cake\Core\Configure;
         document.getElementById('provincia_id').dispatchEvent(new Event('change'));
 
         setTimeout(function() {
-            
+
             var localidadId = "<?php echo $rbacUsuario->direcciones[0]->localidad_id ?? ''; ?>";
             if (localidadId) {
                 document.getElementById('localidad_id').value = localidadId;

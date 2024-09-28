@@ -36,8 +36,8 @@ use Cake\Core\Configure;
 
                             <div class="form-group col-sm-4">
                                 <label id="lblUsuario" for="usuario">Usuario (mail)</label>
-                                <input type="email" name="usuario" required id="RbacUsuarioUsuario" 
-                                oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')" 
+                                <input type="email" name="usuario" required id="RbacUsuarioUsuario"
+                                oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
                                 placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo $this->request->getData('usuario'); ?>">
                             </div>
 
@@ -52,7 +52,7 @@ use Cake\Core\Configure;
                             <div class="form-group col-sm-2">
                                 <label>Tipo de Documento</label><br>
                                 <select required name="tipo_documento_id" class="form-control">
-                                    <option value="">Seleccione un tipo </option>
+                                    <option value="">Seleccione</option>
                                     <?php foreach ($tipoDocumentos as $id => $tipoDocumento) : ?>
                                         <?php if ($this->request->getData('tipo_documento_id') == $id) { ?>
                                             <option selected value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
@@ -63,10 +63,10 @@ use Cake\Core\Configure;
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label for="documento">Documento</label>                                
-                                <input required type="text"  placeholder="Ingrese el número de documento"  maxlength="20"
-                                class="form-control" value="<?php echo $this->request->getData('documento'); ?>" name="documento" 
-                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');"  
+                                <label for="documento">Documento</label>
+                                <input required type="text"  placeholder="Número de Doc."  maxlength="20"
+                                class="form-control" value="<?php echo $this->request->getData('documento'); ?>" name="documento"
+                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');"
                                 onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();" >
                             </div>
                             <div class="form-group col-sm-4">
@@ -90,9 +90,9 @@ use Cake\Core\Configure;
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Calle</label>
-                                <input name="direcciones[0][calle]" required 
-                                value="<?php echo !empty($this->request->getData('direcciones')[0]['calle']) ? $this->request->getData('direcciones')[0]['calle'] : ''; ?>" 
-                                type="text" class="form-control" 
+                                <input name="direcciones[0][calle]" required
+                                value="<?php echo !empty($this->request->getData('direcciones')[0]['calle']) ? $this->request->getData('direcciones')[0]['calle'] : ''; ?>"
+                                type="text" class="form-control"
                                 oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
                                 placeholder="Calle" maxlength="100" min="1">
                             </div>

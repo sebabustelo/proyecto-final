@@ -48,8 +48,8 @@ class PermisosComponent extends Component
 				}
 
 				if (!$tienePermiso) {
-					throw new InternalErrorException('El usuario no tiene permiso para acceder a la funcionalidad requerida.');
-					//return $this->Controller->redirect(array('plugin' => 'rbac', 'controller' => 'rbacUsuarios', 'action' => 'login'));
+                    $this->Controller->Flash->error('Usted no tiene permiso para acceder a la funcionalidad requerida.');
+					return $this->Controller->redirect(array('plugin' => 'rbac', 'controller' => 'rbacUsuarios', 'action' => 'login'));
 				}
 			}
 		}

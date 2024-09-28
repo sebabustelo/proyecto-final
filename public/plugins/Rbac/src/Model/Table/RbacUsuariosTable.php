@@ -149,7 +149,9 @@ class RbacUsuariosTable extends Table
             ->minLength('password', 6, 'El campo debe tener al menos 6 caracteres.')
             ->add('password', 'complexity', [
                 'rule' => function ($value, $context) {
-                    return (bool)preg_match('/^(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/', $value);
+                    return (bool)preg_match('/^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};\'":\\|,.<>\/?`~\s]).{6,}$/', $value);
+
+
                 },
                 'message' => 'El password debe contener al menos una mayúscula y un carácter especial.',
             ])

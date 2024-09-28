@@ -62,26 +62,27 @@ return function (RouteBuilder $routes): void {
         //$builder->connect('/', ['controller' => 'Home', 'action' => 'index']);
 
 
-      // $builder->connect('/', ['controller' => 'Pages', 'action' => 'display']);
-       $builder->connect('/', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login'), array('routeClass' => 'InflectedRoute'));
+        // $builder->connect('/', ['controller' => 'Pages', 'action' => 'display']);
+        $builder->connect('/', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login'), array('routeClass' => 'InflectedRoute'));
 
-       $builder->connect('/db/index', array('plugin'=>'Db','controller' => 'Db', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/db/index', array('plugin' => 'Db', 'controller' => 'Db', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
 
-       $builder->connect('/db/index/*', array('plugin'=>'Db','controller' => 'Db', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/db/index/*', array('plugin' => 'Db', 'controller' => 'Db', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
 
-       //$builder->connect('/db/index/*', array('plugin'=>'Db','controller' => 'Db', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
-
-
-
-        $builder->connect('/login', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login'), array('routeClass' => 'InflectedRoute'));
-        $builder->connect('/register', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'register'), array('routeClass' => 'InflectedRoute'));
-        $builder->connect('/registerPassword', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'registerPassword'), array('routeClass' => 'InflectedRoute'));
-        $builder->connect('/forgetPassword', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'forgetPassword'), array('routeClass' => 'InflectedRoute'));
-
-        //$builder->connect('/rbac/:controller', array('plugin'=>'Rbac', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
+        //$builder->connect('/db/index/*', array('plugin'=>'Db','controller' => 'Db', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
 
         $builder->connect('/rbac/{controller}/{action}/*', array('plugin' => 'Rbac'), array('routeClass' => 'InflectedRoute'));
         $builder->connect('/db/{controller}/{action}/*', array('plugin' => 'Db'), array('routeClass' => 'InflectedRoute'));
+
+        $builder->connect('/login', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/register', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'register'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/registerPassword/*', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'registerPassword'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/forgetPassword/*', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'forgetPassword'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/changePassword/*', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'changePassword'), array('routeClass' => 'InflectedRoute'));
+
+
+        $builder->connect('/rbac/:controller', array('plugin'=>'Rbac', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
+
 
         //$builder->connect('/rbac/rbac_acciones/index', array('plugin'=>'Rbac','controller' => 'RbacAcciones', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));
 

@@ -59,32 +59,33 @@ class RbacUsuariosController extends RbacController
                 if (!empty($rbacUsuario['password'])) {
                     $rbacUsuario['password'] = hash('sha256', $seed . $rbacUsuario['password']);
                 }
-
-               // $this->RbacUsuarios->getConnection()->begin();
+                $rbacUsuario['activo'] = 0;
+                $this->RbacUsuarios->getConnection()->begin();
 
                 if ($this->RbacUsuarios->save($rbacUsuario)) {
-                    debug($rbacUsuario->id);die;
+
                     $id                              = $rbacUsuario->id;
                     $token                           = $this->generateToken();
 
                     $RbacToken = $this->fetchTable('Rbac.RbacToken');
                     $data['token']      = $token;
-                    $data['usuario_id'] = $id;
+                    $data['rbac_usuario_id'] = $id;
                     $data['validez']    = 1440;
                     $rbacToken = $RbacToken->newEntity($data);
-                    //debug( $rbacToken);die;
+
 
                     $datos               = array();
                     $datos['subject']    = 'Confirmación de nuevo usuario';
                     $datos['url']        = Router::url('/', true) . "rbac/rbac_usuarios/registerPassword/" . $token;
                     $datos['aplicacion'] = "IPMAGNA";
-                    $datos['template']   = 'registrarse';
+                    $datos['template']   = 'register';
                     $datos['email']      = $this->getRequest()->getData('usuario');
 
                     if ($RbacToken->save($rbacToken)) {
                         if ($this->sendEmail($datos)) {
                             $this->RbacUsuarios->getConnection()->commit();
                             $this->Flash->success('Se ha enviado la información para crear la clave de su usuario ingresando a la dirección ' . $this->getRequest()->getData('usuario'));
+                            return $this->redirect(array('action' => 'index'));
                         } else {
                             $this->RbacUsuarios->getConnection()->rollback();
                             $this->Flash->error('No se pudo enviar el email de confirmación de nuevo usuario');
@@ -103,13 +104,13 @@ class RbacUsuariosController extends RbacController
                     } else {
                         $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
                     }
-                    
+
                     $this->RbacUsuarios->getConnection()->rollback();
                 }
             } catch (MissingDatasourceException $e) {
                 $this->RbacUsuarios->getConnection()->rollback();
                 $this->Flash->success(__($e->getMessage()));
-                return $this->redirect(array('action' => 'index'));
+
             }
         }
         $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
@@ -128,7 +129,7 @@ class RbacUsuariosController extends RbacController
     public function edit($id = null)
     {
         $rbacUsuario = $this->RbacUsuarios->findById($id)->contain(['RbacPerfiles', 'TipoDocumentos','Direcciones'=>['Localidades'=>'Provincias']])->first();
-        
+
         if ($this->getRequest()->is(['patch', 'post', 'put'])) {
             // debug( $rbacUsuario);
             // debug( $this->getRequest()->getData());
@@ -163,7 +164,7 @@ class RbacUsuariosController extends RbacController
                     $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
                 }
             }
-           
+
         }
         $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
         $this->set('rbacPerfiles', $rbacPerfiles);
@@ -502,10 +503,10 @@ class RbacUsuariosController extends RbacController
         if ($result['success']) {
             //if (!empty($result)) {
             $fecha_actual   = strtotime('now');
-            $fecha_creacion = strtotime($result->created);
+            $fecha_creacion = strtotime($resultToken->created);
             $minutos        = ($fecha_actual - $fecha_creacion) / 60;
 
-            $id   = $result->rbac_usuario_id;
+            $id   = $resultToken->rbac_usuario_id;
             $user = $this->RbacUsuarios->get($id);
             if ($this->getRequest()->is('post')) {
 
@@ -541,7 +542,7 @@ class RbacUsuariosController extends RbacController
                     try {
                         if ($this->RbacUsuarios->save($user)) {
                             // Invalida el token después de usarlo
-                            if ($this->RbacToken->delete($result)) {
+                            if ($this->RbacToken->delete($resultToken)) {
                                 $this->RbacUsuarios->getConnection()->commit();
                                 Log::info("Password asignado para el usuario ID: {$id}");
                                 $this->Flash->success('El password se estableció correctamente');
@@ -623,7 +624,7 @@ class RbacUsuariosController extends RbacController
 
                         $datos               = array();
                         $datos['subject']    = 'Confirmación de registro nuevo usuario';
-                        $datos['url'] = Router::url('/', true) . "rbac/rbac_usuarios/changePassword/" . $token;
+                        $datos['url'] = Router::url('/', true) . "changePassword/" . $token;
                         $datos['aplicacion'] = "IPMAGNA";
                         $datos['template']   = 'recover_password';
                         $datos['email']      = $this->getRequest()->getData('usuario');
@@ -669,7 +670,6 @@ class RbacUsuariosController extends RbacController
         $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
         $this->set('captcha', $configuracionCaptcha->valor);
 
-        //if (!empty($result)) {
         $fecha_actual   = strtotime('now');
         $fecha_creacion = strtotime($resultToken->created);
         $minutos        = ($fecha_actual - $fecha_creacion) / 60;
@@ -710,7 +710,6 @@ class RbacUsuariosController extends RbacController
                         }
                     }
                 } else {
-                    //$seed = $user->seed;
                     $seed = hash('sha256', 'ipmagna');
                     $password =  hash('sha256', $seed . $this->getRequest()->getData('password'));
                     $passwordConfirm =   hash('sha256', $seed . $this->getRequest()->getData('password_confirm'));
@@ -725,7 +724,7 @@ class RbacUsuariosController extends RbacController
                     try {
                         if ($this->RbacUsuarios->save($user)) {
                             // Invalida el token después de usarlo
-                            if ($this->RbacToken->delete($result)) {
+                            if ($this->RbacToken->delete($resultToken)) {
                                 $this->RbacUsuarios->getConnection()->commit();
                                 Log::info("Password cambiado para el usuario ID: {$id}");
                                 $this->Flash->success('El password se estableció correctamente');
