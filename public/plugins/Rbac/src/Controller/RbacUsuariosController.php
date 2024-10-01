@@ -2,14 +2,12 @@
 
 namespace Rbac\Controller;
 
-use Cake\Core\Configure;
 use Cake\Datasource\Exception\MissingDatasourceException;
 use Cake\Routing\Router;
 use Cake\Utility\Inflector;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\Exception\MissingActionException;
 use Cake\Http\Client;
-use Cake\Log\Log;
 use Cake\Validation\Validator;
 
 class RbacUsuariosController extends RbacController
@@ -51,7 +49,7 @@ class RbacUsuariosController extends RbacController
         if ($this->getRequest()->is('post')) {
 
             try {
-                $rbacUsuario = $this->RbacUsuarios->newEntity($this->getRequest()->getData(), ['associated' => ['RbacPerfiles','Direcciones']]);
+                $rbacUsuario = $this->RbacUsuarios->newEntity($this->getRequest()->getData(), ['associated' => ['RbacPerfiles', 'Direcciones']]);
 
                 $seed = md5(rand(0, 9999));
                 $rbacUsuario['seed'] = $seed;
@@ -110,13 +108,12 @@ class RbacUsuariosController extends RbacController
             } catch (MissingDatasourceException $e) {
                 $this->RbacUsuarios->getConnection()->rollback();
                 $this->Flash->success(__($e->getMessage()));
-
             }
         }
         $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
         $this->set('rbacPerfiles', $rbacPerfiles);
         $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
-        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->where(['activo'=>1])->order('nombre')->all());
+        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
     }
 
     /**
@@ -128,7 +125,7 @@ class RbacUsuariosController extends RbacController
      */
     public function edit($id = null)
     {
-        $rbacUsuario = $this->RbacUsuarios->findById($id)->contain(['RbacPerfiles', 'TipoDocumentos','Direcciones'=>['Localidades'=>'Provincias']])->first();
+        $rbacUsuario = $this->RbacUsuarios->findById($id)->contain(['RbacPerfiles', 'TipoDocumentos', 'Direcciones' => ['Localidades' => 'Provincias']])->first();
 
         if ($this->getRequest()->is(['patch', 'post', 'put'])) {
             // debug( $rbacUsuario);
@@ -153,7 +150,7 @@ class RbacUsuariosController extends RbacController
                 $this->Flash->success(__('El Usuario se guardo correctamente.'));
                 $previousUrl = $this->request->getSession()->read('previousUrl');
                 return $this->redirect($previousUrl);
-            }else{
+            } else {
                 if ($rbacUsuario->getErrors()) {
                     foreach ($rbacUsuario->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {
@@ -164,13 +161,12 @@ class RbacUsuariosController extends RbacController
                     $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
                 }
             }
-
         }
         $rbacPerfiles = $this->RbacUsuarios->RbacPerfiles->find('list', keyField: 'id', valueField: 'descripcion')->all();
         $this->set('rbacPerfiles', $rbacPerfiles);
         $this->set(compact('rbacUsuario'));
         $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
-        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->where(['activo'=>1])->order('nombre')->all());
+        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
     }
 
     public function detail($id = null)
@@ -242,13 +238,9 @@ class RbacUsuariosController extends RbacController
 
             return true;
         } catch (MissingActionException $e) {
-            Log::error('Error al enviar el correo: ' . $e->getMessage());
-            // Error al encontrar la acción del correo (plantilla faltante, etc.)
             $this->Flash->error('Error en el envío: ' . $e->getMessage());
             return false;
         } catch (\Exception $e) {
-            Log::error('Error al enviar el correo: ' . $e->getMessage());
-            // Cualquier otro tipo de error
             $this->Flash->error('Se produjo un error inesperado: ' . $e->getMessage());
             return false;
         }
@@ -287,31 +279,16 @@ class RbacUsuariosController extends RbacController
 
     public function login()
     {
-        $session = $this->getRequest()->getSession();
         //session_destroy();
         //session_start();
-        $configuraciones = $this->fetchTable('Rbac.Configuraciones');
-        $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
-        $this->set('captcha', $configuracionCaptcha->valor);
+        $session = $this->getRequest()->getSession();
 
+
+        $resultCaptcha = $this->verifyCaptcha();
         if ($this->getRequest()->is('Post')) {
 
-            //validación de captcha
-            if ($configuracionCaptcha->valor == 'Si') {
-
-                $recaptcha = $this->request->getData('g-recaptcha-response');
-
-                $http = new Client();
-                $response = $http->post('https://www.google.com/recaptcha/api/siteverify', [
-                    'secret' => env('RECAPTCHA_CLAVE_SECRETA'),
-                    'response' => $recaptcha,
-                ]);
-                $result = json_decode($response->getBody(), true);
-            } else {
-                $result['success'] = true;
-            }
             //validacion de usuario correcta
-            if ($result['success']) {
+            if ($resultCaptcha['success']) {
                 $usuario  = $this->request->getData('usuario');
                 $password = $this->request->getData('password');
 
@@ -326,6 +303,7 @@ class RbacUsuariosController extends RbacController
                     if ($usuarioValido) {
 
                         $rbac_perfil = $usr->rbac_perfil;
+                       // debug($usr);die;
 
                         $rbacAcciones = array();
                         $p['id']              = $rbac_perfil->id;
@@ -375,37 +353,21 @@ class RbacUsuariosController extends RbacController
 
     public function register()
     {
-        $configuraciones = $this->fetchTable('Rbac.Configuraciones');
-        $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
-        $this->set('captcha', $configuracionCaptcha->valor);
-
         $rbacUsuario = $this->RbacUsuarios->newEmptyEntity();
         $this->set(compact('rbacUsuario'));
+        $resultCaptcha = $this->verifyCaptcha();
 
         if ($this->getRequest()->is('post')) {
 
-            if ($configuracionCaptcha->valor == 'Si') {
-                $recaptcha = $this->request->getData('g-recaptcha-response');
-
-                $http = new Client();
-                $response = $http->post('https://www.google.com/recaptcha/api/siteverify', [
-                    'secret' => env('RECAPTCHA_CLAVE_SECRETA'),
-                    'response' => $recaptcha,
-                ]);
-                $result = json_decode($response->getBody(), true);
-            } else {
-                $result['success'] = true;
-            }
-
-            if ($result['success']) {
+            if ($resultCaptcha['success']) {
                 //El usuario que se registra tiene el perfil por defecto [Cliente]
+                $configuraciones = $this->fetchTable('Rbac.Configuraciones');
                 $perfilCliente        = $configuraciones->findByClave('Perfil Cliente')->first();
                 $data = $this->getRequest()->getData();
                 $data['perfil_id'] = $perfilCliente->valor;
                 //Hasta que no valide el mail el usuario esta inactivo
                 $data['activo'] = 0;
                 $rbacUsuario = $this->RbacUsuarios->newEntity($data, ['associated' => ['RbacPerfiles', 'Direcciones']]);
-
 
                 if ($rbacUsuario->getErrors()) {
 
@@ -463,7 +425,7 @@ class RbacUsuariosController extends RbacController
         }
 
         $this->set('tipoDocumentos', $this->RbacUsuarios->TipoDocumentos->find('list')->order('descripcion')->all());
-        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->where(['activo'=>1])->order('nombre')->all());
+        $this->set('provincias', $this->RbacUsuarios->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
     }
 
     /**
@@ -476,94 +438,83 @@ class RbacUsuariosController extends RbacController
     {
         $this->RbacToken = $this->fetchTable('Rbac.RbacToken');
 
-        $resultToken = $this->RbacToken->find()->where(['token' => $token])->first();
+
+        $resultToken = $this->RbacToken->find()->where(['token' => $token])->contain(['RbacUsuarios'])->first();
+
+        //debug($resultToken);
 
         if (!$resultToken || !$this->RbacToken->isValidToken($token)) {
             $this->Flash->error('Token no es válido o ha expirado.');
             return $this->redirect(['plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login']);
         }
 
-        $configuraciones = $this->fetchTable('Rbac.Configuraciones');
-        $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
-        $this->set('captcha', $configuracionCaptcha->valor);
+        $resultCaptcha = $this->verifyCaptcha();
+        if ($this->getRequest()->is('post')) {
+            if ($resultCaptcha['success']) {
 
-        if ($configuracionCaptcha->valor == 'Si') {
-            $recaptcha = $this->request->getData('g-recaptcha-response');
+                $fecha_actual   = strtotime('now');
+                $fecha_creacion = strtotime($resultToken->created);
+                $minutos        = ($fecha_actual - $fecha_creacion) / 60;
 
-            $http = new Client();
-            $response = $http->post('https://www.google.com/recaptcha/api/siteverify', [
-                'secret' => env('RECAPTCHA_CLAVE_SECRETA'),
-                'response' => $recaptcha,
-            ]);
-            $result = json_decode($response->getBody(), true);
-        } else {
-            $result['success'] = true;
-        }
+                $id   = $resultToken->rbac_usuario_id;
+                $user = $this->RbacUsuarios->get($id);
+                if ($this->getRequest()->is('post')) {
 
-        if ($result['success']) {
-            //if (!empty($result)) {
-            $fecha_actual   = strtotime('now');
-            $fecha_creacion = strtotime($resultToken->created);
-            $minutos        = ($fecha_actual - $fecha_creacion) / 60;
+                    $user = $this->RbacUsuarios->patchEntity(
+                        $user,
+                        [
+                            'password' =>  $this->getRequest()->getData('password'),
+                            'password_confirm' =>  $this->getRequest()->getData('password_confirm')
+                        ],
+                        ['validate' => 'password']
+                    );
 
-            $id   = $resultToken->rbac_usuario_id;
-            $user = $this->RbacUsuarios->get($id);
-            if ($this->getRequest()->is('post')) {
-
-                $user = $this->RbacUsuarios->patchEntity(
-                    $user,
-                    [
-                        'password' =>  $this->getRequest()->getData('password'),
-                        'password_confirm' =>  $this->getRequest()->getData('password_confirm')
-                    ],
-                    ['validate' => 'password']
-                );
-
-                if ($user->getErrors()) {
-                    // Mostrar errores de validación
-                    foreach ($user->getErrors() as $field => $errors) {
-                        foreach ($errors as $error) {
-                            $this->Flash->error(__($error));
-                        }
-                    }
-                } else {
-                    //$seed = $user->seed;
-                    $seed = hash('sha256', 'ipmagna');
-                    $password =  hash('sha256', $seed . $this->getRequest()->getData('password'));
-                    $passwordConfirm =   hash('sha256', $seed . $this->getRequest()->getData('password_confirm'));
-                    $this->RbacUsuarios->getConnection()->begin();
-                    $user = $this->RbacUsuarios->patchEntity($user, [
-                        'password' =>   $password,
-                        'password_confirm' =>   $passwordConfirm,
-                        'seed' => $seed,
-                        'activo' => 1
-                    ]);
-                    //debug($user);die;
-                    try {
-                        if ($this->RbacUsuarios->save($user)) {
-                            // Invalida el token después de usarlo
-                            if ($this->RbacToken->delete($resultToken)) {
-                                $this->RbacUsuarios->getConnection()->commit();
-                                Log::info("Password asignado para el usuario ID: {$id}");
-                                $this->Flash->success('El password se estableció correctamente');
-                                return $this->redirect(['plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login']);
-                            } else {
-                                throw new \Exception('No se pudo eliminar el token.');
+                    if ($user->getErrors()) {
+                        // Mostrar errores de validación
+                        foreach ($user->getErrors() as $field => $errors) {
+                            foreach ($errors as $error) {
+                                $this->Flash->error(__($error));
                             }
-                        } else {
-                            throw new \Exception('No se pudo guardar el password.');
                         }
-                    } catch (\Exception $e) {
-                        $this->RbacUsuarios->getConnection()->rollback();
-                        Log::error("Error al cambiar el password para el usuario ID: {$id}. Error: " . $e->getMessage());
-                        $this->Flash->error('Ocurrió un error al cambiar el password.');
+                    } else {
+                        //$seed = $user->seed;
+                        $seed = hash('sha256', 'ipmagna');
+                        $password =  hash('sha256', $seed . $this->getRequest()->getData('password'));
+                        $passwordConfirm =   hash('sha256', $seed . $this->getRequest()->getData('password_confirm'));
+                        $this->RbacUsuarios->getConnection()->begin();
+                        $user = $this->RbacUsuarios->patchEntity($user, [
+                            'password' =>   $password,
+                            'password_confirm' =>   $passwordConfirm,
+                            'seed' => $seed,
+                            'activo' => 1
+                        ]);
+
+                        try {
+                            if ($this->RbacUsuarios->save($user)) {
+                                // Invalida el token después de usarlo
+                                if ($this->RbacToken->delete($resultToken)) {
+                                    $this->RbacUsuarios->getConnection()->commit();
+                                    $this->Flash->success('El password se estableció correctamente');
+                                    return $this->redirect(['plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login']);
+                                } else {
+                                    throw new \Exception('No se pudo eliminar el token.');
+                                }
+                            } else {
+                                throw new \Exception('No se pudo guardar el password.');
+                            }
+                        } catch (\Exception $e) {
+                            $this->RbacUsuarios->getConnection()->rollback();
+                            $this->Flash->error('Ocurrió un error al cambiar el password.');
+                        }
                     }
                 }
+            } else {
+                $this->Flash->error(__('CAPTCHA no válido.'));
             }
-            $this->set(compact('user', 'token'));
-        } else {
-            $this->Flash->error(__('CAPTCHA no válido.'));
         }
+
+
+        $this->set('token',$resultToken);
     }
 
     /**
@@ -571,9 +522,7 @@ class RbacUsuariosController extends RbacController
      */
     public function forgetPassword()
     {
-        $configuraciones = $this->fetchTable('Rbac.Configuraciones');
-        $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
-        $this->set('captcha', $configuracionCaptcha->valor);
+        $resultCaptcha = $this->verifyCaptcha();
 
         if ($this->getRequest()->is('post')) {
 
@@ -595,20 +544,7 @@ class RbacUsuariosController extends RbacController
                 }
             } else {
 
-                if ($configuracionCaptcha->valor == 'Si') {
-                    $recaptcha = $this->request->getData('g-recaptcha-response');
-
-                    $http = new Client();
-                    $response = $http->post('https://www.google.com/recaptcha/api/siteverify', [
-                        'secret' => env('RECAPTCHA_CLAVE_SECRETA'),
-                        'response' => $recaptcha,
-                    ]);
-                    $result = json_decode($response->getBody(), true);
-                } else {
-                    $result['success'] = true;
-                }
-
-                if ($result['success']) {
+                if ($resultCaptcha['success']) {
 
                     $usuario = $this->RbacUsuarios->find()->where(['usuario' => $data['usuario']])->first();
 
@@ -657,7 +593,6 @@ class RbacUsuariosController extends RbacController
      */
     public function changePassword($token)
     {
-
         $this->RbacToken = $this->fetchTable('Rbac.RbacToken');
         $resultToken = $this->RbacToken->find()->where(['token' => $token])->first();
 
@@ -666,9 +601,7 @@ class RbacUsuariosController extends RbacController
             return $this->redirect(['plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login']);
         }
 
-        $configuraciones = $this->fetchTable('Rbac.Configuraciones');
-        $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
-        $this->set('captcha', $configuracionCaptcha->valor);
+        $resultCaptcha = $this->verifyCaptcha();
 
         $fecha_actual   = strtotime('now');
         $fecha_creacion = strtotime($resultToken->created);
@@ -678,20 +611,7 @@ class RbacUsuariosController extends RbacController
         $user = $this->RbacUsuarios->get($id);
         if ($this->getRequest()->is('post')) {
 
-            if ($configuracionCaptcha->valor == 'Si') {
-                $recaptcha = $this->request->getData('g-recaptcha-response');
-
-                $http = new Client();
-                $response = $http->post('https://www.google.com/recaptcha/api/siteverify', [
-                    'secret' => env('RECAPTCHA_CLAVE_SECRETA'),
-                    'response' => $recaptcha,
-                ]);
-                $result = json_decode($response->getBody(), true);
-            } else {
-                $result['success'] = true;
-            }
-
-            if ($result['success']) {
+            if ($resultCaptcha['success']) {
 
                 $user = $this->RbacUsuarios->patchEntity(
                     $user,
@@ -726,7 +646,6 @@ class RbacUsuariosController extends RbacController
                             // Invalida el token después de usarlo
                             if ($this->RbacToken->delete($resultToken)) {
                                 $this->RbacUsuarios->getConnection()->commit();
-                                Log::info("Password cambiado para el usuario ID: {$id}");
                                 $this->Flash->success('El password se estableció correctamente');
                                 return $this->redirect(['plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login']);
                             } else {
@@ -737,7 +656,6 @@ class RbacUsuariosController extends RbacController
                         }
                     } catch (\Exception $e) {
                         $this->RbacUsuarios->getConnection()->rollback();
-                        Log::error("Error al cambiar el password para el usuario ID: {$id}. Error: " . $e->getMessage());
                         $this->Flash->error('Ocurrió un error al cambiar el password.');
                     }
                 }
@@ -746,6 +664,29 @@ class RbacUsuariosController extends RbacController
             }
         }
         $this->set(compact('user', 'token'));
+    }
+
+    private function verifyCaptcha()
+    {
+        $configuraciones = $this->fetchTable('Rbac.Configuraciones');
+        $configuracionCaptcha        = $configuraciones->findByClave('Mostrar Captcha')->first();
+        $this->set('captcha', $configuracionCaptcha->valor);
+
+        if ($configuracionCaptcha->valor == 'Si') {
+            $recaptcha = $this->request->getData('g-recaptcha-response');
+
+            $http = new Client();
+            $response = $http->post('https://www.google.com/recaptcha/api/siteverify', [
+                'secret' => env('RECAPTCHA_CLAVE_SECRETA'),
+                'response' => $recaptcha,
+            ]);
+            $result = json_decode($response->getBody(), true);
+        } else {
+            $result['success'] = true;
+        }
+
+
+        return $result;
     }
 
     private function generateToken($length = 24)

@@ -2,6 +2,7 @@
 
 use Cake\Core\Configure; ?>
 <?php
+$user = $token->rbac_usuario;
 if (isset($user)) { ?>
     <h2 class="sub-header"><small>
 
@@ -13,19 +14,19 @@ if (isset($user)) { ?>
 
 
 
-<form id="formRegisterPassword" class="form-signin well" role="form" action="/rbac/rbac_usuarios/registerPassword/<?php echo $token; ?>" method="POST">
+<form id="formRegisterPassword" class="form-signin well" role="form" action="/rbac/rbac_usuarios/registerPassword/<?php echo $token->token; ?>" method="POST">
     <div class="register-logo">
         <a href="<?php echo $this->Url->build(); ?>"><?php echo Configure::read('Theme.logo.large') ?></a>
     </div>
 
     <div class="form-group has-feedback">
         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-        <input minlength="6" name="password" id="password" required type="password" class="form-control" placeholder="Contraseña">
+        <input minlength="6" maxlength="15" name="password" id="password" required type="password" class="form-control" placeholder="Contraseña">
         <span class="fa fa-lock fa-lg form-control-feedback"></span>
-        <?php $user->getErrors() ?>
+        <?php //$user->getErrors() ?>
     </div>
     <div class="form-group has-feedback">
-        <input minlength="6" name="password_confirm" id="password_confirm" required type="password" class="form-control" placeholder="Repita la contraseña">
+        <input minlength="6" maxlength="15" name="password_confirm" id="password_confirm" required type="password" class="form-control" placeholder="Repita la contraseña">
         <span class="fa fa-lock fa-lg form-control-feedback"></span>
     </div>
     <?php if (isset($captcha) && $captcha == 'Si') { ?>
@@ -67,10 +68,8 @@ if (isset($user)) { ?>
         const password_confirm = document.getElementById('password_confirm').value;
 
         // Definir la expresión regular para la validación
-        //const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*=-]{6,}$/;
-//        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~]).{6,}$/;
-        //const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~\s]).{6,}$/;
-        const passwordRegex = /^.{6,}$/;
+        const passwordRegex = /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?`~\s]).{6,}$/;
+
 
         // Validar si las contraseñas coinciden
         if (password !== password_confirm) {

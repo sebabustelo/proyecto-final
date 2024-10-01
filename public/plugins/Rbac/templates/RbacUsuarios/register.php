@@ -31,7 +31,7 @@ use Cake\Core\Configure; ?>
     </div>
     <div class="form-group has-feedback">
         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-        <input name="usuario" required type="email" class="form-control" placeholder="Correo electrónico" value="<?php echo $this->request->getData('usuario'); ?>">
+        <input name="usuario" maxlength="50" required type="email" class="form-control" placeholder="Correo electrónico" value="<?php echo $this->request->getData('usuario'); ?>">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
     </div>
     <!-- Select para elegir entre Particular y Obra Social -->
@@ -45,11 +45,11 @@ use Cake\Core\Configure; ?>
     <!-- Campos para Particular -->
     <div id="particularFields">
         <div class="form-group has-feedback">
-            <input name="nombre" required type="text" class="form-control" placeholder="Nombre" value="<?php echo $this->request->getData('nombre'); ?>">
+            <input name="nombre" maxlength="60" required type="text" class="form-control" placeholder="Nombre" value="<?php echo $this->request->getData('nombre'); ?>">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
-            <input name="apellido" required type="text" class="form-control" placeholder="Apellido" value="<?php echo $this->request->getData('apellido'); ?>">
+            <input name="apellido" maxlength="60" required type="text" class="form-control" placeholder="Apellido" value="<?php echo $this->request->getData('apellido'); ?>">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
@@ -78,11 +78,11 @@ use Cake\Core\Configure; ?>
     <!-- Campos para Obra Social -->
     <div id="obraSocialFields" style="display: none;">
         <div class="form-group has-feedback">
-            <input name="razon_social" type="text" class="form-control" placeholder="Razón Social">
+            <input name="razon_social" maxlength="100" type="text" class="form-control" placeholder="Razón Social">
             <span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
-            <input name="cuit" type="text" class="form-control" placeholder="CUIT" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            <input name="cuit" maxlength="10" type="text" class="form-control" placeholder="CUIT" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
             <span class="glyphicon glyphicon-barcode form-control-feedback"></span>
         </div>
         <span id="mensaje-error" style="display: none;" class="badge bg-red"><i class="fa fa-warning"></i> El CUIT es inválido</span>
@@ -106,14 +106,17 @@ use Cake\Core\Configure; ?>
         </select>
     </div>
     <div class="form-group has-feedback">
-        <input name="direcciones[0][calle]" required type="text" class="form-control" placeholder="Calle" oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');">
+        <input name="direcciones[0][calle]" required type="text" maxlength="50"
+        class="form-control" placeholder="Calle" oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');">
         <span class="glyphicon fa fa-lg fa-road form-control-feedback"></span>
     </div>
 
     <div class="form-group has-feedback">
         <div class="row">
             <div class="col-xs-4">
-                <input name="direcciones[0][numero]" required value="<?php echo !empty($this->request->getData('direcciones')[0]['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>" type="number" class="form-control" placeholder="Número" maxlength="4" min="1"  oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                <input name="direcciones[0][numero]" required
+                value="<?php echo !empty($this->request->getData('direcciones')[0]['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>"
+                type="number" class="form-control" placeholder="Número" maxlength="4" min="1"  oninput="this.value = this.value.replace(/[^0-9]/g, '');">
             </div>
             <div class="col-xs-4">
                 <input name="direcciones[0][piso]" type="text" class="form-control" placeholder="Piso" maxlength="10">
@@ -125,12 +128,12 @@ use Cake\Core\Configure; ?>
     </div>
 
     <div class="form-group has-feedback">
-        <input name="celular" required type="number" step="1" min="8" class="form-control" placeholder="Celular" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+        <input name="celular" required type="number" step="1" maxlength="15" class="form-control" placeholder="Celular" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
         <span class="glyphicon fa fa-lg fa-mobile-phone form-control-feedback"></span>
     </div>
 
 
-    
+
 
     <?php if (isset($captcha) && $captcha == 'Si') { ?>
 

@@ -408,7 +408,7 @@ return [
      * To use database sessions, load the SQL file located at config/schema/sessions.sql
      */
     'Session' => [
-        'defaults' => 'cache',
+        'defaults' => 'php',
         // 'ini' => [
         //     'session.save_path' => '../tmp/sessions'
         // ]

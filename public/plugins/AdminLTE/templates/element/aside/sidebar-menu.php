@@ -231,7 +231,7 @@ $action =   $this->request->getParam('action');
     <?php }  ?>
 
     <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Cliente </li>
-
+<?php //debug($accionesPermitidas); ?>
     <?php if ((isset($accionesPermitidas['Productos']['categorias']) && $accionesPermitidas['Productos']['categorias'])) { ?>
         <li class="treeview <?php echo ($controller == 'Productos' && ($action == 'categorias') ? ' active' : ''); ?>">
             <a href="#">
