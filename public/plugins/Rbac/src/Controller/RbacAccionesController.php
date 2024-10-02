@@ -8,12 +8,11 @@ class RbacAccionesController extends RbacController
 {
     public function index()
     {
-        //debug(ini_get('session.save_path'));
         $conditions = $this->getConditions();
         $rbacAcciones = $this->RbacAcciones->find()
             ->where($conditions['where'])
             ->group(['controller', 'action'])
-            ->order(['controller' => 'ASC', 'action' => 'DESC']);
+            ->order(['controller' => 'ASC', 'action' => 'ASC']);
 
         $this->set('rbacAcciones', $rbacAcciones->all());
         $this->loadComponent('Rbac.ControllerList');
@@ -25,7 +24,6 @@ class RbacAccionesController extends RbacController
 
     public function delete($id)
     {
-
         $this->request->allowMethod(['post', 'delete']);
         $rbacAccion = $this->RbacAcciones->get($id, contain: ['RbacPerfiles']);
 
@@ -34,7 +32,6 @@ class RbacAccionesController extends RbacController
         } else {
             $this->Flash->error(__('No se pudo eliminar la acción. Por favor, inténtalo de nuevo.'));
         }
-
 
         return $this->redirect(['action' => 'index']);
     }
@@ -141,7 +138,6 @@ class RbacAccionesController extends RbacController
                 // Crear entidades en masa
                 $rbacAcciones = $this->RbacAcciones->newEntities($data);
 
-                // Intentar guardar todas las acciones
                 if ($this->RbacAcciones->saveMany($rbacAcciones)) {
                     $result = true;
                     $this->Flash->success('Ha sido grabado correctamente', 'flash_custom');

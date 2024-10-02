@@ -118,6 +118,34 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        //Verificar si el usuario existe en la db
+        const usernameInput = document.querySelector('input[name="usuario"]');
+
+        usernameInput.addEventListener('blur', function() {
+            const username = this.value;
+
+            // Solo hacer la petición si el campo no está vacío
+            if (username) {
+                fetch('/rbac/RbacUsuarios/checkUsername/' + encodeURIComponent(username))
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+
+                        if (data) {
+                            alert('El nombre de usuario ya existe. Por favor, elige otro.');
+                            usernameInput.value = ''; // Limpia el campo
+                            usernameInput.focus(); // Regresa el enfoque al campo
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
+
         var provinciaSelect = document.getElementById('provincia_id');
         var localidadSelect = document.getElementById('localidad_id');
 
@@ -158,4 +186,3 @@
 
     });
 </script>
-
