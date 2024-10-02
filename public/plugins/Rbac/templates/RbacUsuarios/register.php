@@ -31,7 +31,11 @@ use Cake\Core\Configure; ?>
     </div>
     <div class="form-group has-feedback">
         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-        <input name="usuario" maxlength="50" required type="email" class="form-control" placeholder="Correo electrónico" value="<?php echo $this->request->getData('usuario'); ?>">
+        <input name="usuario" id="usuario" maxlength="20" required type="text" class="form-control" placeholder="Nombre de usuario" value="<?php echo $this->request->getData('usuario'); ?>">
+        <span class="glyphicon glyphicon-user form-control-feedback"></span>
+    </div>
+    <div class="form-group has-feedback">
+        <input name="email" maxlength="50" required type="email" class="form-control" placeholder="Correo electrónico" value="<?php echo $this->request->getData('email'); ?>">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
     </div>
     <!-- Select para elegir entre Particular y Obra Social -->
@@ -41,15 +45,14 @@ use Cake\Core\Configure; ?>
             <option value="obra_social">Obra Social</option>
         </select>
     </div>
-
     <!-- Campos para Particular -->
     <div id="particularFields">
         <div class="form-group has-feedback">
-            <input name="nombre" maxlength="60" required type="text" class="form-control" placeholder="Nombre" value="<?php echo $this->request->getData('nombre'); ?>">
+            <input name="nombre" maxlength="50" required type="text" class="form-control" placeholder="Nombre" value="<?php echo $this->request->getData('nombre'); ?>">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
-            <input name="apellido" maxlength="60" required type="text" class="form-control" placeholder="Apellido" value="<?php echo $this->request->getData('apellido'); ?>">
+            <input name="apellido" maxlength="50" required type="text" class="form-control" placeholder="Apellido" value="<?php echo $this->request->getData('apellido'); ?>">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
@@ -68,7 +71,7 @@ use Cake\Core\Configure; ?>
                     </select>
                 </div>
                 <div class="col-xs-6">
-                    <input required type="text" placeholder="Número de Doc." maxlength="20" class="form-control" value="<?php echo $this->request->getData('documento'); ?>" name="documento" oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');" onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();">
+                    <input required type="text" placeholder="Número de Doc." maxlength="10" class="form-control" value="<?php echo $this->request->getData('documento'); ?>" name="documento" oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');" onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();">
                     <span class="glyphicon fa fa-lg fa-credit-card form-control-feedback" style="margin-right: 14px;"></span>
                 </div>
             </div>
@@ -82,7 +85,7 @@ use Cake\Core\Configure; ?>
             <span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
-            <input name="cuit" maxlength="10" type="text" class="form-control" placeholder="CUIT" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            <input name="cuit" maxlength="11" type="text" class="form-control" placeholder="CUIT" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
             <span class="glyphicon glyphicon-barcode form-control-feedback"></span>
         </div>
         <span id="mensaje-error" style="display: none;" class="badge bg-red"><i class="fa fa-warning"></i> El CUIT es inválido</span>
@@ -107,7 +110,7 @@ use Cake\Core\Configure; ?>
     </div>
     <div class="form-group has-feedback">
         <input name="direcciones[0][calle]" required type="text" maxlength="50"
-        class="form-control" placeholder="Calle" oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');">
+            class="form-control" placeholder="Calle" oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');">
         <span class="glyphicon fa fa-lg fa-road form-control-feedback"></span>
     </div>
 
@@ -115,25 +118,23 @@ use Cake\Core\Configure; ?>
         <div class="row">
             <div class="col-xs-4">
                 <input name="direcciones[0][numero]" required
-                value="<?php echo !empty($this->request->getData('direcciones')[0]['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>"
-                type="number" class="form-control" placeholder="Número" maxlength="4" min="1"  oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+                    value="<?php echo !empty($this->request->getData('direcciones')[0]['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>"
+                    type="number" class="form-control" placeholder="Número" min="1" max="9999" onkeydown="preventInvalidInput(event)"
+                    oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
             </div>
             <div class="col-xs-4">
-                <input name="direcciones[0][piso]" type="text" class="form-control" placeholder="Piso" maxlength="10">
+                <input name="direcciones[0][piso]" type="text" class="form-control" placeholder="Piso" maxlength="3">
             </div>
             <div class="col-xs-4">
-                <input name="direcciones[0][departamento]" type="text" class="form-control" placeholder="Depto" maxlength="10">
+                <input name="direcciones[0][departamento]" type="text" class="form-control" placeholder="Depto" maxlength="3">
             </div>
         </div>
     </div>
 
     <div class="form-group has-feedback">
-        <input name="celular" required type="number" step="1" maxlength="15" class="form-control" placeholder="Celular" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+        <input name="celular" required type="number" step="1" max="999999999999" oninput="if(this.value.length > 12) this.value = this.value.slice(0, 12);" class="form-control" placeholder="Celular" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
         <span class="glyphicon fa fa-lg fa-mobile-phone form-control-feedback"></span>
     </div>
-
-
-
 
     <?php if (isset($captcha) && $captcha == 'Si') { ?>
 
@@ -168,6 +169,33 @@ use Cake\Core\Configure; ?>
 <!-- Otros contenidos del formulario -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        //Verificar si el usuario existe en la db
+        const usernameInput = document.querySelector('input[name="usuario"]');
+
+        usernameInput.addEventListener('blur', function() {
+            const username = this.value;
+
+            // Solo hacer la petición si el campo no está vacío
+            if (username) {
+                fetch('/rbac/RbacUsuarios/checkUsername/' + encodeURIComponent(username))
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+
+                        if (data) {
+                            alert('El nombre de usuario ya existe. Por favor, elige otro.');
+                            usernameInput.value = ''; // Limpia el campo
+                            usernameInput.focus(); // Regresa el enfoque al campo
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            }
+        });
         var provinciaSelect = document.getElementById('provincia_id');
         var localidadSelect = document.getElementById('localidad_id');
 
@@ -233,7 +261,6 @@ use Cake\Core\Configure; ?>
             }
         }
 
-
     });
 
     function terminosCondiciones() {
@@ -282,5 +309,12 @@ use Cake\Core\Configure; ?>
 
         // Comparar con el dígito verificador (último dígito del CUIT)
         return verificador === parseInt(cuit[10]);
+    }
+
+    function preventInvalidInput(event) {
+        const invalidChars = ['e', 'E', '+', '-']; // caracteres que quieres restringir
+        if (invalidChars.includes(event.key)) {
+            event.preventDefault();
+        }
     }
 </script>

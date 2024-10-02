@@ -14,7 +14,7 @@ class PermisosComponent extends Component
 	private $RbacAccion = NULL;
 
 	private $Controller = NULL;
-	private array $accionesNoPublicasPermitidasSinLogin = ['login', 'recuperar', 'recuperarPass'];
+
 
 	public function initialize(array $config): void
 	{

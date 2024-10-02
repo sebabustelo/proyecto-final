@@ -13,7 +13,7 @@ use Cake\Core\Configure;
         </div>
 
         <div class="form-group has-feedback">
-            <input required type="email" class="form-control" name="usuario" required placeholder="Correo electrónico">
+            <input required type="text" class="form-control" maxlength="40" name="usuario" required placeholder="Usuario o Correo electrónico">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
 

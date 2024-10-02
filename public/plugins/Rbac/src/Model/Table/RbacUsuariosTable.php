@@ -88,8 +88,7 @@ class RbacUsuariosTable extends Table
     public function validationDefault(Validator $validator): Validator
     {
         $validator
-            ->email('usuario', false, 'El campo usuario debe ser una dirección de correo válida.')
-            ->maxLength('usuario', 120, 'El usuarios debe ser menor a 120 caracteres.')
+            ->maxLength('usuario', 20, 'El usuarios debe ser menor a 15 caracteres.')
             ->requirePresence('usuario', 'create')
             ->notEmptyString('usuario', 'El campo usuario no puede estar vacío.')
             ->add(
@@ -98,7 +97,23 @@ class RbacUsuariosTable extends Table
                     'unique' => [
                         'rule' => 'validateUnique',
                         'provider' => 'table',
-                        'message' => 'El usuario existe en la base de datos, no pueden existir usuarios duplicados.',
+                        'message' => 'El usuario existe en la base de datos, no pueden existir duplicados.',
+                    ],
+                ]
+            );
+
+        $validator
+            ->email('email', false, 'El campo usuario debe ser una dirección de correo válida.')
+            ->maxLength('email', 50, 'El usuarios debe ser menor a 15 caracteres.')
+            ->requirePresence('email', 'create')
+            ->notEmptyString('email', 'El campo usuario no puede estar vacío.')
+            ->add(
+                'email',
+                [
+                    'unique' => [
+                        'rule' => 'validateUnique',
+                        'provider' => 'table',
+                        'message' => 'El email existe en la base de datos, no pueden existir duplicados.',
                     ],
                 ]
             );
@@ -150,8 +165,6 @@ class RbacUsuariosTable extends Table
             ->add('password', 'complexity', [
                 'rule' => function ($value, $context) {
                     return (bool)preg_match('/^(?=.*[A-Z])(?=.*[!@#$%^&*()_+\-=\[\]{};\'":\\|,.<>\/?`~\s]).{6,}$/', $value);
-
-
                 },
                 'message' => 'El password debe contener al menos una mayúscula y un carácter especial.',
             ])
@@ -165,8 +178,6 @@ class RbacUsuariosTable extends Table
     }
 
 
-
-
     /**
      * @param string $usuario
      * @param int $password
@@ -174,8 +185,14 @@ class RbacUsuariosTable extends Table
      */
     public function autenticacion($usuario, $password)
     {
+        $usuario  = $this->find()->where([
+            'OR' => [
+                'usuario' => $usuario,
+                'email' => $usuario
+            ],
+            'password' => $password
+        ])->first();
 
-        $usuario  = $this->find()->where(['usuario' => $usuario, 'password' => $password])->first();
 
         return (isset($usuario->id));
     }

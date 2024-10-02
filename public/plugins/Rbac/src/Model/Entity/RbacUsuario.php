@@ -31,6 +31,7 @@ class RbacUsuario extends Entity
 
     protected array $_accessible = [
         'usuario' => true,
+        'email' => true,
         'nombre' => true,
         'apellido' => true,
         'tipo_documento_id' => true,

@@ -62,7 +62,7 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Stock</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="3" placeholder="Ingrese el stock" class="form-control"
+                                <input style='text-transform: uppercase;' required type="number" maxlength="5" placeholder="Ingrese el stock" class="form-control"
                                  onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')" min="0" >
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
