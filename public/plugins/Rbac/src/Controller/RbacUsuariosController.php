@@ -252,7 +252,7 @@ class RbacUsuariosController extends RbacController
         $data = $this->getRequest()->getQuery();
         $filterErrors = array();
         $conditions['where'] = [];
-        $conditions['contain'] = ['RbacPerfiles'];
+        $conditions['contain'] = ['RbacPerfiles', 'TipoDocumentos'];
 
         if (isset($data['nombre']) and !empty($data['nombre'])) {
             $conditions['where'][] = ['RbacUsuarios.nombre LIKE' => '%' . $data['nombre'] . '%'];
@@ -264,6 +264,10 @@ class RbacUsuariosController extends RbacController
 
         if (isset($data['usuario']) and !empty($data['usuario'])) {
             $conditions['where'][] = ['RbacUsuarios.usuario  LIKE' =>   '%' . $data['usuario'] . '%'];
+        }
+
+        if (isset($data['razon_social']) and !empty($data['razon_social'])) {
+            $conditions['where'][] = ['RbacUsuarios.razon_social  LIKE' =>   '%' . $data['crazon_socialuit'] . '%'];
         }
 
         if (isset($data['activo'])) {
@@ -293,8 +297,8 @@ class RbacUsuariosController extends RbacController
                 $usuario  = $this->request->getData('usuario');
                 $password = $this->request->getData('password');
 
-                $usr = $this->RbacUsuarios
-                    ->find()
+                $usr = $this->RbacUsuarios->find()
+                    //->select(['id', 'usuario', 'email', 'nombre', 'apellido', 'activo','seed']) // Correcto uso de select
                     ->where([
                         'OR' => [
                             'usuario' => $usuario,
@@ -304,12 +308,10 @@ class RbacUsuariosController extends RbacController
                     ->contain(['RbacPerfiles' => ['RbacAcciones', 'RbacAccionDefault']])
                     ->first();
 
-
                 if (isset($usr->id) and $usr->activo) {
                     $this->LoginManager->setUserAndPassword($usuario, hash('sha256', $usr->seed . $password));
                     $usuarioValido = $this->LoginManager->autenticacion($this->DbHandler);
                     if ($usuarioValido) {
-
                         $rbac_perfil = $usr->rbac_perfil;
                         $rbacAcciones = array();
                         $p['id']              = $rbac_perfil->id;
@@ -320,16 +322,18 @@ class RbacUsuariosController extends RbacController
                             $controller = Inflector::camelize($accion['controller']);
                             $rbacAcciones[$controller][$accion->action] = 1;
                         }
-
+                        unset($usr['password']);
+                        unset($usr['seed']);
                         $session->write('RbacAcciones', $rbacAcciones);
                         $session->write('RbacUsuario', $usr);
 
-                        $pluginRedirect = (!empty($rbac_perfil['accion_default']['plugin'])) ? $rbac_perfil['accion_default']['plugin'] : '';
+                        //$pluginRedirect = (!empty($rbac_perfil['accion_default']['plugin'])) ? $rbac_perfil['accion_default']['plugin'] : '';
 
                         $controllerRedirect = $usr->rbac_perfil['accion_default']['controller'];
                         $actionRedirect = $usr->rbac_perfil['accion_default']['action'];
-                        if (!empty($pluginRedirect)) {
-                            $redirectParams = ['plugin' => $pluginRedirect, 'controller' => $controllerRedirect, 'action' => $actionRedirect];
+
+                        if (!empty($rbac_perfil['accion_default']['plugin'])) {
+                            $redirectParams = ['plugin' =>  $rbac_perfil['accion_default']['plugin'], 'controller' => $controllerRedirect, 'action' => $actionRedirect];
                             return $this->redirect($redirectParams);
                         } else {
                             $redirectParams = ['controller' => $controllerRedirect, 'action' => $actionRedirect];
@@ -361,18 +365,41 @@ class RbacUsuariosController extends RbacController
     {
         $session = $this->getRequest()->getSession();
         $user = $session->read('RbacUsuario');
+        if (is_null($session->read('RbacUsuario'))) {
+            return $this->redirect([
+                'plugin' => 'Rbac',
+                'controller' => 'RbacUsuarios',
+                'action' => 'login'
+            ]);
+        }
 
-        $rbacUsuario = $this->RbacUsuarios->get($user->id, [
-            'contain' => ['Direcciones' => ['Localidades' => ['Provincias']]]
-        ]);
+        $rbacUsuario = $this->RbacUsuarios->find()
+            ->where(['RbacUsuarios.id' => $user->id])
+            ->contain(['Direcciones' => ['Localidades' => ['Provincias']]])
+            ->first();
 
         if ($this->request->is(['patch', 'post', 'put'])) {
+            $data = $this->request->getData();
+            if ($data['email'] != $rbacUsuario->email) {
+                $data['email_nuevo'] = $data['email'];
+                $data['email'] = $rbacUsuario->email;
+                //Enviar mail para confirmar el cambio de correo del usuario, recibirar una url changeMail/token
+            }
             $rbacUsuario = $this->RbacUsuarios->patchEntity($rbacUsuario, $this->request->getData());
             if ($this->RbacUsuarios->save($rbacUsuario)) {
                 $this->Flash->success(__('Los datos del usuario han sido actualizados correctamente.'));
-                return $this->redirect(['action' => 'view', $rbacUsuario->id]);
+                return $this->redirect(['action' => 'detail', $rbacUsuario->id]);
+            } else {
+                if ($rbacUsuario->getErrors()) {
+                    foreach ($rbacUsuario->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                } else {
+                    $this->Flash->error(__('El usuario no pudo ser guardado. Por favor, resuelva los errores e intente nuevamente.'));
+                }
             }
-            $this->Flash->error(__('No se pudo actualizar los datos del usuario. Intente nuevamente.'));
         }
 
         // Cargar listas de provincias y localidades para los selects
@@ -435,6 +462,7 @@ class RbacUsuariosController extends RbacController
                                     $this->RbacUsuarios->getConnection()->commit();
                                     $this->Flash->success('Se ha enviado la información a ' . $data['email'] . ' para crear una nueva contraseña.
                                 Por favor, ingrese al enlace que se encuentra en la descripción del email');
+                                    $this->render('Rbac.RbacUsuarios/register_message');
                                 } else {
                                     // $this->RbacUsuarios->getConnection()->rollback();
                                     $this->Flash->error('No se pudo enviar el email de confirmación de nuevo usuario');

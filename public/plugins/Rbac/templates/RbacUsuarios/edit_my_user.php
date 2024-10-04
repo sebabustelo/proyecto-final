@@ -13,106 +13,168 @@
                 <div class="box-footer">
                     <div class="row">
 
-                        <?= $this->Form->create($rbacUsuario) ?>
-                        <div class="form-group col-sm-4">
-                            <label>Nombre</label>
-                            <?= $this->Form->input('nombre', ['class' => 'form-control', 'label' => false]) ?>
-                        </div>
+                        <form id="formEditMyUser" role="form" action="/editMyUser" method="POST">
+                            <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
+                            <div class="form-group col-sm-4">
+                                <label id="lblUsuario" for="usuario">Usuario</label>
+                                <input type="text" name="usuario" required value="<?php echo $rbacUsuario->usuario; ?>"
+                                    oninvalid="this.setCustomValidity('Complete el usuario')" oninput="this.setCustomValidity('')" placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
+                                <?php foreach ($rbacUsuario->getError('usuario') as $k => $v) { ?>
+                                    <div class="form-group   label label-danger">
+                                        <span class=" "> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                            <?php echo $v; ?>
+                                        </span>
+                                    </div>
+                                <?php  } ?>
+                            </div>
+                            <?php if (!empty($rbacUsuario->nombre)) { ?>
+                                <div class="form-group col-sm-4">
+                                    <label>Nombre</label>
+                                    <input required type="text" value="<?php echo $rbacUsuario->nombre; ?>" placeholder="Ingrese el nombre" class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el/los nombre/s')" oninput="this.setCustomValidity('')">
+                                    <?php foreach ($rbacUsuario->getError('nombre') as $k => $v) { ?>
+                                        <div class="form-group   label label-danger">
+                                            <span class=" "> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                                <?php echo $v; ?>
+                                            </span>
+                                        </div>
+                                    <?php  } ?>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label >Apellido</label>
+                                    <input required type="text" value="<?php echo $rbacUsuario->apellido; ?>" placeholder="Ingrese el apellido" class="form-control" name="apellido" oninvalid="this.setCustomValidity('Debe completar el/los apellido/s')" oninput="this.setCustomValidity('')">
+                                    <?php foreach ($rbacUsuario->getError('apellido') as $k => $v) { ?>
+                                        <div class="form-group   label label-danger">
+                                            <span class=" "> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                                <?php echo $v; ?>
+                                            </span>
+                                        </div>
+                                    <?php  } ?>
+                                </div>
+                            <?php } else { ?>
+                                <div class="form-group col-sm-8">
+                                    <label >Razon Social</label>
+                                    <input required type="text" value="<?php echo $rbacUsuario->razon_social; ?>" placeholder="Ingrese la razón social"
+                                     class="form-control" name="apellido" oninvalid="this.setCustomValidity('Debe completar la razón social')" oninput="this.setCustomValidity('')">
+                                    <?php foreach ($rbacUsuario->getError('razon_social') as $k => $v) { ?>
+                                        <div class="form-group   label label-danger">
+                                            <span class=" "> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                                <?php echo $v; ?>
+                                            </span>
+                                        </div>
+                                    <?php  } ?>
+                                </div>
+                            <?php } ?>
+                            <div class="form-group col-sm-4">
+                                <label id="lblUsuario">Email</label>
+                                <input type="email" name="email" required value="<?php echo $rbacUsuario->email; ?>"
+                                    oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
+                                    placeholder="Ingrese el email" class="form-control" maxlength="120"
+                                    value="<?php echo (!$rbacUsuario->getError('email')) ? $this->request->getData('usuario') : ''; ?>">
+                                <?php foreach ($rbacUsuario->getError('email') as $k => $v) { ?>
+                                    <div class="form-group   label label-danger">
+                                        <span class=" "> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                            <?php echo $v; ?>
+                                        </span>
+                                    </div>
+                                <?php  } ?>
+                            </div>
 
-                        <div class="form-group col-sm-4">
-                            <label>Apellido</label>
-                            <?= $this->Form->input('apellido', ['class' => 'form-control', 'label' => false]) ?>
-                        </div>
+                            <div class="form-group col-sm-2">
+                                <label>Tipo de Documento</label><br>
+                                <select required name="tipo_documento_id" class="form-control">
+                                    <option value="">Seleccione</option>
+                                    <?php foreach ($tipoDocumentos as $id => $tipoDocumento) : ?>
+                                        <?php if ($rbacUsuario->tipo_documento_id == $id) { ?>
+                                            <option selected value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
+                                        <?php } ?>
 
-                        <div class="form-group col-sm-4">
-                            <label>Usuario</label>
-                            <?= $this->Form->input('usuario', ['class' => 'form-control', 'label' => false]) ?>
-                        </div>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Documento</label>
+                                <input required type="text" placeholder="Número de Doc." maxlength="20"
+                                    class="form-control" value="<?php echo $rbacUsuario->documento; ?>" name="documento"
+                                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');"
+                                    onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();">
+                            </div>
+                            <div class="form-group col-sm-4">
+                                <label>Celular</label>
+                                <input name="celular" required type="number" step="1"
+                                    oninput="if(this.value.length > 12) this.value = this.value.slice(0, 12);" class="form-control"
+                                    placeholder="Celular"
+                                    value="<?php echo $rbacUsuario->celular; ?>"
+                                    min="1" max="999999999999" onkeydown="preventInvalidInput(event)"
+                                    oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
+                            </div>
 
-                        <div class="form-group col-sm-4">
-                            <label>Email</label>
-                            <?= $this->Form->input('email', ['class' => 'form-control', 'label' => false]) ?>
-                        </div>
+                            <div class="form-group col-sm-3">
+                                <label>Provincia</label><br>
+                                <select id="provincia_id" required name="direcciones[0][localidade][provincia][id]" class="form-control">
+                                    <option selected value="">Seleccione una provincia</option>
+                                    <?php foreach ($provincias as $id => $provincia) { ?>
+                                        <?php if ($rbacUsuario->direcciones[0]->localidade['provincia']['id'] == $id) { ?>
+                                            <option selected value="<?php echo $id ?>"><?php echo $provincia; ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $id ?>"><?php echo $provincia; ?></option>
+                                        <?php } ?>
 
-                        <div class="form-group col-sm-2">
-                            <label>Tipo de Documento</label>
-                            <?= $this->Form->control('tipo_documento_id', ['options' => $tipoDocumentos, 'class' => 'form-control', 'label' => false]) ?>
-                        </div>
-
-                        <div class="form-group col-sm-2">
-                            <label>Documento</label>
-                            <?= $this->Form->input('documento', ['class' => 'form-control', 'label' => false]) ?>
-                        </div>
-
-                        <div class="form-group col-sm-4">
-                            <label>Teléfono</label>
-                            <?= $this->Form->input('telefono', ['class' => 'form-control', 'label' => false]) ?>
-                        </div>
-
-                        <div class="form-group col-sm-3">
-                            <label>Provincia</label><br>
-                            <select id="provincia_id" required name="direcciones[0][localidade][provincia][id]" class="form-control">
-                                <option selected value="">Seleccione una provincia</option>
-                                <?php foreach ($provincias as $id => $provincia) { ?>
-                                    <?php if ($rbacUsuario->direcciones[0]->localidade['provincia']['id'] == $id) { ?>
-                                        <option selected value="<?php echo $id ?>"><?php echo $provincia; ?></option>
-                                    <?php } else { ?>
-                                        <option value="<?php echo $id ?>"><?php echo $provincia; ?></option>
                                     <?php } ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>Localidad</label><br>
+                                <select required id="localidad_id" name="direcciones[0][localidad_id]" class="form-control">
+                                    <option selected value="">Seleccione una localidad</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label>Calle</label>
+                                <input name="direcciones[0][calle]" required
+                                    value="<?php echo isset($rbacUsuario->direcciones[0]->calle) ? $rbacUsuario->direcciones[0]->calle : ''; ?>" type="text" class="form-control"
+                                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
+                                    placeholder="Calle" maxlength="100">
+                            </div>
 
-                                <?php } ?>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-3">
-                            <label>Localidad</label><br>
-                            <select required id="localidad_id" name="direcciones[0][localidad_id]" class="form-control">
-                                <option selected value="">Seleccione una localidad</option>
-                            </select>
-                        </div>
-                        <div class="form-group col-sm-2">
-                            <label>Calle</label>
-                            <input name="direcciones[0][calle]" required
-                                value="<?php echo isset($rbacUsuario->direcciones[0]->calle) ? $rbacUsuario->direcciones[0]->calle : ''; ?>" type="text" class="form-control"
-                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
-                                placeholder="Calle" maxlength="100">
-                        </div>
-
-                        <div class="form-group col-sm-2">
-                            <label>Número</label>
-                            <input name="direcciones[0][numero]" required type="number" min="1" class="form-control"
-                                value="<?php echo isset($rbacUsuario->direcciones[0]->numero) ? $rbacUsuario->direcciones[0]->numero : ''; ?>" placeholder="Número" maxlength="4">
-                        </div>
-                        <div class="form-group col-sm-1">
-                            <label>Piso</label>
-                            <input name="direcciones[0][piso]" type="text" class="form-control"
-                                value="<?php echo isset($rbacUsuario->direcciones[0]->piso) ? $rbacUsuario->direcciones[0]->piso : ''; ?>" placeholder="Piso" maxlength="3">
-                        </div>
-                        <div class="form-group col-sm-1">
-                            <label>Depto</label>
-                            <input name="direcciones[0][departamento]" type="text" class="form-control"
-                                value="<?php echo isset($rbacUsuario->direcciones[0]->departamento) ? $rbacUsuario->direcciones[0]->departamento : ''; ?>" placeholder="Depto" maxlength="10">
-                        </div>
-
-
-
-                        <div class="form-row form-group col-sm-12 callout callout-info" role="alert">
-                            <i class="fa fa-info-circle" aria-hidden="true"></i>
-                            Si modifica el email, deberá confirmarlo desde su bandeja de entrada. Hasta que no lo haga, se seguirá mostrando el email anterior.
-                        </div>
+                            <div class="form-group col-sm-2">
+                                <label>Número</label>
+                                <input name="direcciones[0][numero]"
+                                    value="<?php echo isset($rbacUsuario->direcciones[0]->numero) ? $rbacUsuario->direcciones[0]->numero : ''; ?>"
+                                    type="number" class="form-control" placeholder="Número" min="1" max="9999" onkeydown="preventInvalidInput(event)"
+                                    oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
+                            </div>
+                            <div class="form-group col-sm-1">
+                                <label>Piso</label>
+                                <input name="direcciones[0][piso]" type="text" class="form-control"
+                                    value="<?php echo isset($rbacUsuario->direcciones[0]->piso) ? $rbacUsuario->direcciones[0]->piso : ''; ?>" placeholder="Piso" maxlength="3">
+                            </div>
+                            <div class="form-group col-sm-1">
+                                <label>Depto</label>
+                                <input name="direcciones[0][departamento]" type="text" class="form-control"
+                                    value="<?php echo isset($rbacUsuario->direcciones[0]->departamento) ? $rbacUsuario->direcciones[0]->departamento : ''; ?>" placeholder="Depto" maxlength="10">
+                            </div>
 
 
-                        <div class="form-group text-center">
-                            <a href="<?= $this->Url->build(['action' => 'view', $rbacUsuario->id]) ?>" class="btn btn-default">Cancelar</a>
-                            <?= $this->Form->button(__('Guardar'), ['class' => 'btn btn-primary']) ?>
 
-                        </div>
-                        <?= $this->Form->end() ?>
+                            <div class="form-group col-sm-12 text-center">
 
+                                <button type="submit" class="btn btn-primary">
+                                    <span class="glyphicon glyphicon-check"></span>
+                                    Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="form-row  col-sm-12 callout callout-info" role="alert">
+                        <i class="fa fa-info-circle" aria-hidden="true"></i>
+                        Si modifica el email, deberá confirmarlo desde su bandeja de entrada. Hasta que no lo haga, se seguirá mostrando el email anterior.
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
 </section>
 
 
@@ -185,4 +247,11 @@
 
 
     });
+
+    function preventInvalidInput(event) {
+        const invalidChars = ['e', 'E', '+', '-']; // caracteres que quieres restringir
+        if (invalidChars.includes(event.key)) {
+            event.preventDefault();
+        }
+    }
 </script>

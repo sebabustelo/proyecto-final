@@ -108,8 +108,8 @@ class TipoDocumentosTable extends Table
      */
     public function beforeSave(EventInterface $event, $entity, $options)
     {
-        if ($entity->isNew() || $entity->isDirty('nombre')) {
-            $entity->nombre = strtoupper($entity->nombre);
+        if ($entity->isNew() || $entity->isDirty('descripcion')) {
+            $entity->nombre = strtoupper($entity->descripcion);
         }
     }
 }

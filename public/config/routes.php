@@ -79,6 +79,8 @@ return function (RouteBuilder $routes): void {
         $builder->connect('/registerPassword/*', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'registerPassword'), array('routeClass' => 'InflectedRoute'));
         $builder->connect('/forgetPassword/*', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'forgetPassword'), array('routeClass' => 'InflectedRoute'));
         $builder->connect('/changePassword/*', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'changePassword'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/editMyUser/', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'editMyUser'), array('routeClass' => 'InflectedRoute'));
+        $builder->connect('/details/*', array('plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'detail'), array('routeClass' => 'InflectedRoute'));
 
 
         $builder->connect('/rbac/:controller', array('plugin'=>'Rbac', 'action' => 'index'), array('routeClass' => 'InflectedRoute'));

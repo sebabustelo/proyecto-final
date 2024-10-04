@@ -39,12 +39,22 @@ class TipoDocumentosController extends AppController
 
             $tipoDocumento = $this->TipoDocumentos->patchEntity($tipoDocumento,  $this->request->getData());
 
+
             if ($this->TipoDocumentos->save($tipoDocumento)) {
                 $this->Flash->success(__('El Tipo de Documento se guardo correctamente.'));
 
                 return $this->redirect(['action' => 'index']);
+            } else {
+                if ($tipoDocumento->getErrors()) {
+                    foreach ($tipoDocumento->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                } else {
+                    $this->Flash->error(__('El Tipo de Documento no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
+                }
             }
-            $this->Flash->error(__('El Tipo de Documento no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
         }
         $this->set(compact('tipoDocumento'));
     }

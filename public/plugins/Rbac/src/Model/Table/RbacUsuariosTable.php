@@ -132,16 +132,62 @@ class RbacUsuariosTable extends Table
             ->maxLength('modified_by', 16, 'El campo debe ser menor a 16 caracteres.')
             ->allowEmptyString('modified_by');
 
-        $validator
-            ->notEmptyString('documento', 'El documento es obligatorio.')
-            ->add('documento', 'validFormat', [
-                'rule' => 'notBlank',
-                'message' => 'El documento no puede contener caracteres inválidos.'
-            ])
-            ->add('documento', 'validFormat', [
-                'rule' => [$this, 'validarDocumento'],
-                'message' => 'El Documento no es válido, solo puede tener números y letras.',
-            ]);;
+        // $validator
+        //     ->add('nombre', 'requiredIfNotCUIT', [
+        //         'rule' => function ($value, $context) {
+
+        //             return empty($context['data']['cuit']) && empty($context['data']['razon_social']);
+        //         },
+        //         'message' => 'El nombre es obligatorio.',
+        //     ]);
+
+        // $validator
+        //     ->add('apellido', 'requiredIfNotCUIT', [
+        //         'rule' => function ($value, $context) {
+        //             return empty($context['data']['cuit']) && empty($context['data']['razon_social']);
+        //         },
+        //         'message' => 'El apellido es obligatorio .',
+        //     ]);
+
+        // // Validación de tipo_documento_id y documento solo si CUIT y razón social no están presentes
+        // $validator
+        //     ->add('tipo_documento_id', 'requiredIfNotCUIT', [
+        //         'rule' => function ($value, $context) {
+        //             return empty($context['data']['cuit']) && empty($context['data']['razon_social']);
+        //         },
+        //         'message' => 'El tipo de documento es obligatorio',
+        //     ]);
+
+        // $validator
+        //     ->add('documento', 'requiredIfNotCUIT', [
+        //         'rule' => function ($value, $context) {
+        //             return empty($context['data']['cuit']) && empty($context['data']['razon_social']);
+        //         },
+        //         'message' => 'El documento es obligatorio',
+        //     ])
+        //     ->add('documento', 'validFormat', [
+        //         'rule' => [$this, 'validarDocumento'],
+        //         'message' => 'El Documento no es válido, solo puede tener números y letras.',
+        //     ]);
+
+        // // Validación de CUIT y razón social solo si nombre, apellido, tipo_documento_id y documento no están presentes
+        // $validator
+        //     ->add('cuit', 'requiredIfNotPersona', [
+        //         'rule' => function ($value, $context) {
+        //             return !empty($context['data']['nombre']) && !empty($context['data']['apellido']) &&
+        //                 !empty($context['data']['tipo_documento_id']) && !empty($context['data']['documento']);
+        //         },
+        //         'message' => 'El CUIT es obligatorio.',
+        //     ]);
+
+        // $validator
+        //     ->add('razon_social', 'requiredIfNotPersona', [
+        //         'rule' => function ($value, $context) {
+        //             return !empty($context['data']['nombre']) && !empty($context['data']['apellido']) &&
+        //                 !empty($context['data']['tipo_documento_id']) && !empty($context['data']['documento']);
+        //         },
+        //         'message' => 'La razón social es obligatoria. ',
+        //     ]);
 
         return $validator;
     }

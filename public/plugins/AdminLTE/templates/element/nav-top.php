@@ -134,8 +134,14 @@ use Cake\Core\Configure; ?>
                             ?>
                             <p>
 
-                                <a href="/rbac/RbacUsuarios/detail/<?php echo $_SESSION['RbacUsuario']['id'] ?>"><?php echo $usuario->nombre . " " . $usuario->apellido; ?></a>
+                                <a href="/rbac/RbacUsuarios/detail/<?php echo $_SESSION['RbacUsuario']['id'] ?>">
+                                    <?php if (!empty($usuario->nombre) or !empty($usuario->apellid)) { ?>
+                                        <?php echo $usuario->nombre . " " . $usuario->apellido; ?>
 
+                                    <?php } else { ?>
+                                        <?php echo $usuario->razon_social; ?>
+                                    <?php } ?>
+                                </a>
                             </p>
                         </li>
 

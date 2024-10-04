@@ -48,7 +48,9 @@ class RbacUsuario extends Entity
         'perfil_id' => true,
         'password' => true,
         'password_confirm'=>true,
-        'direcciones'=>true
+        'direcciones'=>true,
+        'razon_social'=>true,
+
     ];
 
     protected function password_confirm()
