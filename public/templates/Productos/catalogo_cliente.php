@@ -70,67 +70,23 @@
         <!-- /.col -->
     </div>
     <div class="row">
-        <div class="col-sm-6 col-md-3">
-            <div class="thumbnail product-item">
-                <img src="/img/productos/fassier-duval.jpg" alt="Producto 1">
-                <div class="caption">
-                    <h4>Bisturí Descartable</h4>
-                    <p>Precio: $100</p>
-                    <p><a href="#" class="btn btn-success" role="button">Alquilar</a>
-                        <a href="#" class="btn btn-warning" role="button">Detalles</a>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="fa fa-shopping-cart"></span>
-                        </button>
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="thumbnail product-item">
-                <img src="/img/productos/fin_short.jpg" alt="Producto 2">
-                <div class="caption">
-                    <h4>Guantes Quirúrgicos</h4>
-                    <p>Precio: $200</p>
-                    <p><a href="#" class="btn btn-success" role="button">Alquilar</a>
-                        <a href="#" class="btn btn-warning" role="button">Detalles</a>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="fa fa-shopping-cart"></span>
-                        </button>
-                    </p>
+        <?php foreach ($productos as $k => $producto) { ?>
+            <div class="col-sm-6 col-md-3">
+                <div class="thumbnail product-item">
+                    <img src="/img/productos/<?php echo $producto->productos_archivos[0]->file_name; ?>" alt="Producto 1">
+                    <div class="caption">
+                        <h4><?php echo $producto->nombre; ?></h4>
+                        <p>Precio: <?php echo $producto->precio; ?></p>
+                        <p><a href="/Productos/buy" class="btn btn-success" role="button">Comprar</a>
+                            <a href="/Productos/detail/<?php echo $producto->id ?>" class="btn btn-warning" role="button">Detalles</a>
+                            <a href="/Pedidos/addCart" class="btn btn-primary" role="button"> <span class="fa fa-shopping-cart"></span></a>
 
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="thumbnail product-item">
-                <img src="/img/productos/k-mono.jpg" alt="Producto 3">
-                <div class="caption">
-                    <h4>Mascarillas N95</h4>
-                    <p>Precio: $150</p>
-                    <p><a href="#" class="btn btn-success" role="button">Alquilar</a>
-                        <a href="#" class="btn btn-warning" role="button">Detalles</a>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="fa fa-shopping-cart"></span>
-                        </button>
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="col-sm-6 col-md-3">
-            <div class="thumbnail product-item">
-                <img src="/img/productos/kmod-rev.jpg" alt="Producto 4">
-                <div class="caption">
-                    <h4>Jeringas Descartables</h4>
-                    <p>Precio: $50</p>
-                    <p><a href="#" class="btn btn-success" role="button">Alquilar</a>
-                        <a href="#" class="btn btn-warning" role="button">Detalles</a>
-                        <button type="submit" class="btn btn-primary">
-                            <span class="fa fa-shopping-cart"></span>
-                        </button>
-                    </p>
-                </div>
-            </div>
-        </div>
+        <?php } ?>
+
     </div>
 </section>
 

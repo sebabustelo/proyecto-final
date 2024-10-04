@@ -69,7 +69,8 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Stock</label>
-                                <input required type="number" maxlength="3" min="0" placeholder="Ingrese el stock" class="form-control" value="<?php echo $producto->stock; ?>">
+                                <input required type="number" maxlength="3" name="stock" min="0" placeholder="Ingrese el stock" 
+                                class="form-control" value="<?php echo $producto->stock; ?>">
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -78,8 +79,7 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Precio</label>
-                                <input required type="number" maxlength="6"
-                                placeholder="Ingrese el precio" name="precio" step="0.01" min="0" class="form-control" value="<?php echo $producto->precio; ?>">
+                                <input required type="number" maxlength="6" placeholder="Ingrese el precio" name="productos_precios[0][precio]" step="0.01" min="0" class="form-control" value="<?php echo $producto->productos_precios[0]->precio; ?>">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -88,7 +88,7 @@
                             </div>
                             <div class="form-group col-sm-12">
                                 <label>Descripción</label>
-                                <textarea required maxlength="2000" rows="5" placeholder="Ingrese la descripción" class="form-control" name="descripcion_breve"><?php echo $producto->descripcion_breve; ?></textarea>
+                                <textarea required maxlength="2000" rows="3" placeholder="Ingrese la descripción" class="form-control" name="descripcion_breve"><?php echo $producto->descripcion_breve; ?></textarea>
                                 <?php if ($producto->getError('descripcion_breve')) { ?>
                                     <?php foreach ($producto->getError('descripcion_breve') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -104,6 +104,11 @@
                                 <div class="kv-avatar-hint">
                                     <small>Las imagenes deben ser menor a < 1500 KB para optimizar la carga del portal</small>
                                 </div>
+                            </div>
+
+                            <div class="form-row form-group col-sm-12 callout callout-info" role="alert">
+                                <i class="fa fa-info-circle" aria-hidden="true"></i>
+                                La primera imagen se mostrará en la vista de productos del cliente, y las imágenes secundarias serán visibles al ingresar en el detalle del mismo.
                             </div>
 
 
@@ -129,10 +134,38 @@
                             </div>
                         </form>
 
-                        <div class="form-row form-group col-sm-12 callout callout-info" role="alert">
-                            <i class="fa fa-info-circle" aria-hidden="true"></i>
-                            La imagen principal se mostrará en la vista de kits de cirugías del cliente, y las imágenes secundarias serán visibles al ingresar en el detalle del mismo.
+                        <div class="col-sm-12">
+                            <label>Historial de Precios</label>
+                            <table class="table table-bordered table-striped">
+                                <thead>
+                                    <tr>
+
+                                        <th>Fecha Desde</th>
+                                        <th>Fecha Hasta</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($producto->productos_precios as $precio) : ?>
+                                        <tr>
+
+                                            <td><?php echo "" . $precio->fecha_desde->format('d/m/Y h:i:s'); ?></td>
+                                            <td>
+                                                <?php
+                                                if ($precio->fecha_hasta) {
+                                                    echo $precio->fecha_hasta->format('d/m/Y h:i:s');
+                                                } else {
+                                                    echo 'Actual';
+                                                }
+                                                ?>
+                                            </td>
+                                            <td><?php echo "$" . number_format($precio->precio, 2); ?> </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
                         </div>
+
                     </div>
                 </div>
             </div>

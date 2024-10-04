@@ -60,6 +60,9 @@ class ProductosTable extends Table
         $this->hasMany('ProductosArchivos', [
             'foreignKey' => 'producto_id',
         ]);
+        $this->hasMany('ProductosPrecios', [
+            'foreignKey' => 'producto_id',
+        ]);
     }
 
     /**
@@ -96,12 +99,7 @@ class ProductosTable extends Table
 
         $validator
             ->integer('stock')
-            ->allowEmptyString('stock');
-
-        $validator
-            ->decimal('precio')
-            ->notEmptyString('precio');
-
+            ->allowEmptyString('stock');       
 
         return $validator;
     }

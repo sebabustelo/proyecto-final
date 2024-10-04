@@ -31,7 +31,6 @@ class ProductosController extends AppController
 
         $this->set('filters', $this->getRequest()->getQuery());
         $this->set('productos', $this->paginate($productos));
-
     }
 
     /**
@@ -42,10 +41,27 @@ class ProductosController extends AppController
     public function catalogoCliente()
     {
         $query = $this->Productos->find()
-            ->contain(['Categorias', 'Proveedores']);
+            ->contain(['Categorias', 'ProductosArchivos']);
         $productos = $this->paginate($query);
 
         $this->set(compact('productos'));
+    }
+
+    public function detail($id = null)
+    {
+        $producto = $this->Productos->find()
+            ->where(['Productos.id' => $id])
+            ->contain(['Categorias', 'ProductosArchivos'])
+            ->first();
+
+        if (!$producto) {
+            $this->Flash->error(__('El producto no existe.'));
+            return $this->redirect(['action' => 'index']);
+        }
+        //debug($producto);
+
+        // Pasar el producto a la vista
+        $this->set(compact('producto'));
     }
 
 
@@ -58,10 +74,7 @@ class ProductosController extends AppController
     {
         $producto = $this->Productos->newEmptyEntity();
         if ($this->request->is('post')) {
-           // debug( count($_FILES['imagenes']['name']));
-            // debug($_FILES);
-           //  debug($this->request->getData());
-           // die;
+
             $producto = $this->Productos->patchEntity($producto, $this->request->getData());
 
             if ($this->Productos->save($producto)) {
@@ -80,7 +93,7 @@ class ProductosController extends AppController
                         $upload->file_size = $file['file_size'];
                         $upload->file_path = $file['file_path'];
                         $upload->producto_id = $producto->id;
-                        if($principal){
+                        if ($principal) {
                             $upload->es_principal = 1;
                             $principal = false;
                         }
@@ -94,8 +107,8 @@ class ProductosController extends AppController
             }
             $this->Flash->error(__('El producto no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
         }
-        $categorias = $this->Productos->Categorias->find('list', limit: 200)->all();
-        $proveedores = $this->Productos->Proveedores->find('list', limit: 200)->all();
+        $categorias = $this->Productos->Categorias->find('list')->where(['Categorias.activo' => 1])->all();
+        $proveedores = $this->Productos->Proveedores->find('list')->where(['Proveedores.activo' => 1])->all();
         $this->set(compact('producto', 'categorias', 'proveedores'));
     }
 
@@ -108,10 +121,60 @@ class ProductosController extends AppController
      */
     public function edit($id = null)
     {
-        $producto = $this->Productos->get($id, contain: ['ProductosArchivos']);
+        $producto = $this->Productos->find()
+            ->where(['Productos.id' => $id]) // Filtrar por el ID del producto
+            ->contain([
+                'ProductosArchivos',
+                'ProductosPrecios' => function ($q) {
+                    return $q->order(['ProductosPrecios.fecha_desde' => 'DESC']); // Ordenar por fecha_desde en orden ascendente
+                }
+            ])
+            ->first(); // Retorna el primer registro encontrado
+
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $producto = $this->Productos->patchEntity($producto, $this->request->getData());
-          
+            $data =  $this->request->getData();
+
+
+            if ($data['productos_precios'][0]['precio'] != $producto->productos_precios[0]->precio) {
+                // Obtener el precio actual del producto
+                $precioActual = $producto->productos_precios[0];
+
+                // Actualizar la fecha_hasta del precio existente
+                $precioActual->fecha_hasta =  date('Y-m-d H:i:s'); // Fecha actual
+
+                // Guardar el precio existente con la fecha_hasta actualizada
+                if ($this->Productos->ProductosPrecios->save($precioActual)) {
+                    // Crear un nuevo precio
+                    $nuevoPrecio = $this->Productos->ProductosPrecios->newEntity([
+                        'producto_id' => $producto->id,
+                        'precio' => $data['productos_precios'][0]['precio'],
+                        'fecha_desde' => date('Y-m-d H:i:s'), // Fecha actual
+                        'fecha_hasta' => null // Mantener como null hasta que haya un cambio futuro
+                    ]);
+
+                    // Guardar el nuevo precio
+                    if ($this->Productos->ProductosPrecios->save($nuevoPrecio)) {
+                        $this->Flash->success(__('Nuevo precio guardado con éxito.'));
+                    } else {
+                        if ($nuevoPrecio->getErrors()) {
+                            foreach ($nuevoPrecio->getErrors() as $field => $errors) {
+                                foreach ($errors as $error) {
+                                    $this->Flash->error(__($error));
+                                }
+                            }
+                        } else {
+                            $this->Flash->error(__('No se pudo guardar el nuevo precio.'));
+                        }
+                    }
+                } else {
+                    $this->Flash->error(__('No se pudo actualizar el precio anterior.'));
+                }
+            }
+
+            // Eliminar productos_precios de los datos antes de guardar el producto
+            unset($data['productos_precios']);
+            $producto = $this->Productos->patchEntity($producto, $data);
+
             if ($this->Productos->save($producto)) {
                 $this->Flash->success(__('El producto se actualizo correctamente.'));
 
@@ -119,12 +182,12 @@ class ProductosController extends AppController
             }
             $this->Flash->error(__('No se pudo eliminar el producto. Por favor, inténtalo de nuevo.'));
         }
-        $categorias = $this->Productos->Categorias->find('list', limit: 200)->all();
-        $proveedores = $this->Productos->Proveedores->find('list', limit: 200)->all();
+        $categorias = $this->Productos->Categorias->find('list')->where(['Categorias.activo' => 1])->all();
+        $proveedores = $this->Productos->Proveedores->find('list')->where(['Proveedores.activo' => 1])->all();
         $this->set(compact('producto', 'categorias', 'proveedores'));
     }
 
-    
+
     /**
      * Categorias method
      *
@@ -135,8 +198,8 @@ class ProductosController extends AppController
     public function categorias($id = null)
     {
         $categoria = $this->Productos->Categorias->get($id);
-        $productos = $this->Productos->find()->where(['categoria_id'=>$id])->contain(['Categorias','ProductosArchivos'])->all();
-        $this->set(compact('productos','categoria'));
+        $productos = $this->Productos->find()->where(['categoria_id' => $id])->contain(['Categorias', 'ProductosArchivos'])->all();
+        $this->set(compact('productos', 'categoria'));
     }
 
     /**
@@ -148,7 +211,7 @@ class ProductosController extends AppController
      */
     public function delete($id = null)
     {
-       
+
         $this->request->allowMethod(['post', 'delete']);
         $producto = $this->Productos->get($id);
         if ($this->Productos->delete($producto)) {
@@ -171,7 +234,7 @@ class ProductosController extends AppController
     {
         $data = $this->getRequest()->getQuery();
         $conditions['where'] = [];
-        $conditions['contain'] =['Categorias', 'Proveedores', 'ProductosArchivos'];
+        $conditions['contain'] = ['Categorias', 'Proveedores', 'ProductosArchivos'];
 
         if (isset($data['nombre']) and !empty($data['nombre'])) {
             $conditions['where'][] = ['Productos.nombre LIKE' => '%' . $data['nombre'] . '%'];
