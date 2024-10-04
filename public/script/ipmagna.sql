@@ -184,7 +184,7 @@ CREATE TABLE `direcciones` (
   KEY `FK_direcciones_localidades_idx` (`localidad_id`),
   CONSTRAINT `FK_direcciones_localidades` FOREIGN KEY (`localidad_id`) REFERENCES `localidades` (`id`) ON UPDATE NO ACTION,
   CONSTRAINT `FK_direcciones_usuarios` FOREIGN KEY (`rbac_usuario_id`) REFERENCES `rbac_usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -193,7 +193,7 @@ CREATE TABLE `direcciones` (
 
 LOCK TABLES `direcciones` WRITE;
 /*!40000 ALTER TABLE `direcciones` DISABLE KEYS */;
-INSERT INTO `direcciones` VALUES (24,2923,'terrero','1589','2','31',286,NULL),(25,2923,'terrero','','2','31',286,NULL),(26,2923,'terrero','','2','31',286,NULL),(27,2923,'terrero','','2','31',286,NULL),(28,2923,'terrero','','2','31',286,NULL);
+INSERT INTO `direcciones` VALUES (24,2923,'terrero','1589','2','31',286,NULL),(35,2998,'padilla','752','2','a',282,NULL),(36,2998,'padilla','752','2','a',282,NULL);
 /*!40000 ALTER TABLE `direcciones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -573,7 +573,7 @@ CREATE TABLE `rbac_token` (
   KEY `IDX_TOKEN` (`token`),
   KEY `fk_rbac_usuario_idx` (`rbac_usuario_id`),
   CONSTRAINT `fk_rbac_usuarios` FOREIGN KEY (`rbac_usuario_id`) REFERENCES `rbac_usuarios` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -620,7 +620,7 @@ CREATE TABLE `rbac_usuarios` (
   KEY `FK_tipo_documento` (`tipo_documento_id`),
   CONSTRAINT `FK_rbac_usuarios_rbac_perfiles` FOREIGN KEY (`perfil_id`) REFERENCES `rbac_perfiles` (`id`),
   CONSTRAINT `FK_tipo_documento` FOREIGN KEY (`tipo_documento_id`) REFERENCES `tipo_documentos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2992 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=2999 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -629,7 +629,7 @@ CREATE TABLE `rbac_usuarios` (
 
 LOCK TABLES `rbac_usuarios` WRITE;
 /*!40000 ALTER TABLE `rbac_usuarios` DISABLE KEYS */;
-INSERT INTO `rbac_usuarios` VALUES (2901,1,'florencia','florenciatigani@hotmail.com',NULL,'María Florencia','Tigani',1,'María Flor',NULL,NULL,NULL,'33a47f95b1fca05597aec141e7a3221e90a20dac6e73c3e38b09931229212713','d57edf2d2082b0865e15d11edaecdb20',1,'2019-10-28 14:50:04','2024-08-30 18:01:45',NULL,'2923'),(2923,1,'sebabustelo','sebabustelo@gmail.com',NULL,'Sebastian','Bustelo',1,'28999186',NULL,NULL,1140876451,'d685328db63350ce310941e16d676d09b88bd3e8630c334a883edf0ee0f8d4fa','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-08-30 14:29:31','2024-10-03 15:31:40','2907','2907'),(2987,1,'facundo','faquundo2406@hotmail.com',NULL,'Facundo','Ramirez',1,'37680252',NULL,NULL,1128809967,'9f4dbfaa3036cd2b07d9613fb0af7f8033dfcb314ab4115607e799454e8dc709','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-09-28 10:52:31','2024-09-28 11:00:06',NULL,NULL),(2988,8,'eduardo','eduardotigani@hotmail.com',NULL,'Eduardo','Tigani',1,'8432465',NULL,NULL,1169441515,NULL,NULL,0,'2024-09-28 10:54:06','2024-09-28 10:54:06',NULL,NULL),(2989,8,'morella','morelloalicia@hotmail.com',NULL,'ALICIA NELIDA','MORELLO',1,'10120815',NULL,NULL,1140333290,NULL,NULL,0,'2024-10-01 16:59:06','2024-10-01 16:59:06',NULL,NULL),(2990,8,'mflorencia','mflorenciatigani@gmail.com',NULL,'susana','alvarez',1,'843256598',NULL,NULL,1142541358,NULL,NULL,0,'2024-10-03 09:13:56','2024-10-03 09:13:56',NULL,NULL),(2991,8,'flawer','flawer777@hotmail.com',NULL,'susana','alvarez',1,'843256598',NULL,NULL,15451315,NULL,NULL,0,'2024-10-03 09:15:40','2024-10-03 09:15:40',NULL,NULL);
+INSERT INTO `rbac_usuarios` VALUES (2901,1,'florencia','florenciatigani@hotmail.com',NULL,'María Florencia','Tigani',1,'29121333',NULL,NULL,NULL,'33a47f95b1fca05597aec141e7a3221e90a20dac6e73c3e38b09931229212713','d57edf2d2082b0865e15d11edaecdb20',1,'2019-10-28 14:50:04','2024-08-30 18:01:45',NULL,'2923'),(2923,1,'sebabustelo','sebabustelo@gmail.com',NULL,'Sebastian','Bustelo',1,'28999186',NULL,NULL,1140876451,'d685328db63350ce310941e16d676d09b88bd3e8630c334a883edf0ee0f8d4fa','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-08-30 14:29:31','2024-10-03 15:31:40','2907','2907'),(2987,1,'facundo','faquundo2406@hotmail.com',NULL,'Facundo','Ramirez',1,'37680252',NULL,NULL,1128809967,'9f4dbfaa3036cd2b07d9613fb0af7f8033dfcb314ab4115607e799454e8dc709','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-09-28 10:52:31','2024-09-28 11:00:06',NULL,NULL),(2998,8,'seba','zebabustelo@gmail.com',NULL,'','Perez SA',25,'2028999186',NULL,'Perez SA',2147483647,'66f35bfdcc1ec10b11e0de2537e8df5816732d929891c3ac1018b82343876b6e','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-10-04 05:30:59','2024-10-04 05:40:20',NULL,NULL);
 /*!40000 ALTER TABLE `rbac_usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -648,7 +648,7 @@ CREATE TABLE `tipo_documentos` (
   `activo` tinyint(1) DEFAULT 1,
   PRIMARY KEY (`id`),
   UNIQUE KEY `descripcion_UNIQUE` (`descripcion`)
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -657,7 +657,7 @@ CREATE TABLE `tipo_documentos` (
 
 LOCK TABLES `tipo_documentos` WRITE;
 /*!40000 ALTER TABLE `tipo_documentos` DISABLE KEYS */;
-INSERT INTO `tipo_documentos` VALUES (1,'DNI','2024-09-04 20:48:19','2024-09-04 20:52:56',1),(2,'LE','2024-09-04 20:48:19','2024-09-04 20:52:56',1),(3,'PASAPORTE','2024-09-04 20:48:19','2024-09-04 20:52:56',1);
+INSERT INTO `tipo_documentos` VALUES (1,'DNI','2024-09-04 20:48:19','2024-09-04 20:52:56',1),(2,'LE','2024-09-04 20:48:19','2024-09-04 20:52:56',1),(3,'PASAPORTE','2024-09-04 20:48:19','2024-09-04 20:52:56',1),(25,'CUIT','2024-10-04 03:21:22','2024-10-04 03:21:22',1);
 /*!40000 ALTER TABLE `tipo_documentos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -670,4 +670,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-03 19:02:00
+-- Dump completed on 2024-10-04  8:26:43

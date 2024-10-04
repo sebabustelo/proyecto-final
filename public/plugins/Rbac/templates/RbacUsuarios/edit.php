@@ -151,7 +151,12 @@ use Cake\Core\Configure;
                                 <label for="rbac-perfiles-ids">Perfil</label><br>
                                 <select required id="rbac-perfiles-ids" name="rbac_perfiles[_ids][]" class="form-control">
                                     <?php foreach ($rbacPerfiles as $id => $perfil) : ?>
-                                        <option value="<?php echo $id; ?>"><?php echo $perfil; ?></option>
+                                        <?php if ($rbacUsuario->perfil_id == $id) { ?>
+                                            <option selected value="<?php echo $id; ?>"><?php echo $perfil; ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $id; ?>"><?php echo $perfil; ?></option>
+                                        <?php } ?>
+
                                     <?php endforeach; ?>
                                 </select>
                             </div>
