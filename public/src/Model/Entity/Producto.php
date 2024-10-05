@@ -42,11 +42,12 @@ class Producto extends Entity
         'categoria_id' => true,
         'proveedor_id' => true,
         'stock' => true,
-        'precio' => true,
+        'productos_precios' => true,
         'created' => true,
         'modified' => true,
         'categoria' => true,
         'proveedore' => true,
         'activo' => true,
+
     ];
 }

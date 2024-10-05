@@ -10,7 +10,7 @@
 
 <section class="content-header">
     <h1>
-    <i class="fa fa-fw fa-medkit"></i> Gestión de Productos
+        <i class="fa fa-fw fa-medkit"></i> Gestión de Productos
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Productos</a></li> <i class="fa fa-arrow-right"></i>
@@ -35,7 +35,9 @@
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <div class="form-group col-sm-4">
                                 <label>Nombre</label>
-                                <input required type="text" maxlength="150" placeholder="Ingrese el nombre" class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')" oninput="this.setCustomValidity('')">
+                                <input required type="text" maxlength="150" placeholder="Ingrese el nombre"
+                                    class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')"
+                                    oninput="this.setCustomValidity('')" value="<?php echo $this->request->getData('nombre') ?>">
                                 <?php if ($producto->getError('nombre')) { ?>
                                     <?php foreach ($producto->getError('nombre') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -47,7 +49,11 @@
                                 <select required name="categoria_id" class="form-control">
                                     <option value="">Seleccione una categoría</option>
                                     <?php foreach ($categorias as $id => $categoria) : ?>
-                                        <option value="<?php echo $id; ?>"><?php echo $categoria; ?></option>
+                                        <?php if ($this->request->getData('categoria_id') == $id) { ?>
+                                            <option selected value="<?php echo $id; ?>"><?php echo $categoria; ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $id; ?>"><?php echo $categoria; ?></option>
+                                        <?php } ?>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
@@ -56,14 +62,19 @@
                                 <select required name="proveedor_id" class="form-control">
                                     <option value="">Seleccione un proveedor</option>
                                     <?php foreach ($proveedores as $id => $proveedor) : ?>
-                                        <option value="<?php echo $id; ?>"><?php echo $proveedor; ?></option>
+                                        <?php if ($this->request->getData('proveedor_id') == $id) { ?>
+                                            <option selected value="<?php echo $id; ?>"><?php echo $proveedor; ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $id; ?>"><?php echo $proveedor; ?></option>
+                                        <?php } ?>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Stock</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="5" placeholder="Ingrese el stock" class="form-control"
-                                 onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')" min="0" >
+                                <input required type="number" maxlength="5" placeholder="Ingrese el stock" class="form-control"
+                                    onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')" min="0"
+                                     value="<?php echo $this->request->getData('stock') ?>">
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -72,8 +83,9 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Precio</label>
-                                <input style='text-transform: uppercase;' required type="number" maxlength="6" placeholder="Ingrese el precio" min="0"
-                                class="form-control" onkeydown="preventInvalidInput(event)" name="precio" step="0.01" oninput="this.setCustomValidity('')">
+                                <input required type="number" maxlength="6" placeholder="Ingrese el precio" min="0"
+                                    class="form-control" onkeydown="preventInvalidInput(event)" name="productos_precios[0][precio]"
+                                    step="0.01" oninput="this.setCustomValidity('')" value="<?php echo isset($this->request->getData('productos_precios')[0]['precio'])?$this->request->getData('productos_precios')[0]['precio']:'' ?>">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -82,9 +94,12 @@
                             </div>
                             <div class="form-group col-sm-12">
                                 <label>Descripción</label>
-                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción" class="form-control" name="descripcion" oninvalid="this.setCustomValidity('Debe completar la descripción')" oninput="this.setCustomValidity('')"></textarea>
-                                <?php if ($producto->getError('descripcion')) { ?>
-                                    <?php foreach ($producto->getError('descripcion') as $error) { ?>
+
+                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción"
+                                    class="form-control" name="descripcion_breve" oninvalid="this.setCustomValidity('Debe completar la descripción')"
+                                    oninput="this.setCustomValidity('')"><?php echo $this->request->getData('descripcion_breve') ?></textarea>
+                                <?php if ($producto->getError('descripcion_breve')) { ?>
+                                    <?php foreach ($producto->getError('descripcion_breve') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
                                     <?php } ?>
                                 <?php } ?>
@@ -93,7 +108,7 @@
                             <div class="col-sm-12">
                                 <div class="verify-sub-box">
                                     <div class="file-loading">
-                                        <input id="imagenes" name="imagenes[]"  accept=".jpg, .jpeg, .png, .gif"  type="file" multiple>
+                                        <input id="imagenes" name="imagenes[]" accept=".jpg, .jpeg, .png, .gif" type="file" multiple>
                                     </div>
                                 </div>
                                 <div class="kv-avatar-hint">

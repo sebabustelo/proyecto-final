@@ -35,7 +35,24 @@ class PedidosController extends AppController
         // $this->set('categorias', $this->paginate($categorias));
     }
 
-   
+    public function reserve($id = null)
+    {
+        $producto = $this->Pedidos->DetallesPedidos->Productos->find()
+            ->where(['Productos.id' => $id])
+            ->contain(['Categorias', 'ProductosArchivos'])
+            ->first();
+
+        if (!$producto) {
+            $this->Flash->error(__('El producto no existe.'));
+            return $this->redirect(['action' => 'index']);
+        }
+        //debug($producto);
+
+        // Pasar el producto a la vista
+        $this->set(compact('producto'));
+    }
+
+
     /**
      * getCondition method
      *

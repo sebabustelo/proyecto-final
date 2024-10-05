@@ -77,29 +77,29 @@ class ProductosTable extends Table
             ->scalar('nombre')
             ->maxLength('nombre', 255)
             ->requirePresence('nombre', 'create')
-            ->notEmptyString('nombre');
+            ->notEmptyString('nombre','Debe ingresar un nombre');
 
         $validator
             ->scalar('descripcion_breve')
             ->requirePresence('descripcion_breve', 'create')
-            ->notEmptyString('descripcion_breve');
+            ->notEmptyString('descripcion_breve','Debe ingresar una descripción breve');
 
         $validator
             ->scalar('descripcion_larga')
-            ->requirePresence('descripcion_larga', 'create')
+            //->requirePresence('descripcion_larga', 'create')
             ->allowEmptyString('descripcion_larga');
 
         $validator
             ->integer('categoria_id')
-            ->notEmptyString('categoria_id');
+            ->notEmptyString('categoria_id','Debe seleccionar una categoría');
 
         $validator
             ->integer('proveedor_id')
-            ->notEmptyString('proveedor_id');
+            ->notEmptyString('proveedor_id','Debe seleccionar un proveedor');
 
         $validator
             ->integer('stock')
-            ->allowEmptyString('stock');       
+            ->allowEmptyString('stock');
 
         return $validator;
     }

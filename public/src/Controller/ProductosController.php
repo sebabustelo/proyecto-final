@@ -34,33 +34,45 @@ class ProductosController extends AppController
     }
 
     /**
-     * Index method
+     * catalogoCliente method
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function catalogoCliente()
     {
-        $query = $this->Productos->find()
-            ->contain(['Categorias', 'ProductosArchivos']);
-        $productos = $this->paginate($query);
+        $conditions = $this->getConditionsPublic();
+        $productos = $this->Productos->find()
+            ->where($conditions['where'])
+            ->contain([
+                'Categorias',
+                'ProductosArchivos',
+                'ProductosPrecios' => function ($q) {
+                    return $q->where(['fecha_hasta IS NULL'])->order(['ProductosPrecios.fecha_desde' => 'DESC']); // Ordenar por fecha_desde en orden ascendente
+                }
+            ]);
 
-        $this->set(compact('productos'));
+        $this->set('productos', $this->paginate($productos));
+        $this->set('filters', $this->getRequest()->getQuery());
     }
 
     public function detail($id = null)
     {
         $producto = $this->Productos->find()
             ->where(['Productos.id' => $id])
-            ->contain(['Categorias', 'ProductosArchivos'])
+            ->contain([
+                'Categorias',
+                'ProductosArchivos',
+                'ProductosPrecios' => function ($q) {
+                    return $q->order(['ProductosPrecios.fecha_desde' => 'DESC']);
+                }
+            ])
             ->first();
 
         if (!$producto) {
             $this->Flash->error(__('El producto no existe.'));
             return $this->redirect(['action' => 'index']);
         }
-        //debug($producto);
 
-        // Pasar el producto a la vista
         $this->set(compact('producto'));
     }
 
@@ -74,8 +86,18 @@ class ProductosController extends AppController
     {
         $producto = $this->Productos->newEmptyEntity();
         if ($this->request->is('post')) {
+            $data = $this->request->getData();
+            $data['productos_precios'][0]['fecha_desde'] =  date('Y-m-d H:i:s'); // Fecha actual
 
-            $producto = $this->Productos->patchEntity($producto, $this->request->getData());
+            $producto = $this->Productos->patchEntity(
+                $producto,
+                $data,
+                [
+                    'associated' => [
+                        'ProductosPrecios'
+                    ],
+                ]
+            );
 
             if ($this->Productos->save($producto)) {
 
@@ -104,8 +126,19 @@ class ProductosController extends AppController
                 } else {
                     $this->Flash->error($result['error']);
                 }
+            } else {
+                debug($producto->getErrors());
+                die;
+                if ($producto->getErrors()) {
+                    foreach ($producto->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                } else {
+                    $this->Flash->error(__('El producto no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
+                }
             }
-            $this->Flash->error(__('El producto no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
         }
         $categorias = $this->Productos->Categorias->find('list')->where(['Categorias.activo' => 1])->all();
         $proveedores = $this->Productos->Proveedores->find('list')->where(['Proveedores.activo' => 1])->all();
@@ -130,6 +163,7 @@ class ProductosController extends AppController
                 }
             ])
             ->first(); // Retorna el primer registro encontrado
+
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data =  $this->request->getData();
@@ -251,6 +285,32 @@ class ProductosController extends AppController
         }
 
         $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
+
+        return $conditions;
+    }
+
+    /**
+     * getCondition method
+     *
+     * @param string|null $data Data send by the Form .
+     * @return array $conditions Conditions for search filters with $conditions['where'], $conditions['contain'] and $conditions['matching'] to find.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    private function getConditionsPublic()
+    {
+        $data = $this->getRequest()->getQuery();
+
+        $conditions['where'] = [];
+        $conditions['contain'] = ['Categorias', 'ProductosArchivos'];
+
+        if(!isset($data['search'])){
+            $data['search']='';
+        }
+
+        $orConditions = [];
+        $orConditions[] = ['Productos.nombre LIKE' => '%' . $data['search'] . '%'];
+        $orConditions[] = ['Productos.descripcion_breve LIKE ' => '%' . $data['search'] . '%'];
+        $conditions['where']['OR'] = $orConditions;
 
         return $conditions;
     }

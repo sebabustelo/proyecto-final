@@ -9,60 +9,26 @@
     </ol>
 </section>
 
-<section id="RbacUsuariosList" class="content">
+<section id="CatalogoClienteList" class="content">
     <div class="row">
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
                     <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> </h3>
-
-                </div>
-                <!-- /.box-header -->
-                <div class="box-body">
-                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/productos/search">
+                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/productos/catalogo_cliente">
 
                         <div class="form-row text-center">
                             <div class="input-group col-md-6 col-md-offset-3 ">
-                                <input type="text" name="message" placeholder=" Buscar productos... " class="form-control">
+                                <input type="text" name="search" value="<?php echo (isset($filters['search'])) ? $filters['search'] : '' ?>" placeholder=" Buscar productos... " class="form-control">
                                 <span class="input-group-btn">
                                     <button type="submit" class="btn btn-primary btn-flat"> <span class="glyphicon glyphicon-search"></span></button>
                                 </span>
                             </div>
-
-                            <!-- <div class="form-group col-md-4 ">
-                                <button type="button" id="limpiar" class="btn btn-default">
-                                    <span class="glyphicon glyphicon-trash"></span>
-                                    Limpiar</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                <button type="submit" id="enviar" class="btn btn-primary">
-                                    <span class="glyphicon glyphicon-search"></span>
-                                    Buscar</button>
-
-
-                                <script>
-                                    $(function() {
-                                        $('#limpiar').on('click', function() {
-                                            $('#formOrderFilter').find(
-                                                'input:text, input:password, select, textarea').val('');
-                                            $('#formOrderFilter').find(
-                                                'input:radio, input:checkbox:not(#activo)').prop(
-                                                'checked', false);
-                                            document.getElementById("activo").checked = true;
-
-                                            $('#formOrderFilter').submit();
-
-                                            return false;
-                                        });
-                                    });
-                                </script>
-                                <div id="filterErrors">
-                                </div>
-                            </div> -->
-
                         </div>
-
-
                     </form>
                 </div>
+                <!-- /.box-header -->
+
                 <!-- /.box-body -->
             </div>
             <!-- /.box -->
@@ -76,12 +42,20 @@
                     <img src="/img/productos/<?php echo $producto->productos_archivos[0]->file_name; ?>" alt="Producto 1">
                     <div class="caption">
                         <h4><?php echo $producto->nombre; ?></h4>
-                        <p>Precio: <?php echo $producto->precio; ?></p>
-                        <p><a href="/Productos/buy" class="btn btn-success" role="button">Comprar</a>
-                            <a href="/Productos/detail/<?php echo $producto->id ?>" class="btn btn-warning" role="button">Detalles</a>
-                            <a href="/Pedidos/addCart" class="btn btn-primary" role="button"> <span class="fa fa-shopping-cart"></span></a>
-
+                        <p>Precio: <?php echo "$".$producto->productos_precios[0]->precio; ?></p>
+                        <p>
+                            <?php
+                            $descripcion = $producto->descripcion_breve;
+                            if (strlen($descripcion) > 100) {
+                                $descripcion = substr($descripcion, 0, strrpos(substr($descripcion, 0, 150), ' ')) . '...';
+                            }
+                            echo $descripcion;
+                            ?>
                         </p>
+                        <div class="button-group">
+                            <a href="/Productos/detail/<?php echo $producto->id ?>" class="btn btn-success" role="button"><i class="fa fa-file"></i> Solicitud y Detalles</a>
+                            <a href="/Pedidos/addCart" class="btn btn-primary" role="button"> <span class="fa fa-shopping-cart"></span></a>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -146,3 +120,48 @@
     </div>
 
 </div> -->
+<style>
+    /* Para asegurar que las columnas sean flexibles */
+    .row {
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    /* Asegura que cada tarjeta (thumbnail) tenga la misma altura y use flexbox */
+    .thumbnail.product-item {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    /* Define que el contenido de la tarjeta crezca */
+    .thumbnail .caption {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex-grow: 1;
+    }
+
+    /* Botones alineados al final */
+    .button-group {
+        margin-top: auto;
+        display: flex;
+        justify-content: space-between;
+        padding-top: 10px;
+    }
+
+    /* Limitar la altura de la imagen para que no expanda la tarjeta */
+    .thumbnail img {
+        margin-bottom: 15px;
+        max-height: 200px;
+        width: 100%;
+        object-fit: cover;
+    }
+
+    /* Asegurar que todos los thumbnails tengan la misma altura */
+    .thumbnail {
+        min-height: 400px;
+        /* Ajusta esta altura dependiendo de lo que necesitas */
+    }
+</style>

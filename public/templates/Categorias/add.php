@@ -35,7 +35,8 @@ use Cake\Core\Configure;
                             <div class="form-group col-sm-2">
                                 <label>Nombre</label>
                                 <input style='text-transform: uppercase;' required type="text" maxlength="100" placeholder="Ingrese el nombre"
-                                    class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')" oninput="this.setCustomValidity('')">
+                                    class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')"
+                                    oninput="this.setCustomValidity('')">
                                 <?php if ($categoria->getError('nombre')) { ?>
                                     <?php foreach ($categoria->getError('nombre') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -45,7 +46,8 @@ use Cake\Core\Configure;
                             </div>
                             <div class="form-group col-sm-10">
                                 <label>Descripción</label>
-                                <input type="text" maxlength="300" placeholder="Ingrese la descripción" class="form-control" name="descripcion">
+                                <input type="text" maxlength="300" placeholder="Ingrese la descripción" class="form-control"
+                                name="descripcion">
                                 <?php if ($categoria->getError('descripcion')) { ?>
                                     <?php foreach ($categoria->getError('descripcion') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>

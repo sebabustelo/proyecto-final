@@ -30,6 +30,8 @@ use Cake\Core\Configure; ?>
   <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
   <?php echo $this->Html->css('AdminLTE.skins/skin-' . Configure::read('Theme.skin') . '.min'); ?>
+  <?php echo $this->Html->css('catalogo_cliente.css'); ?>
+
 
   <!-- jQuery 3 -->
   <?php echo $this->Html->script('AdminLTE./bower_components/jquery/dist/jquery.min'); ?>

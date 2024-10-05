@@ -69,7 +69,7 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Stock</label>
-                                <input required type="number" maxlength="3" name="stock" min="0" placeholder="Ingrese el stock" 
+                                <input required type="number" maxlength="3" name="stock" min="0" placeholder="Ingrese el stock"
                                 class="form-control" value="<?php echo $producto->stock; ?>">
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
@@ -79,7 +79,8 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Precio</label>
-                                <input required type="number" maxlength="6" placeholder="Ingrese el precio" name="productos_precios[0][precio]" step="0.01" min="0" class="form-control" value="<?php echo $producto->productos_precios[0]->precio; ?>">
+                                <input required type="number" maxlength="6" placeholder="Ingrese el precio" name="productos_precios[0][precio]"
+                                step="0.01" min="0" class="form-control" value="<?php echo isset($producto->productos_precios[0]->precio)?$producto->productos_precios[0]->precio:0; ?>">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
