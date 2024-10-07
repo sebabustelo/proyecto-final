@@ -27,7 +27,8 @@ class PedidosEstadosController extends AppController
         $conditions = $this->getConditions();
         $pedidoEstados = $this->PedidosEstados->find()
             ->where($conditions['where'])
-            ->contain($conditions['contain']);
+            ->contain($conditions['contain'])
+            ->orderBy('orden');
 
         $this->set('filters', $this->getRequest()->getQuery());
         $this->set('estados', $this->paginate($pedidoEstados));

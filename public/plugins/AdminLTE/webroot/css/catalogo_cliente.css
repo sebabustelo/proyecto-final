@@ -1,0 +1,43 @@
+/* Estilos aplicados solo a la sección #CatalogoClienteList */
+#CatalogoClienteList .row {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* Asegura que cada tarjeta (thumbnail) tenga la misma altura y use flexbox */
+#CatalogoClienteList .thumbnail.product-item {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100%;
+}
+
+/* Define que el contenido de la tarjeta crezca */
+#CatalogoClienteList .thumbnail .caption {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+/* Botones alineados al final */
+#CatalogoClienteList .button-group {
+    margin-top: auto;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+/* Limitar la altura de la imagen para que no expanda la tarjeta */
+#CatalogoClienteList .thumbnail img {
+    margin-bottom: 15px;
+    max-height: 200px;
+    width: 100%;
+    object-fit: cover;
+}
+
+/* Asegurar que todos los thumbnails tengan la misma altura */
+#CatalogoClienteList .thumbnail {
+    min-height: 400px;
+    /* Ajusta esta altura dependiendo de lo que necesitas */
+}

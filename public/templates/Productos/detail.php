@@ -49,7 +49,7 @@
                         <div class="col-md-8">
 
                             <p>
-                                <i class="fa fa-tag"></i> <strong>Precio: </strong><?php echo $producto->productos_precios[0]->precio; ?>
+                                <i class="fa fa-tag"></i> <strong>Precio: </strong><?php echo "$" . $producto->productos_precios[0]->precio; ?>
                             </p>
                             <p>
                                 <i class="fa fa-info-circle"></i> <strong>Info del producto: </strong><?php echo $producto->descripcion_breve; ?>
@@ -58,25 +58,30 @@
                                 <i class="fa fa-align-left"></i> <strong>Descripción: </strong><?php echo $producto->descripcion_larga; ?>
                             </p>
                             <!-- Formulario para cargar receta y aclaración -->
-                            <form action="/Pedidos/uploadPrescription" method="POST" enctype="multipart/form-data">
+                            <form id="pedidoForm" action="/Pedidos/addForCliente" method="POST" enctype="multipart/form-data">
+                                <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
 
                                 <div class="form-group col-md-6">
-                                    <label for="receta">Cargar receta médica</label>
-                                    <input type="file" class="form-control" name="receta" id="receta" required>
+                                    <label for="orden_medica">Cargar receta médica</label>
+                                    <input type="file" class="form-control" name="orden_medica" id="orden_medica" required>
                                 </div>
                                 <div class="form-group col-md-4">
                                     <label for="fecha_aplicacion">Fecha de Aplicación</label>
-                                    <input type="date" class="form-control" name="fecha_aplicacion" id="fecha_aplicacion" required>
+                                    <input type="hidden" value="<?php echo $producto->id; ?>" id="id" name="detalles_pedidos[0][producto_id]">
+                                    <input type="date" class="form-control" name="detalles_pedidos[0][fecha_aplicacion]"
+                                        min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" id="fecha_aplicacion" required>
                                 </div>
                                 <!-- Cantidad -->
                                 <div class="form-group col-md-2">
                                     <label for="cantidad">Cantidad</label>
-                                    <input type="number" class="form-control" name="cantidad" id="cantidad" min="1" required>
+                                    <input onkeydown="preventInvalidInput(event)" oninput="limitInputLength(this)"
+                                        type="number" class="form-control" id="cantidad"
+                                        name="detalles_pedidos[0][cantidad]" min="1" max="99" required>
                                 </div>
 
                                 <div class="form-group col-md-12">
                                     <label for="aclaracion">Aclaraciones</label>
-                                    <textarea class="form-control" name="aclaracion" id="aclaracion" rows="2" maxlength="500" placeholder="Escriba aquí cualquier aclaración..." required></textarea>
+                                    <textarea class="form-control" name="detalles_pedidos[0][aclaracion]" id="aclaracion" rows="2" maxlength="500" placeholder="Escriba aquí cualquier aclaración..." required></textarea>
                                 </div>
                                 <div class="button-group">
                                     <button type="submit" class="btn btn-success">
@@ -147,9 +152,98 @@
     }
 </style>
 <script>
-    document.getElementById('cantidad').addEventListener('keydown', function(e) {
-        if (e.key === 'e' || e.key === 'E') {
-            e.preventDefault();
+    // Evita que se ingresen caracteres no numéricos
+    function preventInvalidInput(event) {
+        if (event.key.length === 1 && !/[0-9]/.test(event.key)) {
+            event.preventDefault();
         }
+    }
+
+    // Limitar a 2 dígitos en total
+    function limitInputLength(input) {
+        if (input.value.length > 2) {
+            input.value = input.value.slice(0, 2);
+        }
+    }
+
+    function validarCantidad() {
+        const cantidadInput = document.getElementById("cantidad");
+        const cantidad = parseInt(cantidadInput.value);
+        const productoId = document.getElementById('id').value;
+
+        // Obtener el token CSRF desde la metaetiqueta generada por CakePHP
+        const csrfToken = "<?php echo $this->request->getAttribute('csrfToken'); ?>";
+
+        if (isNaN(cantidad) || cantidad <= 0) {
+            alert("Por favor, ingrese una cantidad válida.");
+            return;
+        }
+
+        fetch(`/productos/stock/${productoId}`)
+
+            .then(response => response.json())
+            .then(data => {
+                const stockDisponible = data.stock;
+                if (cantidad > stockDisponible) {
+                    alert(`La cantidad ingresada (${cantidad}) excede el stock disponible (${stockDisponible}).`);
+                    cantidadInput.value = ""; // Borrar la cantidad
+                }
+            })
+            .catch(error => console.error('Error al cargar localidades:', error));
+
+
+    }
+
+
+
+    // Función para validar la fecha de aplicación que sea mayor a la actual
+    function validarFechaAplicacion() {
+        const fechaAplicacionInput = document.getElementById("fecha_aplicacion");
+        const fechaAplicacion = new Date(fechaAplicacionInput.value);
+        const fechaActual = new Date();
+        fechaActual.setDate(fechaActual.getDate() + 1);
+        // Eliminar horas, minutos y segundos para comparar solo las fechas
+        fechaActual.setHours(0, 0, 0, 0);
+
+        if (fechaAplicacion <= fechaActual) {
+            alert("La fecha de aplicación debe ser mayor a la fecha actual.");
+            // Establecer la fecha actual en el input
+            const año = fechaActual.getFullYear();
+            const mes = ("0" + (fechaActual.getMonth() + 1)).slice(-2); // Asegura que el mes tenga 2 dígitos
+            const dia = ("0" + fechaActual.getDate()).slice(-2); // Asegura que el día tenga 2 dígitos
+            const fechaHoy = `${año}-${mes}-${dia}`;
+
+            fechaAplicacionInput.value = fechaHoy; // Establecer la fecha actual
+            return false;
+        }
+        return true;
+    }
+
+
+    document.addEventListener("DOMContentLoaded", function() {
+
+        const fechaAplicacionInput = document.getElementById("fecha_aplicacion");
+
+        // Evento 'blur' para avisar al dejar el campo
+        fechaAplicacionInput.addEventListener('blur', function() {
+            validarFechaAplicacion();
+        });
+
+        const cantidadInput = document.getElementById("cantidad");
+
+        // Evento 'blur' para avisar al dejar el campo
+        cantidadInput.addEventListener('blur', function() {
+            validarCantidad();
+        });
+
+        // Evento 'submit' para validar al enviar el formulario
+        document.getElementById("pedidoForm").addEventListener("submit", function(event) {
+            if (!validarFechaAplicacion()) {
+                event.preventDefault(); // Prevenir el envío si la fecha es inválida
+            }
+            if (!validarCantdidad()) {
+                event.preventDefault(); // Prevenir el envío si no existe stock para la cantidad solicitada
+            }
+        });
     });
 </script>

@@ -70,7 +70,7 @@ $action =   $this->request->getParam('action');
                 <?php //if ((isset($accionesPermitidas['RbacUsuarios']['index']) && $accionesPermitidas['RbacUsuarios']['index'])) {
                 ?>
                 <li>
-                    <a href="<?php echo $this->Url->build('/pages/en_construccion'); ?>">
+                    <a href="<?php echo $this->Url->build('/Pedidos/index'); ?>">
                         <i class="fa fa-files-o"></i>
                         <span>Listado</span></a>
                 </li>
@@ -281,7 +281,7 @@ $action =   $this->request->getParam('action');
         </li> -->
     <?php //}    ?>
 
-    <!-- <li class="treeview">
+    <li class="treeview">
         <a href="#">
             <i class="fa fa-files-o"></i>
             <span>Layout Options</span>
@@ -364,7 +364,7 @@ $action =   $this->request->getParam('action');
             <li><a href="<?php echo $this->Url->build('/pages/tables/simple'); ?>"><i class="fa fa-circle-o"></i> Simple tables</a></li>
             <li><a href="<?php echo $this->Url->build('/pages/tables/data'); ?>"><i class="fa fa-circle-o"></i> Data tables</a></li>
         </ul>
-    </li> -->
+    </li>
     <!--
     <li>
         <a href="<?php echo $this->Url->build('/pages/mailbox/mailbox'); ?>">

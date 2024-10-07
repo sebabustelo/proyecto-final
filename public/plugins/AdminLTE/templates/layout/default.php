@@ -17,6 +17,7 @@ use Cake\Core\Configure; ?>
   <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap-fileinput/css/fileinput.min'); ?>
   <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap-fileinput/themes/explorer-fa4/theme.css'); ?>
   <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap-duallistbox/dist/bootstrap-duallistbox.min.css'); ?>
+  <?php echo $this->Html->css('AdminLTE./bower_components/bootstrap-daterangepicker/daterangepicker', ['block' => 'css']); ?>
   <!-- Font Awesome -->
   <?php echo $this->Html->css('AdminLTE./bower_components/font-awesome/css/font-awesome.min'); ?>
   <!-- Ionicons -->
@@ -43,8 +44,9 @@ use Cake\Core\Configure; ?>
   <!-- Bootstrap 3.3.7 -->
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap/dist/js/bootstrap.min'); ?>
   <!-- Bootstrap-fileinput -->
-
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/js/fileinput.min'); ?>
+  <?php echo $this->Html->script('AdminLTE./bower_components/moment/min/moment.min', ['block' => 'script']); ?>
+  <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-daterangepicker/daterangepicker', ['block' => 'script']); ?>
   <?php //echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/themes/explorer-fa4/theme.js'); ?>
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/themes/fa4/theme.js'); ?>
   <?php echo $this->Html->script('AdminLTE./bower_components/bootstrap-fileinput/js/locales/es.js'); ?>

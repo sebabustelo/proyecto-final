@@ -104,7 +104,7 @@ class LocalidadesController extends AppController
         if ($this->Localidades->delete($localidad)) {
             $this->Flash->success(__('La localidad ha sido eliminada.'));
         } else {
-            
+
             if ($localidad->getErrors()) {
                 foreach ($localidad->getErrors() as $field => $errors) {
                     foreach ($errors as $error) {
@@ -122,8 +122,7 @@ class LocalidadesController extends AppController
     public function localidades($provinciaId)
     {
         $this->viewBuilder()->disableAutoLayout();
-        // $this->viewBuilder()->setLayout(null);
-        $result = false;
+
         $localidades = $this->Localidades->find('all')
             ->where(['provincia_id' => $provinciaId])
             ->select(['id', 'nombre'])->all(); // Asegúrate de seleccionar los campos correctos

@@ -42,7 +42,7 @@ class PedidosEstadosTable extends Table
         parent::initialize($config);
         $this->setEntityClass('PedidoEstado');
         $this->setTable('pedidos_estados');
-        $this->setDisplayField('descripcion');
+        $this->setDisplayField('nombre');
         $this->setPrimaryKey('id');
 
         $this->hasMany('Pedidos', [

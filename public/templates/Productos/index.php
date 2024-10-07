@@ -33,7 +33,8 @@
                     <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/Productos/index">
                         <div class="form-row">
                             <div class="form-group col-md-2">
-                                <input type="text" name="nombre" placeholder="Nombre" class="form-control" id="nombre" aria-label="nombre" value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
+                                <input type="text" name="nombre" placeholder="Nombre" class="form-control" id="nombre" aria-label="nombre"
+                                value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
                             </div>
                             <div class="form-group col-md-8">
                                 <input type="text" name="descripcion_breve" placeholder="Descripción breve" class="form-control" id="descripcion_breve" aria-label="descripcion_breve" value="<?php echo (isset($filters['descripcion_breve'])) ? $filters['descripcion_breve'] : '' ?>">

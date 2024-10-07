@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Http\Exception\NotFoundException;
+use Cake\Http\Response;
+
 /**
  * Productos Controller
  *
@@ -55,6 +58,17 @@ class ProductosController extends AppController
         $this->set('filters', $this->getRequest()->getQuery());
     }
 
+    /**
+     * Método detail
+     *
+     * Este método permite obtener y mostrar los detalles de un producto específico.
+     * Utiliza el ID del producto para buscar la información asociada, incluyendo
+     * categorías, archivos de producto y precios. Si el producto no se encuentra,
+     * se notifica al usuario y se redirige a la lista de productos.
+     *
+     * @param string|null $id El ID del producto que se desea mostrar.
+     * @return \Cake\Http\Response|null|void Redirecciona a la lista de productos si el producto no existe o renderiza la vista con los detalles del producto.
+     */
     public function detail($id = null)
     {
         $producto = $this->Productos->find()
@@ -76,11 +90,14 @@ class ProductosController extends AppController
         $this->set(compact('producto'));
     }
 
-
     /**
-     * Add method
+     * Método add
      *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
+     * Este método permite la creación de un nuevo producto en el sistema. Al agregar un producto, se puede incluir información sobre
+     * los precios asociados y subir imágenes del producto. Se asegura que la primera imagen subida se marque como la imagen principal.
+     * En caso de errores durante el proceso de guardado, se notifica al usuario con mensajes informativos.
+     *
+     * @return \Cake\Http\Response|null|void Redirecciona a la lista de productos después de un guardado exitoso o renderiza la vista en caso contrario.
      */
     public function add()
     {
@@ -127,8 +144,7 @@ class ProductosController extends AppController
                     $this->Flash->error($result['error']);
                 }
             } else {
-                debug($producto->getErrors());
-                die;
+
                 if ($producto->getErrors()) {
                     foreach ($producto->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {
@@ -146,11 +162,20 @@ class ProductosController extends AppController
     }
 
     /**
-     * Edit method
+     * Método edit
      *
-     * @param string|null $id Producto id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * Este método permite la edición de un producto existente. Al editar el producto, también se verifica si el precio ha cambiado,
+     * y si es así, se actualiza el precio anterior con una `fecha_hasta` y se crea un nuevo registro de precio con la `fecha_desde`
+     * actual. Los datos de precios son gestionados a través de la relación entre el producto y su entidad `ProductosPrecios`.
+     *
+     * @param string|null $id El ID del producto a editar. Si no se proporciona, será `null`.
+     * @return \Cake\Http\Response|null|void Redirecciona después de una edición exitosa o renderiza la vista en caso contrario.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException Si no se encuentra el registro del producto con el ID proporcionado.
+     *
+     * - Se consulta el producto por su ID, junto con sus archivos (`ProductosArchivos`) y precios (`ProductosPrecios`).
+     * - Los precios se ordenan por `fecha_desde` de manera descendente para obtener el precio más reciente.
+     * - Si el precio del producto ha cambiado, se actualiza el precio actual añadiendo la `fecha_hasta` y se crea un nuevo precio.
+     * - En caso de error al guardar el nuevo precio, se muestra un mensaje de error utilizando el sistema de `Flash`.
      */
     public function edit($id = null)
     {
@@ -164,16 +189,13 @@ class ProductosController extends AppController
             ])
             ->first(); // Retorna el primer registro encontrado
 
-
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data =  $this->request->getData();
 
 
             if ($data['productos_precios'][0]['precio'] != $producto->productos_precios[0]->precio) {
-                // Obtener el precio actual del producto
-                $precioActual = $producto->productos_precios[0];
 
-                // Actualizar la fecha_hasta del precio existente
+                $precioActual = $producto->productos_precios[0];
                 $precioActual->fecha_hasta =  date('Y-m-d H:i:s'); // Fecha actual
 
                 // Guardar el precio existente con la fecha_hasta actualizada
@@ -182,7 +204,7 @@ class ProductosController extends AppController
                     $nuevoPrecio = $this->Productos->ProductosPrecios->newEntity([
                         'producto_id' => $producto->id,
                         'precio' => $data['productos_precios'][0]['precio'],
-                        'fecha_desde' => date('Y-m-d H:i:s'), // Fecha actual
+                        'fecha_desde' => date('Y-m-d H:i:s'),
                         'fecha_hasta' => null // Mantener como null hasta que haya un cambio futuro
                     ]);
 
@@ -205,7 +227,7 @@ class ProductosController extends AppController
                 }
             }
 
-            // Eliminar productos_precios de los datos antes de guardar el producto
+            // Eliminar productos_precios de los datos antes de guardar el producto, porque ya lo actualice arriba
             unset($data['productos_precios']);
             $producto = $this->Productos->patchEntity($producto, $data);
 
@@ -221,13 +243,53 @@ class ProductosController extends AppController
         $this->set(compact('producto', 'categorias', 'proveedores'));
     }
 
+    /**
+     * Método stock
+     *
+     * Este método maneja la solicitud para obtener el stock disponible de un producto específico.
+     * Recibe como parámetro el ID del producto, busca el producto en la base de datos y devuelve
+     * un objeto JSON que contiene el `id` del producto y su `stock`.
+     *
+     * @param int|null $id El ID del producto cuyo stock se desea consultar.
+     * @return \Cake\Http\Response JSON con los datos del producto (id y stock).
+     *
+     * Ejemplo de respuesta JSON:
+     * {
+     *   "id": 34,
+     *   "stock": 20
+     * }
+     *
+     * - Se deshabilita el uso de layouts automáticos para este método, ya que solo se devuelve una respuesta JSON.
+     * - Si no se encuentra un producto con el ID especificado, el resultado será `null` y se devolverá un JSON vacío.
+     * - La respuesta es enviada con el tipo de contenido `application/json` para asegurar que sea interpretada correctamente.
+     *
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException Si el producto con el ID proporcionado no existe.
+     */
+    public function stock($id = null)
+    {
+        $this->viewBuilder()->disableAutoLayout();
+
+        $producto = $this->Productos->find()
+            ->select(['id', 'stock']) // Selecciona solo los campos necesarios
+            ->where(['id' => $id])
+            ->first();
+        $jsonData = json_encode($producto, JSON_PRETTY_PRINT);
+
+        $response = new Response();
+        $response = $response->withType('application/json')->withStringBody($jsonData);
+        return $response;
+    }
 
     /**
-     * Categorias method
+     * Método categorias
      *
-     * @param string|null $id Categosrias id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * Este método permite obtener y mostrar los productos que pertenecen a una categoría específica.
+     * Utiliza el ID de la categoría para buscar la información asociada, incluyendo productos y archivos de producto.
+     * Si la categoría no se encuentra, se lanzará una excepción.
+     *
+     * @param string|null $id El ID de la categoría cuyos productos se desean mostrar.
+     * @return \Cake\Http\Response|null|void Renderiza la vista con los productos de la categoría solicitada.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException Cuando no se encuentra la categoría solicitada.
      */
     public function categorias($id = null)
     {
@@ -303,8 +365,8 @@ class ProductosController extends AppController
         $conditions['where'] = [];
         $conditions['contain'] = ['Categorias', 'ProductosArchivos'];
 
-        if(!isset($data['search'])){
-            $data['search']='';
+        if (!isset($data['search'])) {
+            $data['search'] = '';
         }
 
         $orConditions = [];
