@@ -70,7 +70,7 @@ use Cake\Core\Configure; ?>
     <div class="form-group has-feedback">
         <div class="row">
             <div class="col-xs-6">
-                <select required name="tipo_documento_id" class="form-control">
+                <select required name="tipo_documento_id" id="tipo_documento_id" class="form-control">
                     <option value="">Tipo de Doc.</option>
                     <?php foreach ($tipoDocumentos as $id => $tipoDocumento) : ?>
                         <?php if ($this->request->getData('tipo_documento_id') == $id) { ?>
@@ -83,14 +83,12 @@ use Cake\Core\Configure; ?>
             </div>
             <div class="col-xs-6">
                 <input required type="text" placeholder="Número de Doc." maxlength="11" class="form-control"
-                    value="<?php echo $this->request->getData('documento'); ?>" name="documento"
-                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');"
-                    onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();">
+                    value="<?php echo $this->request->getData('documento'); ?>" name="documento" id="documento"
+                    oninput="validateDocumentInput()">
                 <span class="glyphicon fa fa-lg fa-credit-card form-control-feedback" style="margin-right: 14px;"></span>
             </div>
         </div>
     </div>
-
     <div class="form-group has-feedback">
         <select id="provincia_id" required name="provincia_id" class="form-control">
             <option selected value="">Seleccione una provincia</option>
@@ -176,6 +174,11 @@ use Cake\Core\Configure; ?>
 <!-- Otros contenidos del formulario -->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+
+        // Llama a la función también cuando se cambie el tipo de documento
+        document.getElementById('tipo_documento_id').addEventListener('change', function() {
+            validateDocumentInput();
+        });
 
         //Verificar si el usuario existe en la db
         const usernameInput = document.querySelector('input[name="usuario"]');
@@ -305,6 +308,19 @@ use Cake\Core\Configure; ?>
     //     }
 
     // });
+
+    function validateDocumentInput() {
+        var tipoDocumento = document.getElementById('tipo_documento_id').value;
+        var documentoInput = document.getElementById('documento');
+
+        if (tipoDocumento === '3') { // Cambia 'PASAPORTE_ID' por el ID correspondiente al pasaporte
+            // Permitir letras y números
+            documentoInput.value = documentoInput.value.replace(/[^a-zA-Z0-9]/g, '');
+        } else {
+            // Permitir solo números
+            documentoInput.value = documentoInput.value.replace(/\D/g, '');
+        }
+    }
 
     function terminosCondiciones() {
         var acceptTermsCheckbox = document.getElementById('acceptTerms');

@@ -4,8 +4,8 @@
         Categoría de Producto : <?php echo $categoria->nombre; ?>
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-users"></i> Productos</a></li>
-        <li class="active">catalogo</li>
+        <li><a href="#"><i class="fa fa-fw fa-medkit"></i> Productos</a></li>
+        <li class="active">categorías</li>
     </ol>
 </section>
 

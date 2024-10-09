@@ -7,10 +7,10 @@
 ?>
 <section class="content-header">
     <h1>
-    <i class="fa fa-cubes"></i> Gestión de Proveedores
+        <i class="fa fa-cubes"></i> Gestión de Pedidos
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Proveedores</a></li> <i class="fa fa-arrow-right"></i>
+        <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Pedidos</a></li> <i class="fa fa-arrow-right"></i>
         <li class="active">Editar</li>
     </ol>
 </section>
@@ -19,101 +19,148 @@
         <div class="col-xs-12">
             <div class="box box-primary">
                 <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-refresh fa-lg"></span> Editar Proveedor</h3>
+                    <h3 class="box-title"> <span class="fa fa-refresh fa-lg"></span> Editar Pedido</h3>
                     <div class="box-tools pull-right">
-                        <a title="Listado de proveedores" href="/Proveedores/index/" class="btn btn-sm btn-primary ">
-                            <span class="fa fa-list"></span> <span class=" hidden-xs">Proveedores</span>
+                        <a title="Listado de Pedidos" href="/Pedidos/index/" class="btn btn-sm btn-primary ">
+                            <span class="fa fa-list"></span> <span class=" hidden-xs">Pedidos</span>
                         </a>
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
                 <div class="box-body">
                     <div class="form-row">
-                        <form id="ProveedoresEditForm" name="ProveedoresEditForm" role="form" action="/Proveedores/edit/<?php echo $proveedor->id; ?>" method="POST">
+                        <form id="ProveedoresEditForm" name="ProveedoresEditForm" role="form" action="/Pedidos/edit/<?php echo $pedido->id; ?>" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-                            <div class="form-group col-sm-4">
-                                <label>Nombre</label>
-                                <input required type="text" maxlength="255" placeholder="Ingrese el nombre" value="<?php echo $proveedor->nombre; ?>"
-                                    class="form-control" name="nombre">
-                                <?php if ($proveedor->getError('nombre')) { ?>
-                                    <?php foreach ($proveedor->getError('nombre') as $error) { ?>
-                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
-                                    <?php } ?>
-                                <?php } ?>
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <label>CUIT</label>
-                                <input required type="number" maxlength="11" id="cuit" placeholder="Ingrese el CUIT"
-                                    class="form-control" name="cuit" oninvalid="this.setCustomValidity('Debe completar el CUIT')" oninput="this.setCustomValidity('')"
-                                    value="<?php echo $proveedor->cuit; ?>">
-                                <?php if ($proveedor->getError('cuit')) { ?>
-                                    <?php foreach ($proveedor->getError('cuit') as $error) { ?>
-                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
-                                    <?php } ?>
-                                <?php } ?>
-                                <span id="mensaje-error" style="display: none;" class="badge bg-red"><i class="fa fa-warning"></i> El CUIT es inválido</span>
-                            </div>
-                            <div class="form-group col-sm-4">
-                                <label>Email</label>
-                                <input required type="email" maxlength="100" placeholder="Ingrese el email" value="<?php echo $proveedor->email; ?>"
-                                    class=" form-control" name="email">
-                                <?php if ($proveedor->getError('email')) { ?>
-                                    <?php foreach ($proveedor->getError('email') as $error) { ?>
-                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
-                                    <?php } ?>
-                                <?php } ?>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Datos del cliente</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <dl class="dl-horizontal">
+                                        <dt>Nombre y Apellido:</dt>
+                                        <dd><?php echo h($pedido->rbac_usuario->nombre) . " " . $pedido->rbac_usuario->apellido; ?></dd>
 
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <label>Teléfono</label>
-                                <input required type="number" maxlength="120" placeholder="Ingrese el teléfono"
-                                    class="form-control" name="telefono" value="<?php echo $proveedor->telefono; ?>">
-                                <?php if ($proveedor->getError('telefono')) { ?>
-                                    <?php foreach ($proveedor->getError('telefono') as $error) { ?>
-                                        <span class=" badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
-                                    <?php } ?>
-                                <?php } ?>
+                                        <dt>Documento:</dt>
+                                        <dd><?php echo h($pedido->rbac_usuario->tipo_documento->descripcion) . ":" . h($pedido->rbac_usuario->documento); ?></dd>
 
-                            </div>
-                            <div class="form-group col-sm-6">
-                                <label>Descripción</label>
-                                <input type="text" maxlength="500" placeholder="Ingrese una descripción"
-                                    class="form-control" name="descripcion" value="<?php echo $proveedor->descripcion; ?>">
-                                <?php if ($proveedor->getError('descripcion')) { ?>
-                                    <?php foreach ($proveedor->getError('descripcion') as $error) { ?>
-                                        <span class=" badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
-                                    <?php } ?>
-                                <?php } ?>
-                            </div>
-                            <div class="form-group col-sm-4">
-                                <label>Dirección</label>
-                                <input required type="text" maxlength="255" placeholder="Ingrese la dirección"
-                                    class="form-control" name="direccion" value="<?php echo $proveedor->direccion; ?>">
-                                <?php if ($proveedor->getError('direccion')) { ?>
-                                    <?php foreach ($proveedor->getError('direccion') as $error) { ?>
-                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
-                                    <?php } ?>
-                                <?php } ?>
-                            </div>
-                            <div class="form-group   col-sm-2">
-                                <label>&nbsp;</label><br>
-                                <label class="btn btn-default btn-block">
-                                    <input type="hidden" name="activo" value="0">
-                                    <input value="1" type="checkbox" name="activo" <?php echo (isset($proveedor) and $proveedor['activo']) == 'true' ? 'checked' : ''; ?>>
-                                    <span>Activo</span>
+                                        <dt>Email:</dt>
+                                        <dd><?php echo h($pedido->rbac_usuario->email); ?></dd>
 
-                                </label>
+                                        <dt>Teléfono:</dt>
+                                        <dd><?php echo h($pedido->rbac_usuario->celular); ?></dd>
+                                    </dl>
+                                </div>
                             </div>
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <h3 class="panel-title">Datos del Pedido</h3>
+                                </div>
+                                <div class="panel-body">
+
+                                        <div class="row">
+                                            <div class="col-md-3">
+                                                <dt>ID:</dt>
+                                                <dd><?php echo h($pedido->id); ?></dd>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <dt>Estado:</dt>
+                                                <dd>
+                                                    <span class="label <?php
+                                                                        switch ($pedido->pedidos_estado->nombre) {
+                                                                            case 'PENDIENTE':
+                                                                                echo 'bg-yellow'; // Fondo amarillo
+                                                                                break;
+                                                                            case 'INCOMPLETO':
+                                                                                echo 'bg-red'; // Fondo rojo
+                                                                                break;
+                                                                            case 'EN_PROCESO':
+                                                                                echo 'bg-blue'; // Fondo azul
+                                                                                break;
+                                                                            case 'PAGADO':
+                                                                                echo 'bg-purple'; // Fondo morado
+                                                                                break;
+                                                                            case 'EN_CAMINO':
+                                                                                echo 'bg-orange'; // Fondo naranja
+                                                                                break;
+                                                                            case 'FINALIZADO':
+                                                                                echo 'bg-green'; // Fondo verde
+                                                                                break;
+                                                                            default:
+                                                                                echo 'bg-gray'; // Fondo gris por defecto
+                                                                                break;
+                                                                        }
+                                                                        ?>">
+                                                        <?php echo $pedido->pedidos_estado->nombre; ?>
+                                                    </span>
+                                                </dd>
+                                            </div>
+
+                                            <div class="col-md-3">
+                                                <dt>Fecha:</dt>
+                                                <dd><?php echo h($pedido->fecha_pedido->format('d/m/Y H:i:s')); ?></dd>
+                                            </div>
+
+
+                                        </div>
+
+
+                                        <br>
+                                        <div class="table-responsive">
+                                            <table class="table table-bordered">
+                                                <thead class="thead-light">
+                                                    <tr>
+                                                        <th>Producto</th>
+                                                        <th>Cantidad</th>
+                                                        <th>Precio Unitario</th>
+                                                        <th>Subtotal</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <?php $total = 0; ?>
+                                                    <?php foreach ($pedido->detalles_pedidos as $detalle): ?>
+                                                        <?php
+                                                        $precioUnitario = h($detalle->producto->productos_precios[0]['precio']);
+                                                        $subtotal = $precioUnitario * $detalle->cantidad;
+                                                        $total += $subtotal;
+                                                        ?>
+                                                        <tr>
+                                                            <td><?php echo h($detalle->producto->nombre); ?></td>
+                                                            <td><?php echo h($detalle->cantidad); ?></td>
+                                                            <td>$<?php echo h(number_format($precioUnitario, 2)); ?></td>
+                                                            <td>$<?php echo h(number_format($subtotal, 2)); ?></td>
+                                                        </tr>
+                                                    <?php endforeach; ?>
+                                                </tbody>
+                                                <tfoot>
+                                                    <tr>
+                                                        <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                                                        <td>$<?php echo h(number_format($total, 2)); ?></td>
+                                                    </tr>
+                                                </tfoot>
+                                            </table>
+                                        </div>
+
+
+
+
+
+                                </div>
+                            </div>
+
+
+
+
                             <?php
                             if ($this->request->getSession()->check('previousUrl')) {
                                 $url = $this->request->getSession()->read('previousUrl');
-                                if (strpos($url, "Proveedores") !== false) {
+                                if (strpos($url, "Pedidos") !== false) {
                                     $url = $this->request->getSession()->read('previousUrl');
                                 } else {
-                                    $url = "/Proveedores/index/";
+                                    $url = "/Pedidos/index/";
                                 }
                             } else {
-                                $url = '/Proveedores/index';
+                                $url = '/Pedidos/index';
                             }
                             ?>
                             <div class="form-group col-sm-12 text-center">

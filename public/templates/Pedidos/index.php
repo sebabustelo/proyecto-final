@@ -31,11 +31,11 @@
                         <div class="form-row">
                             <div class="form-group col-md-3">
 
-                                <select name="estado" class="form-control" id="estado" aria-label="estado">
+                                <select name="estado_id" class="form-control" id="estado" aria-label="estado">
                                     <option value="">Seleccione un estado</option>
                                     <?php foreach ($estados as $id => $estado): ?>
                                         <option value="<?php echo $id; ?>"
-                                            <?php echo (isset($filters['estado']) && $filters['estado'] == $estado->id) ? 'selected' : '' ?>>
+                                            <?php echo (isset($filters['estado_id']) && $filters['estado_id'] == $id) ? 'selected' : '' ?>>
                                             <?php echo $estado; ?>
                                         </option>
                                     <?php endforeach; ?>
@@ -57,24 +57,30 @@
                                     id="nombre" aria-label="email"
                                     value="<?php echo (isset($filters['email'])) ? $filters['email'] : '' ?>">
                             </div>
+                            <div class="form-group col-md-4">
+                                <label for="">&nbsp;</label>
+                                <input type="text" name="producto" placeholder="Producto" class="form-control"
+                                    id="nombre" aria-label="producto"
+                                    value="<?php echo (isset($filters['producto'])) ? $filters['producto'] : '' ?>">
+                            </div>
 
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-4">
                                 <label for="">Fecha de pedido</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" class="form-control pull-right" id="fecha_pedido" name="fecha_pedido" placeholder="fecha desde - fecha hasta">
+                                    <input type="text" class="form-control" value="<?php echo (isset($filters['fecha_pedido'])) ? $filters['fecha_pedido'] : '' ?>" id="fecha_pedido" name="fecha_pedido" placeholder="fecha desde - fecha hasta">
                                 </div>
                                 <!-- /.input group -->
                             </div>
-                            <div class="form-group col-md-3">
+                            <div class="form-group col-md-4">
                                 <label for="">Fecha de aplicación</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" class="form-control pull-right" id="fecha_aplicacion" name="fecha_aplicacion" placeholder="fecha desde - fecha hasta">
+                                    <input type="text" class="form-control pull-right"  value="<?php echo (isset($filters['fecha_aplicacion'])) ? $filters['fecha_aplicacion'] : '' ?>" id="fecha_aplicacion" name="fecha_aplicacion" placeholder="fecha desde - fecha hasta">
                                 </div>
                                 <!-- /.input group -->
                             </div>
@@ -234,15 +240,16 @@
                                 </table>
                             </div>
                         <?php } else { ?>
-                            <div class="callout callout-info">
-                                <p> <i class="fa-lg fa fa-info" aria-hidden="true"></i> Todavía no se ha cargado ningún pedido.</p>
+                            <div class="callout callout-danger">
+                                <p> <i class="icon fa fa-warning" aria-hidden="true"></i> No se encontraron resultados que
+                                    coincidan con el criterio de búsqueda.</p>
                             </div>
+
                         <?php } ?>
                     <?php } else {
                     ?>
-                        <div class="callout callout-danger">
-                            <p> <i class="icon fa fa-warning" aria-hidden="true"></i> No se encontraron resultados que
-                                coincidan con el criterio de búsqueda.</p>
+                        <div class="callout callout-info">
+                            <p> <i class="fa-lg fa fa-info" aria-hidden="true"></i> Todavía no se ha cargado ningún pedido.</p>
                         </div>
                     <?php } ?>
 
@@ -253,27 +260,56 @@
 </section>
 <script>
     $('#fecha_pedido').daterangepicker({
-        autoUpdateInput: false // Esto evita que el campo se llene automáticamente
+        "locale": {
+            "direction": "ltr",
+            "format": 'DD/MM/YYYY',
+            "separator": " - ",
+            "applyLabel": "Aplicar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "Desde",
+            "toLabel": "Hasta",
+        },
+        "showWeekNumbers": true,
+        "opens": "right",
+        //"drops": "up",
+        "autoUpdateInput": false, // Esto asegura que no se muestre ninguna fecha por defecto en el input
+
     });
 
-    // Para manejar cuando el usuario selecciona una fecha
+
+
     $('#fecha_pedido').on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('YYYY-MM-DD')); // Define el formato de la fecha que se mostrará
+        $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
     });
 
     $('#fecha_pedido').on('cancel.daterangepicker', function(ev, picker) {
-        $(this).val(''); // Vacía el campo si el usuario cancela
-    });
-    $('#fecha_aplicacion').daterangepicker({
-        autoUpdateInput: false // Esto evita que el campo se llene automáticamente
+        $(this).val('');
     });
 
-    // Para manejar cuando el usuario selecciona una fecha
+    $('#fecha_aplicacion').daterangepicker({
+        "locale": {
+            "direction": "ltr",
+            "format": 'DD/MM/YYYY',
+            "separator": " - ",
+            "applyLabel": "Aplicar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "Desde",
+            "toLabel": "Hasta",
+        },
+        "showWeekNumbers": true,
+        "opens": "right",
+        //"drops": "up",
+        "autoUpdateInput": false, // Esto asegura que no se muestre ninguna fecha por defecto en el input
+
+    });
+
+
+
     $('#fecha_aplicacion').on('apply.daterangepicker', function(ev, picker) {
-        $(this).val(picker.startDate.format('YYYY-MM-DD')); // Define el formato de la fecha que se mostrará
+        $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
     });
 
     $('#fecha_aplicacion').on('cancel.daterangepicker', function(ev, picker) {
-        $(this).val(''); // Vacía el campo si el usuario cancela
+        $(this).val('');
     });
 </script>

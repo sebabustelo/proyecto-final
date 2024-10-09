@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\I18n\DateTime;
+use Cake\I18n\FrozenTime;
+
 /**
  * Categorias Controller
  *
@@ -32,13 +35,25 @@ class PedidosController extends AppController
      */
     public function index()
     {
+        // Obtener las condiciones
         $conditions = $this->getConditions();
-        $pedidos = $this->Pedidos->find()
+
+        // Construir la consulta inicial con las condiciones 'where' y 'contain'
+        $query = $this->Pedidos->find()
             ->where($conditions['where'])
             ->contain($conditions['contain']);
 
+        // Verificar si existe el índice 'matching' en las condiciones
+        if (!empty($conditions['matching'])) {
+            foreach ($conditions['matching'] as $match) {
+                // Aplicar el matching a la consulta
+                $query = $query->matching($match[0], $match[1]);
+            }
+        }
+
+        // Paginación y seteo de variables
         $this->set('filters', $this->getRequest()->getQuery());
-        $this->set('pedidos', $this->paginate($pedidos));
+        $this->set('pedidos', $this->paginate($query));
         $this->set('estados', $this->Pedidos->PedidosEstados->find('list')->orderBy('orden')->all());
     }
 
@@ -61,6 +76,48 @@ class PedidosController extends AppController
         }
         $this->set(compact('pedido'));
     }
+
+    /**
+     * Edit method
+     *
+     * @param string|null $id Pedido id.
+     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function edit($id = null)
+    {
+        // Cargar el pedido para obtener la fecha_pedido
+        $pedido = $this->Pedidos->find()
+            ->where(['Pedidos.id' => $id])
+            ->contain(['PedidosEstados', 'DetallesPedidos' => [
+                'Productos' => [
+                    'ProductosPrecios' => function ($q) use ($id) {
+                        // Obtener el pedido usando el ID
+                        $pedido = $this->Pedidos->get($id);
+                        return $q->where([
+                            'fecha_desde <=' => $pedido->fecha_pedido,
+                            'OR' => [
+                                'fecha_hasta >=' => $pedido->fecha_pedido,
+                                'fecha_hasta IS' => null // Considerar también precios sin fecha_hasta
+                            ]
+                        ]);
+                    }
+                ]
+            ], 'OrdenesMedicas', 'RbacUsuarios' => ['TipoDocumentos']])
+            ->first();
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $pedido = $this->Pedidos->patchEntity($pedido, $this->request->getData());
+            if ($this->Pedidos->save($pedido)) {
+                $this->Flash->success(__('El proveedor se actualizo correctamente.'));
+
+                return $this->redirect('/Pedidos/index');;
+            }
+            $this->Flash->error(__('El pedido no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+        }
+        $this->set(compact('pedido'));
+    }
+
 
     /**
      * addForCliente Método para agregar un nuevo pedido realizado por el cliente.
@@ -157,47 +214,37 @@ class PedidosController extends AppController
         }
     }
 
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Pedido id.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $pedido = $this->Pedidos->get($id, contain: []);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $pedido = $this->Pedidos->patchEntity($pedido, $this->request->getData());
-            if ($this->Pedidos->save($pedido)) {
-                $this->Flash->success(__('El proveedor se actualizo correctamente.'));
-
-                return $this->redirect('/Pedidos/index');;
-            }
-            $this->Flash->error(__('El pedido no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
-        }
-        $this->set(compact('pedido'));
-    }
-
     /**
      * misPedidos method
+     *
+     * Este método obtiene los pedidos realizados por el cliente actual. Se utiliza
+     * la sesión del usuario autenticado para filtrar los pedidos según el cliente
+     * que los realizó. Los pedidos obtenidos son paginados por orden de fecha del pedido y enviados a la vista.
+     *
+     * Funcionalidad:
+     * - Se establece una condición de búsqueda que incluye las relaciones con los
+     *   estados del pedido (`PedidosEstados`), los detalles del pedido (`DetallesPedidos`),
+     *   y dentro de los detalles, los productos asociados con sus archivos (`ProductosArchivos`).
+     * - Se realiza una consulta para obtener los pedidos del cliente actual basándose
+     *   en su `cliente_id` almacenado en la sesión.
+     * - Se utiliza la paginación para mostrar los pedidos.
      *
      * @return \Cake\Http\Response|null|void Renders view
      */
     public function misPedidos()
     {
-        // $conditions = $this->getConditions();
-        // $categorias = $this->Categorias->find()
-        //     ->where($conditions['where'])
-        //     ->contain($conditions['contain']);
+        $conditions['contain'] = [
+            'PedidosEstados',
+            'DetallesPedidos' => ['Productos' => ['ProductosArchivos']],
+        ];
 
-        // $this->set('filters', $this->getRequest()->getQuery());
-        // $this->set('categorias', $this->paginate($categorias));
+        $pedidos = $this->Pedidos->find()
+            ->where(['cliente_id' => $_SESSION['RbacUsuario']['id']])
+            ->contain($conditions['contain'])
+            ->orderBy('fecha_pedido');
+
+        $this->set('pedidos', $this->paginate($pedidos));
     }
-
-
-
 
     /**
      * getCondition method
@@ -222,13 +269,57 @@ class PedidosController extends AppController
             $conditions['where'][] = ['Pedidos.cliente_id' =>  $data['cliente_id']];
         }
 
-        // if (isset($data['fecha_pedido']) and !empty($data['fecha_pedido'])) {
-        //     $conditions['where'][] = ['Categorias.fecha_pedido LIKE ' => '%' . $data['descripcion'] . '%'];
-        // }
 
-        if (isset($data['estado_id']) and !empty($data['cliente_id'])) {
+
+        if (isset($data['estado_id']) and !empty($data['estado_id'])) {
             $conditions['where'][] = ['Pedidos.estado_id' => $data['estado_id']];
         }
+
+
+        if (isset($data['fecha_pedido']) && !empty($data['fecha_pedido'])) {
+            // Separar las dos fechas basadas en el guion
+            $fechas = explode(' - ', $data['fecha_pedido']);
+
+            // Convertir las cadenas de fecha en objetos DateTime con hora de inicio y fin
+            $fecha_inicio = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[0] . ' 00:00:01');
+            $fecha_fin = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[1] . ' 23:59:59');
+
+            // Verificar si las fechas fueron creadas correctamente
+            if ($fecha_inicio && $fecha_fin) {
+                // Agregar condiciones a la consulta
+                $conditions['where'][] = ['Pedidos.fecha_pedido >= ' => $fecha_inicio->format('Y-m-d H:i:s')];
+                $conditions['where'][] = ['Pedidos.fecha_pedido <= ' => $fecha_fin->format('Y-m-d H:i:s')];
+            }
+        }
+
+
+        // Filtro por fecha_aplicacion (en DetallesPedidos)
+        if (isset($data['fecha_aplicacion']) && !empty($data['fecha_aplicacion'])) {
+            // Separar las dos fechas basadas en el guion
+            $fechas = explode(' - ', $data['fecha_aplicacion']);
+
+            // Convertir las cadenas de fecha en objetos DateTime con hora de inicio y fin
+            $fecha_inicio = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[0] . ' 00:00:01');
+            $fecha_fin = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[1] . ' 23:59:59');
+
+            // Verificar si las fechas fueron creadas correctamente
+            if ($fecha_inicio && $fecha_fin) {
+                // Agregar condiciones utilizando matching correctamente
+                $conditions['matching'][] = [
+                    'DetallesPedidos',
+                    function ($q) use ($fecha_inicio, $fecha_fin) {
+                        return $q->where([
+                            'DetallesPedidos.fecha_aplicacion >=' => $fecha_inicio->format('Y-m-d H:i:s'),
+                            'DetallesPedidos.fecha_aplicacion <=' => $fecha_fin->format('Y-m-d H:i:s')
+                        ]);
+                    }
+                ];
+            }
+        }
+
+
+
+
 
         $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
 

@@ -37,8 +37,8 @@ use Cake\Core\Configure;
                             <div class="form-group col-sm-4">
                                 <label id="lblUsuario" for="usuario">Usuario (mail)</label>
                                 <input type="email" name="usuario" required id="RbacUsuarioUsuario"
-                                oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
-                                placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo $this->request->getData('usuario'); ?>">
+                                    oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
+                                    placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo $this->request->getData('usuario'); ?>">
                             </div>
 
                             <div class="form-group col-sm-4">
@@ -49,10 +49,11 @@ use Cake\Core\Configure;
                                 <label for="apellido">Apellido</label>
                                 <input required type="text" placeholder="Ingrese el/los apellido/s" class="form-control" name="apellido" value="<?php echo $this->request->getData('apellido'); ?>" oninvalid="this.setCustomValidity('Debe completar el/los apellido/s')" oninput="this.setCustomValidity('')">
                             </div>
+
                             <div class="form-group col-sm-2">
                                 <label>Tipo de Documento</label><br>
-                                <select required name="tipo_documento_id" class="form-control">
-                                    <option value="">Seleccione</option>
+                                <select required name="tipo_documento_id" id="tipo_documento_id" class="form-control">
+                                    <option value="">Tipo de Doc.</option>
                                     <?php foreach ($tipoDocumentos as $id => $tipoDocumento) : ?>
                                         <?php if ($this->request->getData('tipo_documento_id') == $id) { ?>
                                             <option selected value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
@@ -64,10 +65,9 @@ use Cake\Core\Configure;
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="documento">Documento</label>
-                                <input required type="text"  placeholder="Número de Doc."  maxlength="20"
-                                class="form-control" value="<?php echo $this->request->getData('documento'); ?>" name="documento"
-                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');"
-                                onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();" >
+                                <input required type="text" placeholder="Número de Doc." maxlength="11" class="form-control"
+                                    value="<?php echo $this->request->getData('documento'); ?>" name="documento" id="documento"
+                                    oninput="validateDocumentInput()">
                             </div>
                             <div class="form-group col-sm-4">
                                 <label>Provincia</label><br>
@@ -91,10 +91,10 @@ use Cake\Core\Configure;
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Calle</label>
                                 <input name="direcciones[0][calle]" required
-                                value="<?php echo !empty($this->request->getData('direcciones')[0]['calle']) ? $this->request->getData('direcciones')[0]['calle'] : ''; ?>"
-                                type="text" class="form-control"
-                                oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
-                                placeholder="Calle" maxlength="100" min="1">
+                                    value="<?php echo !empty($this->request->getData('direcciones')[0]['calle']) ? $this->request->getData('direcciones')[0]['calle'] : ''; ?>"
+                                    type="text" class="form-control"
+                                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
+                                    placeholder="Calle" maxlength="100" min="1">
                             </div>
 
                             <div class="form-group col-sm-2">
@@ -168,11 +168,16 @@ use Cake\Core\Configure;
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        var provinciaSelect = document.getElementById('provincia_id');
-        var localidadSelect = document.getElementById('localidad_id');
+        // Llama a la función también cuando se cambie el tipo de documento
+        document.getElementById('tipo_documento_id').addEventListener('change', function() {
+            validateDocumentInput();
+        });
+
+        const provinciaSelect = document.getElementById('provincia_id');
+        const localidadSelect = document.getElementById('localidad_id');
 
         provinciaSelect.addEventListener('change', function() {
-            var provinciaId = this.value;
+            const provinciaId = this.value;
 
 
             if (provinciaId) {
@@ -206,4 +211,17 @@ use Cake\Core\Configure;
 
 
     });
+
+    function validateDocumentInput() {
+        var tipoDocumento = document.getElementById('tipo_documento_id').value;
+        var documentoInput = document.getElementById('documento');
+
+        if (tipoDocumento === '3') { // Cambia 'PASAPORTE_ID' por el ID correspondiente al pasaporte
+            // Permitir letras y números
+            documentoInput.value = documentoInput.value.replace(/[^a-zA-Z0-9]/g, '');
+        } else {
+            // Permitir solo números
+            documentoInput.value = documentoInput.value.replace(/\D/g, '');
+        }
+    }
 </script>

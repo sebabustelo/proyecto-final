@@ -4,7 +4,7 @@
         Productos
     </h1>
     <ol class="breadcrumb">
-        <li><a href="#"><i class="fa fa-users"></i> Productos</a></li>
+        <li><a href="#"><i class="fa fa-fw fa-medkit"></i> Productos</a></li>
         <li class="active">catalogo</li>
     </ol>
 </section>
