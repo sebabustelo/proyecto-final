@@ -21,47 +21,36 @@
                 <div class="box-header  with-border">
                     <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> Buscador</h3>
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
                 <div class="box-body">
-                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter"
-                        action="/Pedidos/index">
+                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/Pedidos/index">
                         <div class="form-row">
                             <div class="form-group col-md-3">
 
                                 <select name="estado_id" class="form-control" id="estado" aria-label="estado">
                                     <option value="">Seleccione un estado</option>
-                                    <?php foreach ($estados as $id => $estado): ?>
-                                        <option value="<?php echo $id; ?>"
-                                            <?php echo (isset($filters['estado_id']) && $filters['estado_id'] == $id) ? 'selected' : '' ?>>
+                                    <?php foreach ($estados as $id => $estado) : ?>
+                                        <option value="<?php echo $id; ?>" <?php echo (isset($filters['estado_id']) && $filters['estado_id'] == $id) ? 'selected' : '' ?>>
                                             <?php echo $estado; ?>
                                         </option>
                                     <?php endforeach; ?>
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <input type="number" name="documento" placeholder="DNI/CUIT" class="form-control"
-                                    id="cuit" aria-label="cuit"
-                                    value="<?php echo (isset($filters['cuit'])) ? $filters['cuit'] : '' ?>">
+                                <input type="number" name="documento" placeholder="DNI/CUIT" class="form-control" id="cuit" aria-label="cuit" value="<?php echo (isset($filters['cuit'])) ? $filters['cuit'] : '' ?>">
                             </div>
 
                             <div class="form-group col-md-3">
-                                <input type="text" name="apellido" placeholder="Apellido" class="form-control"
-                                    id="nombre" aria-label="nombre"
-                                    value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
+                                <input type="text" name="apellido" placeholder="Apellido" class="form-control" id="nombre" aria-label="nombre" value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
                             </div>
                             <div class="form-group col-md-3">
-                                <input type="email" name="email" placeholder="Correo electrónico" class="form-control"
-                                    id="nombre" aria-label="email"
-                                    value="<?php echo (isset($filters['email'])) ? $filters['email'] : '' ?>">
+                                <input type="email" name="email" placeholder="Correo electrónico" class="form-control" id="nombre" aria-label="email" value="<?php echo (isset($filters['email'])) ? $filters['email'] : '' ?>">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="">&nbsp;</label>
-                                <input type="text" name="producto" placeholder="Producto" class="form-control"
-                                    id="nombre" aria-label="producto"
-                                    value="<?php echo (isset($filters['producto'])) ? $filters['producto'] : '' ?>">
+                                <input type="text" name="producto" placeholder="Producto" class="form-control" id="nombre" aria-label="producto" value="<?php echo (isset($filters['producto'])) ? $filters['producto'] : '' ?>">
                             </div>
 
                             <div class="form-group col-md-4">
@@ -80,7 +69,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" class="form-control pull-right"  value="<?php echo (isset($filters['fecha_aplicacion'])) ? $filters['fecha_aplicacion'] : '' ?>" id="fecha_aplicacion" name="fecha_aplicacion" placeholder="fecha desde - fecha hasta">
+                                    <input type="text" class="form-control pull-right" value="<?php echo (isset($filters['fecha_aplicacion'])) ? $filters['fecha_aplicacion'] : '' ?>" id="fecha_aplicacion" name="fecha_aplicacion" placeholder="fecha desde - fecha hasta">
                                 </div>
                                 <!-- /.input group -->
                             </div>
@@ -134,8 +123,7 @@
                                 <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nuevo Pedido</span>
                             </a>
                         <?php } ?>
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i
-                                class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                     </div>
                 </div>
                 <div class="box-body">
@@ -146,7 +134,7 @@
                                 <table class="table table-hover table-striped">
                                     <thead>
                                         <tr>
-                                            <th class="col-sm-1">
+                                            <th class="col-sm-2">
                                                 Estado
                                             </th>
                                             <th class="col-sm-3">
@@ -155,11 +143,12 @@
                                             <th class="col-sm-2">
                                                 Producto
                                             </th>
-                                            <th class="hidden-xs col-sm-3">
+                                            <th class="hidden-xs col-sm-2">
                                                 <?php echo $this->Paginator->sort('fecha_pedido', 'Fecha de Pedido'); ?>
                                             </th>
                                             <th class="hidden-xs col-sm-2">
-                                                Fecha de Aplicación
+                                                <?php echo $this->Paginator->sort('fecha_aplicacion', ' Fecha de Aplicación'); ?>
+                                               
                                             </th class="hidden-xs col-sm-2">
                                             <th>
                                             </th>
@@ -216,7 +205,7 @@
                                                     <?php echo $this->Time->format($pedido->fecha_pedido, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo $this->Time->format($pedido->detalles_pedidos[0]->fecha_aplicacion, 'dd/MM/Y'); ?>
+                                                    <?php echo $this->Time->format($pedido->fecha_aplicacion, 'dd/MM/Y'); ?>
                                                 </td>
                                                 <td class="pencil">
                                                     <a href="/Pedidos/edit/<?php echo $pedido->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self">

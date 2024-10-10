@@ -32,9 +32,7 @@ class DetallesPedido extends Entity
     protected array $_accessible = [
         'pedido_id' => true,
         'producto_id' => true,
-        'cantidad' => true,
-        'aclaracion' => true,
-        'fecha_aplicacion' => true,
+        'cantidad' => true,            
         'pedido' => true,
         'producto' => true,
     ];

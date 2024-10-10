@@ -88,24 +88,7 @@ class DetallesPedidosTable extends Table
                 'rule' => ['range', 1, 1000],
                 'message' => 'La cantidad debe estar entre 1 y 1000.'
             ]);
-
-        $validator
-            ->scalar('aclaracion')
-            ->maxLength('aclaracion', 500, 'La aclaración no debe superar los 500 caracteres.')
-            ->allowEmptyString('aclaracion', 'Puede dejar este campo vacío si no tiene aclaraciones.');
-
-        // Validación para la fecha de aplicación
-        $validator
-            ->date('fecha_aplicacion')
-            ->requirePresence('fecha_aplicacion', 'create', 'El campo fecha de aplicación es obligatorio.')
-            ->notEmptyDateTime('fecha_aplicacion', 'Debe ingresar una fecha de aplicación.')
-            ->add('fecha_aplicacion', 'validFutureDate', [
-                'rule' => function ($value, $context) {
-                    $currentDate = date('Y-m-d');
-                    return $value > $currentDate;
-                },
-                'message' => 'La fecha de aplicación debe ser mayor a la fecha actual.'
-            ]);
+       
 
         return $validator;
     }

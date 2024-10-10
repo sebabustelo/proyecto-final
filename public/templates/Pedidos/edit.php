@@ -53,98 +53,120 @@
                             </div>
                             <div class="panel panel-default">
                                 <div class="panel-heading">
+                                    <h3 class="panel-title">Orden Médica</h3>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <?php if (!empty($pedido->ordenes_medicas[0]->file_name)) : ?>
+                                                    <a href="/img/ordenes_medicas/<?php echo h($pedido->ordenes_medicas[0]->file_name); ?>" target="_blank" class="btn btn-success flex-fill ">
+                                                        <span class="fa fa-file-pdf-o"></span> Descargar Orden Médica
+                                                    </a>
+                                                <?php else : ?>
+                                                    <span class="text-danger">No se ha subido una orden médica.</span>
+                                                <?php endif; ?>
+
+                                                <?php if ($pedido->pedidos_estado->nombre == 'PENDIENTE') : ?>
+                                                    <form id="VerificarOrdenForm" method="POST" action="/Pedidos/verificarOrden/<?php echo $pedido->id; ?>" class="flex-fill">
+                                                        <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
+                                                        <button type="submit" class="btn btn-primary flex-fill" onclick="return confirmValidation(event)">
+                                                            <span class="fa fa-check"></span> Validar Orden Médica
+                                                        </button>
+                                                    </form>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
                                     <h3 class="panel-title">Datos del Pedido</h3>
                                 </div>
                                 <div class="panel-body">
 
-                                        <div class="row">
-                                            <div class="col-md-3">
-                                                <dt>ID:</dt>
-                                                <dd><?php echo h($pedido->id); ?></dd>
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <dt>Estado:</dt>
-                                                <dd>
-                                                    <span class="label <?php
-                                                                        switch ($pedido->pedidos_estado->nombre) {
-                                                                            case 'PENDIENTE':
-                                                                                echo 'bg-yellow'; // Fondo amarillo
-                                                                                break;
-                                                                            case 'INCOMPLETO':
-                                                                                echo 'bg-red'; // Fondo rojo
-                                                                                break;
-                                                                            case 'EN_PROCESO':
-                                                                                echo 'bg-blue'; // Fondo azul
-                                                                                break;
-                                                                            case 'PAGADO':
-                                                                                echo 'bg-purple'; // Fondo morado
-                                                                                break;
-                                                                            case 'EN_CAMINO':
-                                                                                echo 'bg-orange'; // Fondo naranja
-                                                                                break;
-                                                                            case 'FINALIZADO':
-                                                                                echo 'bg-green'; // Fondo verde
-                                                                                break;
-                                                                            default:
-                                                                                echo 'bg-gray'; // Fondo gris por defecto
-                                                                                break;
-                                                                        }
-                                                                        ?>">
-                                                        <?php echo $pedido->pedidos_estado->nombre; ?>
-                                                    </span>
-                                                </dd>
-                                            </div>
-
-                                            <div class="col-md-3">
-                                                <dt>Fecha:</dt>
-                                                <dd><?php echo h($pedido->fecha_pedido->format('d/m/Y H:i:s')); ?></dd>
-                                            </div>
-
-
+                                    <div class="row align-items-center">
+                                        <div class="col-md-3 d-flex">
+                                            <div class="mr-2 font-weight-bold"><strong>ID:</strong> <?php echo h($pedido->id); ?></div>
                                         </div>
 
-
-                                        <br>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered">
-                                                <thead class="thead-light">
-                                                    <tr>
-                                                        <th>Producto</th>
-                                                        <th>Cantidad</th>
-                                                        <th>Precio Unitario</th>
-                                                        <th>Subtotal</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    <?php $total = 0; ?>
-                                                    <?php foreach ($pedido->detalles_pedidos as $detalle): ?>
-                                                        <?php
-                                                        $precioUnitario = h($detalle->producto->productos_precios[0]['precio']);
-                                                        $subtotal = $precioUnitario * $detalle->cantidad;
-                                                        $total += $subtotal;
-                                                        ?>
-                                                        <tr>
-                                                            <td><?php echo h($detalle->producto->nombre); ?></td>
-                                                            <td><?php echo h($detalle->cantidad); ?></td>
-                                                            <td>$<?php echo h(number_format($precioUnitario, 2)); ?></td>
-                                                            <td>$<?php echo h(number_format($subtotal, 2)); ?></td>
-                                                        </tr>
-                                                    <?php endforeach; ?>
-                                                </tbody>
-                                                <tfoot>
-                                                    <tr>
-                                                        <td colspan="3" class="text-right"><strong>Total:</strong></td>
-                                                        <td>$<?php echo h(number_format($total, 2)); ?></td>
-                                                    </tr>
-                                                </tfoot>
-                                            </table>
+                                        <div class="col-md-3 d-flex">
+                                            <div class="mr-2 font-weight-bold"><strong>Estado:</strong>
+                                                <span class="label <?php
+                                                                    switch ($pedido->pedidos_estado->nombre) {
+                                                                        case 'PENDIENTE':
+                                                                            echo 'bg-yellow'; // Fondo amarillo
+                                                                            break;
+                                                                        case 'INCOMPLETO':
+                                                                            echo 'bg-red'; // Fondo rojo
+                                                                            break;
+                                                                        case 'EN_PROCESO':
+                                                                            echo 'bg-blue'; // Fondo azul
+                                                                            break;
+                                                                        case 'PAGADO':
+                                                                            echo 'bg-purple'; // Fondo morado
+                                                                            break;
+                                                                        case 'EN_CAMINO':
+                                                                            echo 'bg-orange'; // Fondo naranja
+                                                                            break;
+                                                                        case 'FINALIZADO':
+                                                                            echo 'bg-green'; // Fondo verde
+                                                                            break;
+                                                                        default:
+                                                                            echo 'bg-gray'; // Fondo gris por defecto
+                                                                            break;
+                                                                    }
+                                                                    ?>">
+                                                    <?php echo $pedido->pedidos_estado->nombre; ?>
+                                                </span>
+                                            </div>
                                         </div>
 
+                                        <div class="col-md-3 d-flex">
+                                            <div class="mr-2 font-weight-bold"><strong>Fecha:</strong><?php echo h($pedido->fecha_pedido->format('d/m/Y H:i:s')); ?></div>
+                                           
+                                        </div>
+                                    </div>
 
 
 
-
+                                    <br>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead class="thead-light">
+                                                <tr>
+                                                    <th>Producto</th>
+                                                    <th>Cantidad</th>
+                                                    <th>Precio Unitario</th>
+                                                    <th>Subtotal</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php $total = 0; ?>
+                                                <?php foreach ($pedido->detalles_pedidos as $detalle) : ?>
+                                                    <?php
+                                                    $precioUnitario = h($detalle->producto->productos_precios[0]['precio']);
+                                                    $subtotal = $precioUnitario * $detalle->cantidad;
+                                                    $total += $subtotal;
+                                                    ?>
+                                                    <tr>
+                                                        <td><?php echo h($detalle->producto->nombre); ?></td>
+                                                        <td><?php echo h($detalle->cantidad); ?></td>
+                                                        <td>$<?php echo h(number_format($precioUnitario, 2)); ?></td>
+                                                        <td>$<?php echo h(number_format($subtotal, 2)); ?></td>
+                                                    </tr>
+                                                <?php endforeach; ?>
+                                            </tbody>
+                                            <tfoot>
+                                                <tr>
+                                                    <td colspan="3" class="text-right"><strong>Total:</strong></td>
+                                                    <td>$<?php echo h(number_format($total, 2)); ?></td>
+                                                </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
 
@@ -166,9 +188,7 @@
                             <div class="form-group col-sm-12 text-center">
                                 <a href="<?php echo $url; ?>" class="btn btn-danger">
                                     <span class="fa fa-remove"></span> Cancelar</a>
-                                <button type="submit" class="btn btn-primary">
-                                    <span class="fa  fa-check-square-o"></span>
-                                    Guardar</button>
+
                             </div>
                         </form>
                     </div>
@@ -212,5 +232,18 @@
 
         // Comparar con el dígito verificador (último dígito del CUIT)
         return verificador === parseInt(cuit[10]);
+    }
+
+
+    function confirmValidation(event) {
+        event.preventDefault(); // Prevenir el envío del formulario
+        const form = event.target.closest('form'); // Obtener el formulario
+
+        // Mostrar el popup de confirmación
+        const userConfirmed = confirm("¿Está seguro de que desea validar la orden médica? Esto cambiará el estado del pedido y enviará un email al cliente con el link de pago.");
+
+        if (userConfirmed) {
+            form.submit(); // Si el usuario confirma, enviar el formulario
+        }
     }
 </script>

@@ -68,7 +68,7 @@
                                 <div class="form-group col-md-4">
                                     <label for="fecha_aplicacion">Fecha de Aplicación</label>
                                     <input type="hidden" value="<?php echo $producto->id; ?>" id="id" name="detalles_pedidos[0][producto_id]">
-                                    <input type="date" class="form-control" name="detalles_pedidos[0][fecha_aplicacion]"
+                                    <input type="date" class="form-control" name="fecha_aplicacion"
                                         min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" id="fecha_aplicacion" required>
                                 </div>
                                 <!-- Cantidad -->
@@ -81,7 +81,7 @@
 
                                 <div class="form-group col-md-12">
                                     <label for="aclaracion">Aclaraciones</label>
-                                    <textarea class="form-control" name="detalles_pedidos[0][aclaracion]" id="aclaracion" rows="2" maxlength="500" placeholder="Escriba aquí cualquier aclaración..." required></textarea>
+                                    <textarea class="form-control" name="aclaracion" id="aclaracion" rows="2" maxlength="500" placeholder="Escriba aquí cualquier aclaración..." required></textarea>
                                 </div>
                                 <div class="button-group">
                                     <button type="submit" class="btn btn-success">

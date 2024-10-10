@@ -18,7 +18,7 @@ class PedidosController extends AppController
     protected array $paginate = [
         'limit' => 10,
         'order' => [
-            'Proveedores.nombre' => 'asc',
+            'Pedidos.fecha_pedido' => 'asc',
         ],
     ];
 
@@ -89,7 +89,7 @@ class PedidosController extends AppController
         // Cargar el pedido para obtener la fecha_pedido
         $pedido = $this->Pedidos->find()
             ->where(['Pedidos.id' => $id])
-            ->contain(['PedidosEstados', 'DetallesPedidos' => [
+            ->contain(['PedidosEstados','OrdenesMedicas', 'DetallesPedidos' => [
                 'Productos' => [
                     'ProductosPrecios' => function ($q) use ($id) {
                         // Obtener el pedido usando el ID
@@ -109,7 +109,7 @@ class PedidosController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             $pedido = $this->Pedidos->patchEntity($pedido, $this->request->getData());
             if ($this->Pedidos->save($pedido)) {
-                $this->Flash->success(__('El proveedor se actualizo correctamente.'));
+                $this->Flash->success(__('El pedido se actualizo correctamente.'));
 
                 return $this->redirect('/Pedidos/index');;
             }
@@ -269,12 +269,9 @@ class PedidosController extends AppController
             $conditions['where'][] = ['Pedidos.cliente_id' =>  $data['cliente_id']];
         }
 
-
-
         if (isset($data['estado_id']) and !empty($data['estado_id'])) {
             $conditions['where'][] = ['Pedidos.estado_id' => $data['estado_id']];
         }
-
 
         if (isset($data['fecha_pedido']) && !empty($data['fecha_pedido'])) {
             // Separar las dos fechas basadas en el guion
@@ -303,22 +300,11 @@ class PedidosController extends AppController
             $fecha_fin = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[1] . ' 23:59:59');
 
             // Verificar si las fechas fueron creadas correctamente
-            if ($fecha_inicio && $fecha_fin) {
-                // Agregar condiciones utilizando matching correctamente
-                $conditions['matching'][] = [
-                    'DetallesPedidos',
-                    function ($q) use ($fecha_inicio, $fecha_fin) {
-                        return $q->where([
-                            'DetallesPedidos.fecha_aplicacion >=' => $fecha_inicio->format('Y-m-d H:i:s'),
-                            'DetallesPedidos.fecha_aplicacion <=' => $fecha_fin->format('Y-m-d H:i:s')
-                        ]);
-                    }
-                ];
+            if ($fecha_inicio && $fecha_fin) {               
+                $conditions['where'][] = ['Pedidos.fecha_aplicacion >= ' => $fecha_inicio->format('Y-m-d H:i:s')];
+                $conditions['where'][] = ['Pedidos.fecha_aplicacion <= ' => $fecha_fin->format('Y-m-d H:i:s')];                
             }
         }
-
-
-
 
 
         $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
