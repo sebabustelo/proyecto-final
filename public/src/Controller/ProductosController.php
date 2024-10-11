@@ -20,6 +20,14 @@ class ProductosController extends AppController
         $this->loadComponent('Upload');
     }
 
+    protected array $paginate = [
+        'limit' => 8,
+        'order' => [
+            'Productos.nombre' => 'asc',
+        ],
+    ];
+
+
     /**
      * Index method
      *
@@ -82,11 +90,13 @@ class ProductosController extends AppController
             ])
             ->first();
 
+           // debug($_SESSION);
+
         if (!$producto) {
             $this->Flash->error(__('El producto no existe.'));
             return $this->redirect(['action' => 'index']);
         }
-
+        $this->set('provincias', $this->Productos->DetallesPedidos->Pedidos->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
         $this->set(compact('producto'));
     }
 

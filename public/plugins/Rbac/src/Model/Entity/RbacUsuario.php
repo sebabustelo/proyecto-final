@@ -48,8 +48,9 @@ class RbacUsuario extends Entity
         'perfil_id' => true,
         'password' => true,
         'password_confirm'=>true,
-        'direcciones'=>true,
+        'direccion'=>true,
         'razon_social'=>true,
+        'direccion_id' => true,
 
     ];
 

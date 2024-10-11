@@ -63,6 +63,9 @@ class ProductosTable extends Table
         $this->hasMany('ProductosPrecios', [
             'foreignKey' => 'producto_id',
         ]);
+        $this->belongsTo('DetallesPedidos', [
+            'foreignKey' => 'producto_id',
+        ]);
     }
 
     /**

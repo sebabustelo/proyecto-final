@@ -44,11 +44,7 @@ class DireccionesTable extends Table
         $this->setDisplayField('calle');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('RbacUsuarios', [
-            'foreignKey' => 'usuario_id',
-            'joinType' => 'INNER',
-            'className' => 'Rbac.RbacUsuarios',
-        ]);
+
         $this->belongsTo('Localidades', [
             'foreignKey' => 'localidad_id',
             'joinType' => 'INNER',
@@ -64,9 +60,6 @@ class DireccionesTable extends Table
      */
     public function validationDefault(Validator $validator): Validator
     {
-        $validator
-            ->integer('rbac_usuario_id')
-            ->notEmptyString('rbac_usuario_id');
 
         $validator
             ->scalar('calle')
@@ -110,7 +103,6 @@ class DireccionesTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['rbac_usuario_id'], 'RbacUsuarios'), ['errorField' => 'rbac_usuario_id']);
         $rules->add($rules->existsIn(['localidad_id'], 'Localidades'), ['errorField' => 'localidad_id']);
 
         return $rules;

@@ -93,11 +93,23 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-12">
+                                <label>Info del producto</label>
+
+                                <textarea  required maxlength="2000" rows="2" placeholder="Ingrese la info del producto"
+                                    class="form-control" name="descripcion_breve" oninvalid="this.setCustomValidity('Debe completar info del producto')"
+                                    oninput="this.setCustomValidity('')"><?php echo $this->request->getData('descripcion_breve') ?></textarea>
+                                <?php if ($producto->getError('descripcion_breve')) { ?>
+                                    <?php foreach ($producto->getError('descripcion_breve') as $error) { ?>
+                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
+                            <div class="form-group col-sm-12">
                                 <label>Descripción</label>
 
-                                <textarea style='text-transform: uppercase;' required maxlength="2000" rows="5" placeholder="Ingrese la descripción"
-                                    class="form-control" name="descripcion_breve" oninvalid="this.setCustomValidity('Debe completar la descripción')"
-                                    oninput="this.setCustomValidity('')"><?php echo $this->request->getData('descripcion_breve') ?></textarea>
+                                <textarea  required maxlength="2000" rows="3" placeholder="Ingrese la descripción"
+                                    class="form-control" name="descripcion_larga" oninvalid="this.setCustomValidity('Debe completar la descripción')"
+                                    oninput="this.setCustomValidity('')"><?php echo $this->request->getData('descripcion_larga') ?></textarea>
                                 <?php if ($producto->getError('descripcion_breve')) { ?>
                                     <?php foreach ($producto->getError('descripcion_breve') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>

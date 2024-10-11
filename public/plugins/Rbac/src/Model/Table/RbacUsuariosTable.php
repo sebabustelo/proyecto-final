@@ -57,10 +57,14 @@ class RbacUsuariosTable extends Table
             'foreignKey' => 'tipo_documento_id',
         ]);
 
-        $this->hasMany('Direcciones', [
-            'className'        => 'Rbac.Direcciones',
-            'foreignKey' => 'rbac_usuario_id',
-        ]);
+        $this->belongsTo(
+            'Direcciones',
+            [
+                'className'        => 'Rbac.Direcciones',
+                'foreignKey' => 'direccion_id',
+                'propertyName' => 'direccion'
+            ]
+        );
     }
 
     /**
@@ -113,7 +117,7 @@ class RbacUsuariosTable extends Table
                     'unique' => [
                         'rule' => 'validateUnique',
                         'provider' => 'table',
-                        'message' => 'El email existe en la base de datos, no pueden existir duplicados.',
+                        'message' => 'El email ingresado ya está registrado en nuestro sistema.',
                     ],
                 ]
             );

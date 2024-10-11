@@ -32,7 +32,6 @@ class Direccion extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
-        'rbac_usuario_id' => true,
         'calle' => true,
         'numero' => true,
         'piso' => true,

@@ -148,7 +148,7 @@
                                             </th>
                                             <th class="hidden-xs col-sm-2">
                                                 <?php echo $this->Paginator->sort('fecha_aplicacion', ' Fecha de Aplicación'); ?>
-                                               
+
                                             </th class="hidden-xs col-sm-2">
                                             <th>
                                             </th>
@@ -190,13 +190,13 @@
                                                     </small>
                                                 </td>
                                                 <td>
-                                                    <?php echo $pedido->rbac_usuario->tipo_documento->descripcion . ":" . $pedido->rbac_usuario->documento; ?><br>
-                                                    <?php if (!empty($pedido->rbac_usuario->apellido)) { ?>
-                                                        <?php echo $pedido->rbac_usuario->apellido . ", " . $pedido->rbac_usuario->nombre; ?><br>
+                                                    <?php echo $pedido->cliente->tipo_documento->descripcion . ":" . $pedido->cliente->documento; ?><br>
+                                                    <?php if (!empty($pedido->cliente->apellido)) { ?>
+                                                        <?php echo $pedido->cliente->apellido . ", " . $pedido->cliente->nombre; ?><br>
                                                     <?php } else { ?>
-                                                        <?php echo $pedido->rbac_usuario->razon_social; ?><br>
+                                                        <?php echo $pedido->cliente->razon_social; ?><br>
                                                     <?php } ?>
-                                                    <?php echo $pedido->rbac_usuario->email; ?>
+                                                    <?php echo $pedido->cliente->email; ?>
                                                 </td>
                                                 <td>
                                                     <?php echo $pedido->detalles_pedidos[0]->producto->nombre; ?>
@@ -211,7 +211,7 @@
                                                     <a href="/Pedidos/edit/<?php echo $pedido->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self">
                                                         <i class="fa fa-pencil"></i></a>
                                                 </td>
-                                                <td class="remove">
+                                                <!-- <td class="remove">
                                                     <?= $this->Form->postLink(
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $pedido->id],
@@ -222,7 +222,7 @@
                                                             'escape' => false
                                                         ]
                                                     ) ?>
-                                                </td>
+                                                </td> -->
                                             </tr>
                                         <?php } ?>
                                     </tbody>

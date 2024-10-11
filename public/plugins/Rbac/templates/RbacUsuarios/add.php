@@ -34,18 +34,24 @@ use Cake\Core\Configure;
                         <form id="RbacUsuariosAddForm" name="RbacUsuariosAddForm" role="form" action="/rbac/rbacUsuarios/add/" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
 
-                            <div class="form-group col-sm-4">
-                                <label id="lblUsuario" for="usuario">Usuario (mail)</label>
-                                <input type="email" name="usuario" required id="RbacUsuarioUsuario"
+                            <div class="form-group col-sm-3">
+                                <label  for="usuario">Usuario</label>
+                                <input type="text" name="usuario" required id="RbacUsuarioUsuario"
+                                    oninvalid="this.setCustomValidity('Complete el usuario')" oninput="this.setCustomValidity('')"
+                                    placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo $this->request->getData('usuario'); ?>">
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label  for="usuario">Usuario</label>
+                                <input type="email" name="email" required
                                     oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
                                     placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo $this->request->getData('usuario'); ?>">
                             </div>
 
-                            <div class="form-group col-sm-4">
+                            <div class="form-group col-sm-3">
                                 <label for="nombre">Nombre</label>
                                 <input required type="text" placeholder="Ingrese el/los nombre/s" class="form-control" name="nombre" value="<?php echo $this->request->getData('nombre'); ?>" oninvalid="this.setCustomValidity('Debe completar el/los nombre/s')" oninput="this.setCustomValidity('')">
                             </div>
-                            <div class="form-group col-sm-4">
+                            <div class="form-group col-sm-3">
                                 <label for="apellido">Apellido</label>
                                 <input required type="text" placeholder="Ingrese el/los apellido/s" class="form-control" name="apellido" value="<?php echo $this->request->getData('apellido'); ?>" oninvalid="this.setCustomValidity('Debe completar el/los apellido/s')" oninput="this.setCustomValidity('')">
                             </div>
@@ -84,14 +90,14 @@ use Cake\Core\Configure;
                             </div>
                             <div class="form-group col-sm-4">
                                 <label>Localidad</label><br>
-                                <select required id="localidad_id" name="direcciones[][localidad_id]" class="form-control">
+                                <select required id="localidad_id" name="direccion[localidad_id]" class="form-control">
                                     <option selected value="">Seleccione una localidad</option>
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Calle</label>
-                                <input name="direcciones[0][calle]" required
-                                    value="<?php echo !empty($this->request->getData('direcciones')[0]['calle']) ? $this->request->getData('direcciones')[0]['calle'] : ''; ?>"
+                                <input name="direccion[calle]" required
+                                    value="<?php echo !empty($this->request->getData('direccion')['calle']) ? $this->request->getData('direccion')['calle'] : ''; ?>"
                                     type="text" class="form-control"
                                     oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
                                     placeholder="Calle" maxlength="100" min="1">
@@ -99,17 +105,17 @@ use Cake\Core\Configure;
 
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Número</label>
-                                <input name="direcciones[0][numero]" required value="<?php echo !empty($this->request->getData('direcciones')[0]['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>" type="number" class="form-control" placeholder="Número" maxlength="4" min="1">
+                                <input name="direccion[numero]" required value="<?php echo !empty($this->request->getData('direccion')['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>" type="number" class="form-control" placeholder="Número" maxlength="4" min="1">
                             </div>
 
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Piso</label>
-                                <input name="direcciones[0][piso]" value="<?php echo !empty($this->request->getData('direcciones')[0]['piso']) ? $this->request->getData('direcciones')[0]['piso'] : ''; ?>" type="text" class="form-control" placeholder="Piso" maxlength="3">
+                                <input name="direccion[piso]" value="<?php echo !empty($this->request->getData('direccion')['piso']) ? $this->request->getData('direcciones')[0]['piso'] : ''; ?>" type="text" class="form-control" placeholder="Piso" maxlength="3">
                             </div>
 
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Depto</label>
-                                <input name="direcciones[0][departamento]" value="<?php echo !empty($this->request->getData('direcciones')[0]['departamento']) ? $this->request->getData('direcciones')[0]['departamento'] : ''; ?>" type="text" class="form-control" placeholder="Depto" maxlength="10">
+                                <input name="direccion[departamento]" value="<?php echo !empty($this->request->getData('direccion')['departamento']) ? $this->request->getData('direcciones')[0]['departamento'] : ''; ?>" type="text" class="form-control" placeholder="Depto" maxlength="10">
                             </div>
 
 

@@ -51,8 +51,10 @@ class PedidosTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Rbac.RbacUsuarios', [
+        $this->belongsTo('RbacUsuarios', [
+            'className'        => 'Rbac.RbacUsuarios',
             'foreignKey' => 'cliente_id',
+             'propertyName' => 'cliente',
             'joinType' => 'INNER',
         ]);
         $this->belongsTo('PedidosEstados', [
@@ -65,6 +67,14 @@ class PedidosTable extends Table
         $this->hasMany('OrdenesMedicas', [
             'foreignKey' => 'pedido_id',
         ]);
+        $this->belongsTo(
+            'Direcciones',
+            [
+                'className'        => 'Rbac.Direcciones',
+                'foreignKey' => 'direccion_id',
+                'propertyName' => 'direccion'
+            ]
+        );
     }
 
     /**
@@ -92,7 +102,7 @@ class PedidosTable extends Table
             ->scalar('aclaracion')
             ->maxLength('aclaracion', 500, 'La aclaración no debe superar los 500 caracteres.')
             ->allowEmptyString('aclaracion', 'Puede dejar este campo vacío si no tiene aclaraciones.');
-       
+
         $validator
             ->date('fecha_aplicacion')
             ->requirePresence('fecha_aplicacion', 'create', 'El campo fecha de aplicación es obligatorio.')

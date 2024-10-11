@@ -33,9 +33,11 @@ use Cake\Core\Configure;
                     <div class="form-row">
                         <form id="RbacUsuariosAddForm" name="RbacUsuariosAddForm" role="form" action="/rbac/rbacUsuarios/edit/<?php echo $rbacUsuario->id; ?>" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-                            <div class="form-group col-sm-4">
-                                <label id="lblUsuario" for="usuario">Usuario (mail)</label>
-                                <input type="email" name="usuario" required value="<?php echo $rbacUsuario->usuario; ?>" oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')" placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
+                            <div class="form-group col-sm-3">
+                                <label id="lblUsuario">Usuario</label>
+                                <input type="text" name="usuario" required value="<?php echo $rbacUsuario->usuario; ?>" oninvalid="this.setCustomValidity('Complete el usuario ')"
+                                 oninput="this.setCustomValidity('')" placeholder="Ingrese el usuario" class="form-control" maxlength="120"
+                                 value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
                                 <?php foreach ($rbacUsuario->getError('usuario') as $k => $v) { ?>
                                     <div class="form-group   label label-danger">
                                         <span class=" "> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
@@ -44,9 +46,21 @@ use Cake\Core\Configure;
                                     </div>
                                 <?php  } ?>
                             </div>
+                            <div class="form-group col-sm-3">
+                                <label id="lblUsuario">Usuario (mail)</label>
+                                <input type="email" name="email" required value="<?php echo $rbacUsuario->email; ?>" oninvalid="this.setCustomValidity('Complete el email)')"
+                                 oninput="this.setCustomValidity('')" placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
+                                <?php foreach ($rbacUsuario->getError('email') as $k => $v) { ?>
+                                    <div class="form-group   label label-danger">
+                                        <span class=" "> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
+                                            <?php echo $v; ?>
+                                        </span>
+                                    </div>
+                                <?php  } ?>
+                            </div>
                             <?php if (!empty($rbacUsuario->nombre)) { ?>
-                                <div class="form-group col-sm-4">
-                                    <label for="nombre">Nombre</label>
+                                <div class="form-group col-sm-3">
+                                    <label>Nombre</label>
                                     <input required type="text" value="<?php echo $rbacUsuario->nombre; ?>" placeholder="Ingrese el nombre" class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el/los nombre/s')" oninput="this.setCustomValidity('')">
                                     <?php foreach ($rbacUsuario->getError('nombre') as $k => $v) { ?>
                                         <div class="form-group   label label-danger">
@@ -56,8 +70,8 @@ use Cake\Core\Configure;
                                         </div>
                                     <?php  } ?>
                                 </div>
-                                <div class="form-group col-sm-4">
-                                    <label for="apellido">Apellido</label>
+                                <div class="form-group col-sm-3">
+                                    <label>Apellido</label>
                                     <input required type="text" value="<?php echo $rbacUsuario->apellido; ?>" placeholder="Ingrese el apellido" class="form-control" name="apellido" oninvalid="this.setCustomValidity('Debe completar el/los apellido/s')" oninput="this.setCustomValidity('')">
                                     <?php foreach ($rbacUsuario->getError('apellido') as $k => $v) { ?>
                                         <div class="form-group   label label-danger">
@@ -95,20 +109,19 @@ use Cake\Core\Configure;
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label for="documento">Documento</label>
+                                <label>Documento</label>
                                 <input required type="text" placeholder="Número de Doc." maxlength="20"
                                     class="form-control" value="<?php echo $rbacUsuario->documento; ?>" name="documento"
                                     oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');"
                                     onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();">
                             </div>
-                            <?php //debug($rbacUsuario->direcciones[0] )
-                            ?>
+
                             <div class="form-group col-sm-4">
                                 <label>Provincia</label><br>
-                                <select id="provincia_id" required name="direcciones[0][localidade][provincia][id]" class="form-control">
+                                <select id="provincia_id" required name="direccion[localidade][provincia][id]" class="form-control">
                                     <option selected value="">Seleccione una provincia</option>
                                     <?php foreach ($provincias as $id => $provincia) { ?>
-                                        <?php if ($rbacUsuario->direcciones[0]->localidade['provincia']['id'] == $id) { ?>
+                                        <?php if ($rbacUsuario->direccion->localidade['provincia']['id'] == $id) { ?>
                                             <option selected value="<?php echo $id ?>"><?php echo $provincia; ?></option>
                                         <?php } else { ?>
                                             <option value="<?php echo $id ?>"><?php echo $provincia; ?></option>
@@ -119,36 +132,36 @@ use Cake\Core\Configure;
                             </div>
                             <div class="form-group col-sm-4">
                                 <label>Localidad</label><br>
-                                <select required id="localidad_id" name="direcciones[0][localidad_id]" class="form-control">
+                                <select required id="localidad_id" name="direccion[localidad_id]" class="form-control">
                                     <option selected value="">Seleccione una localidad</option>
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label for="direccion">Calle</label>
-                                <input name="direcciones[0][calle]" required
-                                    value="<?php echo isset($rbacUsuario->direcciones[0]->calle) ? $rbacUsuario->direcciones[0]->calle : ''; ?>" type="text" class="form-control"
+                                <label>Calle</label>
+                                <input name="direccion[calle]" required
+                                    value="<?php echo isset($rbacUsuario->direccion->calle) ? $rbacUsuario->direccion->calle : ''; ?>" type="text" class="form-control"
                                     oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
                                     placeholder="Calle" maxlength="100">
                             </div>
 
                             <div class="form-group col-sm-2">
-                                <label for="direccion">Número</label>
-                                <input name="direcciones[0][numero]" required type="number" min="1" class="form-control"
-                                    value="<?php echo isset($rbacUsuario->direcciones[0]->numero) ? $rbacUsuario->direcciones[0]->numero : ''; ?>" placeholder="Número" maxlength="4">
+                                <label>Número</label>
+                                <input name="direccion[numero]" required type="number" min="1" class="form-control"
+                                    value="<?php echo isset($rbacUsuario->direccion->numero) ? $rbacUsuario->direccion->numero : ''; ?>" placeholder="Número" maxlength="4">
                             </div>
                             <div class="form-group col-sm-2">
-                                <label for="direccion">Piso</label>
-                                <input name="direcciones[0][piso]" type="text" class="form-control"
-                                    value="<?php echo isset($rbacUsuario->direcciones[0]->piso) ? $rbacUsuario->direcciones[0]->piso : ''; ?>" placeholder="Piso" maxlength="3">
+                                <label>Piso</label>
+                                <input name="direccion[piso]" type="text" class="form-control"
+                                    value="<?php echo isset($rbacUsuario->direccion->piso) ? $rbacUsuario->direccion->piso : ''; ?>" placeholder="Piso" maxlength="3">
                             </div>
                             <div class="form-group col-sm-2">
-                                <label for="direccion">Depto</label>
-                                <input name="direcciones[0][departamento]" type="text" class="form-control"
-                                    value="<?php echo isset($rbacUsuario->direcciones[0]->departamento) ? $rbacUsuario->direcciones[0]->departamento : ''; ?>" placeholder="Depto" maxlength="10">
+                                <label>Depto</label>
+                                <input name="direccion[departamento]" type="text" class="form-control"
+                                    value="<?php echo isset($rbacUsuario->direccion->departamento) ? $rbacUsuario->direccion->departamento : ''; ?>" placeholder="Depto" maxlength="10">
                             </div>
 
                             <div class="form-group col-sm-2">
-                                <label for="rbac-perfiles-ids">Perfil</label><br>
+                                <label>Perfil</label><br>
                                 <select required id="rbac-perfiles-ids" name="rbac_perfiles[_ids][]" class="form-control">
                                     <?php foreach ($rbacPerfiles as $id => $perfil) : ?>
                                         <?php if ($rbacUsuario->perfil_id == $id) { ?>
@@ -161,7 +174,7 @@ use Cake\Core\Configure;
                                 </select>
                             </div>
                             <div class="form-group   col-sm-2">
-                                <label for="">&nbsp;</label><br>
+                                <label>&nbsp;</label><br>
                                 <label class="btn btn-default btn-block">
                                     <input type="hidden" name="activo" value="0">
                                     <input value="1" type="checkbox" name="activo" <?php echo (isset($rbacUsuario) and $rbacUsuario->activo) == 'true' ? 'checked' : ''; ?>>
@@ -239,7 +252,7 @@ use Cake\Core\Configure;
 
         setTimeout(function() {
 
-            var localidadId = "<?php echo $rbacUsuario->direcciones[0]->localidad_id ?? ''; ?>";
+            var localidadId = "<?php echo $rbacUsuario->direccion->localidad_id ?? ''; ?>";
             if (localidadId) {
                 document.getElementById('localidad_id').value = localidadId;
             }

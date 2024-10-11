@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\I18n\DateTime;
-use Cake\I18n\FrozenTime;
+use Cake\Routing\Router;
+use Cake\Mailer\Mailer;
+use Cake\Mailer\Exception\MissingActionException;
 
 /**
  * Categorias Controller
@@ -89,7 +91,7 @@ class PedidosController extends AppController
         // Cargar el pedido para obtener la fecha_pedido
         $pedido = $this->Pedidos->find()
             ->where(['Pedidos.id' => $id])
-            ->contain(['PedidosEstados','OrdenesMedicas', 'DetallesPedidos' => [
+            ->contain(['PedidosEstados', 'OrdenesMedicas', 'DetallesPedidos' => [
                 'Productos' => [
                     'ProductosPrecios' => function ($q) use ($id) {
                         // Obtener el pedido usando el ID
@@ -140,7 +142,6 @@ class PedidosController extends AppController
             $connection->begin();
 
             try {
-
                 $pedido = $this->Pedidos->patchEntity(
                     $pedido,
                     $this->request->getData(),
@@ -148,7 +149,8 @@ class PedidosController extends AppController
                         'associated' => [
                             'DetallesPedidos' => ['Productos'],
                             'OrdenesMedicas',
-                            'PedidosEstados'
+                            'PedidosEstados',
+                            'Direcciones'
                         ],
                     ]
                 );
@@ -164,16 +166,20 @@ class PedidosController extends AppController
                 $pedido['cliente_id'] = $_SESSION['RbacUsuario']['id'];
                 $pedido['fecha_pedido'] = date('Y-m-d H:i:s');
 
+                // Verificar stock
+                $producto_id = $pedido->detalles_pedidos[0]->producto_id;
+                $producto = $this->Pedidos->DetallesPedidos->Productos->find()->where(['id' => $producto_id])->first();
+
+                if ($producto->stock >= ($this->request->getData('detalles_pedidos')[0]['cantidad'])) {
+                    $producto->stock = $producto->stock - 1;
+                    $this->Pedidos->DetallesPedidos->Productos->save($producto);
+                } else {
+                    //$this->Flash->error(__('Lo sentimos, el producto que solicitaste se ha agotado. Por favor, verifica más tarde o elige otro producto.'));
+                    throw new \Exception('Lo sentimos, el producto que solicitaste se ha agotado. Por favor, verifica más tarde o elige otro producto.');
+                }
+
                 // Guardar el pedido
                 if ($this->Pedidos->save($pedido)) {
-
-                    // Reducción del stock del producto
-                    $producto_id = $pedido->detalles_pedidos[0]->producto_id;
-                    $producto = $this->Pedidos->DetallesPedidos->Productos->find()->where(['id' => $producto_id])->first();
-                    if ($producto) {
-                        $producto->stock = $producto->stock - 1;
-                        $this->Pedidos->DetallesPedidos->Productos->save($producto);
-                    }
 
                     // Subida de la orden médica
                     $file = $this->request->getData('orden_medica');
@@ -194,10 +200,11 @@ class PedidosController extends AppController
 
                         // Confirmar la transacción
                         $connection->commit();
-
                         $this->Flash->success(__('El pedido se guardó correctamente. Puede hacer el seguimiento del mismo desde el menú "Mis Pedidos".'));
                     } else {
-                        $this->Flash->error(__('Ocurrio un error al guardar ' . $result['error']));
+                        $connection->rollback();
+                        //$this->Flash->error(__('Ocurrio un error al guardar ' . $result['error']));
+                        $this->Flash->error(__('Ocurrio un error al guardar la orden médica'));
                         //throw new \Exception($result['error']); // Lanzar una excepción si hay un error al subir la orden médica
                     }
                 } else {
@@ -207,10 +214,139 @@ class PedidosController extends AppController
             } catch (\Exception $e) {
                 // En caso de error, hacer rollback de la transacción
                 $connection->rollback();
+                // $this->Flash->error(__('Ocurrio un error al guardar el pedido'));
                 $this->Flash->error($e->getMessage());
             }
             return $this->redirect('/Productos/detail/' . $pedido->detalles_pedidos[0]->producto_id);
             $this->set(compact('pedido'));
+        }
+    }
+
+    /**
+     * Valida y actualiza el estado de un pedido médico.
+     *
+     * Este método busca un pedido en la base de datos por su ID y verifica si su estado
+     * actual es 'PENDIENTE'. Si es así, cambia el estado a 'EN_PROCESO' y guarda los
+     * cambios. Si el estado no es 'PENDIENTE', se muestra un mensaje de error.
+     *
+     * @param int $id ID del pedido a validar y actualizar.
+     * @return \Cake\Http\Response|null Redirige a la página de listado de pedidos
+     *                                    después de una actualización exitosa o un error.
+     */
+    public function ordenMedicaValida($id)
+    {
+        $pedido = $this->Pedidos->find()
+            ->where(['Pedidos.id' => $id])
+            ->contain(['PedidosEstados', 'DetallesPedidos' => ['Productos'], 'RbacUsuarios'])
+            ->first();
+
+        //debug($pedido);die;
+
+        if ($this->request->is(['patch', 'post', 'put'])) {
+
+            if ($pedido->pedidos_estado->nombre == 'PENDIENTE') {
+                $estado_en_proceso = $this->Pedidos->PedidosEstados->find()->where(['PedidosEstados.nombre' => 'EN_PROCESO'])->first();
+                $pedido->estado_id = $estado_en_proceso->id;
+                $pedido->pedidos_estado = $estado_en_proceso;
+
+                if ($this->Pedidos->save($pedido)) {
+
+                    $token                           = $id . "-" . $this->generateToken();
+                    $rbacTokenTable = $this->fetchTable('Rbac.RbacToken');
+                    $data['token']      = $token;
+                    $data['rbac_usuario_id'] = $pedido->cliente->id;
+                    $data['validez']    = 1440;
+                    $rbacToken = $rbacTokenTable->newEntity($data);
+
+                    $datos               = array();
+                    $datos['subject']    = 'Link de pago del producto: ' . $pedido->detalles_pedidos[0]->producto->nombre;
+                    $datos['url']        = Router::url('/', true) . "Pedidos/payment/" . $token;
+                    $datos['aplicacion'] = "IPMAGNA";
+                    $datos['template']   = 'payment';
+                    $datos['email']      = $pedido->cliente->email;
+
+                    // debug($datos);die;
+
+                    if ($rbacTokenTable->save($rbacToken)) {
+                        if ($this->sendEmail($datos)) {
+                            $this->Flash->success('Se ha enviado la información a ' . $pedido->cliente->email . ' para realizar el pago del pedido.');
+                        } else {
+                            throw new \Exception('No se pudo enviar el email pago al cliente.');
+                        }
+                    } else {
+                        throw new \Exception('No se pudo generar el token para el pago que se envia por email.');
+                    }
+
+                    //$this->Flash->success(__('El pedido se actualizo correctamente.'));
+
+                    return $this->redirect('/Pedidos/index');
+                }
+            } else {
+                $this->Flash->error(__('El estado del pedido no es PENDIENTE, acción no válida.'));
+                return $this->redirect('/Pedidos/index');
+            }
+            $this->Flash->error(__('El pedido no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+        }
+        $this->set(compact('pedido'));
+    }
+
+    public function payment($token)
+    {
+
+        $this->RbacToken = $this->fetchTable('Rbac.RbacToken');
+        $resultToken = $this->RbacToken->find()->where(['token' => $token])->contain(['RbacUsuarios'])->first();
+        // debug($resultToken);
+        // die;
+
+        if (!$resultToken || !$this->RbacToken->isValidToken($token)) {
+            $this->Flash->error('Token no es válido o ha expirado.');
+            return $this->redirect(['plugin' => 'Rbac', 'controller' => 'RbacUsuarios', 'action' => 'login']);
+        }
+
+        $partes = explode('-', $resultToken->token);
+
+        // Obtener el primer valor antes del guion
+        $pedido_id = $partes[0];
+
+        // Cargar el pedido para obtener la fecha_pedido
+        $pedido = $this->Pedidos->find()
+            ->where(['Pedidos.id' => $pedido_id])
+            ->contain(['PedidosEstados', 'DetallesPedidos' => [
+                'Productos' => [
+                    'ProductosPrecios' => function ($q) use ($pedido_id) {
+                        // Obtener el pedido usando el ID
+                        $pedido = $this->Pedidos->get($pedido_id);
+                        return $q->where([
+                            'fecha_desde <=' => $pedido->fecha_pedido,
+                            'OR' => [
+                                'fecha_hasta >=' => $pedido->fecha_pedido,
+                                'fecha_hasta IS' => null // Considerar también precios sin fecha_hasta
+                            ]
+                        ]);
+                    }
+                ]
+            ], 'RbacUsuarios' => ['TipoDocumentos']])
+            ->first();
+
+
+        // Obtener estado PENDIENTE
+        $estadoPagado = $this->Pedidos->PedidosEstados
+            ->find()
+            ->where(['nombre' => 'PAGADO'])
+            ->first();
+
+        // Asignar valores adicionales al pedido
+        $pedido['estado_id'] = $estadoPagado->id;
+
+        if ($this->Pedidos->save($pedido)) {
+
+            if ($this->RbacToken->delete($resultToken)) {
+
+                $this->Flash->success('El pago se realizo correctamente, su pedido esta en proceso de entrega.');
+                return $this->redirect(['controller' => 'Pedidos', 'action' => 'misPedidos']);
+            } else {
+                throw new \Exception('No se pudo eliminar el token.');
+            }
         }
     }
 
@@ -247,11 +383,22 @@ class PedidosController extends AppController
     }
 
     /**
-     * getCondition method
+     * Genera condiciones de búsqueda basadas en los parámetros de consulta de la solicitud.
      *
-     * @param string|null $data Data send by the Form .
-     * @return array $conditions Conditions for search filters with $conditions['where'], $conditions['contain'] and $conditions['matching'] to find.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * Este método construye un arreglo de condiciones para filtrar los resultados
+     * de búsqueda en el contexto de pedidos. Recupera los parámetros de consulta
+     * de la solicitud, procesa rangos de fechas y construye las condiciones
+     * necesarias para filtrar los `Pedidos` junto con las entidades relacionadas.
+     *
+     * @param string|null $data Datos enviados por el formulario en la cadena de consulta. Si no se proporcionan datos, el método seguirá devolviendo un arreglo de condiciones vacío.
+     * @return array $conditions Un arreglo que contiene:
+     *     - 'where': Condiciones para filtrar resultados basados en campos específicos.
+     *     - 'contain': Asociaciones que se incluirán en los resultados de la consulta, tales como
+     *       'PedidosEstados', 'DetallesPedidos' (con 'Productos'),
+     *       'OrdenesMedicas', y 'RbacUsuarios' (con 'TipoDocumentos').
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException Cuando no se encuentra un registro solicitado.
+     *
+     * El método también almacena la URL anterior en la sesión para su referencia posterior.
      */
     private function getConditions()
     {
@@ -289,7 +436,6 @@ class PedidosController extends AppController
             }
         }
 
-
         // Filtro por fecha_aplicacion (en DetallesPedidos)
         if (isset($data['fecha_aplicacion']) && !empty($data['fecha_aplicacion'])) {
             // Separar las dos fechas basadas en el guion
@@ -300,15 +446,62 @@ class PedidosController extends AppController
             $fecha_fin = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[1] . ' 23:59:59');
 
             // Verificar si las fechas fueron creadas correctamente
-            if ($fecha_inicio && $fecha_fin) {               
+            if ($fecha_inicio && $fecha_fin) {
                 $conditions['where'][] = ['Pedidos.fecha_aplicacion >= ' => $fecha_inicio->format('Y-m-d H:i:s')];
-                $conditions['where'][] = ['Pedidos.fecha_aplicacion <= ' => $fecha_fin->format('Y-m-d H:i:s')];                
+                $conditions['where'][] = ['Pedidos.fecha_aplicacion <= ' => $fecha_fin->format('Y-m-d H:i:s')];
             }
         }
-
 
         $this->request->getSession()->write('previousUrl', $this->request->getRequestTarget());
 
         return $conditions;
+    }
+
+    private function generateToken($length = 24)
+    {
+        if (function_exists('openssl_random_pseudo_bytes')) {
+            $token = base64_encode(openssl_random_pseudo_bytes($length, $strong));
+            if ($strong == TRUE) {
+                return strtr(substr($token, 0, $length), '+/=', '-_,');
+            }
+        }
+
+        //php < 5.3 or no openssl
+        $characters = '0123456789';
+        $characters .= 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz+';
+        $charactersLength = strlen($characters) - 1;
+        $token            = '';
+
+        //select some random characters
+        for ($i = 0; $i < $length; $i++) {
+            $token .= $characters[mt_rand(0, $charactersLength)];
+        }
+
+        return $token;
+    }
+
+    private function sendEmail($datos)
+    {
+        $mailer = new Mailer('default');
+        try {
+            $mailer->setFrom(['ipmagna-noreply@gmail.com' => 'IPMAGNA'])
+                ->setTo($datos['email'])
+                ->setSubject($datos['subject'])
+                ->setEmailFormat('html')
+                ->setViewVars(['url' => @$datos['url']])
+                ->viewBuilder()
+                ->setTemplate($datos['template'])
+                ->setPlugin('Rbac');
+
+            $mailer->deliver();
+
+            return true;
+        } catch (MissingActionException $e) {
+            $this->Flash->error('Error en el envío: ' . $e->getMessage());
+            return false;
+        } catch (\Exception $e) {
+            $this->Flash->error('Se produjo un error inesperado: ' . $e->getMessage());
+            return false;
+        }
     }
 }

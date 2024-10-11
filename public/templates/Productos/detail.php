@@ -60,7 +60,8 @@
                             <!-- Formulario para cargar receta y aclaración -->
                             <form id="pedidoForm" action="/Pedidos/addForCliente" method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-
+                                <p>
+                                    <i class="fa fa-fw  fa-cube"></i> <strong>Datos solicitados: </strong>
                                 <div class="form-group col-md-6">
                                     <label for="orden_medica">Cargar receta médica</label>
                                     <input type="file" class="form-control" name="orden_medica" id="orden_medica" required>
@@ -72,17 +73,73 @@
                                         min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" id="fecha_aplicacion" required>
                                 </div>
                                 <!-- Cantidad -->
+
                                 <div class="form-group col-md-2">
+                                <?php //debug($this->request->getData('detalle_pedido')[0]['cantidad']) ?>
                                     <label for="cantidad">Cantidad</label>
                                     <input onkeydown="preventInvalidInput(event)" oninput="limitInputLength(this)"
-                                        type="number" class="form-control" id="cantidad"
+                                        type="number" class="form-control" id="cantidad"  value="<?php echo $this->request->getData('detalle_pedido')[0]['cantidad'] ?? ''; ?>"
                                         name="detalles_pedidos[0][cantidad]" min="1" max="99" required>
                                 </div>
 
                                 <div class="form-group col-md-12">
                                     <label for="aclaracion">Aclaraciones</label>
-                                    <textarea class="form-control" name="aclaracion" id="aclaracion" rows="2" maxlength="500" placeholder="Escriba aquí cualquier aclaración..." required></textarea>
+                                    <textarea class="form-control" name="aclaracion" value="<?php echo $this->request->getData('aclaracion') ?? ''; ?>" id="aclaracion" rows="2" maxlength="500" placeholder="Escriba aquí cualquier aclaración..." required></textarea>
                                 </div>
+                                </p>
+                                <p>
+                                    <?php $direccion =     $this->getRequest()->getSession()->read('RbacUsuario')->direccion;
+                                    // debug($direccion);
+                                    ?>
+                                    <i class="fa fa-map-marker"></i> <strong>Dirección de Entrega: </strong>
+                                <div class="form-group col-md-6">
+                                    <label for="provincia_id">Provincia</label>
+                                    <select id="provincia_id" required name="provincia_id" class="form-control">
+                                        <option selected value="">Seleccione una provincia</option>
+                                        <?php foreach ($provincias as $id => $provincia) { ?>
+                                            <option value="<?php echo $id; ?>" <?php echo ($direccion->localidade->provincia_id == $id) ? 'selected' : ''; ?>>
+                                                <?php echo $provincia; ?>
+                                            </option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="localidad_id">Localidad</label>
+                                    <select id="localidad_id" required name="direccion[localidad_id]" class="form-control">
+                                        <option selected value="">Seleccione una localidad</option>
+                                    </select>
+                                </div>
+
+                                <div class="form-group col-md-4">
+                                    <label for="calle">Calle</label>
+                                    <input name="direccion[calle]" required type="text" maxlength="50"
+                                        value="<?php echo $direccion->calle ?? ''; ?>"
+                                        class="form-control" placeholder="Calle" oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');">
+                                </div>
+
+                                <div class="form-group col-md-8">
+                                    <div class="row">
+                                        <div class="col-xs-4">
+                                            <label for="numero">Número</label>
+                                            <input name="direccion[numero]" required type="number"
+                                                value="<?php echo $direccion->numero ?? ''; ?>"
+                                                class="form-control" placeholder="Número" min="1" max="9999" oninput="this.value = this.value.slice(0, 5);">
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label for="piso">Piso</label>
+                                            <input name="direccion[piso]" type="text" class="form-control" placeholder="Piso" maxlength="3"
+                                                value="<?php echo $direccion->piso ?? ''; ?>">
+                                        </div>
+                                        <div class="col-xs-4">
+                                            <label for="departamento">Departamento</label>
+                                            <input name="direccion[departamento]" type="text" class="form-control" placeholder="Depto" maxlength="3"
+                                                value="<?php echo  $direccion->departamento ?? ''; ?>">
+                                        </div>
+                                    </div>
+                                </div>
+                                </p>
+
                                 <div class="button-group">
                                     <button type="submit" class="btn btn-success">
                                         <i class="fa fa-check" style="color: white;"></i> Solicitar
@@ -245,5 +302,41 @@
                 event.preventDefault(); // Prevenir el envío si no existe stock para la cantidad solicitada
             }
         });
+
+        var provinciaSelect = document.getElementById('provincia_id');
+        var localidadSelect = document.getElementById('localidad_id');
+
+        provinciaSelect.addEventListener('change', function() {
+            var provinciaId = this.value;
+
+
+            if (provinciaId) {
+
+                fetch('/localidades/localidades/' + provinciaId)
+
+                    .then(response => response.json())
+                    .then(data => {
+                        localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
+
+                        data.forEach(function(localidad) {
+
+                            localidadSelect.innerHTML += '<option value="' + localidad.id + '">' + localidad.nombre + '</option>';
+                        });
+                    })
+                    .catch(error => console.error('Error al cargar localidades:', error));
+            } else {
+                localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
+            }
+        });
+
+        document.getElementById('provincia_id').dispatchEvent(new Event('change'));
+
+        setTimeout(function() {
+
+            var localidadId = "<?php echo $direccion->localidad_id ?? ''; ?>";
+            if (localidadId) {
+                document.getElementById('localidad_id').value = localidadId;
+            }
+        }, 1000); // Ajusta el tiempo según sea necesario
     });
 </script>

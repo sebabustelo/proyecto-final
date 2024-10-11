@@ -50,6 +50,7 @@ class RbacUsuariosController extends RbacController
         if ($this->getRequest()->is('post')) {
 
             try {
+
                 $rbacUsuario = $this->RbacUsuarios->newEntity($this->getRequest()->getData(), ['associated' => ['RbacPerfiles', 'Direcciones']]);
 
                 $seed = md5(rand(0, 9999));
@@ -129,8 +130,7 @@ class RbacUsuariosController extends RbacController
         $rbacUsuario = $this->RbacUsuarios->findById($id)->contain(['RbacPerfiles', 'TipoDocumentos', 'Direcciones' => ['Localidades' => 'Provincias']])->first();
 
         if ($this->getRequest()->is(['patch', 'post', 'put'])) {
-            // debug( $rbacUsuario);
-            // debug( $this->getRequest()->getData());
+
             $rbacUsuario = $this->RbacUsuarios->patchEntity(
                 $rbacUsuario,
                 $this->getRequest()->getData(),
@@ -146,7 +146,7 @@ class RbacUsuariosController extends RbacController
                     ]
                 ]
             );
-            //debug($rbacUsuario);die;
+
             if ($this->RbacUsuarios->save($rbacUsuario)) {
                 $this->Flash->success(__('El Usuario se guardo correctamente.'));
                 $previousUrl = $this->request->getSession()->read('previousUrl');
@@ -305,7 +305,7 @@ class RbacUsuariosController extends RbacController
                             'email' => $usuario
                         ]
                     ])
-                    ->contain(['RbacPerfiles' => ['RbacAcciones', 'RbacAccionDefault']])
+                    ->contain(['Direcciones'=>['Localidades'=>['Provincias']],'RbacPerfiles' => ['RbacAcciones', 'RbacAccionDefault']])
                     ->first();
 
                 if (isset($usr->id) and $usr->activo) {

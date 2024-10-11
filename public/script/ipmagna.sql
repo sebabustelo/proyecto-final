@@ -1,8 +1,8 @@
--- MySQL dump 10.13  Distrib 8.0.29, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.38, for Win64 (x86_64)
 --
 -- Host: 127.0.0.1    Database: ipmagna
 -- ------------------------------------------------------
--- Server version	5.5.5-10.5.23-MariaDB-0+deb11u1
+-- Server version	5.5.5-10.4.32-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -101,7 +101,6 @@ CREATE TABLE `consultas` (
 
 LOCK TABLES `consultas` WRITE;
 /*!40000 ALTER TABLE `consultas` DISABLE KEYS */;
-INSERT INTO `consultas` VALUES (3,6,2923,2923,'Solicito información detallada sobre el kit quirúrgico FIN SHORT]. Quisiera saber más acerca de las especificaciones técnicas, precios y tiempos de entrega.','asdfsadf','2024-09-20 01:16:19','2024-09-20 04:08:36'),(4,6,2923,2923,'saasdfsdaf','ok esta todo bien','2024-09-25 12:25:41','2024-09-25 12:30:54');
 /*!40000 ALTER TABLE `consultas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -151,7 +150,7 @@ CREATE TABLE `detalles_pedidos` (
   KEY `fk_producto_id_idx` (`producto_id`),
   CONSTRAINT `detalles_pedidos_ibfk_1` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE CASCADE,
   CONSTRAINT `fk_producto_id` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -160,7 +159,7 @@ CREATE TABLE `detalles_pedidos` (
 
 LOCK TABLES `detalles_pedidos` WRITE;
 /*!40000 ALTER TABLE `detalles_pedidos` DISABLE KEYS */;
-INSERT INTO `detalles_pedidos` VALUES (21,21,34,1),(22,22,35,1),(23,23,34,1);
+INSERT INTO `detalles_pedidos` VALUES (25,33,39,1),(26,34,36,1);
 /*!40000 ALTER TABLE `detalles_pedidos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -173,7 +172,6 @@ DROP TABLE IF EXISTS `direcciones`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `direcciones` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `rbac_usuario_id` int(11) NOT NULL,
   `calle` varchar(100) NOT NULL,
   `numero` varchar(10) DEFAULT NULL,
   `piso` varchar(10) DEFAULT NULL,
@@ -181,11 +179,9 @@ CREATE TABLE `direcciones` (
   `localidad_id` int(11) NOT NULL,
   `codigo_postal` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK_direcciones_usuarios` (`rbac_usuario_id`),
   KEY `FK_direcciones_localidades_idx` (`localidad_id`),
-  CONSTRAINT `FK_direcciones_localidades` FOREIGN KEY (`localidad_id`) REFERENCES `localidades` (`id`) ON UPDATE NO ACTION,
-  CONSTRAINT `FK_direcciones_usuarios` FOREIGN KEY (`rbac_usuario_id`) REFERENCES `rbac_usuarios` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+  CONSTRAINT `FK_direcciones_localidades` FOREIGN KEY (`localidad_id`) REFERENCES `localidades` (`id`) ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -194,7 +190,7 @@ CREATE TABLE `direcciones` (
 
 LOCK TABLES `direcciones` WRITE;
 /*!40000 ALTER TABLE `direcciones` DISABLE KEYS */;
-INSERT INTO `direcciones` VALUES (24,2923,'terrero','1589','2','31',286,NULL),(35,2998,'padilla','752','2','a',282,NULL),(36,2998,'padilla','752','2','a',282,NULL);
+INSERT INTO `direcciones` VALUES (24,'terrero','1589','2','31',296,NULL),(35,'padilla','752','2','a',282,NULL),(36,'padilla','752','2','a',282,NULL),(37,'Padilla','752','11','E',317,NULL),(44,'Padilla','752','11','E',317,NULL),(45,'padilla','752','2','a',282,NULL),(46,'padilla','752','2','a',282,NULL);
 /*!40000 ALTER TABLE `direcciones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -246,7 +242,7 @@ CREATE TABLE `ordenes_medicas` (
   PRIMARY KEY (`id`),
   KEY `pedido_id` (`pedido_id`),
   CONSTRAINT `fk_pedidos` FOREIGN KEY (`pedido_id`) REFERENCES `pedidos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -255,7 +251,7 @@ CREATE TABLE `ordenes_medicas` (
 
 LOCK TABLES `ordenes_medicas` WRITE;
 /*!40000 ALTER TABLE `ordenes_medicas` DISABLE KEYS */;
-INSERT INTO `ordenes_medicas` VALUES (21,21,'0','orden_medica_sebastian_bustelo.pdf','pdf',76598,'D:\\sitios\\ipmagna\\public\\webroot\\img\\ordenes_medicas\\orden_medica_sebastian_bustelo.pdf','2024-10-07 20:31:44','2024-10-07 20:31:44'),(22,22,'0','orden_medica_sebastian_bustelo.pdf','pdf',77740,'D:\\sitios\\ipmagna\\public\\webroot\\img\\ordenes_medicas\\orden_medica_sebastian_bustelo.pdf','2024-10-09 01:35:28','2024-10-09 01:35:28'),(23,23,'0','orden_medica_sebastian_bustelo.pdf','pdf',76598,'D:\\sitios\\ipmagna\\public\\webroot\\img\\ordenes_medicas\\orden_medica_sebastian_bustelo.pdf','2024-10-09 01:36:12','2024-10-09 01:36:12');
+INSERT INTO `ordenes_medicas` VALUES (25,33,'0','1728625672_orden_medica_sebastian_bustelo.pdf','pdf',1993,'D:\\sitios\\ipmagna\\public\\webroot\\uploads/ordenes_medicas/1728625672_orden_medica_sebastian_bustelo.pdf','2024-10-11 07:47:52','2024-10-11 07:47:52'),(26,34,'0','1728627564_orden_medica_sebastian_bustelo.pdf','pdf',1993,'D:\\sitios\\ipmagna\\public\\webroot\\uploads/ordenes_medicas/1728627564_orden_medica_sebastian_bustelo.pdf','2024-10-11 08:19:24','2024-10-11 08:19:24');
 /*!40000 ALTER TABLE `ordenes_medicas` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -270,6 +266,7 @@ CREATE TABLE `pedidos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `cliente_id` int(11) NOT NULL,
   `estado_id` int(11) NOT NULL,
+  `direccion_id` int(11) NOT NULL,
   `fecha_pedido` datetime NOT NULL,
   `fecha_aplicacion` date DEFAULT NULL,
   `aclaracion` varchar(500) DEFAULT NULL,
@@ -278,9 +275,11 @@ CREATE TABLE `pedidos` (
   PRIMARY KEY (`id`),
   KEY `fk_cliente_idx` (`cliente_id`),
   KEY `fk_estado_idx` (`estado_id`),
+  KEY `fk_direccion_idx` (`direccion_id`),
   CONSTRAINT `fk_cliente` FOREIGN KEY (`cliente_id`) REFERENCES `rbac_usuarios` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `fk_direccion` FOREIGN KEY (`direccion_id`) REFERENCES `direcciones` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `fk_estado` FOREIGN KEY (`estado_id`) REFERENCES `pedidos_estados` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -289,7 +288,7 @@ CREATE TABLE `pedidos` (
 
 LOCK TABLES `pedidos` WRITE;
 /*!40000 ALTER TABLE `pedidos` DISABLE KEYS */;
-INSERT INTO `pedidos` VALUES (21,2923,2,'2024-10-07 20:31:43','2024-10-15',NULL,'2024-10-07 20:31:44','2024-10-09 11:49:37'),(22,2923,2,'2024-10-09 01:35:28','2024-10-18',NULL,'2024-10-09 01:35:28','2024-10-09 11:49:43'),(23,2923,2,'2024-10-09 01:36:12','2024-10-20',NULL,'2024-10-09 01:36:12','2024-10-09 11:49:46');
+INSERT INTO `pedidos` VALUES (33,10,2,45,'2024-10-11 07:47:51','2024-10-17','necesito urgente','2024-10-11 07:47:52','2024-10-11 04:29:35'),(34,10,2,46,'2024-10-11 08:19:24','2024-10-30','urgente','2024-10-11 08:19:24','2024-10-11 03:53:36');
 /*!40000 ALTER TABLE `pedidos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -346,7 +345,7 @@ CREATE TABLE `productos` (
   KEY `fk_categoria` (`categoria_id`),
   CONSTRAINT `fk_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categorias` (`id`) ON UPDATE NO ACTION,
   CONSTRAINT `fk_proveedor` FOREIGN KEY (`proveedor_id`) REFERENCES `proveedores` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -355,7 +354,7 @@ CREATE TABLE `productos` (
 
 LOCK TABLES `productos` WRITE;
 /*!40000 ALTER TABLE `productos` DISABLE KEYS */;
-INSERT INTO `productos` VALUES (34,'FIN SHORT ',9,1,'El tallo corto recto FIN SHORT ofrece una alternativa a las técnicas de revestimiento femoral, manteniendo las características propias de estabilidad que han diferenciado al vástago FIN durante los últimos 30 años.','El vástago FIN SHORT ofrece una alternativa a las técnicas de revestimiento femoral, manteniendo las características propias de estabilidad que han diferenciado al vástago FIN durante los últimos 30 años.',8,'2024-09-13 01:35:12','2024-10-09 01:36:12',1),(35,'K-MONO',7,1,'El sistema K-MONO ofrece un doble enfoque fisiológico para la zona femoral: Resección (3CUT) y Revestimiento (RES), ambos compatibles con el componente tibial anatómico (MetalBack y AllPoly).',NULL,24,'2024-10-05 15:32:11','2024-10-09 01:35:28',1),(36,'K-MOD',7,1,'K-MOD es el sistema de prótesis primaria total de rodilla que se caracteriza por la modularidad de sus componentes.',NULL,12,'2024-10-05 20:56:49','2024-10-05 20:56:49',1),(37,'K-MOD-REV',7,1,'El sistema de revisión de rodilla K-MOD REV CCK está diseñado para artroplastia total de rodilla primaria y de revisión en caso de inestabilidad o ligamentos colaterales con funcionalidad inadecuada.',NULL,8,'2024-10-05 21:14:16','2024-10-05 21:14:16',1);
+INSERT INTO `productos` VALUES (34,'FIN SHORT ',9,1,'El tallo corto recto FIN SHORT ofrece una alternativa a las técnicas de revestimiento femoral, manteniendo las características propias de estabilidad que han diferenciado al vástago FIN durante los últimos 30 años.','El vástago FIN SHORT ofrece una alternativa a las técnicas de revestimiento femoral, manteniendo las características propias de estabilidad que han diferenciado al vástago FIN durante los últimos 30 años.',8,'2024-09-13 01:35:12','2024-10-09 01:36:12',1),(35,'K-MONO',7,1,'El sistema K-MONO ofrece un doble enfoque fisiológico para la zona femoral: Resección (3CUT) y Revestimiento (RES), ambos compatibles con el componente tibial anatómico (MetalBack y AllPoly).','El sistema patentado K-MONO es una solución completa y única con un abanico de posibilidades diseñadas para adaptarse al enfoque individual del cirujano para cada paciente.',23,'2024-10-05 15:32:11','2024-10-10 23:00:42',1),(36,'K-MOD',7,1,'K-MOD es el sistema de prótesis primaria total de rodilla que se caracteriza por la modularidad de sus componentes.',NULL,11,'2024-10-05 20:56:49','2024-10-11 08:19:24',1),(37,'K-MOD-REV',7,1,'El sistema de revisión de rodilla K-MOD REV CCK está diseñado para artroplastia total de rodilla primaria y de revisión en caso de inestabilidad o ligamentos colaterales con funcionalidad inadecuada.',NULL,8,'2024-10-05 21:14:16','2024-10-05 21:14:16',1),(38,'K-MOD REV CCK',7,1,'El sistema de revisión de rodilla K-MOD REV CCK está diseñado para artroplastia total de rodilla primaria y de revisión en caso de inestabilidad o ligamentos colaterales con funcionalidad inadecuada.','El sistema de revisión de rodilla K-MOD REV CCK está diseñado para artroplastia total de rodilla primaria y de revisión en caso de inestabilidad o ligamentos colaterales con funcionalidad inadecuada.\r\nEl sistema K-MOD REV CCK es completamente compatible y modular con el sistema K-MOD REV BOXLESS: los objetivos son, de hecho, poder hacer más efectivas las operaciones de revisión, y adaptarse a las diferentes situaciones anatómicas y a las necesidades del cirujano, incluso en casos de ligamentos colaterales dañados.\r\nLa modularidad de K-MOD REV CCK con el sistema K-MODREV BOXLESS permite elegir intraoperatoriamente el grado de constricción más adecuado:\r\n\r\nESTABILIZACIÓN ANTERIOR y POSTERIOR mediante insertos UltraCongruent (UC) o insertos Dynamic Congruence (DC) acoplados al fémur K-MOD REV BOXLESS o insertos de estabilidad posterior PS con el fémur K-MOD REV CCK.\r\nCONSTRICCIÓN en VARO/VALGO y ROTACIÓN FEMOROTIBIAL usando los insertos CCK combinados con el fémur K-MOD REV CC',15,'2024-10-11 07:02:05','2024-10-11 07:02:05',1),(39,'Fassier Duval',6,1,'El sistema intramedular telescópico Fassier-Duval es una varilla autoextensible diseñada para pacientes que padecen osteogénesis imperfecta (OI), displasia esquelética y otras deformidades óseas. Creado para prevenir o estabilizar fracturas o corregir la deformidad de los huesos largos mientras se p','El sistema intramedular telescópico Fassier-Duval es una varilla autoextensible diseñada para pacientes que padecen osteogénesis imperfecta (OI), displasia esquelética y otras deformidades óseas. Creado para prevenir o estabilizar fracturas o corregir la deformidad de los huesos largos mientras se produce el crecimiento.\r\n\r\nEl diseño de la varilla incluye un componente hembra (que está unido a la epífisis proximal) y un componente masculino (que está unido a la epífisis distal). Está disponible en cinco diámetros: 3,2, 4,0, 4,8, 5,6 y 6,4 mm, hasta 420 mm de longitud.\r\n\r\nLos Pega PEG permiten el enclavamiento tanto de FD Rod como de SLIM:\r\n\r\nProporciona una mayor fijación en el hueso osteopénico.\r\nReducir el riesgo de migración\r\nTamaño 2.0, 2.4 y 2.8\r\nRango de longitud 16-60 mm',11,'2024-10-11 07:03:43','2024-10-11 07:47:52',1),(40,'Flex +2',3,1,'El sistema Flex +2 es una innovadora varilla estéril diseñada para la estabilización dinámica lumbar degenerativa o el montaje de remate. El Flex +2 es un dispositivo dinámico que se puede implantar ya sea durante un abordaje percutáneo o durante cirugías abiertas.','Sistema de estabilización dinámica.\r\nMantener la altura intervertebral.\r\nEstabilización duradera sin fusión\r\nVarillas dinámicas de perfil bajo patentadas.\r\nPieza dinámica incluida en la varilla de 6 mm de diámetro.\r\nImplantable mediante abordaje percutáneo.\r\nSin pasos quirúrgicos adicionales ni instrumentación específica\r\nAmplia gama de varillas dinámicas o híbridas de Ø 6 mm\r\nVarilla dinámica para 1 nivel en abordaje abierto o percutáneo\r\nVarilla híbrida de uno o dos niveles para completar la construcción.\r\nUn verdadero rango de movimiento dinámico en 3D\r\nPlano frontal y sagital\r\nPlano transversal\r\nSólo debe usarse con los productos SPINEVISION: Lumis, Ulis y Plus.',13,'2024-10-11 07:05:17','2024-10-11 07:05:17',1),(41,'Ulis',3,1,'Ulis es un sistema de tornillos pediculares de carga superior potente e intuitivo especialmente diseñado para simplificar las cirugías abiertas para la columna lumbar degenerativa. El conjunto ergonómico y compacto de Ulis permite a los cirujanos realizar una construcción versátil con una gran varie','Una gama completa para abordar todas las situaciones.\r\nTornillos multiaxiales con movilidad polar de cabeza de 360°\r\nTornillos monobloque para puntos fijos fuertes\r\nTornillos de reducción multiaxiales para facilitar la colocación de la varilla\r\nDiámetros de tornillos de 4,5 mm a 8,5 mm en incrementos de 1 mm\r\nLongitud de 25 a 90 mm en incrementos de 5 mm\r\nGran libertad y rapidez en la colocación de tornillos.\r\nMovilidad polar de 360° de la cabeza del tornillo.\r\n+/- 30° poliaxialidad\r\nImplantes de perfil bajo y liso.\r\nRosca doble para una inserción rápida.\r\nInstrumentación ergonómica y fácil de usar.\r\nReducción simultánea de la varilla e inserción del tornillo de fijación\r\nTornillos codificados por colores para una rápida identificación.\r\nDos tipos de varillas, desde construcciones dinámicas hasta construcciones rígidas.\r\nVarillas rectas o predobladas de aleación de titanio de 6 mm de diámetro\r\nVarilla Flex +2* para montaje dinámico o de remate',16,'2024-10-11 07:06:18','2024-10-11 07:06:18',1),(42,'Lumis',3,1,'Lumis es un versátil sistema de tornillos pediculares poliaxiales de carga superior especialmente diseñado para cirugía mínimamente invasiva. Optimizado y potente, Lumis es totalmente compatible con las varillas Flex +2 para realizar una construcción dinámica o híbrida mediante un abordaje percutáne','Estabilización dinámica incluso en MIS\r\nTotalmente compatible con las cañas Flex +2\r\nVarilla dinámica patentada para ser implantable percutáneamente\r\nColocación de tornillos percutáneos\r\nExtensión de Ø 14,5 mm fácil de usar y segura\r\n+/- 30° poliaxialidad\r\nImplantes de bajo perfil\r\nAmplia gama de implantes\r\nDiámetros de tornillos de 5,5 mm a 8,5 mm en incrementos de 1 mm\r\nLongitud de 30 a 60 mm en incrementos de 5 mm\r\nVarillas de aleación de titanio de 6 mm de diámetro, de 30 mm a 140 mm de longitud\r\nInstrumentación ergonómica y que ahorra tiempo\r\nCarga de extensiones fácil y rápida\r\nRosca doble para una inserción rápida.\r\nTornillos codificados por colores para una rápida identificación.\r\nDos soluciones diferentes para la introducción de varillas\r\n2 tipos de persuasores (de 16 a 33mm de offset)',11,'2024-10-11 07:07:32','2024-10-11 07:07:32',1);
 /*!40000 ALTER TABLE `productos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -379,7 +378,7 @@ CREATE TABLE `productos_archivos` (
   PRIMARY KEY (`id`),
   KEY `producto_id` (`producto_id`),
   CONSTRAINT `fk_productos` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=23 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -388,7 +387,7 @@ CREATE TABLE `productos_archivos` (
 
 LOCK TABLES `productos_archivos` WRITE;
 /*!40000 ALTER TABLE `productos_archivos` DISABLE KEYS */;
-INSERT INTO `productos_archivos` VALUES (19,34,'1728092300_fin_short.jpg','jpg',21307,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728092300_fin_short.jpg','2024-10-05 03:38:20','2024-10-05 03:38:20',0),(20,35,'1728135131_k-mono.jpg','jpg',21751,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728135131_k-mono.jpg','2024-10-05 15:32:11','2024-10-05 15:32:11',1),(21,36,'1728154609_kmod.jpg','jpg',19396,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728154609_kmod.jpg','2024-10-05 20:56:49','2024-10-05 20:56:49',1),(22,37,'1728155656_kmod-rev2.jpg','jpg',29750,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728155656_kmod-rev2.jpg','2024-10-05 21:14:16','2024-10-05 21:14:16',1);
+INSERT INTO `productos_archivos` VALUES (23,34,'1728552705_fin_short.jpg','jpg',21307,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728552705_fin_short.jpg','2024-10-10 11:31:45','2024-10-10 11:31:45',0),(24,35,'1728552720_k-mono.jpg','jpg',21751,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728552720_k-mono.jpg','2024-10-10 11:32:00','2024-10-10 11:32:00',0),(25,36,'1728552736_kmod.jpg','jpg',19396,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728552736_kmod.jpg','2024-10-10 11:32:16','2024-10-10 11:32:16',0),(26,37,'1728552748_kmod-rev.jpg','jpg',19543,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728552748_kmod-rev.jpg','2024-10-10 11:32:28','2024-10-10 11:32:28',0),(27,38,'1728622925_kmod-rev2.jpg','jpg',401336,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728622925_kmod-rev2.jpg','2024-10-11 07:02:05','2024-10-11 07:02:05',1),(28,39,'1728623023_fassier-duval.jpg','jpg',333852,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728623023_fassier-duval.jpg','2024-10-11 07:03:43','2024-10-11 07:03:43',1),(29,40,'1728623117_flex.jpg','jpg',336369,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728623117_flex.jpg','2024-10-11 07:05:17','2024-10-11 07:05:17',1),(30,41,'1728623178_ulis_640x640.jpg','jpg',36958,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728623178_ulis_640x640.jpg','2024-10-11 07:06:18','2024-10-11 07:06:18',1),(31,42,'1728623252_lumis.jpg','jpg',633032,'D:\\sitios\\ipmagna\\public\\webroot\\img/productos/1728623252_lumis.jpg','2024-10-11 07:07:32','2024-10-11 07:07:32',1);
 /*!40000 ALTER TABLE `productos_archivos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -408,7 +407,7 @@ CREATE TABLE `productos_precios` (
   PRIMARY KEY (`id`),
   KEY `fk_producto` (`producto_id`),
   CONSTRAINT `fk_producto` FOREIGN KEY (`producto_id`) REFERENCES `productos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -417,7 +416,7 @@ CREATE TABLE `productos_precios` (
 
 LOCK TABLES `productos_precios` WRITE;
 /*!40000 ALTER TABLE `productos_precios` DISABLE KEYS */;
-INSERT INTO `productos_precios` VALUES (2,34,400000.00,'2024-10-03 14:30:53','2024-10-04 19:05:14'),(7,34,500000.00,'2024-10-04 19:05:14','2024-10-09 01:34:24'),(8,35,780000.00,'2024-10-05 11:48:15',NULL),(9,36,680000.00,'2024-10-05 20:56:49',NULL),(10,37,950000.00,'2024-10-05 21:14:16',NULL),(11,34,600000.00,'2024-10-09 01:34:24',NULL);
+INSERT INTO `productos_precios` VALUES (2,34,400000.00,'2024-10-03 14:30:53','2024-10-04 19:05:14'),(7,34,500000.00,'2024-10-04 19:05:14','2024-10-09 01:34:24'),(8,35,780000.00,'2024-10-05 11:48:15',NULL),(9,36,680000.00,'2024-10-05 20:56:49',NULL),(10,37,950000.00,'2024-10-05 21:14:16',NULL),(11,34,600000.00,'2024-10-09 01:34:24',NULL),(12,38,1200000.00,'2024-10-11 07:02:05',NULL),(13,39,890000.00,'2024-10-11 07:03:43',NULL),(14,40,420000.00,'2024-10-11 07:05:17',NULL),(15,41,390000.00,'2024-10-11 07:06:18',NULL),(16,42,395000.00,'2024-10-11 07:07:32',NULL);
 /*!40000 ALTER TABLE `productos_precios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -494,7 +493,7 @@ CREATE TABLE `rbac_acciones` (
   `publico` int(1) DEFAULT 0,
   PRIMARY KEY (`id`),
   UNIQUE KEY `controller` (`controller`,`action`)
-) ENGINE=InnoDB AUTO_INCREMENT=344 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=346 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -503,7 +502,7 @@ CREATE TABLE `rbac_acciones` (
 
 LOCK TABLES `rbac_acciones` WRITE;
 /*!40000 ALTER TABLE `rbac_acciones` DISABLE KEYS */;
-INSERT INTO `rbac_acciones` VALUES (1,'Rbac','RbacUsuarios','index',0),(2,'Rbac','RbacUsuarios','add',0),(3,'Rbac','RbacUsuarios','edit',0),(5,'Rbac','RbacPerfiles','index',0),(10,'Rbac','RbacAcciones','index',0),(12,'Rbac','RbacAcciones','sincronizar',0),(16,'Rbac','RbacUsuarios','validarLoginDB',0),(17,'Rbac','RbacUsuarios','login',1),(27,'Rbac','Configuraciones','index',0),(114,NULL,'Pages','display',0),(124,NULL,'Pages','home2',0),(151,'Rbac','RbacUsuarios','clear_cache',0),(154,'Rbac','RbacUsuarios','delete',0),(250,'Rbac','RbacUsuarios','register',1),(251,'Rbac','RbacUsuarios','detail',0),(252,'','TipoDocumentos','index',0),(254,'','TipoDocumentos','add',0),(255,'','TipoDocumentos','edit',0),(256,'','TipoDocumentos','delete',0),(257,'Rbac','RbacUsuarios','registerPassword',1),(258,'','Productos','index',0),(259,'','Productos','view',0),(260,'','Productos','add',0),(261,'','Productos','edit',0),(262,'','Productos','delete',0),(263,'','Productos','catalogoCliente',0),(264,'','Informes','index',0),(266,'Rbac','RbacUsuarios','changePassword',1),(267,'','Categorias','index',0),(268,'','Categorias','add',0),(269,'','Categorias','edit',0),(270,'','Categorias','delete',0),(271,'','Consultas','index',0),(277,'','Proveedores','index',0),(278,'','Proveedores','add',0),(279,'','Proveedores','edit',0),(280,'','Proveedores','delete',0),(281,'Rbac','RbacAcciones','requireLogin',0),(282,'','Consultas','add',0),(283,'','Consultas','edit',0),(284,'','Consultas','delete',0),(289,'Rbac','RbacAcciones','delete',0),(290,'Rbac','RbacUsuarios','forgetPassword',1),(292,'','Pedidos','misPedidos',0),(293,'Rbac','Configuraciones','add',0),(294,'Rbac','Configuraciones','edit',0),(295,'Rbac','Configuraciones','delete',0),(296,'Rbac','RbacPerfiles','add',0),(297,'Rbac','RbacPerfiles','edit',0),(298,'Rbac','RbacPerfiles','delete',0),(302,'','Consultas','view',0),(303,'','ProductosArchivos','delete',0),(304,'','ProductosArchivos','add',0),(305,'','Consultas','response',0),(306,'','PedidoEstados','index',0),(307,'','PedidoEstados','add',0),(308,'','PedidoEstados','edit',0),(309,'','PedidoEstados','delete',0),(310,'','ProductosArchivos','index',0),(311,'','ProductosArchivos','view',0),(312,'','ProductosArchivos','edit',0),(313,'','ConsultasEstados','index',0),(314,'','ConsultasEstados','add',0),(315,'','ConsultasEstados','edit',0),(316,'','PedidosEstados','index',0),(317,'','PedidosEstados','add',0),(318,'','PedidosEstados','edit',0),(319,'','PedidosEstados','delete',0),(320,'','ConsultasEstados','delete',0),(321,'Db','Db','index',0),(322,'Db','Db','getClientIP',0),(323,'','Localidades','index',0),(324,'','Localidades','add',0),(325,'','Localidades','edit',0),(326,'','Localidades','delete',0),(327,'','Provincias','index',0),(328,'','Provincias','add',0),(329,'','Provincias','edit',0),(330,'','Provincias','delete',0),(331,'','Localidades','localidades',1),(332,'','Productos','categorias',0),(333,'Rbac','RbacUsuarios','checkUsername',1),(334,'Rbac','RbacUsuarios','editMyUser',0),(335,'','Productos','detail',0),(338,'','Productos','search',0),(339,'','Pedidos','index',0),(340,'','Pedidos','add',0),(341,'','Pedidos','edit',0),(342,'','Pedidos','addForCliente',0),(343,'','Productos','stock',0);
+INSERT INTO `rbac_acciones` VALUES (1,'Rbac','RbacUsuarios','index',0),(2,'Rbac','RbacUsuarios','add',0),(3,'Rbac','RbacUsuarios','edit',0),(5,'Rbac','RbacPerfiles','index',0),(10,'Rbac','RbacAcciones','index',0),(12,'Rbac','RbacAcciones','sincronizar',0),(16,'Rbac','RbacUsuarios','validarLoginDB',0),(17,'Rbac','RbacUsuarios','login',1),(27,'Rbac','Configuraciones','index',0),(114,NULL,'Pages','display',0),(124,NULL,'Pages','home2',0),(151,'Rbac','RbacUsuarios','clear_cache',0),(154,'Rbac','RbacUsuarios','delete',0),(250,'Rbac','RbacUsuarios','register',1),(251,'Rbac','RbacUsuarios','detail',0),(252,'','TipoDocumentos','index',0),(254,'','TipoDocumentos','add',0),(255,'','TipoDocumentos','edit',0),(256,'','TipoDocumentos','delete',0),(257,'Rbac','RbacUsuarios','registerPassword',1),(258,'','Productos','index',0),(259,'','Productos','view',0),(260,'','Productos','add',0),(261,'','Productos','edit',0),(262,'','Productos','delete',0),(263,'','Productos','catalogoCliente',0),(264,'','Informes','index',0),(266,'Rbac','RbacUsuarios','changePassword',1),(267,'','Categorias','index',0),(268,'','Categorias','add',0),(269,'','Categorias','edit',0),(270,'','Categorias','delete',0),(271,'','Consultas','index',0),(277,'','Proveedores','index',0),(278,'','Proveedores','add',0),(279,'','Proveedores','edit',0),(280,'','Proveedores','delete',0),(281,'Rbac','RbacAcciones','requireLogin',0),(282,'','Consultas','add',0),(283,'','Consultas','edit',0),(284,'','Consultas','delete',0),(289,'Rbac','RbacAcciones','delete',0),(290,'Rbac','RbacUsuarios','forgetPassword',1),(292,'','Pedidos','misPedidos',0),(293,'Rbac','Configuraciones','add',0),(294,'Rbac','Configuraciones','edit',0),(295,'Rbac','Configuraciones','delete',0),(296,'Rbac','RbacPerfiles','add',0),(297,'Rbac','RbacPerfiles','edit',0),(298,'Rbac','RbacPerfiles','delete',0),(302,'','Consultas','view',0),(303,'','ProductosArchivos','delete',0),(304,'','ProductosArchivos','add',0),(305,'','Consultas','response',0),(306,'','PedidoEstados','index',0),(307,'','PedidoEstados','add',0),(308,'','PedidoEstados','edit',0),(309,'','PedidoEstados','delete',0),(310,'','ProductosArchivos','index',0),(311,'','ProductosArchivos','view',0),(312,'','ProductosArchivos','edit',0),(313,'','ConsultasEstados','index',0),(314,'','ConsultasEstados','add',0),(315,'','ConsultasEstados','edit',0),(316,'','PedidosEstados','index',0),(317,'','PedidosEstados','add',0),(318,'','PedidosEstados','edit',0),(319,'','PedidosEstados','delete',0),(320,'','ConsultasEstados','delete',0),(321,'Db','Db','index',0),(322,'Db','Db','getClientIP',0),(323,'','Localidades','index',0),(324,'','Localidades','add',0),(325,'','Localidades','edit',0),(326,'','Localidades','delete',0),(327,'','Provincias','index',0),(328,'','Provincias','add',0),(329,'','Provincias','edit',0),(330,'','Provincias','delete',0),(331,'','Localidades','localidades',1),(332,'','Productos','categorias',0),(333,'Rbac','RbacUsuarios','checkUsername',1),(334,'Rbac','RbacUsuarios','editMyUser',0),(335,'','Productos','detail',0),(338,'','Productos','search',0),(339,'','Pedidos','index',0),(340,'','Pedidos','add',0),(341,'','Pedidos','edit',0),(342,'','Pedidos','addForCliente',0),(343,'','Productos','stock',0),(344,'','Pedidos','ordenMedicaValida',0),(345,'','Pedidos','payment',1);
 /*!40000 ALTER TABLE `rbac_acciones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -523,7 +522,7 @@ CREATE TABLE `rbac_acciones_rbac_perfiles` (
   KEY `fk_ap_perfil_idx` (`rbac_perfil_id`),
   CONSTRAINT `fk_acion` FOREIGN KEY (`rbac_accion_id`) REFERENCES `rbac_acciones` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   CONSTRAINT `fk_perfil` FOREIGN KEY (`rbac_perfil_id`) REFERENCES `rbac_perfiles` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=3605 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3606 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -532,7 +531,7 @@ CREATE TABLE `rbac_acciones_rbac_perfiles` (
 
 LOCK TABLES `rbac_acciones_rbac_perfiles` WRITE;
 /*!40000 ALTER TABLE `rbac_acciones_rbac_perfiles` DISABLE KEYS */;
-INSERT INTO `rbac_acciones_rbac_perfiles` VALUES (3071,27,1),(3095,5,1),(3102,16,1),(3103,2,1),(3106,1,1),(3107,3,1),(3156,17,1),(3278,114,1),(3328,151,1),(3331,154,1),(3457,10,1),(3464,250,1),(3465,17,8),(3466,114,8),(3468,124,8),(3470,12,1),(3471,251,1),(3472,252,1),(3474,254,1),(3475,255,1),(3476,256,1),(3477,257,1),(3478,258,1),(3479,259,1),(3480,260,1),(3481,261,1),(3482,262,1),(3483,263,1),(3484,264,1),(3486,266,1),(3487,267,1),(3488,268,1),(3489,269,1),(3490,270,1),(3491,271,1),(3497,277,1),(3498,278,1),(3499,279,1),(3500,280,1),(3501,281,1),(3502,282,1),(3503,283,1),(3504,284,1),(3509,289,1),(3510,290,1),(3512,292,1),(3515,293,1),(3516,294,1),(3517,295,1),(3518,296,1),(3519,297,1),(3520,298,1),(3523,302,1),(3527,263,8),(3528,268,8),(3531,303,1),(3532,304,1),(3533,305,1),(3534,306,1),(3535,307,1),(3536,308,1),(3537,309,1),(3538,310,1),(3539,311,1),(3540,312,1),(3541,313,1),(3542,314,1),(3543,315,1),(3544,316,1),(3545,317,1),(3546,318,1),(3547,319,1),(3548,320,1),(3549,321,1),(3550,322,1),(3551,323,1),(3552,324,1),(3553,325,1),(3554,326,1),(3555,327,1),(3556,328,1),(3557,329,1),(3558,330,1),(3560,251,8),(3573,332,1),(3574,292,8),(3575,332,8),(3576,334,1),(3577,334,8),(3578,335,1),(3581,338,1),(3582,335,8),(3583,338,8),(3584,339,1),(3585,340,1),(3586,341,1),(3587,342,1),(3588,342,8),(3589,343,8),(3590,343,1),(3591,1,9),(3592,3,9),(3593,254,9),(3594,258,9),(3595,271,9),(3596,305,9),(3597,323,9),(3598,324,9),(3599,339,9),(3600,339,10),(3601,341,10),(3602,339,11),(3603,339,12),(3604,339,13);
+INSERT INTO `rbac_acciones_rbac_perfiles` VALUES (3071,27,1),(3095,5,1),(3102,16,1),(3103,2,1),(3106,1,1),(3107,3,1),(3156,17,1),(3278,114,1),(3328,151,1),(3331,154,1),(3457,10,1),(3464,250,1),(3465,17,8),(3466,114,8),(3468,124,8),(3470,12,1),(3471,251,1),(3472,252,1),(3474,254,1),(3475,255,1),(3476,256,1),(3477,257,1),(3478,258,1),(3479,259,1),(3480,260,1),(3481,261,1),(3482,262,1),(3483,263,1),(3484,264,1),(3486,266,1),(3487,267,1),(3488,268,1),(3489,269,1),(3490,270,1),(3491,271,1),(3497,277,1),(3498,278,1),(3499,279,1),(3500,280,1),(3501,281,1),(3502,282,1),(3503,283,1),(3504,284,1),(3509,289,1),(3510,290,1),(3512,292,1),(3515,293,1),(3516,294,1),(3517,295,1),(3518,296,1),(3519,297,1),(3520,298,1),(3523,302,1),(3527,263,8),(3528,268,8),(3531,303,1),(3532,304,1),(3533,305,1),(3534,306,1),(3535,307,1),(3536,308,1),(3537,309,1),(3538,310,1),(3539,311,1),(3540,312,1),(3541,313,1),(3542,314,1),(3543,315,1),(3544,316,1),(3545,317,1),(3546,318,1),(3547,319,1),(3548,320,1),(3549,321,1),(3550,322,1),(3551,323,1),(3552,324,1),(3553,325,1),(3554,326,1),(3555,327,1),(3556,328,1),(3557,329,1),(3558,330,1),(3560,251,8),(3573,332,1),(3574,292,8),(3575,332,8),(3576,334,1),(3577,334,8),(3578,335,1),(3581,338,1),(3582,335,8),(3583,338,8),(3584,339,1),(3585,340,1),(3586,341,1),(3587,342,1),(3588,342,8),(3589,343,8),(3590,343,1),(3591,1,9),(3592,3,9),(3593,254,9),(3594,258,9),(3595,271,9),(3596,305,9),(3597,323,9),(3598,324,9),(3599,339,9),(3600,339,10),(3601,341,10),(3602,339,11),(3603,339,12),(3604,339,13),(3605,344,1);
 /*!40000 ALTER TABLE `rbac_acciones_rbac_perfiles` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -582,7 +581,7 @@ CREATE TABLE `rbac_token` (
   KEY `IDX_TOKEN` (`token`),
   KEY `fk_rbac_usuario_idx` (`rbac_usuario_id`),
   CONSTRAINT `fk_rbac_usuarios` FOREIGN KEY (`rbac_usuario_id`) REFERENCES `rbac_usuarios` (`id`) ON DELETE CASCADE ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=81 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=89 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -591,7 +590,7 @@ CREATE TABLE `rbac_token` (
 
 LOCK TABLES `rbac_token` WRITE;
 /*!40000 ALTER TABLE `rbac_token` DISABLE KEYS */;
-INSERT INTO `rbac_token` VALUES (61,2923,'uWM2sUlvGvJPGvPYSS2NiC1e','2024-09-28 03:32:50','2024-09-28 03:32:50',1440),(62,2923,'5sJJ0JgjDsoId3nXbtpl8rlu','2024-09-28 03:36:06','2024-09-28 03:36:06',1440),(63,2923,'1sFH-bJdEwv8IePztz4Ew7F8','2024-09-28 03:39:17','2024-09-28 03:39:17',1440),(66,2923,'A8qJRfy1lBs67ifs-dKb5Uyg','2024-09-28 12:57:45','2024-09-28 12:57:45',1440);
+INSERT INTO `rbac_token` VALUES (85,10,'BPbitdN9HvLi8smRg2xI9gxv','2024-10-11 09:06:18','2024-10-11 09:06:18',1440),(86,10,'5sE0q1c-UEIm2IVF9ss7ewj_','2024-10-11 09:07:19','2024-10-11 09:07:19',1440),(87,10,'mPLoddiczGBY0O_1Im6QTUJf','2024-10-11 09:09:56','2024-10-11 09:09:56',1440);
 /*!40000 ALTER TABLE `rbac_token` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -605,9 +604,9 @@ DROP TABLE IF EXISTS `rbac_usuarios`;
 CREATE TABLE `rbac_usuarios` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `perfil_id` int(11) NOT NULL,
+  `direccion_id` int(12) NOT NULL,
   `usuario` varchar(20) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `email_nuevo` varchar(50) DEFAULT NULL,
   `nombre` varchar(50) DEFAULT NULL,
   `apellido` varchar(50) DEFAULT NULL,
   `tipo_documento_id` int(11) DEFAULT NULL,
@@ -627,9 +626,11 @@ CREATE TABLE `rbac_usuarios` (
   UNIQUE KEY `email_UNIQUE` (`email`),
   KEY `FK_rbac_usuarios_rbac_perfiles` (`perfil_id`),
   KEY `FK_tipo_documento` (`tipo_documento_id`),
+  KEY `FK_direcciones_idx` (`direccion_id`),
+  CONSTRAINT `FK_direcciones` FOREIGN KEY (`direccion_id`) REFERENCES `direcciones` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_rbac_usuarios_rbac_perfiles` FOREIGN KEY (`perfil_id`) REFERENCES `rbac_perfiles` (`id`),
   CONSTRAINT `FK_tipo_documento` FOREIGN KEY (`tipo_documento_id`) REFERENCES `tipo_documentos` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2999 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -638,7 +639,7 @@ CREATE TABLE `rbac_usuarios` (
 
 LOCK TABLES `rbac_usuarios` WRITE;
 /*!40000 ALTER TABLE `rbac_usuarios` DISABLE KEYS */;
-INSERT INTO `rbac_usuarios` VALUES (2901,1,'florencia','florenciatigani@hotmail.com',NULL,'María Florencia','Tigani',1,'29121333',NULL,NULL,NULL,'33a47f95b1fca05597aec141e7a3221e90a20dac6e73c3e38b09931229212713','d57edf2d2082b0865e15d11edaecdb20',1,'2019-10-28 14:50:04','2024-08-30 18:01:45',NULL,'2923'),(2923,1,'sebabustelo','sebabustelo@gmail.com',NULL,'Sebastian','Bustelo',1,'28999186',NULL,NULL,1140876451,'d685328db63350ce310941e16d676d09b88bd3e8630c334a883edf0ee0f8d4fa','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-08-30 14:29:31','2024-10-03 15:31:40','2907','2907'),(2987,1,'facundo','faquundo2406@hotmail.com',NULL,'Facundo','Ramirez',1,'37680252',NULL,NULL,1128809967,'9f4dbfaa3036cd2b07d9613fb0af7f8033dfcb314ab4115607e799454e8dc709','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-09-28 10:52:31','2024-09-28 11:00:06',NULL,NULL),(2998,8,'seba','zebabustelo@gmail.com',NULL,'','Perez SA',25,'2028999186',NULL,'Perez SA',2147483647,'66f35bfdcc1ec10b11e0de2537e8df5816732d929891c3ac1018b82343876b6e','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-10-04 05:30:59','2024-10-04 05:40:20',NULL,NULL);
+INSERT INTO `rbac_usuarios` VALUES (9,1,24,'florencia','florenciatigani@hotmail.com','María Florencia','Tigani',1,'30999121',NULL,NULL,NULL,'33a47f95b1fca05597aec141e7a3221e90a20dac6e73c3e38b09931229212713','d57edf2d2082b0865e15d11edaecdb20',1,'2019-10-28 14:50:04','2024-08-30 18:01:45',NULL,'2923'),(10,1,35,'sebabustelo','sebabustelo@gmail.com','Sebastian','Bustelo',1,'28999186',NULL,NULL,1140876451,'d685328db63350ce310941e16d676d09b88bd3e8630c334a883edf0ee0f8d4fa','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-08-30 14:29:31','2024-10-03 15:31:40','2907','2907'),(11,1,36,'facundo','faquundo2406@hotmail.com','Facundo','Ramirez',1,'37680252',NULL,NULL,1128809967,'9f4dbfaa3036cd2b07d9613fb0af7f8033dfcb314ab4115607e799454e8dc709','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-09-28 10:52:31','2024-09-28 11:00:06',NULL,NULL),(13,8,24,'Juan','eduardotigani@hotmail.com','Juan','Perez',1,'8432465',NULL,NULL,548285215,'bf337535d1ebf9b2622e10d9129fb7b00596773df7d3dda890b7a70896a80e25','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-10-03 20:40:40','2024-10-03 20:44:19',NULL,NULL),(15,8,24,'pepito','mviapiano@esbabarrionorte.edu.ar','Maximliano Hernán','Viapiano123',1,'dddd',NULL,'',1151655284,'1c0ab00ae04218154fcb86f24f9274c6d9a1f1da20875ba2ff7e2c8d816b7263','07a500b0097c2725b5ee843d28259d8456e320f9e71bb70e1370e4de3671dc92',1,'2024-10-04 08:44:59','2024-10-04 08:51:03',NULL,'2923');
 /*!40000 ALTER TABLE `rbac_usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -679,4 +680,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-09 21:40:24
+-- Dump completed on 2024-10-11  4:30:33

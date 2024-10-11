@@ -105,13 +105,13 @@ use Cake\Core\Configure; ?>
 
     </div>
     <div class="form-group has-feedback">
-        <select required id="localidad_id" name="direcciones[0][localidad_id]" class="form-control">
+        <select required id="localidad_id" name="direccion[localidad_id]" class="form-control">
             <option selected value="">Seleccione una localidad</option>
         </select>
     </div>
     <div class="form-group has-feedback">
-        <input name="direcciones[0][calle]" required type="text" maxlength="50"
-            value="<?php echo !empty($this->request->getData('direcciones')[0]['calle']) ? $this->request->getData('direcciones')[0]['calle'] : ''; ?>"
+        <input name="direccion[calle]" required type="text" maxlength="50"
+            value="<?php echo !empty($this->request->getData('direccion')['calle']) ? $this->request->getData('direccion')['calle'] : ''; ?>"
             class="form-control" placeholder="Calle" oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');">
         <span class="glyphicon fa fa-lg fa-road form-control-feedback"></span>
     </div>
@@ -119,18 +119,18 @@ use Cake\Core\Configure; ?>
     <div class="form-group has-feedback">
         <div class="row">
             <div class="col-xs-4">
-                <input name="direcciones[0][numero]" required
-                    value="<?php echo !empty($this->request->getData('direcciones')[0]['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>"
+                <input name="direccion[numero]" required
+                    value="<?php echo !empty($this->request->getData('direccion')['numero']) ? $this->request->getData('direccion')['numero'] : ''; ?>"
                     type="number" class="form-control" placeholder="Número" min="1" max="9999" onkeydown="preventInvalidInput(event)"
                     oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
             </div>
             <div class="col-xs-4">
-                <input name="direcciones[0][piso]" type="text" class="form-control" placeholder="Piso" maxlength="3"
-                    value="<?php echo !empty($this->request->getData('direcciones')[0]['piso']) ? $this->request->getData('direcciones')[0]['piso'] : ''; ?>">
+                <input name="direccion[piso]" type="text" class="form-control" placeholder="Piso" maxlength="3"
+                    value="<?php echo !empty($this->request->getData('direccion')['piso']) ? $this->request->getData('direccion')['piso'] : ''; ?>">
             </div>
             <div class="col-xs-4">
-                <input name="direcciones[0][departamento]" type="text" class="form-control" placeholder="Depto" maxlength="3"
-                    value="<?php echo !empty($this->request->getData('direcciones')[0]['departamento']) ? $this->request->getData('direcciones')[0]['departamento'] : ''; ?>">
+                <input name="direccion[departamento]" type="text" class="form-control" placeholder="Depto" maxlength="3"
+                    value="<?php echo !empty($this->request->getData('direccion')['departamento']) ? $this->request->getData('direccion')['departamento'] : ''; ?>">
             </div>
         </div>
     </div>
@@ -232,6 +232,8 @@ use Cake\Core\Configure; ?>
                 localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
             }
         });
+
+        document.getElementById('provincia_id').dispatchEvent(new Event('change'));
 
 
 
@@ -377,11 +379,12 @@ use Cake\Core\Configure; ?>
         }
     }
 
-    document.getElementById('provincia_id').dispatchEvent(new Event('change'));
+
 
     setTimeout(function() {
 
-        var localidadId = "<?php echo $this->request->getData('direcciones')[0]['localidad_id'] ?? ''; ?>";
+        var localidadId = "<?php echo $this->request->getData('direccion')['localidad_id'] ?? ''; ?>";
+        alert(localidadId)
         if (localidadId) {
             document.getElementById('localidad_id').value = localidadId;
         }
