@@ -54,7 +54,7 @@
                         </p>
                         <div class="button-group">
                             <a href="/Productos/detail/<?php echo $producto->id ?>" class="btn btn-success" role="button"><i class="fa fa-shopping-bag"></i> Solicitar</a>
-                            <a href="/Pedidos/addCart" class="btn btn-primary" role="button"> <span class="fa fa-shopping-cart"></span></a>
+                            <!-- <a href="/Pedidos/addCart" class="btn btn-primary" role="button"> <span class="fa fa-shopping-cart"></span></a> -->
                         </div>
                     </div>
                 </div>

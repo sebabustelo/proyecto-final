@@ -16,6 +16,7 @@ declare(strict_types=1);
  */
 namespace Cake\Routing\Route;
 
+use Cake\Core\Exception\CakeException;
 use Cake\Http\Exception\BadRequestException;
 use InvalidArgumentException;
 use Psr\Http\Message\ServerRequestInterface;
@@ -40,7 +41,7 @@ class Route
     /**
      * An array of additional parameters for the Route.
      *
-     * @var array
+     * @var array<string, mixed>
      */
     public array $options = [];
 
@@ -83,7 +84,7 @@ class Route
     /**
      * List of connected extensions for this route.
      *
-     * @var array<string>
+     * @var list<string>
      */
     protected array $_extensions = [];
 
@@ -97,7 +98,7 @@ class Route
     /**
      * Valid HTTP methods.
      *
-     * @var array<string>
+     * @var list<string>
      */
     public const VALID_METHODS = ['GET', 'PUT', 'POST', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'];
 
@@ -131,6 +132,21 @@ class Route
      */
     public function __construct(string $template, array $defaults = [], array $options = [])
     {
+        $checker = function () use ($defaults): bool {
+            foreach (['plugin', 'prefix', 'controller', 'action'] as $key) {
+                if (isset($defaults[$key]) && !is_string($defaults[$key])) {
+                    throw new CakeException(
+                        'Value for `' . $key . '` in $defaults when connecting routes'
+                        . ' must be of type `string` or `null`'
+                    );
+                }
+            }
+
+            return true;
+        };
+
+        assert($checker());
+
         $this->template = $template;
         $this->defaults = $defaults;
         $this->options = $options + ['_ext' => [], '_middleware' => []];
@@ -146,7 +162,7 @@ class Route
     /**
      * Set the supported extensions for this route.
      *
-     * @param array<string> $extensions The extensions to set.
+     * @param list<string> $extensions The extensions to set.
      * @return $this
      */
     public function setExtensions(array $extensions)
@@ -159,7 +175,7 @@ class Route
     /**
      * Get the supported extensions for this route.
      *
-     * @return array<string>
+     * @return list<string>
      */
     public function getExtensions(): array
     {
@@ -169,7 +185,7 @@ class Route
     /**
      * Set the accepted HTTP methods for this route.
      *
-     * @param array<string> $methods The HTTP methods to accept.
+     * @param list<string> $methods The HTTP methods to accept.
      * @return $this
      * @throws \InvalidArgumentException When methods are not in `VALID_METHODS` list.
      */
@@ -183,8 +199,8 @@ class Route
     /**
      * Normalize method names to upper case and validate that they are valid HTTP methods.
      *
-     * @param array<string>|string $methods Methods.
-     * @return array<string>|string
+     * @param list<string>|string $methods Methods.
+     * @return list<string>|string
      * @throws \InvalidArgumentException When methods are not in `VALID_METHODS` list.
      */
     protected function normalizeAndValidateMethods(array|string $methods): array|string
@@ -209,7 +225,7 @@ class Route
      * If any of your patterns contain multibyte values, the `multibytePattern`
      * mode will be enabled.
      *
-     * @param array<string> $patterns The patterns to apply to routing elements
+     * @param array<string, string> $patterns The patterns to apply to routing elements
      * @return $this
      */
     public function setPatterns(array $patterns)
@@ -239,7 +255,7 @@ class Route
     /**
      * Set the names of parameters that will be converted into passed parameters
      *
-     * @param array<string> $names The names of the parameters that should be passed.
+     * @param list<string> $names The names of the parameters that should be passed.
      * @return $this
      */
     public function setPass(array $names)
@@ -250,7 +266,7 @@ class Route
     }
 
     /**
-     * Set the names of parameters that will persisted automatically
+     * Set the names of parameters that will be persisted automatically
      *
      * Persistent parameters allow you to define which route parameters should be automatically
      * included when generating new URLs. You can override persistent parameters
@@ -316,7 +332,8 @@ class Route
             return;
         }
         $route = $this->template;
-        $names = $routeParams = [];
+        $names = [];
+        $routeParams = [];
         $parsed = preg_quote($this->template, '#');
 
         preg_match_all(static::PLACEHOLDER_REGEX, $route, $namedElements, PREG_OFFSET_CAPTURE | PREG_SET_ORDER);
@@ -375,7 +392,7 @@ class Route
      */
     public function getName(): string
     {
-        if (!empty($this->_name)) {
+        if ($this->_name) {
             return $this->_name;
         }
         $name = '';
@@ -495,7 +512,7 @@ class Route
             unset($route['_trailing_']);
         }
 
-        if (!empty($ext)) {
+        if ($ext) {
             $route['_ext'] = $ext;
         }
 
@@ -517,7 +534,7 @@ class Route
 
         $route['_route'] = $this;
         $route['_matchedRoute'] = $this->template;
-        if (count($this->middleware) > 0) {
+        if ($this->middleware !== []) {
             $route['_middleware'] = $this->middleware;
         }
 
@@ -566,7 +583,7 @@ class Route
      *
      * @param string $args A string with the passed params. eg. /1/foo
      * @param array $context The current route context, which should contain controller/action keys.
-     * @return array<string> Array of passed args.
+     * @return list<string> Array of passed args.
      */
     protected function _parseArgs(string $args, array $context): array
     {
@@ -575,7 +592,7 @@ class Route
         $urldecode = $this->options['_urldecode'] ?? true;
 
         foreach ($args as $param) {
-            if (empty($param) && $param !== '0') {
+            if (!$param && $param !== '0') {
                 continue;
             }
             $pass[] = $urldecode ? rawurldecode($param) : $param;
@@ -619,7 +636,7 @@ class Route
      */
     public function match(array $url, array $context = []): ?string
     {
-        if (empty($this->_compiledRoute)) {
+        if (!$this->_compiledRoute) {
             $this->compile();
         }
         $defaults = $this->defaults;
@@ -726,16 +743,14 @@ class Route
         }
 
         // if not a greedy route, no extra params are allowed.
-        if (!$this->_greedy && !empty($pass)) {
+        if (!$this->_greedy && $pass !== []) {
             return null;
         }
 
         // check patterns for routed params
-        if (!empty($this->options)) {
-            foreach ($this->options as $key => $pattern) {
-                if (isset($url[$key]) && !preg_match('#^' . $pattern . '$#u', (string)$url[$key])) {
-                    return null;
-                }
+        foreach ($this->options as $key => $pattern) {
+            if (isset($url[$key]) && !preg_match('#^' . $pattern . '$#u', (string)$url[$key])) {
+                return null;
             }
         }
         $url += $hostOptions;
@@ -794,8 +809,8 @@ class Route
         }, $pass);
         $pass = implode('/', $pass);
         $out = $this->template;
-
-        $search = $replace = [];
+        $search = [];
+        $replace = [];
         foreach ($this->keys as $key) {
             if (!array_key_exists($key, $params)) {
                 throw new InvalidArgumentException(sprintf(
@@ -809,8 +824,10 @@ class Route
         }
 
         if (str_contains($this->template, '**')) {
-            array_push($search, '**', '%2F');
-            array_push($replace, $pass, '/');
+            $search[] = '**';
+            $search[] = '%2F';
+            $replace[] = $pass;
+            $replace[] = '/';
         } elseif (str_contains($this->template, '*')) {
             $search[] = '*';
             $replace[] = $pass;
@@ -838,13 +855,13 @@ class Route
             $scheme = $params['_scheme'] ?? 'http';
             $out = "{$scheme}://{$host}{$out}";
         }
-        if (!empty($params['_ext']) || !empty($query)) {
+        if (!empty($params['_ext']) || $query !== []) {
             $out = rtrim($out, '/');
         }
         if (!empty($params['_ext'])) {
             $out .= '.' . $params['_ext'];
         }
-        if (!empty($query)) {
+        if ($query) {
             $out .= rtrim('?' . http_build_query($query), '?');
         }
 

@@ -95,21 +95,18 @@ trait CellTrait
         $builder = $instance->viewBuilder();
         $builder->setTemplate(Inflector::underscore($action));
 
-        if (!empty($plugin)) {
+        if ($plugin) {
             $builder->setPlugin($plugin);
-        }
-        if (!empty($this->helpers)) {
-            $builder->addHelpers($this->helpers);
         }
 
         if ($this instanceof View) {
-            if (!empty($this->theme)) {
+            $builder->addHelpers($this->helpers);
+
+            if ($this->theme) {
                 $builder->setTheme($this->theme);
             }
 
-            $class = static::class;
-            $builder->setClassName($class);
-            $instance->viewBuilder()->setClassName($class);
+            $builder->setClassName(static::class);
 
             return $instance;
         }

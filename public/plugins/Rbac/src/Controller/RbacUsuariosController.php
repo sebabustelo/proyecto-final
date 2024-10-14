@@ -8,7 +8,6 @@ use Cake\Utility\Inflector;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\Exception\MissingActionException;
 use Cake\Http\Client;
-use Cake\Validation\Validator;
 use Cake\Http\Response;
 
 class RbacUsuariosController extends RbacController

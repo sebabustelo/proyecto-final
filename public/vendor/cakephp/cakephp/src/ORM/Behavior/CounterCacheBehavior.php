@@ -221,7 +221,7 @@ class CounterCacheBehavior extends Behavior
         Association $assoc,
         array $settings
     ): void {
-        /** @var array<string> $foreignKeys */
+        /** @var list<string> $foreignKeys */
         $foreignKeys = (array)$assoc->getForeignKey();
         $countConditions = $entity->extract($foreignKeys);
 
@@ -236,6 +236,7 @@ class CounterCacheBehavior extends Behavior
         $updateConditions = array_combine($primaryKeys, $countConditions);
 
         $countOriginalConditions = $entity->extractOriginalChanged($foreignKeys);
+        $updateOriginalConditions = null;
         if ($countOriginalConditions !== []) {
             $updateOriginalConditions = array_combine($primaryKeys, $countOriginalConditions);
         }
@@ -264,7 +265,7 @@ class CounterCacheBehavior extends Behavior
                 }
             }
 
-            if (isset($updateOriginalConditions) && $this->_shouldUpdateCount($updateOriginalConditions)) {
+            if ($updateOriginalConditions && $this->_shouldUpdateCount($updateOriginalConditions)) {
                 if ($config instanceof Closure) {
                     $count = $config($event, $entity, $this->_table, true);
                 } else {

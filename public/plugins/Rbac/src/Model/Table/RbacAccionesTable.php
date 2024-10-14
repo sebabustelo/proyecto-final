@@ -41,12 +41,12 @@ class RbacAccionesTable extends Table
         $this->setEntityClass('Rbac\Model\Entity\RbacAccion');
 
 
-        $this->belongsToMany('RbacPerfiles', [
-            'className'        => 'Rbac.RbacPerfiles',
-            'foreignKey'       => 'rbac_accion_id',
-            'targetForeignKey' => 'rbac_perfil_id',
-            'joinTable'        => 'rbac_acciones_rbac_perfiles',
-        ]);
+        // $this->belongsToMany('RbacPerfiles', [
+        //     'className'        => 'Rbac.RbacPerfiles',
+        //     'foreignKey'       => 'rbac_accion_id',
+        //     'targetForeignKey' => 'rbac_perfil_id',
+        //     'joinTable'        => 'rbac_acciones_rbac_perfiles',
+        // ]);
 
         $this->hasMany('RbacPerfiles', [
             'className'        => 'Rbac.RbacPerfiles',

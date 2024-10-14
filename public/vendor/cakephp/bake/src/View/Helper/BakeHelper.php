@@ -8,7 +8,10 @@ use Bake\Utility\Model\AssociationFilter;
 use Brick\VarExporter\VarExporter;
 use Cake\Core\Configure;
 use Cake\Core\ConventionsTrait;
+use Cake\Core\Plugin;
 use Cake\Database\Schema\TableSchema;
+use Cake\Database\Type\EnumType;
+use Cake\Database\TypeFactory;
 use Cake\Datasource\SchemaInterface;
 use Cake\ORM\Table;
 use Cake\Utility\Inflector;
@@ -95,7 +98,7 @@ class BakeHelper extends Helper
     {
         $options = 0;
         if ($inline) {
-            $options = VarExporter::INLINE_NUMERIC_SCALAR_ARRAY;
+            $options = VarExporter::INLINE_SCALAR_LIST;
         }
 
         return $this->exportVar($var, $indentLevel, $options);
@@ -163,6 +166,16 @@ class BakeHelper extends Helper
             'name' => $name,
             'fullName' => $class,
         ];
+    }
+
+    /**
+     * Check if the current application has a plugin installed
+     *
+     * @param string $plugin The plugin name to check for.
+     */
+    public function hasPlugin(string $plugin): bool
+    {
+        return Plugin::isLoaded($plugin);
     }
 
     /**
@@ -282,6 +295,26 @@ class BakeHelper extends Helper
     }
 
     /**
+     * Check if a column is both an enum, and the mapped enum implements `label()` as a method.
+     *
+     * @param string $field the field to check
+     * @param \Cake\Database\Schema\TableSchema $schema The table schema to read from.
+     * @return bool
+     */
+    public function enumSupportsLabel(string $field, TableSchema $schema): bool
+    {
+        $typeName = $schema->getColumnType($field);
+        if (!str_starts_with($typeName, 'enum-')) {
+            return false;
+        }
+        $type = TypeFactory::build($typeName);
+        assert($type instanceof EnumType);
+        $enumClass = $type->getEnumClassName();
+
+        return method_exists($enumClass, 'label');
+    }
+
+    /**
      * Get alias of associated table.
      *
      * @param \Cake\ORM\Table $modelObj Model object.
@@ -336,7 +369,7 @@ class BakeHelper extends Helper
                 return $this->exportVar(
                     $item,
                     is_array($item) ? 3 : 0,
-                    VarExporter::INLINE_NUMERIC_SCALAR_ARRAY
+                    VarExporter::INLINE_SCALAR_LIST
                 );
             }, $rule['args']);
             $validationMethods[] = sprintf(

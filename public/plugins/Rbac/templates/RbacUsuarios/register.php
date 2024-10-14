@@ -31,9 +31,10 @@ use Cake\Core\Configure; ?>
     </div>
     <div class="form-group has-feedback">
         <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-        <input name="usuario" id="usuario" maxlength="20" required type="text" class="form-control" placeholder="Nombre de usuario"
+        <input name="usuario" id="usuario" maxlength="20" required type="text" class="form-control" placeholder="(*) Nombre de usuario"
             value="<?php echo $this->request->getData('usuario'); ?>">
         <span class="glyphicon glyphicon-user form-control-feedback"></span>
+
     </div>
     <div class="form-group has-feedback">
         <input name="email" maxlength="50" required type="email" class="form-control" placeholder="Correo electrónico" value="<?php echo $this->request->getData('email'); ?>">
@@ -172,6 +173,12 @@ use Cake\Core\Configure; ?>
     </div>
 </div>
 <!-- Otros contenidos del formulario -->
+ <style>
+    .required-asterisk {
+    color: red;
+    margin-left: 5px;
+}
+ </style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -384,7 +391,7 @@ use Cake\Core\Configure; ?>
     setTimeout(function() {
 
         var localidadId = "<?php echo $this->request->getData('direccion')['localidad_id'] ?? ''; ?>";
-        alert(localidadId)
+
         if (localidadId) {
             document.getElementById('localidad_id').value = localidadId;
         }

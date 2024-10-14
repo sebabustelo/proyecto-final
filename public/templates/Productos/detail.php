@@ -59,10 +59,10 @@
                             </p>
                             <!-- Formulario para cargar receta y aclaración -->
                             <form id="pedidoForm" action="/Pedidos/addForCliente" method="POST" enctype="multipart/form-data">
-                                <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
+                                <input type="hidden" name="csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                                 <p>
                                     <i class="fa fa-fw  fa-cube"></i> <strong>Datos solicitados: </strong>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-8">
                                     <label for="orden_medica">Cargar receta médica</label>
                                     <input type="file" class="form-control" name="orden_medica" id="orden_medica" required>
                                 </div>
@@ -74,17 +74,17 @@
                                 </div>
                                 <!-- Cantidad -->
 
-                                <div class="form-group col-md-2">
+                                <!-- <div class="form-group col-md-2">
                                 <?php //debug($this->request->getData('detalle_pedido')[0]['cantidad']) ?>
                                     <label for="cantidad">Cantidad</label>
                                     <input onkeydown="preventInvalidInput(event)" oninput="limitInputLength(this)"
                                         type="number" class="form-control" id="cantidad"  value="<?php echo $this->request->getData('detalle_pedido')[0]['cantidad'] ?? ''; ?>"
                                         name="detalles_pedidos[0][cantidad]" min="1" max="99" required>
-                                </div>
+                                </div> -->
 
                                 <div class="form-group col-md-12">
                                     <label for="aclaracion">Aclaraciones</label>
-                                    <textarea class="form-control" name="aclaracion" value="<?php echo $this->request->getData('aclaracion') ?? ''; ?>" id="aclaracion" rows="2" maxlength="500" placeholder="Escriba aquí cualquier aclaración..." required></textarea>
+                                    <textarea class="form-control" name="aclaracion" value="<?php echo $this->request->getData('aclaracion') ?? ''; ?>" id="aclaracion" rows="2" maxlength="500" placeholder="Escriba aquí cualquier aclaración..." ></textarea>
                                 </div>
                                 </p>
                                 <p>
@@ -144,9 +144,9 @@
                                     <button type="submit" class="btn btn-success">
                                         <i class="fa fa-check" style="color: white;"></i> Solicitar
                                     </button>
-                                    <a href="/Pedidos/addCart" class="btn btn-primary" role="button">
+                                    <!-- <a href="/Pedidos/addCart" class="btn btn-primary" role="button">
                                         <span class="fa fa-shopping-cart"></span> Agregar al Carrito
-                                    </a>
+                                    </a> -->
                                     <a href="/productos/catalogoCliente" class="btn btn-default" role="button"><i class="fa fa-arrow-left"></i> Volver a Productos</a>
                                 </div>
                             </form>

@@ -190,6 +190,7 @@ class ExceptionTrap
         if (static::$registeredTrap == $this) {
             $this->disabled = true;
             static::$registeredTrap = null;
+            restore_exception_handler();
         }
     }
 
@@ -229,16 +230,19 @@ class ExceptionTrap
 
         try {
             $event = $this->dispatchEvent('Exception.beforeRender', ['exception' => $exception, 'request' => $request]);
+            if ($event->isStopped()) {
+                return;
+            }
             $exception = $event->getData('exception');
             assert($exception instanceof Throwable);
 
             $renderer = $this->renderer($exception, $request);
-            $renderer->write($event->getResult() ?? $renderer->render());
+            $renderer->write($event->getResult() ?: $renderer->render());
         } catch (Throwable $exception) {
             $this->logInternalError($exception);
         }
         // Use this constant as a proxy for cakephp tests.
-        if (PHP_SAPI == 'cli' && !env('FIXTURE_SCHEMA_METADATA')) {
+        if (PHP_SAPI === 'cli' && !env('FIXTURE_SCHEMA_METADATA')) {
             exit(1);
         }
     }

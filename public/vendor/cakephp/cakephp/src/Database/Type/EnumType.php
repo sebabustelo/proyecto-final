@@ -95,9 +95,10 @@ class EnumType extends BaseType
         if ($value instanceof BackedEnum) {
             if (!$value instanceof $this->enumClassName) {
                 throw new InvalidArgumentException(sprintf(
-                    'Given value type `%s` does not match associated `%s` backed enum',
+                    'Given value type `%s` does not match associated `%s` backed enum in `%s`',
                     get_debug_type($value),
-                    $this->backingType
+                    $this->backingType,
+                    $this->enumClassName
                 ));
             }
 
@@ -174,20 +175,45 @@ class EnumType extends BaseType
             return $value;
         }
 
+        if (!is_string($value) && !is_int($value)) {
+            throw new InvalidArgumentException(sprintf(
+                'Unable to marshal value `%s` of type `%s` to `%s`',
+                print_r($value, true),
+                get_debug_type($value),
+                $this->enumClassName,
+            ));
+        }
+
+        if ($this->backingType === 'int') {
+            if ($value === '') {
+                return null;
+            }
+
+            if (is_numeric($value)) {
+                $value = (int)$value;
+            }
+        }
+
         if (get_debug_type($value) !== $this->backingType) {
             throw new InvalidArgumentException(sprintf(
-                'Given value type `%s` does not match associated `%s` backed enum',
+                'Given value type `%s` does not match associated `%s` backed enum in `%s`',
                 get_debug_type($value),
-                $this->backingType
+                $this->backingType,
+                $this->enumClassName
             ));
         }
 
         $enumInstance = $this->enumClassName::tryFrom($value);
         if ($enumInstance === null) {
+            if ($value === '' && $this->backingType === 'string') {
+                return null;
+            }
+
             throw new InvalidArgumentException(sprintf(
-                'Unable to marshal value to %s, got %s',
-                $this->enumClassName,
+                'Unable to marshal value `%s` of type `%s` to `%s`',
+                print_r($value, true),
                 get_debug_type($value),
+                $this->enumClassName,
             ));
         }
 

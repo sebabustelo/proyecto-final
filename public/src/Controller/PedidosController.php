@@ -8,6 +8,7 @@ use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\Exception\MissingActionException;
+use Cake\Http\Exception\InvalidCsrfTokenException;
 
 /**
  * Categorias Controller
@@ -134,6 +135,7 @@ class PedidosController extends AppController
      */
     public function addForCliente()
     {
+
         if ($this->request->is('post')) {
             $pedido = $this->Pedidos->newEmptyEntity();
 
@@ -217,7 +219,7 @@ class PedidosController extends AppController
                 // $this->Flash->error(__('Ocurrio un error al guardar el pedido'));
                 $this->Flash->error($e->getMessage());
             }
-            return $this->redirect('/Productos/detail/' . $pedido->detalles_pedidos[0]->producto_id);
+            return $this->redirect('/Productos/catalogoCliente');
             $this->set(compact('pedido'));
         }
     }

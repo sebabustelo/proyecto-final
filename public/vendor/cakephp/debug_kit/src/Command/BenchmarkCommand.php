@@ -50,15 +50,21 @@ class BenchmarkCommand extends Command
         $this->io = $io;
         /** @var string $url */
         $url = $args->getArgumentAt(0);
-        $defaults = ['t' => 100, 'n' => 10];
-        $options = array_merge($defaults, $args->getOptions());
         $times = [];
 
         $io->out(Text::insert('-> Testing :url', compact('url')));
         $io->out('');
-        for ($i = 0; $i < $options['n']; $i++) {
-            /** @psalm-suppress PossiblyInvalidOperand */
-            if (floor($options['t'] - array_sum($times)) <= 0 || $options['n'] <= 1) {
+        $count = 10;
+        if ($args->hasOption('n')) {
+            $count = (float)$args->getOption('n');
+        }
+        $timeout = 100;
+        if ($args->hasOption('t')) {
+            $timeout = (float)$args->getOption('t');
+        }
+
+        for ($i = 0; $i < $count; $i++) {
+            if (floor($timeout - array_sum($times)) <= 0 || $count <= 1) {
                 break;
             }
 
@@ -170,11 +176,11 @@ class BenchmarkCommand extends Command
             'required' => true,
         ])
         ->addOption('n', [
-            'default' => 10,
+            'default' => '10',
             'help' => 'Number of iterations to perform.',
         ])
         ->addOption('t', [
-            'default' => 100,
+            'default' => '100',
             'help' =>
                 'Maximum total time for all iterations, in seconds. ' .
                 'If a single iteration takes more than the timeout, only one request will be made',

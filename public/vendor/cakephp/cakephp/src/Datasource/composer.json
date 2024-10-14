@@ -25,7 +25,7 @@
     },
     "require": {
         "php": ">=8.1",
-        "cakephp/core": "^5.0",
+        "cakephp/core": "^5.1",
         "psr/simple-cache": "^2.0 || ^3.0"
     },
     "suggest": {
@@ -37,5 +37,10 @@
         "psr-4": {
             "Cake\\Datasource\\": "."
         }
+    },
+    "require-dev": {
+        "cakephp/cache": "^5.1",
+        "cakephp/collection": "^5.1",
+        "cakephp/utility": "^5.1"
     }
 }

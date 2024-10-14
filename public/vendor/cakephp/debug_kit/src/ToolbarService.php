@@ -55,19 +55,18 @@ class ToolbarService
     protected array $_defaultConfig = [
         'panels' => [
             'DebugKit.Cache' => true,
-            'DebugKit.Session' => true,
             'DebugKit.Request' => true,
             'DebugKit.SqlLog' => true,
             'DebugKit.Timer' => true,
             'DebugKit.Log' => true,
             'DebugKit.Variables' => true,
             'DebugKit.Environment' => true,
-            'DebugKit.Include' => true,
             'DebugKit.History' => true,
             'DebugKit.Routes' => true,
             'DebugKit.Packages' => true,
             'DebugKit.Mail' => true,
             'DebugKit.Deprecations' => true,
+            'DebugKit.Plugins' => true,
         ],
         'forceEnable' => false,
         'safeTld' => [],
@@ -143,7 +142,7 @@ class ToolbarService
     protected function isSuspiciouslyProduction(): bool
     {
         $host = parse_url('http://' . env('HTTP_HOST'), PHP_URL_HOST);
-        if ($host === false) {
+        if ($host === false || $host === null) {
             return false;
         }
 
@@ -166,7 +165,7 @@ class ToolbarService
 
         // Check if the TLD is in the list of safe TLDs.
         $tld = end($parts);
-        $safeTlds = ['localhost', 'invalid', 'test', 'example', 'local'];
+        $safeTlds = ['localhost', 'invalid', 'test', 'example', 'local', 'internal'];
         $safeTlds = array_merge($safeTlds, (array)$this->getConfig('safeTld'));
 
         if (in_array($tld, $safeTlds, true)) {

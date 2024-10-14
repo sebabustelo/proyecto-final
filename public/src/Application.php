@@ -25,10 +25,12 @@ use Cake\Error\Middleware\ErrorHandlerMiddleware;
 use Cake\Http\BaseApplication;
 use Cake\Http\Middleware\BodyParserMiddleware;
 use Cake\Http\Middleware\CsrfProtectionMiddleware;
+use Cake\Http\Middleware\SessionCsrfProtectionMiddleware;
 use Cake\Http\MiddlewareQueue;
 use Cake\ORM\Locator\TableLocator;
 use Cake\Routing\Middleware\AssetMiddleware;
 use Cake\Routing\Middleware\RoutingMiddleware;
+use App\Middleware\CsrfRedirectMiddleware;
 
 /**
  * Application setup class.
@@ -50,9 +52,9 @@ class Application extends BaseApplication
         // Call parent to load bootstrap from files.
         parent::bootstrap();
 
-        $this->addPlugin('AdminLTE');
-        $this->addPlugin('Rbac');
-        $this->addPlugin('Db');
+        //$this->addPlugin('AdminLTE');
+        //$this->addPlugin('Rbac');
+       // $this->addPlugin('Db');
 
         if (PHP_SAPI !== 'cli') {
             FactoryLocator::add(
@@ -79,7 +81,7 @@ class Application extends BaseApplication
             ->add(new AssetMiddleware([
                 'cacheTime' => Configure::read('Asset.cacheTime'),
             ]))
-
+            ->add(new CsrfRedirectMiddleware())
             // Add routing middleware.
             // If you have a large number of routes connected, turning on routes
             // caching in production could improve performance.
@@ -93,9 +95,12 @@ class Application extends BaseApplication
 
             // Cross Site Request Forgery (CSRF) Protection Middleware
             // https://book.cakephp.org/4/en/security/csrf.html#cross-site-request-forgery-csrf-middleware
-            ->add(new CsrfProtectionMiddleware([
+            ->add(new SessionCsrfProtectionMiddleware([
                 'httponly' => true,
-            ]));
+            ]))
+            ;
+
+
 
         return $middlewareQueue;
     }

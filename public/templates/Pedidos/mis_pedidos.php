@@ -19,7 +19,10 @@
                     <div class="box-header with-border">
                         <i class="fa fa-calendar"></i>
                         <?php setlocale(LC_TIME, 'es_ES.UTF-8', 'es_ES', 'Spanish_Spain', 'es_AR'); ?>
-                        <h3 class="box-title">Fecha de Pedido <?php echo strftime('%e de %B de %Y', strtotime($pedido->fecha_pedido)); ?></h3>
+                        <h3 class="box-title">Fecha de Pedido <?php echo $pedido->fecha_pedido->i18nFormat('dd/MM/yyyy'); ?>
+
+
+                    </h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">

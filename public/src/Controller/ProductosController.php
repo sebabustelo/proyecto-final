@@ -79,6 +79,7 @@ class ProductosController extends AppController
      */
     public function detail($id = null)
     {
+
         $producto = $this->Productos->find()
             ->where(['Productos.id' => $id])
             ->contain([

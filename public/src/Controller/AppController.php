@@ -8,7 +8,7 @@ use Cake\Controller\Controller;
 use Cake\Event\EventInterface;
 
 use Cake\View\JsonView;
-use Cake\Utility\Inflector;
+
 
 //use Rbac\Controller\Component\Permisos;
 /**
@@ -34,6 +34,7 @@ class AppController extends Controller
 
         $this->loadComponent('Flash');
         $this->loadComponent('Rbac.Permisos');
+
 
         // Configurar el componente de autenticación
         // $this->loadComponent('Auth', [
@@ -83,19 +84,27 @@ class AppController extends Controller
         $this->set('usuario', $usuario);
         $this->viewBuilder()->setTheme('AdminLTE');
 
-        $controller = Inflector::camelize($this->getRequest()->getParam('controller'));
-        $action = Inflector::underscore($this->getRequest()->getParam('action'));
+
 
         if ($this->getRequest()->is('ajax')) {
             $this->viewBuilder()->setLayout('ajax');
-        } else {
-            if ($action == 'exportar') {
-                $this->viewBuilder()->setLayout('informe_excel');
-            } else {
-                $this->viewBuilder()->setLayout('AdminLTE.default');
-            }
         }
     }
+
+    // public function beforeFilter(\Cake\Event\EventInterface $event)
+    // {
+    //     parent::beforeFilter($event);
+
+    //     // Manejo global de la excepción InvalidCsrfTokenException
+    //     $this->getEventManager()->on('Controller.beforeRender', function ($event) {
+    //         try {
+    //             // Aquí puedes realizar alguna otra lógica si es necesario
+    //         } catch (InvalidCsrfTokenException $e) {
+    //             $this->Flash->error(__('El token CSRF no es válido. Intente de nuevo.'));
+    //             return $this->redirect(['controller' => 'Users', 'action' => 'login']); // Redirige según tu lógica
+    //         }
+    //     });
+    // }
 
     protected function getParamsKey($key)
     {

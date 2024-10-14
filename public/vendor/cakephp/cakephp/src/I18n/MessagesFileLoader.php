@@ -150,29 +150,32 @@ class MessagesFileLoader
      * Returns the folders where the file should be looked for according to the locale
      * and package name.
      *
-     * @return array<string> The list of folders where the translation file should be looked for
+     * @return list<string> The list of folders where the translation file should be looked for
      */
     public function translationsFolders(): array
     {
         $locale = Locale::parseLocale($this->_locale) + ['region' => null];
 
         $folders = [
-            implode('_', [$locale['language'], $locale['region']]),
             $locale['language'],
+            // gettext compatible paths, see https://www.php.net/manual/en/function.gettext.php
+            $locale['language'] . DIRECTORY_SEPARATOR . 'LC_MESSAGES',
         ];
+        if ($locale['region']) {
+            $languageRegion = implode('_', [$locale['language'], $locale['region']]);
+            $folders[] = $languageRegion;
+            // gettext compatible paths, see https://www.php.net/manual/en/function.gettext.php
+            $folders[] = $languageRegion . DIRECTORY_SEPARATOR . 'LC_MESSAGES';
+        }
 
         $searchPaths = [];
 
-        if ($this->_plugin && Plugin::isLoaded($this->_plugin)) {
-            $basePath = App::path('locales', $this->_plugin)[0];
-            foreach ($folders as $folder) {
-                $searchPaths[] = $basePath . $folder . DIRECTORY_SEPARATOR;
-            }
-        }
-
         $localePaths = App::path('locales');
-        if (empty($localePaths) && defined('APP')) {
+        if (!$localePaths && defined('ROOT')) {
             $localePaths[] = ROOT . 'resources' . DIRECTORY_SEPARATOR . 'locales' . DIRECTORY_SEPARATOR;
+        }
+        if ($this->_plugin && Plugin::isLoaded($this->_plugin)) {
+            $localePaths[] = App::path('locales', $this->_plugin)[0];
         }
         foreach ($localePaths as $path) {
             foreach ($folders as $folder) {
@@ -184,7 +187,7 @@ class MessagesFileLoader
     }
 
     /**
-     * @param array<string> $folders Folders
+     * @param list<string> $folders Folders
      * @param string $name File name
      * @param string $ext File extension
      * @return string|null File if found
@@ -196,7 +199,7 @@ class MessagesFileLoader
         $name = str_replace('/', '_', $name);
 
         foreach ($folders as $folder) {
-            $path = $folder . $name . ".$ext";
+            $path = "{$folder}{$name}.{$ext}";
             if (is_file($path)) {
                 $file = $path;
                 break;

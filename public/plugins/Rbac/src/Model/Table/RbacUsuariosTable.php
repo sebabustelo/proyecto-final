@@ -162,6 +162,22 @@ class RbacUsuariosTable extends Table
         //         'message' => 'El tipo de documento es obligatorio',
         //     ]);
 
+        $validator
+            ->add('documento', 'uniqueCombo', [
+                'rule' => function ($value, $context) {
+                    $tipo_documento_id = $context['data']['tipo_documento_id'];
+                    $documento = $context['data']['documento'];
+
+                    // Busca si ya existe un usuario con esa combinación de tipo_documento_id y documento
+                    $existingUser = $this->find()
+                        ->where(['tipo_documento_id' => $tipo_documento_id, 'documento' => $documento])
+                        ->first();
+
+                    return empty($existingUser); // Retorna verdadero si no existe, lo que significa que la validación pasa
+                },
+                'message' => 'Este documento ya ha sido registrado.'
+            ]);
+
         // $validator
         //     ->add('documento', 'requiredIfNotCUIT', [
         //         'rule' => function ($value, $context) {

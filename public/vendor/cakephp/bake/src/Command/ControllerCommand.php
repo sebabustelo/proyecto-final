@@ -21,6 +21,7 @@ use Cake\Console\Arguments;
 use Cake\Console\ConsoleIo;
 use Cake\Console\ConsoleOptionParser;
 use Cake\Core\Configure;
+use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 
 /**
@@ -85,6 +86,9 @@ class ControllerCommand extends BakeCommand
         if ($args->getOption('actions')) {
             $actions = array_map('trim', explode(',', $args->getOption('actions')));
             $actions = array_filter($actions);
+        }
+        if (!$args->getOption('actions') && Plugin::isLoaded('Authentication') && $controllerName === 'Users') {
+            $actions[] = 'login';
         }
 
         $helpers = $this->getHelpers($args);
@@ -219,6 +223,10 @@ class ControllerCommand extends BakeCommand
         if ($args->getOption('components')) {
             $components = explode(',', $args->getOption('components'));
             $components = array_values(array_filter(array_map('trim', $components)));
+        } else {
+            if (Plugin::isLoaded('Authorization')) {
+                $components[] = 'Authorization.Authorization';
+            }
         }
 
         return $components;

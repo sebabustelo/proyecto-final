@@ -22,6 +22,7 @@ use Cake\Console\Exception\MissingOptionException;
 use Cake\Console\Exception\StopException;
 use Cake\Core\ConsoleApplicationInterface;
 use Cake\Core\ContainerApplicationInterface;
+use Cake\Core\EventAwareApplicationInterface;
 use Cake\Core\PluginApplicationInterface;
 use Cake\Event\EventDispatcherInterface;
 use Cake\Event\EventDispatcherTrait;
@@ -67,9 +68,13 @@ class CommandRunner implements EventDispatcherInterface
     /**
      * Alias mappings.
      *
-     * @var array<string>
+     * @var array<string, string>
      */
-    protected array $aliases = [];
+    protected array $aliases = [
+        '--version' => 'version',
+        '--help' => 'help',
+        '-h' => 'help',
+    ];
 
     /**
      * Constructor
@@ -86,11 +91,6 @@ class CommandRunner implements EventDispatcherInterface
         $this->app = $app;
         $this->root = $root;
         $this->factory = $factory;
-        $this->aliases = [
-            '--version' => 'version',
-            '--help' => 'help',
-            '-h' => 'help',
-        ];
     }
 
     /**
@@ -106,7 +106,7 @@ class CommandRunner implements EventDispatcherInterface
      * $runner->setAliases(['--version' => 'version']);
      * ```
      *
-     * @param array<string> $aliases The map of aliases to replace.
+     * @param array<string, string> $aliases The map of aliases to replace.
      * @return $this
      */
     public function setAliases(array $aliases)
@@ -132,7 +132,7 @@ class CommandRunner implements EventDispatcherInterface
      */
     public function run(array $argv, ?ConsoleIo $io = null): int
     {
-        assert(!empty($argv), 'Cannot run any commands. No arguments received.');
+        assert($argv !== [], 'Cannot run any commands. No arguments received.');
 
         $this->bootstrap();
 
@@ -215,12 +215,9 @@ class CommandRunner implements EventDispatcherInterface
      */
     public function setEventManager(EventManagerInterface $eventManager)
     {
-        assert(
-            $this->app instanceof EventDispatcherInterface,
-            'Cannot set the event manager, the application does not support events.'
-        );
-
-        $this->app->setEventManager($eventManager);
+        if ($this->app instanceof EventDispatcherInterface) {
+            $this->app->setEventManager($eventManager);
+        }
 
         return $this;
     }
@@ -320,6 +317,12 @@ class CommandRunner implements EventDispatcherInterface
     protected function runCommand(CommandInterface $command, array $argv, ConsoleIo $io): ?int
     {
         try {
+            $eventManager = $this->getEventManager();
+            if ($this->app instanceof EventAwareApplicationInterface) {
+                $eventManager = $this->app->events($eventManager);
+                $eventManager = $this->app->pluginEvents($eventManager);
+            }
+            $this->setEventManager($eventManager);
             if ($command instanceof EventDispatcherInterface) {
                 $command->setEventManager($this->getEventManager());
             }
