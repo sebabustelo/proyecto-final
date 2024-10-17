@@ -1,7 +1,5 @@
 # PROYECTO FINAL 
 
-# PROYECTO FINAL
-
 Este proyecto es una aplicación web desarrollada en **CakePHP 5** que permite la gestión de pedidos para una tienda en línea. Los usuarios pueden registrarse, navegar por un catálogo de productos, realizar pedidos, y gestionar sus órdenes. Además, se incluye un sistema de autenticación basado en roles (RBAC) para gestionar permisos y accesos, así como un diseño moderno utilizando el framework de **AdminLTE**.
 
 ## Integrantes del Proyecto
