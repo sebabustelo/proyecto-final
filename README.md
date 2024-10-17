@@ -1,6 +1,6 @@
 # PROYECTO FINAL 
 
-Este proyecto es una aplicación web desarrollada en **CakePHP 5** que permite la gestión de pedidos para una tienda en línea. Los usuarios pueden registrarse, navegar por un catálogo de productos, realizar pedidos, y gestionar sus órdenes. Además, se incluye un sistema de autenticación basado en roles (RBAC) para gestionar permisos y accesos, así como un diseño moderno utilizando el framework de **AdminLTE**.
+Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empresa dedicada a la **venta de insumos médicos**. La tienda en línea permite a los usuarios navegar y comprar productos especializados en las áreas de **Ortopedia**, **Traumatología**, **Neurocirugía**, y **Bucomaxilofacial**. Los clientes pueden registrarse, realizar pedidos, y hacer seguimiento de sus pedidos. Además, se cuenta con un sistema de autenticación basado en roles (RBAC) para gestionar permisos y accesos, y un diseño moderno utilizando **AdminLTE**.
 
 ## Integrantes del Proyecto
 
