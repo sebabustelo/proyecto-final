@@ -3,13 +3,22 @@
         'name' => 'cakephp/app',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '96aaa55832362f8cc4e70a730833eb36cc375dc7',
+        'reference' => '2776e2aafa20be283539c8f4d23d7b6a99046446',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
         'dev' => true,
     ),
     'versions' => array(
+        'andrewsville/php-token-reflection' => array(
+            'pretty_version' => '1.3.1',
+            'version' => '1.3.1.0',
+            'reference' => '3e3a36de17f32889fd2d4b8108af16d3033ce9bf',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../andrewsville/php-token-reflection',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'brick/varexporter' => array(
             'pretty_version' => '0.5.0',
             'version' => '0.5.0.0',
@@ -22,7 +31,7 @@
         'cakephp/app' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '96aaa55832362f8cc4e70a730833eb36cc375dc7',
+            'reference' => '2776e2aafa20be283539c8f4d23d7b6a99046446',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -274,6 +283,12 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'dg/texy' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.4',
+            ),
+        ),
         'doctrine/sql-formatter' => array(
             'pretty_version' => '1.5.0',
             'version' => '1.5.0.0',
@@ -310,6 +325,15 @@
             'aliases' => array(),
             'dev_requirement' => true,
         ),
+        'kukulich/fshl' => array(
+            'pretty_version' => '2.1.0',
+            'version' => '2.1.0.0',
+            'reference' => '974c294ade5d76c0c16b6fe3fd3a584ba999b24f',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../kukulich/fshl',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'laminas/laminas-diactoros' => array(
             'pretty_version' => '3.4.0',
             'version' => '3.4.0.0',
@@ -327,6 +351,12 @@
             'install_path' => __DIR__ . '/../laminas/laminas-httphandlerrunner',
             'aliases' => array(),
             'dev_requirement' => false,
+        ),
+        'latte/latte' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
         ),
         'league/container' => array(
             'pretty_version' => '4.2.2',
@@ -390,6 +420,123 @@
             'install_path' => __DIR__ . '/../myclabs/deep-copy',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'nette/application' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/bootstrap' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/caching' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/component-model' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/database' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/di' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/finder' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/forms' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/http' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/mail' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/neon' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/nette' => array(
+            'pretty_version' => 'v2.1.13',
+            'version' => '2.1.13.0',
+            'reference' => '5e3bb6b2f48cfd7ac0a2b22cffb32c9a715d4f76',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../nette/nette',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
+        'nette/php-generator' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/reflection' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/robot-loader' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/safe-stream' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/security' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/tokenizer' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
+        ),
+        'nette/utils' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
         ),
         'nikic/php-parser' => array(
             'pretty_version' => 'v5.3.1',
@@ -523,8 +670,8 @@
         'psr/container-implementation' => array(
             'dev_requirement' => false,
             'provided' => array(
-                0 => '^1.0',
-                1 => '^2.0',
+                0 => '^2.0',
+                1 => '^1.0',
             ),
         ),
         'psr/http-client' => array(
@@ -966,6 +1113,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'texy/texy' => array(
+            'pretty_version' => 'v2.4',
+            'version' => '2.4.0.0',
+            'reference' => '67d02cd95e4aaa7dae96b24a7d04ba924d641015',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../texy/texy',
+            'aliases' => array(),
+            'dev_requirement' => true,
+        ),
         'theseer/tokenizer' => array(
             'pretty_version' => '1.2.3',
             'version' => '1.2.3.0',
@@ -974,6 +1130,12 @@
             'install_path' => __DIR__ . '/../theseer/tokenizer',
             'aliases' => array(),
             'dev_requirement' => true,
+        ),
+        'tracy/tracy' => array(
+            'dev_requirement' => true,
+            'replaced' => array(
+                0 => 'v2.1.13',
+            ),
         ),
         'twig/markdown-extra' => array(
             'pretty_version' => 'v3.13.0',

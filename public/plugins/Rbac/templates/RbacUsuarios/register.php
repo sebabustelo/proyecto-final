@@ -20,6 +20,11 @@
     input[type="number"] {
         -moz-appearance: textfield;
     }
+
+    .required-field::placeholder {
+        color: red;
+        font-weight: bold;
+    }
 </style>
 <?php $this->layout = 'AdminLTE.register'; ?>
 <?php
@@ -37,7 +42,7 @@ use Cake\Core\Configure; ?>
 
     </div>
     <div class="form-group has-feedback">
-        <input name="email" maxlength="50" required type="email" class="form-control" placeholder="Correo electrónico" value="<?php echo $this->request->getData('email'); ?>">
+        <input name="email" maxlength="50" required type="email" class="form-control" placeholder="(*) Correo electrónico" value="<?php echo $this->request->getData('email'); ?>">
         <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
     </div>
     <!-- Select para elegir entre Particular y Obra Social -->
@@ -50,11 +55,11 @@ use Cake\Core\Configure; ?>
     <!-- Campos para Particular -->
     <div id="particularFields">
         <div class="form-group has-feedback">
-            <input name="nombre" maxlength="50" type="text" class="form-control" placeholder="Nombre" value="<?php echo $this->request->getData('nombre'); ?>">
+            <input name="nombre" maxlength="50" type="text" class="form-control" placeholder="(*) Nombre" value="<?php echo $this->request->getData('nombre'); ?>">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
         <div class="form-group has-feedback">
-            <input name="apellido" maxlength="50" required type="text" class="form-control" placeholder="Apellido" value="<?php echo $this->request->getData('apellido'); ?>">
+            <input name="apellido" maxlength="50" required type="text" class="form-control" placeholder="(*) Apellido" value="<?php echo $this->request->getData('apellido'); ?>">
             <span class="glyphicon glyphicon-user form-control-feedback"></span>
         </div>
     </div>
@@ -62,7 +67,7 @@ use Cake\Core\Configure; ?>
     <!-- Campos para Obra Social -->
     <div id="obraSocialFields" style="display: none;">
         <div class="form-group has-feedback">
-            <input name="razon_social" maxlength="100" type="text" class="form-control" placeholder="Razón Social">
+            <input name="razon_social" maxlength="100" type="text" class="form-control" placeholder=" (*)Razón Social">
             <span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
         </div>
         <span id="mensaje-error" style="display: none;" class="badge bg-red"><i class="fa fa-warning"></i> El CUIT es inválido</span>
@@ -72,7 +77,7 @@ use Cake\Core\Configure; ?>
         <div class="row">
             <div class="col-xs-6">
                 <select required name="tipo_documento_id" id="tipo_documento_id" class="form-control">
-                    <option value="">Tipo de Doc.</option>
+                    <option value="">(*) Tipo de Doc.</option>
                     <?php foreach ($tipoDocumentos as $id => $tipoDocumento) : ?>
                         <?php if ($this->request->getData('tipo_documento_id') == $id) { ?>
                             <option selected value="<?php echo $id; ?>"><?php echo $tipoDocumento; ?></option>
@@ -83,7 +88,7 @@ use Cake\Core\Configure; ?>
                 </select>
             </div>
             <div class="col-xs-6">
-                <input required type="text" placeholder="Número de Doc." maxlength="11" class="form-control"
+                <input required type="text" placeholder="(*) Número de Doc." maxlength="11" class="form-control"
                     value="<?php echo $this->request->getData('documento'); ?>" name="documento" id="documento"
                     oninput="validateDocumentInput()">
                 <span class="glyphicon fa fa-lg fa-credit-card form-control-feedback" style="margin-right: 14px;"></span>
@@ -92,7 +97,7 @@ use Cake\Core\Configure; ?>
     </div>
     <div class="form-group has-feedback">
         <select id="provincia_id" required name="provincia_id" class="form-control">
-            <option selected value="">Seleccione una provincia</option>
+            <option selected value="">(*) Seleccione una provincia</option>
             <?php foreach ($provincias as $id => $provincia) { ?>
                 <?php if ($this->request->getData('provincia_id') == $id) { ?>
                     <option selected value="<?php echo $id; ?>"><?php echo $provincia; ?></option>
@@ -107,13 +112,13 @@ use Cake\Core\Configure; ?>
     </div>
     <div class="form-group has-feedback">
         <select required id="localidad_id" name="direccion[localidad_id]" class="form-control">
-            <option selected value="">Seleccione una localidad</option>
+            <option selected value="">(*) Seleccione una localidad</option>
         </select>
     </div>
     <div class="form-group has-feedback">
         <input name="direccion[calle]" required type="text" maxlength="50"
             value="<?php echo !empty($this->request->getData('direccion')['calle']) ? $this->request->getData('direccion')['calle'] : ''; ?>"
-            class="form-control" placeholder="Calle" oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');">
+            class="form-control" placeholder="(*) Calle" oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');">
         <span class="glyphicon fa fa-lg fa-road form-control-feedback"></span>
     </div>
 
@@ -138,7 +143,7 @@ use Cake\Core\Configure; ?>
 
     <div class="form-group has-feedback">
         <input name="celular" required type="number" step="1" max="999999999999" oninput="if(this.value.length > 12) this.value = this.value.slice(0, 12);"
-            value="<?php echo $this->request->getData('celular'); ?>" class="form-control" placeholder="Celular" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            value="<?php echo $this->request->getData('celular'); ?>" class="form-control" placeholder="(*) Celular" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
         <span class="glyphicon fa fa-lg fa-mobile-phone form-control-feedback"></span>
     </div>
 
@@ -164,6 +169,9 @@ use Cake\Core\Configure; ?>
         </div>
         <!-- /.col -->
     </div>
+    <p class="text-muted text-center" style="margin-top: 15px;">
+        <small>Los campos con (*) son obligatorios.</small>
+    </p>
 
 </form>
 <br>
@@ -173,12 +181,12 @@ use Cake\Core\Configure; ?>
     </div>
 </div>
 <!-- Otros contenidos del formulario -->
- <style>
+<style>
     .required-asterisk {
-    color: red;
-    margin-left: 5px;
-}
- </style>
+        color: red;
+        margin-left: 5px;
+    }
+</style>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
