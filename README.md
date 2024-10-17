@@ -12,6 +12,9 @@ Desarrollador Frontend responsable del diseño e integración de **AdminLTE**, e
 
 ### Florencia Tigani
 Analista y tester, encargada de verificar el correcto funcionamiento de la aplicación, realizar pruebas en todas las funcionalidades, y asegurar que se cumplan los requisitos del cliente en términos de calidad y usabilidad.
+1. Verificación del Funcionamiento: Asegura que todas las funcionalidades de la aplicación operen de manera adecuada y conforme a las especificaciones establecidas.
+2. Realización de Pruebas: Ejecuta pruebas exhaustivas para identificar posibles errores y asegurar que la aplicación cumpla con los estándares de calidad.
+3. Aseguramiento de Calidad y Usabilidad: Garantiza que se cumplan todos los requisitos del cliente en términos de calidad y experiencia de usuario, proporcionando una aplicación confiable y fácil de usar.
 
 
 # Documentación del Proyecto IPMagna con Framework CakePHP 5
