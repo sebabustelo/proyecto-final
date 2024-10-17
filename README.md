@@ -10,19 +10,29 @@ Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empr
 Desarrollador Backend especializado en CakePHP y PHP, encargado de la lógica del sistema y la integración de la base de datos. Sus responsabilidades incluyen:
 
 - **Diseño de Arquitectura**: Definir la estructura general del sistema, eligiendo patrones de diseño adecuados y asegurando que todos los componentes interactúen de manera eficiente y coherente.
-- **Gestión de Base de Datos**: Diseñar y optimizar esquemas de base de datos, asegurando que las consultas sean rápidas y que se mantenga la integridad de los datos. Implementar migraciones y mantener la base de datos actualizada con cambios en los requisitos del negocio.
+- **Gestión de Base de Datos**: Diseñar y optimizar esquemas de base de datos, asegurando que las consultas sean rápidas y que se mantenga la integridad de los datos. 
 - **Desarrollo de Funcionalidades**: Implementar y asegurar el correcto funcionamiento de funcionalidades clave como la gestión de pedidos y usuarios, utilizando CakePHP para mantener una base de código limpia y modular.
 - **Optimización del Rendimiento**: Monitorear y analizar el rendimiento del sistema, realizando ajustes y optimizaciones necesarias para mejorar la velocidad de respuesta y la escalabilidad.
 - **Colaboración en Metodologías Ágiles**: Trabajar en sprints dentro de un marco ágil, colaborando estrechamente con otros desarrolladores, testers y analistas para iterar rápidamente sobre las funcionalidades y responder a los cambios en los requisitos.
-- **Documentación Técnica**: Crear y mantener documentación técnica clara y accesible, incluyendo diagramas de arquitectura, guías de implementación y documentación de API para facilitar el trabajo de otros desarrolladores.
+- **Documentación Técnica**: Crear y mantener documentación técnica clara y accesible, incluyendo diagramas de arquitectura, guías de implementación y documentación para facilitar el trabajo de desarrollo.
 
 
-### Facundo Ramirez
-Desarrollador Frontend responsable del diseño e integración de **AdminLTE**, encargado de que la experiencia de usuario sea fluida y atractiva, creando interfaces responsive y fáciles de usar.
+### Facundo Ramírez
+
+**Desarrollador Frontend y Project Manager**  
+Desarrollador Frontend responsable del diseño e integración de AdminLTE, encargado de que la experiencia de usuario sea fluida y atractiva, creando interfaces responsive y fáciles de usar. Sus responsabilidades incluyen:
+
+- **Diseño de Interfaz de Usuario**: Crear y mantener interfaces intuitivas y atractivas, asegurando que los elementos visuales sean coherentes con la identidad del proyecto y fáciles de navegar.
+- **Gestión de Base de Datos**: Diseñar y optimizar esquemas de base de datos, asegurando que las consultas sean rápidas y que se mantenga la integridad de los datos. 
+- **Integración de AdminLTE**: Implementar y personalizar el tema de AdminLTE para adaptarlo a los requisitos del proyecto, garantizando que todas las funcionalidades estén correctamente implementadas en la interfaz.
+- **Colaboración en Metodologías Ágiles**: Participar activamente en reuniones de planificación, retrospectivas y revisiones, facilitando la comunicación entre el equipo y ayudando a mantener un flujo de trabajo ágil y eficiente.
+- **Gestión de Proyectos**: Coordinar tareas y cronogramas, asegurando que los hitos del proyecto se cumplan en tiempo y forma. Monitorear el progreso del equipo y hacer ajustes según sea necesario para cumplir con los objetivos del proyecto.
+- **Pruebas de Usabilidad**: Realizar pruebas de usabilidad y recoger feedback de los usuarios para mejorar continuamente la experiencia de usuario, asegurando que la aplicación cumpla con los estándares de calidad.
 
 ### Florencia Tigani
 Analista y tester, encargada de verificar el correcto funcionamiento de la aplicación, realizar pruebas en todas las funcionalidades, y asegurar que se cumplan los requisitos del cliente en términos de calidad y usabilidad.
 - **Verificación del Funcionamiento**: Asegura que todas las funcionalidades de la aplicación operen de manera adecuada y conforme a las especificaciones establecidas.
+- **Gestión de Base de Datos**: Diseñar y optimizar esquemas de base de datos, asegurando que las consultas sean rápidas y que se mantenga la integridad de los datos. 
 - **Realización de Pruebas**: Ejecuta pruebas exhaustivas para identificar posibles errores y asegurar que la aplicación cumpla con los estándares de calidad.
 - **Aseguramiento de Calidad y Usabilidad**: Garantiza que se cumplan todos los requisitos del cliente en términos de calidad y experiencia de usuario, proporcionando una aplicación confiable y fácil de usar.
 - **Colaboración en Metodologías Ágiles**: Trabajar en sprints dentro de un marco ágil, colaborando estrechamente con otros desarrolladores, testers y analistas para iterar rápidamente sobre las funcionalidades y responder a los cambios en los requisitos.
