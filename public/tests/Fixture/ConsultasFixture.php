@@ -20,11 +20,13 @@ class ConsultasFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'cliente_id' => 1,
+                'consulta_estado_id' => 1,
+                'usuario_consulta_id' => 1,
                 'usuario_respuesta_id' => 1,
                 'motivo' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
-                'created' => '2024-09-19 16:50:44',
-                'modified' => '2024-09-19 16:50:44',
+                'respuesta' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+                'created' => '2024-10-17 15:44:39',
+                'modified' => '2024-10-17 15:44:39',
             ],
         ];
         parent::init();

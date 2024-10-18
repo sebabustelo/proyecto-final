@@ -26,10 +26,9 @@ class ProveedoresFixture extends TestFixture
                 'telefono' => 'Lorem ipsum dolor ',
                 'email' => 'Lorem ipsum dolor sit amet',
                 'cuit' => 'Lorem ipsum dolor ',
-                'created' => '2024-09-05 03:48:17',
-                'modified' => '2024-09-05 03:48:17',
-                'created_by' => 'Lorem ipsum dolor sit amet',
-                'modified_by' => 'Lorem ipsum dolor sit amet',
+                'created' => '2024-10-17 15:44:51',
+                'modified' => '2024-10-17 15:44:51',
+                'activo' => 1,
             ],
         ];
         parent::init();

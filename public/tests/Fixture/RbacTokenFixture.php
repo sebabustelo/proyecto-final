@@ -28,8 +28,8 @@ class RbacTokenFixture extends TestFixture
                 'id' => 1,
                 'rbac_usuario_id' => 1,
                 'token' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-09-18 11:42:11',
-                'modified' => '2024-09-18 11:42:11',
+                'created' => '2024-10-17 15:44:53',
+                'modified' => '2024-10-17 15:44:53',
                 'validez' => 1,
             ],
         ];

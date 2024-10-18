@@ -45,28 +45,6 @@ class ProductosController extends AppController
     }
 
     /**
-     * catalogoCliente method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
-    public function catalogoCliente()
-    {
-        $conditions = $this->getConditionsPublic();
-        $productos = $this->Productos->find()
-            ->where($conditions['where'])
-            ->contain([
-                'Categorias',
-                'ProductosArchivos',
-                'ProductosPrecios' => function ($q) {
-                    return $q->where(['fecha_hasta IS NULL'])->order(['ProductosPrecios.fecha_desde' => 'DESC']); // Ordenar por fecha_desde en orden ascendente
-                }
-            ]);
-
-        $this->set('productos', $this->paginate($productos));
-        $this->set('filters', $this->getRequest()->getQuery());
-    }
-
-    /**
      * Método detail
      *
      * Este método permite obtener y mostrar los detalles de un producto específico.
@@ -91,7 +69,7 @@ class ProductosController extends AppController
             ])
             ->first();
 
-           // debug($_SESSION);
+        // debug($_SESSION);
 
         if (!$producto) {
             $this->Flash->error(__('El producto no existe.'));
@@ -292,6 +270,28 @@ class ProductosController extends AppController
     }
 
     /**
+     * catalogoCliente method
+     *
+     * @return \Cake\Http\Response|null|void Renders view
+     */
+    public function catalogoCliente()
+    {
+        $conditions = $this->getConditionsPublic();
+        $productos = $this->Productos->find()
+            ->where($conditions['where'])
+            ->contain([
+                'Categorias',
+                'ProductosArchivos',
+                'ProductosPrecios' => function ($q) {
+                    return $q->where(['fecha_hasta IS NULL'])->order(['ProductosPrecios.fecha_desde' => 'DESC']); // Ordenar por fecha_desde en orden ascendente
+                }
+            ]);
+
+        $this->set('productos', $this->paginate($productos));
+        $this->set('filters', $this->getRequest()->getQuery());
+    }
+
+    /**
      * Método categorias
      *
      * Este método permite obtener y mostrar los productos que pertenecen a una categoría específica.
@@ -302,11 +302,28 @@ class ProductosController extends AppController
      * @return \Cake\Http\Response|null|void Renderiza la vista con los productos de la categoría solicitada.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException Cuando no se encuentra la categoría solicitada.
      */
-    public function categorias($id = null)
+    public function catalogoClienteCategorias($id = null)
     {
+        $conditions = $this->getConditionsPublic();
         $categoria = $this->Productos->Categorias->get($id);
-        $productos = $this->Productos->find()->where(['categoria_id' => $id])->contain(['Categorias', 'ProductosArchivos'])->all();
-        $this->set(compact('productos', 'categoria'));
+
+
+        $conditions['where'][]= ['categoria_id' => $id];
+
+        $productos = $this->Productos->find()
+            ->where($conditions['where'])
+            ->contain([
+                'Categorias',
+                'ProductosArchivos',
+                'ProductosPrecios' => function ($q) {
+                    return $q->where(['fecha_hasta IS NULL'])->order(['ProductosPrecios.fecha_desde' => 'DESC']); // Ordenar por fecha_desde en orden ascendente
+                }
+            ]);
+
+        $this->set('productos', $this->paginate($productos));
+        $this->set('categoria',$categoria);
+        $this->set('categoria_id',$id);
+        $this->set('filters', $this->getRequest()->getQuery());
     }
 
     /**

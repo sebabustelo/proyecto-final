@@ -22,9 +22,12 @@ class PedidosFixture extends TestFixture
                 'id' => 1,
                 'cliente_id' => 1,
                 'estado_id' => 1,
-                'fecha_pedido' => '2024-10-05 01:47:16',
-                'created' => '2024-10-05 01:47:16',
-                'modified' => '2024-10-05 01:47:16',
+                'direccion_id' => 1,
+                'fecha_pedido' => '2024-10-17 15:44:46',
+                'fecha_aplicacion' => '2024-10-17',
+                'aclaracion' => 'Lorem ipsum dolor sit amet',
+                'created' => '2024-10-17 15:44:46',
+                'modified' => '2024-10-17 15:44:46',
             ],
         ];
         parent::init();

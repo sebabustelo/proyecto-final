@@ -23,8 +23,8 @@ class ConsultasEstadosFixture extends TestFixture
                 'nombre' => 'Lorem ipsum dolor sit amet',
                 'descripcion' => 'Lorem ipsum dolor sit amet',
                 'activo' => 1,
-                'created' => '2024-09-19 23:33:03',
-                'modified' => '2024-09-19 23:33:03',
+                'created' => '2024-10-17 15:44:41',
+                'modified' => '2024-10-17 15:44:41',
             ],
         ];
         parent::init();

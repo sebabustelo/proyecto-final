@@ -21,7 +21,7 @@ class PedidosTableTest extends TestCase
     /**
      * Fixtures
      *
-     * @var array<string>
+     * @var list<string>
      */
     protected array $fixtures = [
         'app.Pedidos',
@@ -29,6 +29,7 @@ class PedidosTableTest extends TestCase
         'app.PedidosEstados',
         'app.DetallesPedidos',
         'app.OrdenesMedicas',
+        'app.Direcciones',
     ];
 
     /**

@@ -21,6 +21,9 @@ class TipoDocumentosFixture extends TestFixture
             [
                 'id' => 1,
                 'descripcion' => 'Lorem ipsum dolor sit amet',
+                'created' => '2024-10-17 15:44:55',
+                'modified' => '2024-10-17 15:44:55',
+                'activo' => 1,
             ],
         ];
         parent::init();

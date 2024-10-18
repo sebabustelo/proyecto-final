@@ -20,7 +20,6 @@ class DireccionesFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'usuario_id' => 1,
                 'calle' => 'Lorem ipsum dolor sit amet',
                 'numero' => 'Lorem ip',
                 'piso' => 'Lorem ip',

@@ -195,8 +195,7 @@ $action =   $this->request->getParam('action');
             (isset($accionesPermitidas['PedidoEstados']['index']) && $accionesPermitidas['PedidoEstados']['index']) ||
             (isset($accionesPermitidas['ConsultasEstados']['index']) && $accionesPermitidas['ConsultasEstados']['index']) ||
             (isset($accionesPermitidas['Provincias']['index']) && $accionesPermitidas['Provincias']['index']) ||
-            (isset($accionesPermitidas['Localidades']['index']) && $accionesPermitidas['Localidades']['index']) ||
-            (isset($accionesPermitidas['Categorias']['index']) && $accionesPermitidas['Categorias']['index'])
+            (isset($accionesPermitidas['Localidades']['index']) && $accionesPermitidas['Localidades']['index'])
         ) {
             $menu_sistema = array("TipoDocumentos", "Categorias",  "PedidosEstados", "ConsultasEstados", "Provincias", "Localidades");
             if (in_array($controller, $menu_sistema) and $action != 'detail') {
@@ -266,8 +265,8 @@ $action =   $this->request->getParam('action');
     <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Cliente </li>
     <?php //debug($accionesPermitidas);
     ?>
-    <?php if ((isset($accionesPermitidas['Productos']['categorias']) && $accionesPermitidas['Productos']['categorias'])) { ?>
-        <li class="treeview <?php echo ($controller == 'Productos' && ($action == 'categorias') ? ' active' : ''); ?>">
+    <?php if ((isset($accionesPermitidas['Productos']['catalogoClienteCategorias']) && $accionesPermitidas['Productos']['catalogoClienteCategorias'])) { ?>
+        <li class="treeview <?php echo ($controller == 'Productos' && ($action == 'catalogoClienteCategorias') ? ' active' : ''); ?>">
             <a href="#">
                 <i class="fa fa-fw  fa-th-large"></i> <span>Categorias</span>
                 <span class="pull-right-container">
@@ -278,13 +277,13 @@ $action =   $this->request->getParam('action');
             <ul class="treeview-menu">
                 <?php foreach ($categoriasMenu as $id => $categoria) : ?>
                     <?php
-                    if ($controller == 'Productos' and $action == 'categorias') {
+                    if ($controller == 'Productos' and $action == 'catalogoClienteCategorias') {
                         $active = ($id == $this->request->getParam('pass')[0]) ? ' active' : '';
                     } else {
                         $active = '';
                     } ?>
                     <li class="<?php echo $active; ?>">
-                        <a href="<?php echo $this->Url->build(['plugin' => null, 'controller' => 'Productos', 'action' => 'categorias', $id]); ?>">
+                        <a href="<?php echo $this->Url->build(['plugin' => null, 'controller' => 'Productos', 'action' => 'catalogo_cliente_categorias', $id]); ?>">
                             <i class="fa fa-circle-o"></i> <?php echo h($categoria); ?>
                         </a>
                     </li>

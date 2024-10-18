@@ -23,8 +23,6 @@ class DetallesPedidosFixture extends TestFixture
                 'pedido_id' => 1,
                 'producto_id' => 1,
                 'cantidad' => 1,
-                'aclaracion' => 'Lorem ipsum dolor sit amet',
-                'fecha_aplicacion' => '2024-10-06 22:45:49',
             ],
         ];
         parent::init();

@@ -21,6 +21,7 @@ class ProvinciasFixture extends TestFixture
             [
                 'id' => 1,
                 'nombre' => 'Lorem ipsum dolor sit amet',
+                'activo' => 1,
             ],
         ];
         parent::init();

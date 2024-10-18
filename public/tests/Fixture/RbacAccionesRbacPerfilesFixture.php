@@ -6,9 +6,9 @@ namespace App\Test\Fixture;
 use Cake\TestSuite\Fixture\TestFixture;
 
 /**
- * ProductosPreciosFixture
+ * RbacAccionesRbacPerfilesFixture
  */
-class ProductosPreciosFixture extends TestFixture
+class RbacAccionesRbacPerfilesFixture extends TestFixture
 {
     /**
      * Init method
@@ -20,10 +20,8 @@ class ProductosPreciosFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'producto_id' => 1,
-                'precio' => 1.5,
-                'fecha_desde' => '2024-10-17 15:44:50',
-                'fecha_hasta' => '2024-10-17 15:44:50',
+                'rbac_accion_id' => 1,
+                'rbac_perfil_id' => 1,
             ],
         ];
         parent::init();

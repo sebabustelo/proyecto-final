@@ -25,8 +25,9 @@ class ProductosArchivosFixture extends TestFixture
                 'file_extension' => 'Lorem ip',
                 'file_size' => 1,
                 'file_path' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-09-12 12:31:48',
-                'modified' => '2024-09-12 12:31:48',
+                'created' => '2024-10-17 15:44:48',
+                'modified' => '2024-10-17 15:44:48',
+                'es_principal' => 1,
             ],
         ];
         parent::init();

@@ -67,10 +67,10 @@
                                     <input type="file" class="form-control" name="orden_medica" id="orden_medica" required>
                                 </div>
                                 <div class="form-group col-md-4">
-                                    <label for="fecha_aplicacion">Fecha de Aplicación</label>
+                                    <label for="fecha_intervencion" >Fecha de Intervención</label>
                                     <input type="hidden" value="<?php echo $producto->id; ?>" id="id" name="detalles_pedidos[0][producto_id]">
-                                    <input type="date" class="form-control" name="fecha_aplicacion"
-                                        min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" id="fecha_aplicacion" required>
+                                    <input type="date" class="form-control" name="fecha_intervencion"
+                                        min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" id="fecha_intervencion" required>
                                 </div>
                                 <!-- Cantidad -->
 
@@ -253,24 +253,24 @@
 
 
 
-    // Función para validar la fecha de aplicación que sea mayor a la actual
-    function validarFechaAplicacion() {
-        const fechaAplicacionInput = document.getElementById("fecha_aplicacion");
-        const fechaAplicacion = new Date(fechaAplicacionInput.value);
+    // Función para validar la fecha de intervención que sea mayor a la actual
+    function validarFechaIntervencion() {
+        const fechaIntervencionInput = document.getElementById("fecha_intervencion");
+        const fechaIntervencion = new Date(fechaIntervencionInput.value);
         const fechaActual = new Date();
         fechaActual.setDate(fechaActual.getDate() + 1);
         // Eliminar horas, minutos y segundos para comparar solo las fechas
         fechaActual.setHours(0, 0, 0, 0);
 
-        if (fechaAplicacion <= fechaActual) {
-            alert("La fecha de aplicación debe ser mayor a la fecha actual.");
+        if (fechaIntervencion <= fechaActual) {
+            alert("La fecha de intervención debe ser mayor a la fecha actual.");
             // Establecer la fecha actual en el input
             const año = fechaActual.getFullYear();
             const mes = ("0" + (fechaActual.getMonth() + 1)).slice(-2); // Asegura que el mes tenga 2 dígitos
             const dia = ("0" + fechaActual.getDate()).slice(-2); // Asegura que el día tenga 2 dígitos
             const fechaHoy = `${año}-${mes}-${dia}`;
 
-            fechaAplicacionInput.value = fechaHoy; // Establecer la fecha actual
+            fechaIntervencionInput.value = fechaHoy; // Establecer la fecha actual
             return false;
         }
         return true;
@@ -279,23 +279,23 @@
 
     document.addEventListener("DOMContentLoaded", function() {
 
-        const fechaAplicacionInput = document.getElementById("fecha_aplicacion");
+        const fechaIntervencionInput = document.getElementById("fecha_intervencion");
 
         // Evento 'blur' para avisar al dejar el campo
-        fechaAplicacionInput.addEventListener('blur', function() {
-            validarFechaAplicacion();
+        fechaIntervencionInput.addEventListener('blur', function() {
+            validarFechaIntervencion();
         });
 
-        const cantidadInput = document.getElementById("cantidad");
+       // const cantidadInput = document.getElementById("cantidad");
 
         // Evento 'blur' para avisar al dejar el campo
-        cantidadInput.addEventListener('blur', function() {
-            validarCantidad();
-        });
+        // cantidadInput.addEventListener('blur', function() {
+        //     validarCantidad();
+        // });
 
         // Evento 'submit' para validar al enviar el formulario
         document.getElementById("pedidoForm").addEventListener("submit", function(event) {
-            if (!validarFechaAplicacion()) {
+            if (!validarFechaIntervencion()) {
                 event.preventDefault(); // Prevenir el envío si la fecha es inválida
             }
             if (!validarCantdidad()) {
