@@ -8,7 +8,7 @@ Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empr
 ### Facundo Ramírez
 ### Florencia Tigani
 
-# Documentación del Proyecto IPMagna con Framework CakePHP 5
+# Proyecto final con Framework CakePHP 5
 
 ## Instalación
 1. Clona el repositorio.
