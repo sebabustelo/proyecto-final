@@ -87,7 +87,7 @@ class PedidosTable extends Table
     {
         $validator
             ->integer('cliente_id')
-            ->notEmptyString('cliente_id');
+            ->notEmptyString('cliente_id','El cliente_id es obligatorio');
 
         $validator
             ->integer('estado_id')
