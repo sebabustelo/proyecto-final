@@ -172,7 +172,10 @@ return [
      *   your application that still emit deprecations.
      */
     'Error' => [
-        'errorLevel' => E_ALL,
+        'errorLevel' => E_ALL & ~E_USER_DEPRECATED,
+        'ignoredDeprecationPaths' => [
+            'vendor/cakephp/cakephp/src/I18n/I18n.php'
+        ],
         'skipLog' => [],
         'log' => true,
         'trace' => true,
@@ -327,13 +330,18 @@ return [
         'test' => [
             'className' => Connection::class,
             'driver' => Mysql::class,
+            'host' => env('DATABASE_DEFAULT_HOST_TEST', 'localhost'),
+            'port' => env('DATABASE_DEFAULT_PORT_TEST', false),
+            'username' => env('DATABASE_DEFAULT_USERNAME_TEST', 'root'),
+            'password' => env('DATABASE_DEFAULT_PASSWORD_TEST', ''),
+            'database' => env('DATABASE_DEFAULT_NAME_TEST', 'ipmagna_test'),
+            'log' => filter_var(env('DATABASE_DEFAULT_LOG'), FILTER_VALIDATE_BOOLEAN),
+            'encoding' => env('DATABASE_DEFAULT_ENCODING', 'utf8'),
+            'timezone' => env('DATABASE_DEFAULT_TIMEZONE', 'UTC'),
+            'className' => Connection::class,
+            'driver' => Mysql::class,
             'persistent' => false,
             'timezone' => 'UTC',
-            //'encoding' => 'utf8mb4',
-            'flags' => [],
-            'cacheMetadata' => true,
-            'quoteIdentifiers' => false,
-            'log' => false,
             //'init' => ['SET GLOBAL innodb_stats_on_metadata = 0'],
         ],
     ],

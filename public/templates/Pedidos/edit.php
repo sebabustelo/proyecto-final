@@ -101,29 +101,14 @@
                                     <div class="col-md-3">
 
                                         <?php if (!empty($pedido->ordenes_medicas[0]->file_name)) : ?>
-                                            <a href="/uploads/ordenes_medicas/<?php echo h($pedido->ordenes_medicas[0]->file_name); ?>"
-                                                target="_blank" class="btn btn-success flex-fill ">
+                                            <a href="/uploads/ordenes_medicas/<?php echo h($pedido->ordenes_medicas[0]->file_name); ?>" target="_blank" class="btn btn-success flex-fill ">
                                                 <span class="fa fa-file-pdf-o"></span> Descargar Orden Médica
                                             </a>
                                         <?php else : ?>
                                             <span class="text-danger">No se ha subido una orden médica.</span>
                                         <?php endif; ?>
                                     </div>
-                                    <div class="col-md-3">
-                                        <?php if ($pedido->pedidos_estado->nombre == 'PENDIENTE') : ?>
-                                            <form id="VerificarOrdenForm" method="POST"
-                                                action="/Pedidos/ordenMedicaValida/<?php echo $pedido->id; ?>"
-                                                class="flex-fill">
-                                                <input type="hidden" name="_csrfToken"
-                                                    value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-                                                <button type="submit" class="btn btn-primary flex-fill"
-                                                    onclick="return confirmValidation(event)">
-                                                    <span class="fa fa-check"></span> Orden Médica Válida
-                                                </button>
-                                            </form>
-                                        <?php endif; ?>
 
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -186,15 +171,32 @@
                         }
                         ?>
 
-                        <div class="form-group col-sm-12 text-center">
+
+
+                        <div class="col-md-2">
                             <a href="<?php echo $url; ?>" class="btn btn-default">
                                 <span class="fa fa-arrow-left"></span> Volver</a>
-                            <a id="cancelar_pedido" href="/Pedidos/cancel/<?php echo $pedido->id; ?>"
-                                class="btn btn-danger" onclick="cancelarPedido(event, this)">
-                                <span class="fa fa-remove"></span> Cancelar Pedido
-                            </a>
+                        </div>
+
+                        <div class="col-md-2 pull-right">
+                            <?php if ($pedido->pedidos_estado->nombre == 'PENDIENTE') : ?>
+                                <form id="VerificarOrdenForm" method="POST" action="/Pedidos/ordenMedicaValida/<?php echo $pedido->id; ?>" class="flex-fill">
+                                    <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
+                                    <button type="submit" class="btn btn-primary flex-fill" onclick="return confirmValidation(event)">
+                                        <span class="fa fa-check"></span> Confirmar Orden Médica Válida
+                                    </button>
+                                </form>
+                            <?php endif; ?>
 
                         </div>
+                        <div class="col-md-2 pull-right">
+                            <a id="cancelar_pedido" href="/Pedidos/cancel/<?php echo $pedido->id; ?>" class="btn btn-danger" onclick="cancelarPedido(event, this)">
+                                <span class="fa fa-remove"></span> Cancelar Pedido
+                            </a>
+                        </div>
+
+
+
 
                     </div>
                 </div>
