@@ -43,8 +43,7 @@ class CategoriasTableTest extends TestCase
         $config = $this->getTableLocator()->exists('Categorias') ? [] : ['className' => CategoriasTable::class];
         $this->Categorias = $this->getTableLocator()->get('Categorias', $config);
 
-        $config2 = $this->getTableLocator()->exists('Productos') ? [] : ['className' => ProductosTable::class];
-        $this->Productos = $this->getTableLocator()->get('Productos', $config2);
+       
     }
 
     /**
@@ -142,7 +141,7 @@ class CategoriasTableTest extends TestCase
     {
         // Asegúrate de que una categoría y un producto están configurados en los fixtures
         $categoria = $this->Categorias->get(1); // Obtiene la categoría desde los fixtures
-        $producto = $this->Productos->get(1); // Obtiene el producto desde los fixtures
+        $producto = $this->Categorias->Productos->get(1); // Obtiene el producto desde los fixtures       
 
         // Intentar eliminar la categoría
         $result = $this->Categorias->delete($categoria);
@@ -151,7 +150,7 @@ class CategoriasTableTest extends TestCase
         $this->assertFalse($result, 'La categoría fue eliminada, pero debería haber fallado debido a productos asociados.');
 
         // Ahora elimina el producto y vuelve a intentar eliminar la categoría
-        $this->Productos->delete($producto);
+        $this->Categorias->Productos->delete($producto);
 
         $result = $this->Categorias->delete($categoria);
 
