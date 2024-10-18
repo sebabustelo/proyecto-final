@@ -23,20 +23,33 @@ Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empr
         // Configuración de base de datos
         'Datasources' => [
             'default' => [
+                'className' => Connection::class,
+                'driver' => Mysql::class,
+                'port' => '3306',
                 'host' => 'localhost',
                 'username' => 'mi_usuario',
                 'password' => 'mi_contraseña',
                 'database' => 'mi_base_de_datos',
-                // Comentarios adicionales sobre la configuración de la conexión...
+                'encoding' => 'utf8',
+                'timezone' => 'UTC',
+                'className' => Connection::class,
+                'driver' => Mysql::class,
+                'persistent' => false,
+                'timezone' => 'UTC',
             ]
         ],
 
         // Configuración de correo electrónico
         'EmailTransport' => [
             'default' => [
-                'host' => 'smtp.example.com',
+                'className' => 'Smtp',
+                'host' => 'smtp.gmail.com',
                 'port' => 587,
-                // Configuración SMTP usada para enviar correos electrónicos
+                'timeout' => 30,
+                'username' => 'example@gmail.com',
+                'password' => 'example_pass',
+                'client' => null,
+                'tls' => true,
             ],
         ],
     ];
@@ -45,10 +58,10 @@ Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empr
 4. Ejecuta las migraciones o importa el script SQL inicial para configurar las tablas:
 
     ```bash
-    mysql -u mi_usuario -p mi_base_de_datos < script/initial.sql
+    mysql -u mi_usuario -p mi_base_de_datos < script/db.sql
     ```
 
-    El archivo SQL inicial se encuentra en `script/initial.sql`.
+    El archivo SQL inicial se encuentra en `script/db.sql`.
 
 
 ## Estructura del Proyecto
@@ -59,7 +72,6 @@ Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empr
 - **src/Config/**: Archivos de configuración que definen ajustes globales de la aplicación, como las rutas, la conexión a la base de datos y las configuraciones de seguridad.
 - **src/Entity/**: Clases que representan las entidades del dominio, facilitando la manipulación de datos y la interacción con el modelo.
 - **src/Table/**: Clases de tabla que proporcionan métodos para interactuar con la base de datos y realizar operaciones CRUD en las entidades.
-- **src/Middleware/**: Middleware que permite filtrar y procesar las solicitudes y respuestas de la aplicación, implementando funcionalidades como autenticación y autorización.
 - **plugins/**: Contiene los plugins adicionales utilizados en el proyecto, que añaden funcionalidades específicas y extienden las capacidades de la aplicación.
 
 
@@ -69,7 +81,6 @@ Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empr
 
 Este plugin se utiliza para controlar los accesos dentro de la aplicación basados en roles y permisos. Permite definir roles como "Administrador", "Cliente", etc., y gestionar quién puede realizar ciertas acciones.
 
-**Instalación**:
 
 ### AdminLTE (Role-Based Access Control)
 
