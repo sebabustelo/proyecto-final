@@ -4,15 +4,9 @@ Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empr
 
 ## Integrantes del Proyecto
 
-### Sebastian Bustelo
-Desarrollador Backend especializado en **CakePHP** y **PHP**, encargado de la lógica del sistema y la integración de la base de datos, asegurando que las funcionalidades de pedidos y usuarios se implementen correctamente.
-
-### Facundo Ramirez
-Desarrollador Frontend responsable del diseño e integración de **AdminLTE**, encargado de que la experiencia de usuario sea fluida y atractiva, creando interfaces responsive y fáciles de usar.
-
+### Sebastián Bustelo
+### Facundo Ramírez
 ### Florencia Tigani
-Analista y tester, encargada de verificar el correcto funcionamiento de la aplicación, realizar pruebas en todas las funcionalidades, y asegurar que se cumplan los requisitos del cliente en términos de calidad y usabilidad.
-
 
 # Documentación del Proyecto IPMagna con Framework CakePHP 5
 
@@ -59,10 +53,15 @@ Analista y tester, encargada de verificar el correcto funcionamiento de la aplic
 
 ## Estructura del Proyecto
 
-- **src/Controller/**: Controladores de la aplicación que manejan las peticiones HTTP.
-- **src/Model/**: Modelos que representan las entidades y las interacciones con la base de datos.
-- **src/Template/**: Vistas que contienen el HTML y los datos que se muestran al usuario.
-- **plugins/**: Contiene los plugins adicionales utilizados en el proyecto.
+- **src/Controller/**: Controladores de la aplicación que manejan las peticiones HTTP y la lógica de negocio, respondiendo a las acciones del usuario y coordinando las interacciones entre el modelo y la vista.
+- **src/Model/**: Modelos que representan las entidades y las interacciones con la base de datos, incluyendo la validación de datos y la lógica de negocio relacionada.
+- **src/Template/**: Vistas que contienen el HTML y los datos que se muestran al usuario, definiendo cómo se presenta la información en el navegador.
+- **src/Config/**: Archivos de configuración que definen ajustes globales de la aplicación, como las rutas, la conexión a la base de datos y las configuraciones de seguridad.
+- **src/Entity/**: Clases que representan las entidades del dominio, facilitando la manipulación de datos y la interacción con el modelo.
+- **src/Table/**: Clases de tabla que proporcionan métodos para interactuar con la base de datos y realizar operaciones CRUD en las entidades.
+- **src/Middleware/**: Middleware que permite filtrar y procesar las solicitudes y respuestas de la aplicación, implementando funcionalidades como autenticación y autorización.
+- **plugins/**: Contiene los plugins adicionales utilizados en el proyecto, que añaden funcionalidades específicas y extienden las capacidades de la aplicación.
+
 
 ## Plugins Utilizados
 
