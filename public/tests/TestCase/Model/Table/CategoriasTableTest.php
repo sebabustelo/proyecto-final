@@ -43,7 +43,7 @@ class CategoriasTableTest extends TestCase
         $config = $this->getTableLocator()->exists('Categorias') ? [] : ['className' => CategoriasTable::class];
         $this->Categorias = $this->getTableLocator()->get('Categorias', $config);
 
-       
+
     }
 
     /**
@@ -75,11 +75,6 @@ class CategoriasTableTest extends TestCase
             'modified' => '2024-10-17 15:44:36',
             'activo' => 1,
         ]);
-
-
-
-        // Forzar un error de validación cambiando otro campo (por ejemplo, el estado activo)
-        //$categoria->activo = null; // Esto debería causar un error si activo no puede ser nulo
 
 
         // Validar la entidad
@@ -141,7 +136,7 @@ class CategoriasTableTest extends TestCase
     {
         // Asegúrate de que una categoría y un producto están configurados en los fixtures
         $categoria = $this->Categorias->get(1); // Obtiene la categoría desde los fixtures
-        $producto = $this->Categorias->Productos->get(1); // Obtiene el producto desde los fixtures       
+        $producto = $this->Categorias->Productos->get(1); // Obtiene el producto desde los fixtures
 
         // Intentar eliminar la categoría
         $result = $this->Categorias->delete($categoria);

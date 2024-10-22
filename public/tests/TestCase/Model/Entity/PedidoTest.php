@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Entity;
@@ -26,8 +27,26 @@ class PedidoTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->Pedido = new Pedido();
+        $data =            [
+            'id' => 1,
+            'cliente_id' => 1,
+            'estado_id' => 1,
+            'direccion_id' => 1,
+            'fecha_pedido' => '2024-10-17 15:44:46',
+            'fecha_aplicacion' => '2024-10-17',
+            'aclaracion' => 'zaraza',
+            'created' => '2024-10-17 15:44:46',
+            'modified' => '2024-10-17 15:44:46'
+        ];
+        $this->Pedido = new Pedido($data);
     }
+
+    public function testCreatePedido(): void
+    {
+        $this->assertInstanceOf(Pedido::class, $this->Pedido);
+        $this->assertEquals('zaraza', $this->Pedido->aclaracion);
+    }
+
 
     /**
      * tearDown method
@@ -58,7 +77,7 @@ class PedidoTest extends TestCase
      */
     public function testSetAndGetProperty(): void
     {
-        $this->Pedido->nombre = 'Test Pedido';
-        $this->assertEquals('Test Pedido', $this->Pedido->nombre, "El nombre del pedido no coincide.");
+        $this->Pedido->aclaracion = 'Test Pedido';
+        $this->assertEquals('Test Pedido', $this->Pedido->aclaracion, "El nombre del pedido no coincide.");
     }
 }
