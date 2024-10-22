@@ -426,7 +426,9 @@ class RbacUsuariosController extends RbacController
                 $data['perfil_id'] = $perfilCliente->valor;
                 //Hasta que no valide el mail el usuario esta inactivo
                 $data['activo'] = 0;
+
                 $rbacUsuario = $this->RbacUsuarios->newEntity($data, ['associated' => ['RbacPerfiles', 'Direcciones']]);
+
 
                 if ($rbacUsuario->getErrors()) {
 

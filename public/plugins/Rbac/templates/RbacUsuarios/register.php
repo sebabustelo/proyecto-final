@@ -47,7 +47,7 @@ use Cake\Core\Configure; ?>
     </div>
     <!-- Select para elegir entre Particular y Obra Social -->
     <div class="form-group has-feedback">
-        <select id="tipoCliente" class="form-control">
+        <select id="tipo_cliente" name="tipo_cliente" class="form-control">
             <option value="particular">Particular</option>
             <option value="obra_social">Obra Social</option>
         </select>
@@ -235,7 +235,7 @@ use Cake\Core\Configure; ?>
 
                     .then(response => response.json())
                     .then(data => {
-                        localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
+                        localidadSelect.innerHTML = '<option selected value="">(*) Seleccione una localidad</option>';
 
                         data.forEach(function(localidad) {
 
@@ -244,7 +244,7 @@ use Cake\Core\Configure; ?>
                     })
                     .catch(error => console.error('Error al cargar localidades:', error));
             } else {
-                localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
+                localidadSelect.innerHTML = '<option selected value="">(*) Seleccione una localidad</option>';
             }
         });
 
@@ -262,7 +262,7 @@ use Cake\Core\Configure; ?>
 
 
 
-        const tipoClienteSelect = document.getElementById('tipoCliente');
+        const tipoClienteSelect = document.getElementById('tipo_cliente');
         tipoClienteSelect.addEventListener('change', function() {
             var tipoCliente = this.value;
 
@@ -309,7 +309,7 @@ use Cake\Core\Configure; ?>
     // document.getElementById('formRegister').addEventListener('submit', function(event) {
     //     const cuit = document.getElementById('cuit').value;
     //     const mensajeError = document.getElementById('mensaje-error');
-    //     let tipoClienteSelect = document.getElementById('tipoCliente');
+    //     let tipoClienteSelect = document.getElementById('tipo_cliente');
     //     let particularFields = document.getElementById('particularFields');
     //     let obraSocialFields = document.getElementById('obraSocialFields');
 

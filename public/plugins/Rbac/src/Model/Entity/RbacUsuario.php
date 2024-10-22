@@ -51,6 +51,7 @@ class RbacUsuario extends Entity
         'direccion'=>true,
         'razon_social'=>true,
         'direccion_id' => true,
+        'tipo_cliente' => true,
 
     ];
 
@@ -68,7 +69,7 @@ class RbacUsuario extends Entity
         'password'
     ];
 
-    protected array $_virtual = ['full_name'];
+    protected array $_virtual =['full_name', 'tipo_cliente'];
 
     protected function _getFullName()
     {
