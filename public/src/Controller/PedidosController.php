@@ -439,9 +439,9 @@ class PedidosController extends AppController
         }
 
         // Filtro por fecha_aplicacion (en DetallesPedidos)
-        if (isset($data['fecha_aplicacion']) && !empty($data['fecha_aplicacion'])) {
+        if (isset($data['fecha_intervencion']) && !empty($data['fecha_intervencion'])) {
             // Separar las dos fechas basadas en el guion
-            $fechas = explode(' - ', $data['fecha_aplicacion']);
+            $fechas = explode(' - ', $data['fecha_intervencion']);
 
             // Convertir las cadenas de fecha en objetos DateTime con hora de inicio y fin
             $fecha_inicio = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[0] . ' 00:00:01');
@@ -449,8 +449,8 @@ class PedidosController extends AppController
 
             // Verificar si las fechas fueron creadas correctamente
             if ($fecha_inicio && $fecha_fin) {
-                $conditions['where'][] = ['Pedidos.fecha_aplicacion >= ' => $fecha_inicio->format('Y-m-d H:i:s')];
-                $conditions['where'][] = ['Pedidos.fecha_aplicacion <= ' => $fecha_fin->format('Y-m-d H:i:s')];
+                $conditions['where'][] = ['Pedidos.fecha_intervencion >= ' => $fecha_inicio->format('Y-m-d H:i:s')];
+                $conditions['where'][] = ['Pedidos.fecha_intervencion <= ' => $fecha_fin->format('Y-m-d H:i:s')];
             }
         }
 

@@ -6,19 +6,18 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Proveedore Entity
+ * Proveedor Entity
  *
  * @property int $id
  * @property string $nombre
  * @property string $descripcion
- * @property string|null $direccion
- * @property string|null $telefono
+ * @property int|null $direccion_id
+ * @property int|null $celular
  * @property string $email
  * @property string $cuit
  * @property \Cake\I18n\DateTime|null $created
  * @property \Cake\I18n\DateTime|null $modified
- * @property string|null $created_by
- * @property string|null $modified_by
+ * @property bool $activo
  */
 class Proveedor extends Entity
 {
@@ -34,8 +33,8 @@ class Proveedor extends Entity
     protected array $_accessible = [
         'nombre' => true,
         'descripcion' => true,
-        'direccion' => true,
-        'telefono' => true,
+        'direccion_id' => true,
+        'celular' => true,
         'email' => true,
         'cuit' => true,
         'created' => true,

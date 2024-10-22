@@ -41,8 +41,8 @@ class Pedido extends Entity
         'pedidos_estado' => true,
         'detalles_pedidos' => true,
         'ordenes_medicas' => true,
-        'fecha_aplicacion' => true,
-        'aclaracion' => true,
+        'fecha_intervencion' => true,
+        'comentario' => true,
         'direccion_id' => true,
         'direccion' => true,
     ];
