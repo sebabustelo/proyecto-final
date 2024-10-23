@@ -21,7 +21,7 @@ class LocalidadesFixture extends TestFixture
             [
                 'id' => 1,
                 'provincia_id' => 1,
-                'nombre' => 'Lorem ipsum dolor sit amet',
+                'nombre' => 'Chacabuco',
                 'activo' => 1,
             ],
         ];

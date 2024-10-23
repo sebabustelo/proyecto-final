@@ -20,7 +20,7 @@ class ProvinciasFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'nombre' => 'Lorem ipsum dolor sit amet',
+                'nombre' => 'Buenos Aires',
                 'activo' => 1,
             ],
         ];
