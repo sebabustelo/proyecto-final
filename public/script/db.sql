@@ -144,7 +144,7 @@ CREATE TABLE `detalles_pedidos` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `pedido_id` int(11) NOT NULL,
   `producto_id` int(11) NOT NULL,
-  `cantidad` int(11) NOT NULL,
+  `cantidad` int(11) unsigned NOT NULL,
   PRIMARY KEY (`id`),
   KEY `pedido_id` (`pedido_id`),
   KEY `fk_producto_id_idx` (`producto_id`),
@@ -268,8 +268,8 @@ CREATE TABLE `pedidos` (
   `estado_id` int(11) NOT NULL,
   `direccion_id` int(11) NOT NULL,
   `fecha_pedido` datetime NOT NULL,
-  `fecha_aplicacion` date DEFAULT NULL,
-  `aclaracion` varchar(500) DEFAULT NULL,
+  `fecha_intervencion` date DEFAULT NULL,
+  `comentario` text DEFAULT NULL,
   `created` datetime DEFAULT current_timestamp(),
   `modified` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   PRIMARY KEY (`id`),
@@ -431,14 +431,16 @@ CREATE TABLE `proveedores` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `nombre` varchar(255) NOT NULL,
   `descripcion` text NOT NULL,
-  `direccion` varchar(255) DEFAULT NULL,
-  `telefono` varchar(20) DEFAULT NULL,
+  `direccion_id` int(11) DEFAULT NULL,
+  `celular` bigint(10) unsigned DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `cuit` varchar(20) NOT NULL,
   `created` datetime DEFAULT current_timestamp(),
   `modified` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `activo` tinyint(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_direcciones_proveedor_idx` (`direccion_id`),
+  CONSTRAINT `fk_direcciones_proveedor` FOREIGN KEY (`direccion_id`) REFERENCES `direcciones` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -448,7 +450,7 @@ CREATE TABLE `proveedores` (
 
 LOCK TABLES `proveedores` WRITE;
 /*!40000 ALTER TABLE `proveedores` DISABLE KEYS */;
-INSERT INTO `proveedores` VALUES (1,'DIRT','test','test','432432','seba@f.com','20289991868','2024-09-09 16:42:10','2024-09-14 03:26:56',1),(2,'PVE','sdfsf','Agustín García 1854','01140876458','sebabustelo@gmail.com','20289991868','2024-09-14 03:16:53','2024-09-14 03:17:14',1);
+INSERT INTO `proveedores` VALUES (1,'DIRT','test',45,432432,'seba@f.com','20289991868','2024-09-09 16:42:10','2024-10-20 12:40:32',1),(2,'PVE','sdfsf',46,1140876458,'sebabustelo@gmail.com','20289991868','2024-09-14 03:16:53','2024-10-20 12:40:32',1);
 /*!40000 ALTER TABLE `proveedores` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -611,9 +613,9 @@ CREATE TABLE `rbac_usuarios` (
   `apellido` varchar(50) DEFAULT NULL,
   `tipo_documento_id` int(11) DEFAULT NULL,
   `documento` varchar(10) DEFAULT NULL,
-  `cuit` int(12) DEFAULT NULL,
+  `cuit` bigint(10) unsigned DEFAULT NULL,
   `razon_social` varchar(300) DEFAULT NULL,
-  `celular` int(15) DEFAULT NULL,
+  `celular` bigint(10) unsigned DEFAULT NULL,
   `password` varchar(64) DEFAULT NULL,
   `seed` varchar(64) DEFAULT NULL,
   `activo` tinyint(1) DEFAULT 1,
@@ -680,4 +682,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-10-11  4:30:33
+-- Dump completed on 2024-10-21  8:13:03
