@@ -83,8 +83,8 @@
                                 </div> -->
 
                                 <div class="form-group col-md-12">
-                                    <label for="aclaracion">Aclaraciones</label>
-                                    <textarea class="form-control" name="aclaracion" value="<?php echo $this->request->getData('aclaracion') ?? ''; ?>" id="aclaracion" rows="2" maxlength="500" placeholder="Escriba aquí cualquier aclaración..." ></textarea>
+                                    <label for="comentario">Aclaraciones</label>
+                                    <textarea class="form-control" name="comentario" value="<?php echo $this->request->getData('comentario') ?? ''; ?>" id="comentario" rows="2" maxlength="500" placeholder="Escriba aquí cualquier comentario..." ></textarea>
                                 </div>
                                 </p>
                                 <p>
@@ -204,7 +204,7 @@
         padding: 6px;
     }
 
-    #aclaracion {
+    #comentario {
         resize: none;
     }
 </style>
