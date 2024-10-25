@@ -25,7 +25,7 @@ class PedidosTableTest extends TestCase
      */
     protected array $fixtures = [
         'app.Pedidos',
-        'app.RbacUsuarios',
+        //'plugin.Rbac.RbacUsuarios',
         'app.PedidosEstados',
         'app.DetallesPedidos',
         'app.OrdenesMedicas',

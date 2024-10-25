@@ -91,21 +91,6 @@ class AppController extends Controller
         }
     }
 
-    // public function beforeFilter(\Cake\Event\EventInterface $event)
-    // {
-    //     parent::beforeFilter($event);
-
-    //     // Manejo global de la excepción InvalidCsrfTokenException
-    //     $this->getEventManager()->on('Controller.beforeRender', function ($event) {
-    //         try {
-    //             // Aquí puedes realizar alguna otra lógica si es necesario
-    //         } catch (InvalidCsrfTokenException $e) {
-    //             $this->Flash->error(__('El token CSRF no es válido. Intente de nuevo.'));
-    //             return $this->redirect(['controller' => 'Users', 'action' => 'login']); // Redirige según tu lógica
-    //         }
-    //     });
-    // }
-
     protected function getParamsKey($key)
     {
         return strtolower($this->getRequest()->getParam($key));

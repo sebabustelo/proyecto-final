@@ -125,7 +125,15 @@ use Cake\Core\Configure; ?>
                         $session = $session = $this->request->getSession();
                         $usuario = $session->read('RbacUsuario');
                         ?>
-                        <span class="hidden-xs"> <i class="fa fa-user fa-lg"></i> <?php echo $usuario->usuario; ?></span>
+                        <span class="hidden-xs">
+                            <i class="fa fa-user fa-lg"></i>
+                            <?php
+                            if (!empty($user)) {
+                                echo $usuario->usuario;
+                            }
+                            ?>
+
+                        </span>
                     </a>
                     <ul class="dropdown-menu">
                         <!-- User image -->
@@ -138,7 +146,8 @@ use Cake\Core\Configure; ?>
                                     <?php if (!empty($usuario->nombre) or !empty($usuario->apellid)) { ?>
                                         <?php echo $usuario->nombre . " " . $usuario->apellido; ?>
 
-                                    <?php } else { ?>
+                                    <?php } elseif (!empty($usuario->razon_social)) { ?>
+
                                         <?php echo $usuario->razon_social; ?>
                                     <?php } ?>
                                 </a>

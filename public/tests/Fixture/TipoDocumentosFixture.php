@@ -10,6 +10,7 @@ use Cake\TestSuite\Fixture\TestFixture;
  */
 class TipoDocumentosFixture extends TestFixture
 {
+
     /**
      * Init method
      *
@@ -20,11 +21,18 @@ class TipoDocumentosFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'descripcion' => 'Lorem ipsum dolor sit amet',
+                'descripcion' => 'DNI',
                 'created' => '2024-10-17 15:44:55',
                 'modified' => '2024-10-17 15:44:55',
                 'activo' => 1,
             ],
+            [
+                'id' => 2,
+                'descripcion' => 'CUIT',
+                'created' => '2024-10-17 15:44:55',
+                'modified' => '2024-10-17 15:44:55',
+                'activo' => 1,
+            ]
         ];
         parent::init();
     }

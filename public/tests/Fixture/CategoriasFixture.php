@@ -20,12 +20,20 @@ class CategoriasFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'nombre' => 'Lorem ipsum dolor sit amet',
-                'descripcion' => 'Lorem ipsum dolor sit amet',
+                'nombre' => 'Cadera',
+                'descripcion' => 'set para caderas',
                 'created' => '2024-10-17 15:44:36',
                 'modified' => '2024-10-17 15:44:36',
                 'activo' => 1,
             ],
+            [
+                'id' => 2,
+                'nombre' => 'Columna',
+                'descripcion' => 'set para calomna',
+                'created' => '2024-10-17 15:44:36',
+                'modified' => '2024-10-17 15:44:36',
+                'activo' => 1,
+            ]
         ];
         parent::init();
     }

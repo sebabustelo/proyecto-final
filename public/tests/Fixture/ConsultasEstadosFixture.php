@@ -20,12 +20,20 @@ class ConsultasEstadosFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'nombre' => 'Lorem ipsum dolor sit amet',
-                'descripcion' => 'Lorem ipsum dolor sit amet',
+                'nombre' => 'PENDIENTE',
+                'descripcion' => 'Es el estado inicial cuando el usuario cliente envia una consulta desde el portal',
                 'activo' => 1,
                 'created' => '2024-10-17 15:44:41',
                 'modified' => '2024-10-17 15:44:41',
             ],
+            [
+                'id' => 2,
+                'nombre' => 'RESPONDIDO',
+                'descripcion' => 'La consulta del cliente fue respondida por un usuario de IPMAGNA',
+                'activo' => 1,
+                'created' => '2024-10-17 15:44:41',
+                'modified' => '2024-10-17 15:44:41',
+            ]
         ];
         parent::init();
     }

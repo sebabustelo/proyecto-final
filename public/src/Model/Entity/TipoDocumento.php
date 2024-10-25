@@ -26,10 +26,8 @@ class TipoDocumento extends Entity
      */
     protected array $_accessible = [
         'descripcion' => true,
-        'rbac_usuarios' => true,
         'created' => true,
         'modified' => true,
-        'created_by' => true,
-        'modified_by' => true,
+        'activo' => true,
     ];
 }

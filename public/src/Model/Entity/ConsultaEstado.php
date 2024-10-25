@@ -27,6 +27,7 @@ class ConsultaEstado extends Entity
      * @var array<string, bool>
      */
     protected array $_accessible = [
+        'id' => false,
         'nombre' => true,
         'descripcion' => true,
         'activo' => true,

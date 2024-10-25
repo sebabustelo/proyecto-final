@@ -56,12 +56,12 @@ class Application extends BaseApplication
         //$this->addPlugin('Rbac');
        // $this->addPlugin('Db');
 
-        if (PHP_SAPI !== 'cli') {
-            FactoryLocator::add(
-                'Table',
-                (new TableLocator())->allowFallbackClass(false)
-            );
-        }
+        // if (PHP_SAPI !== 'cli') {
+        //     FactoryLocator::add(
+        //         'Table',
+        //         (new TableLocator())->allowFallbackClass(false)
+        //     );
+        // }
     }
 
     /**
@@ -114,12 +114,14 @@ class Application extends BaseApplication
      */
     public function services(ContainerInterface $container): void {}
 
-    protected function bootstrapCli(): void
-    {
-        $this->addOptionalPlugin('Cake/Repl');
-        $this->addOptionalPlugin('Bake');
-        $this->addPlugin('Migrations');
-        //$this->addPlugin('Authorization');
-        // Load more plugins here
-    }
+    // protected function bootstrapCli(): void
+    // {
+    //     // $this->addPlugin('Rbac');
+    //     // $this->addOptionalPlugin('Cake/Repl');
+    //     // $this->addOptionalPlugin('Bake');
+    //     // $this->addPlugin('Migrations');
+
+    //     //$this->addPlugin('Authorization');
+    //     // Load more plugins here
+    // }
 }

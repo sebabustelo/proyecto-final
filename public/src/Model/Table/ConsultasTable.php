@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Table;
@@ -58,8 +59,6 @@ class ConsultasTable extends Table
             'foreignKey' => 'consulta_estado_id',
             'joinType' => 'INNER',
         ]);
-
-
     }
 
     /**
@@ -70,18 +69,28 @@ class ConsultasTable extends Table
      */
     public function validationDefault(Validator $validator): Validator
     {
+        // Asegurarse de que consulta_estado_id sea requerido y no pueda estar vacío
+        $validator
+            ->integer('consulta_estado_id')
+            ->requirePresence('consulta_estado_id', 'create')  // Obligatorio en creación
+            ->notEmptyString('consulta_estado_id', 'El estado de la consulta es requerido');  // No permitir vacío
+
+        // Asegurarse de que usuario_consulta_id sea requerido y no pueda estar vacío
         $validator
             ->integer('usuario_consulta_id')
-            ->allowEmptyString('usuario_consulta_id');
+            ->requirePresence('usuario_consulta_id', 'create')  // Obligatorio en creación
+            ->notEmptyString('usuario_consulta_id', 'El usuario de la consulta es requerido');  // No permitir vacío
 
+        // usuario_respuesta_id puede estar vacío
         $validator
             ->integer('usuario_respuesta_id')
             ->allowEmptyString('usuario_respuesta_id');
 
+        // Motivo es requerido
         $validator
             ->scalar('motivo')
             ->requirePresence('motivo', 'create')
-            ->notEmptyString('motivo');
+            ->notEmptyString('motivo', 'El motivo es obligatorio');
 
         return $validator;
     }
@@ -95,8 +104,9 @@ class ConsultasTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        //$rules->add($rules->existsIn(['usuario_consulta_id'], 'UsuarioConsulta'), ['errorField' => 'usuario_consulta_id']);
-        //$rules->add($rules->existsIn(['usuario_respuesta_id'], 'UsuarioRespuesta'), ['errorField' => 'usuario_respuesta_id']);
+        $rules->add($rules->existsIn(['usuario_consulta_id'], 'UsuarioConsultas'), ['errorField' => 'usuario_consulta_id']);
+        $rules->add($rules->existsIn(['usuario_respuesta_id'], 'UsuarioRespuestas'), ['errorField' => 'usuario_respuesta_id']);
+        $rules->add($rules->existsIn(['consulta_estado_id'], 'ConsultasEstados'), ['errorField' => 'consulta_estado_id']);
 
         return $rules;
     }

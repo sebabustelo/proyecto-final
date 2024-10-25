@@ -49,7 +49,7 @@ class TipoDocumentosTable extends Table
         $this->hasMany('Rbac.RbacUsuarios', [
             'foreignKey' => 'tipo_documento_id',
         ]);
-        $this->addBehavior('Audit');
+        // $this->addBehavior('Audit');
     }
 
     /**

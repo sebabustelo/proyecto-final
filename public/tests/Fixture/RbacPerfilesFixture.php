@@ -20,7 +20,7 @@ class RbacPerfilesFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'descripcion' => 'Lorem ipsum dolor sit amet',
+                'descripcion' => 'Admin',
                 'accion_default_id' => 1,
             ],
         ];

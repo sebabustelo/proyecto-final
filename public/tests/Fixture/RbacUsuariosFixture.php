@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Test\Fixture;
@@ -22,24 +23,24 @@ class RbacUsuariosFixture extends TestFixture
                 'id' => 1,
                 'perfil_id' => 1,
                 'direccion_id' => 1,
-                'usuario' => 'Lorem ipsum dolor ',
-                'email' => 'Lorem ipsum dolor sit amet',
-                'nombre' => 'Lorem ipsum dolor sit amet',
-                'apellido' => 'Lorem ipsum dolor sit amet',
+                'usuario' => 'usuario_test',
+                'email' => 'test@example.com',
+                'nombre' => 'Nombre',
+                'apellido' => 'Apellido',
                 'tipo_documento_id' => 1,
-                'documento' => 'Lorem ip',
-                'cuit' => 1,
-                'razon_social' => 'Lorem ipsum dolor sit amet',
-                'celular' => 1,
-                'password' => 'Lorem ipsum dolor sit amet',
-                'seed' => 'Lorem ipsum dolor sit amet',
+                'documento' => '12345678',
+                'razon_social' => 'Empresa Test',
+                'celular' => '123456789',
+                'password' => 'password_hash',
+                'seed' => 'seed_value',
                 'activo' => 1,
-                'created' => '2024-10-17 15:44:54',
-                'modified' => '2024-10-17 15:44:54',
-                'created_by' => 'Lorem ipsum do',
-                'modified_by' => 'Lorem ipsum do',
+                'created' => '2024-10-24 15:30:16',
+                'modified' => '2024-10-24 15:30:16',
+                'created_by' => 'Admin',
+                'modified_by' => 'Admin',
             ],
         ];
+
         parent::init();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Test\TestCase\Model\Table;
@@ -60,8 +61,21 @@ class ProvinciasTableTest extends TestCase
      */
     public function testValidationDefault(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+
+        $provincia = $this->Provincias->newEntity([
+            'nombre' => '', // Campo vacío
+            'activo' => true,
+        ]);
+
+        // Validar la entidad
+        $result = $this->Provincias->save($provincia);
+
+        $this->assertFalse($result, 'La categoria fue guardada.');
+
+        // Comprobar que hay errores de validación
+        $this->assertNotEmpty($provincia->getErrors());
     }
+
 
     /**
      * Test buildRules method
@@ -71,8 +85,23 @@ class ProvinciasTableTest extends TestCase
      */
     public function testBuildRules(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        $data = [
+            'nombre' => 'Formosa',
+            'activo' => true,
+        ];
+
+        // Guardar la primera vez
+        $provincia1 = $this->Provincias->newEntity($data);
+        $this->Provincias->save($provincia1);
+
+        $this->assertEmpty($provincia1->getErrors());
+
+        // Intentar guardar una provincia con el mismo nombre
+        $provincia2 = $this->Provincias->newEntity($data);
+        $this->Provincias->save($provincia2);
+        $this->assertNotEmpty($provincia2->getErrors()['nombre']); // Debe haber un error de unicidad
     }
+
 
     /**
      * Test beforeDelete method
@@ -80,8 +109,37 @@ class ProvinciasTableTest extends TestCase
      * @return void
      * @uses \App\Model\Table\ProvinciasTable::beforeDelete()
      */
-    public function testBeforeDelete(): void
+    public function testBeforeDeleteWithNoLocalidades(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+        // Crear una provincia sin localidades
+        $provincia = $this->Provincias->newEntity(['nombre' => 'Provincia Sin Localidades']);
+        $this->Provincias->save($provincia);
+
+        // Intentar eliminar la provincia
+        $result = $this->Provincias->delete($provincia);
+
+        // Verificar que se eliminó correctamente
+        $this->assertTrue($result); // Debe ser verdadero
+    }
+
+    public function testBeforeDeleteWithLocalidades(): void
+    {
+        // Crear una provincia
+        $provincia = $this->Provincias->newEntity(['nombre' => 'Provincia Con Localidades']);
+        $this->Provincias->save($provincia);
+
+        // Crear una localidad asociada a esta provincia
+        $localidad = $this->getTableLocator()->get('Localidades');
+        $localidadEntity = $localidad->newEntity(['nombre' => 'Localidad 1', 'provincia_id' => $provincia->id]);
+        $localidad->save($localidadEntity);
+
+        // Intentar eliminar la provincia
+        $result = $this->Provincias->delete($provincia);
+
+        // Verificar que no se eliminó
+        $this->assertFalse($result); // Debe ser falso
+        $this->assertNotEmpty($provincia->getErrors()); // Debe haber errores
+        $this->assertArrayHasKey('delete', $provincia->getErrors()); // Debe haber un error en el campo 'delete'
+        $this->assertEquals(__('No se puede eliminar la provincia porque está asociada a una o más localidades.'), $provincia->getErrors()['delete'][0]);
     }
 }
