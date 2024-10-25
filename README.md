@@ -14,6 +14,7 @@ Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empr
 1. Clona el repositorio.
 2. Instala las dependencias con Composer:
     ```
+    cd public
     composer install
     ```
 3. Configura tu base de datos en `config/app_local.php` con las credenciales correctas:
