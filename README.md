@@ -75,6 +75,7 @@ Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empr
 - **src/Entity/**: Clases que representan las entidades del dominio, facilitando la manipulación de datos y la interacción con el modelo.
 - **src/Table/**: Clases de tabla que proporcionan métodos para interactuar con la base de datos y realizar operaciones CRUD en las entidades.
 - **plugins/**: Contiene los plugins adicionales utilizados en el proyecto, que añaden funcionalidades específicas y extienden las capacidades de la aplicación.
+- **webroot/**: Directorio de archivos públicos accesibles desde el navegador. Contiene recursos como CSS, JavaScript, imágenes y otros archivos estáticos utilizados en la aplicación.
 
 
 ## Plugins Utilizados
