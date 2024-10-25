@@ -64,7 +64,8 @@ Este proyecto es una aplicación web desarrollada en **CakePHP 5** para una empr
 
     El archivo SQL inicial se encuentra en `script/db.sql`.
 
-5. Ejecutar el sitio en apache/nginx/docker, este manual no explica a fondo esto pero puede verlo en manual oficial de cakephp https://book.cakephp.org/5/es/installation.html   
+5. Ejecutar el sitio en apache/nginx/docker, este manual no explica a fondo esto pero puede verlo en manual oficial de cakephp https://book.cakephp.org/5/es/installation.html
+6. /login  usuarios:admin y password:Sebastian*
 
 
 ## Estructura del Proyecto
