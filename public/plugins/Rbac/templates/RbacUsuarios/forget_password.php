@@ -39,7 +39,7 @@ use Cake\Core\Configure;
         <button class="btn btn-lg btn-primary btn-block" type="submit"><i class="fa fa-lg fa-history"></i> Recuperar</button>
         <br />
         <div class="callout callout-success">
-            <p><i class="fa fa-lg fa fa-info"></i> Por favor, ingresa tu dirección de correo electrónico. Te enviaremos un enlace para restablecer tu contraseña.</p>
+            <p><i class="fa fa-lg fa fa-info"></i> Por favor, ingresa el usuario o correo electrónico. Te enviaremos un enlace para restablecer tu contraseña.</p>
         </div>
         <?= $this->Flash->render() ?>
         <!-- <a href="/rbac/rbac_usuarios/recuperar"><span class="label label-danger">Recuperar contraseña</span></a>-->
