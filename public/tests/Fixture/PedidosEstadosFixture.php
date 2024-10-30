@@ -20,13 +20,22 @@ class PedidosEstadosFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'nombre' => 'Lorem ipsum dolor sit amet',
+                'nombre' => 'estado 1',
                 'descripcion' => 'Lorem ipsum dolor sit amet',
                 'activo' => 1,
                 'created' => '2024-10-17 15:44:47',
                 'modified' => '2024-10-17 15:44:47',
                 'orden' => 1,
             ],
+            [
+                'id' => 2,
+                'nombre' => 'estado 2',
+                'descripcion' => 'Lorem ipsum dolor sit amet',
+                'activo' => 1,
+                'created' => '2024-10-17 15:44:47',
+                'modified' => '2024-10-17 15:44:47',
+                'orden' => 1,
+            ]
         ];
         parent::init();
     }
