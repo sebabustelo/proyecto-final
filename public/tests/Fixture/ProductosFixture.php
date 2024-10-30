@@ -21,25 +21,42 @@ class ProductosFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'nombre' => 'Lorem ipsum dolor sit amet',
+                'nombre' => 'K-MOD',
                 'categoria_id' => 1,
                 'proveedor_id' => 1,
-                'descripcion_breve' => 'Lorem ipsum dolor sit amet',
-                'descripcion_larga' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
+                'descripcion_breve' => 'zaraza k-mod',
+                'descripcion_larga' => 'zarazaaaaaaa k-mod.',
                 'stock' => 1,
                 'created' => '2024-10-17 15:44:47',
                 'modified' => '2024-10-17 15:44:47',
                 'activo' => 1,
                 'productos_precios' =>
                 [
-                    0 => [
-                        'producto_id' => 1,
+                    0 => [                     
                         'precio' => 250000.00,
-                        'fecha_desde' => '2024-10-17 15:44:50',
-                        'fecha_hasta' => '2024-10-17 15:44:50',
+                        'fecha_desde' => '2024-10-17 15:44:50',                       
                     ]
                 ]
             ],
+            [
+                'id' => 2,
+                'nombre' => 'K-MOD-REV',
+                'categoria_id' => 1,
+                'proveedor_id' => 1,
+                'descripcion_breve' => 'zaraza k-mod-rev',
+                'descripcion_larga' => 'zarazaaaaaaa k-mod-rev.',
+                'stock' => 1,
+                'created' => '2024-10-17 15:44:47',
+                'modified' => '2024-10-17 15:44:47',
+                'activo' => 1,
+                'productos_precios' =>
+                [
+                    0 => [                        
+                        'precio' => 250000.00,
+                        'fecha_desde' => '2024-10-17 15:44:50',                       
+                    ]
+                ]
+            ]
         ];
         parent::init();
     }

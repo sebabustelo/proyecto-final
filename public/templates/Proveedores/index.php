@@ -129,7 +129,7 @@
                                                 <?php echo $this->Paginator->sort('cuit', 'CUIT'); ?>
                                             </th>
                                             <th class="hidden-xs">
-                                                <?php echo $this->Paginator->sort('telefono', 'Telefóno'); ?>
+                                                <?php echo $this->Paginator->sort('celular', 'Celular'); ?>
                                             </th>
                                             <th class="hidden-xs">
                                                 <?php echo $this->Paginator->sort('created', 'Creación'); ?>
@@ -156,7 +156,7 @@
                                                     <?php echo $proveedor->cuit; ?>
                                                 </td>
                                                 <td class="hidden-xs">
-                                                    <?php echo $proveedor->telefono; ?>
+                                                    <?php echo $proveedor->celular; ?>
                                                 </td>
                                                 <td class="hidden-xs">
                                                     <?php echo $this->Time->format($proveedor->created, 'dd/MM/Y HH:mm:ss'); ?>

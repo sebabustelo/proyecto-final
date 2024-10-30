@@ -29,6 +29,8 @@ class ProductosControllerTest extends TestCase
         'app.ProductosArchivos',
         'app.ProductosPrecios',
         'app.DetallesPedidos',
+        'app.Direcciones',
+        'app.Localidades'
     ];
 
 
@@ -55,6 +57,20 @@ class ProductosControllerTest extends TestCase
                 'modified' => '2024-10-24 15:30:16',
                 'created_by' => 'Admin',
                 'modified_by' => 'Admin',
+                // 'direccion' => [
+                //     'id' => 1,
+                //     'calle' => 'padilla',
+                //     'numero' => '752',
+                //     'piso' => '2',
+                //     'departamento' => 'a',
+                //     'localidad_id' => 1,
+                //     'localidade' => [
+                //         'id' => 1,
+                //         'provincia_id' => 1,
+                //         'nombre' => 'Buenos Aires'
+                //     ]
+
+                // ]
             ],
             'RbacAcciones' => [
                 'Productos' => [
@@ -62,6 +78,7 @@ class ProductosControllerTest extends TestCase
                     'add' => 1,
                     'view' => 1,
                     'delete' => 1,
+                    'detail' => 1
                 ],
             ],
         ]);
@@ -88,6 +105,7 @@ class ProductosControllerTest extends TestCase
         $filters = $this->viewVariable('filters');
         $this->assertNotNull($filters, 'Los filtros no fueron cargados correctamente.');
         $productos = $this->viewVariable('productos');
+
         $this->assertNotEmpty($productos, 'No se cargaron consultas en la vista.');
     }
 
@@ -97,10 +115,32 @@ class ProductosControllerTest extends TestCase
      * @return void
      * @uses \App\Controller\ProductosController::detail()
      */
-    public function testDetail(): void
+    public function testDetailProductoExistente()
     {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+        // Configurar un ID válido para un producto que exista en tus fixtures
+        $id = 1;
+
+        // Ejecutar la acción
+        $this->get("/productos/detail/$id");
+
+        // Verificar que la respuesta es 200
+        $this->assertResponseOk();
+
+        // Verificar que el producto y las provincias se pasaron a la vista      
+        $this->assertResponseContains('producto');
+     }
+
+    // public function testDetailProductoNoExistente()
+    // {
+    //     // Configurar un ID no existente
+    //     $id = 99999;
+
+    //     // Ejecutar la acción
+    //     $this->get("/productos/detail/$id");       
+
+    //     // Verificar mensaje de error
+    //     $this->assertSession('El producto no existe.', 'Flash.flash.0.message');
+    // }
 
     /**
      * Test add method
@@ -111,7 +151,6 @@ class ProductosControllerTest extends TestCase
     public function testAdd(): void
     {
         $data =  [
-            'id' => 2,
             'nombre' => 'K-MOD',
             'categoria_id' => 1,
             'proveedor_id' => 1,
@@ -124,8 +163,6 @@ class ProductosControllerTest extends TestCase
             'productos_precios' =>
             [
                 0 => [
-                    'id' => 2,
-                    'producto_id' => 2,
                     'precio' => 250000.00,
                     'fecha_desde' => '2024-10-17 15:44:50',
                     'fecha_hasta' => '2024-10-17 15:44:50',
@@ -156,10 +193,6 @@ class ProductosControllerTest extends TestCase
             }
         );
 
-
-        // $initialCount = $this->getTableLocator()->get('Productos')->find()->count();
-        // $this->assertSame(1, $initialCount);
-
         $this->enableCsrfToken();
         $this->enableSecurityToken();
 
@@ -169,11 +202,9 @@ class ProductosControllerTest extends TestCase
         // Verificar que la respuesta sea una redirección
         $this->assertResponseSuccess();
 
-        // $productos = $this->getTableLocator()->get('Productos')->find()->all();
-        // $this->assertCount($initialCount + 1, $productos);
-
-        // $nuevaProducto = $productos->last();
-        // $this->assertEquals('K-MOD', $nuevaProducto->nombre);
+        $productos = $this->getTableLocator()->get('Productos')->find()->all();
+        $nuevaProducto = $productos->last();
+        $this->assertEquals('K-MOD', $nuevaProducto->nombre);
     }
 
     /**
@@ -184,50 +215,107 @@ class ProductosControllerTest extends TestCase
      */
     public function testEdit(): void
     {
-        $this->markTestIncomplete('Not implemented yet.');
+
+        $productoId = 2;
+
+        $data =  [
+            'id' => 2,
+            'nombre' => 'K-MOD2',
+            'categoria_id' => 1,
+            'proveedor_id' => 1,
+            'descripcion_breve' => 'zarazaaaa',
+            'descripcion_larga' => 'zarazan zarazan zarazan.',
+            'stock' => 1,
+            'created' => '2024-10-17 15:44:47',
+            'modified' => '2024-10-17 15:44:47',
+            'activo' => 1,
+            'productos_precios' =>
+            [
+                0 => [
+                    'precio' => 250000.00,
+                    'fecha_desde' => '2024-10-17 15:44:50',
+                ]
+            ],
+            'imagenes' => [
+                // Simula archivos de imagen
+                ['file_name' => 'file1.jpg', 'file_extension' => 'jpg', 'file_size' => 12345, 'file_path' => 'img/productos/file1.jpg'],
+                ['file_name' => 'file2.jpg', 'file_extension' => 'jpg', 'file_size' => 12345, 'file_path' => 'img/productos/file2.jpg']
+            ],
+        ];
+
+        // Crear el mock del componente Upload y envolverlo en un Closure
+        $this->mockService(
+            \App\Controller\Component\UploadComponent::class,
+            function () {
+                $uploadMock = $this->createMock(\App\Controller\Component\UploadComponent::class);
+                $uploadMock->method('uploadMultiple')
+                    ->willReturn([
+                        'status' => true,
+                        'files' => [
+                            ['file_name' => 'file1.jpg', 'file_extension' => 'jpg', 'file_size' => 12345, 'file_path' => 'img/productos/file1.jpg'],
+                            ['file_name' => 'file2.jpg', 'file_extension' => 'jpg', 'file_size' => 12345, 'file_path' => 'img/productos/file2.jpg']
+                        ]
+                    ]);
+                return $uploadMock;
+            }
+        );
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+
+        $this->post("/Productos/edit/{$productoId}", $data);
+
+        // Verificar que la respuesta sea una redirección
+        $this->assertResponseCode(302);
+
+        // Carga el producto de la base de datos y verifica los cambios
+        $productos = $this->getTableLocator()->get('Productos');
+        $producto = $productos->get($productoId);
+
+        $this->assertEquals('K-MOD2', $producto->nombre);
     }
 
-    /**
-     * Test stock method
-     *
-     * @return void
-     * @uses \App\Controller\ProductosController::stock()
-     */
-    public function testStock(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+    // /**
+    //  * Test stock method
+    //  *
+    //  * @return void
+    //  * @uses \App\Controller\ProductosController::stock()
+    //  */
+    // public function testStock(): void
+    // {
+    //     $this->markTestIncomplete('Not implemented yet.');
+    // }
 
-    /**
-     * Test catalogoCliente method
-     *
-     * @return void
-     * @uses \App\Controller\ProductosController::catalogoCliente()
-     */
-    public function testCatalogoCliente(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+    // /**
+    //  * Test catalogoCliente method
+    //  *
+    //  * @return void
+    //  * @uses \App\Controller\ProductosController::catalogoCliente()
+    //  */
+    // public function testCatalogoCliente(): void
+    // {
+    //     $this->markTestIncomplete('Not implemented yet.');
+    // }
 
-    /**
-     * Test catalogoClienteCategorias method
-     *
-     * @return void
-     * @uses \App\Controller\ProductosController::catalogoClienteCategorias()
-     */
-    public function testCatalogoClienteCategorias(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+    // /**
+    //  * Test catalogoClienteCategorias method
+    //  *
+    //  * @return void
+    //  * @uses \App\Controller\ProductosController::catalogoClienteCategorias()
+    //  */
+    // public function testCatalogoClienteCategorias(): void
+    // {
+    //     $this->markTestIncomplete('Not implemented yet.');
+    // }
 
-    /**
-     * Test delete method
-     *
-     * @return void
-     * @uses \App\Controller\ProductosController::delete()
-     */
-    public function testDelete(): void
-    {
-        $this->markTestIncomplete('Not implemented yet.');
-    }
+    // /**
+    //  * Test delete method
+    //  *
+    //  * @return void
+    //  * @uses \App\Controller\ProductosController::delete()
+    //  */
+    // public function testDelete(): void
+    // {
+    //     $this->markTestIncomplete('Not implemented yet.');
+    // }
 }

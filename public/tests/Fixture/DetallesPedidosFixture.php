@@ -24,6 +24,12 @@ class DetallesPedidosFixture extends TestFixture
                 'producto_id' => 1,
                 'cantidad' => 1,
             ],
+            [
+                'id' => 2,
+                'pedido_id' => 1,
+                'producto_id' => 1,
+                'cantidad' => 1,
+            ]
         ];
         parent::init();
     }

@@ -103,8 +103,7 @@ class LocalidadesControllerTest extends TestCase
         $this->enableCsrfToken();
         $this->enableSecurityToken();
 
-        $this->post('/Localidades/add', [
-            'id' => 1,
+        $this->post('/Localidades/add', [           
             'provincia_id' => 1,
             'nombre' => 'Balcarce',
             'activo' => 1,

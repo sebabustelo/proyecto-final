@@ -24,6 +24,7 @@ class ProveedoresControllerTest extends TestCase
     protected array $fixtures = [
         'app.Proveedores',
         'app.Direcciones',
+        'app.Localidades'
     ];
 
     public function setUp(): void

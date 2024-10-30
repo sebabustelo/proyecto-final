@@ -21,14 +21,25 @@ class ProductosArchivosFixture extends TestFixture
             [
                 'id' => 1,
                 'producto_id' => 1,
-                'file_name' => 'Lorem ipsum dolor sit amet',
-                'file_extension' => 'Lorem ip',
+                'file_name' => 'producto1.jpg',
+                'file_extension' => 'jpg',
                 'file_size' => 1,
-                'file_path' => 'Lorem ipsum dolor sit amet',
-                'created' => '2024-10-17 15:44:48',
-                'modified' => '2024-10-17 15:44:48',
+                'file_path' => 'img',
+                'created' => '2024-10-30 16:19:37',
+                'modified' => '2024-10-30 16:19:37',
                 'es_principal' => 1,
             ],
+            [
+                'id' => 2,
+                'producto_id' => 2,
+                'file_name' => 'producto2.jpg',
+                'file_extension' => 'jpg',
+                'file_size' => 1,
+                'file_path' => 'img',
+                'created' => '2024-10-30 16:19:37',
+                'modified' => '2024-10-30 16:19:37',
+                'es_principal' => 1,
+            ]
         ];
         parent::init();
     }

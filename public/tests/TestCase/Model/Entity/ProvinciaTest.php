@@ -11,12 +11,16 @@ use Cake\TestSuite\TestCase;
  */
 class ProvinciaTest extends TestCase
 {
-    /**
+     /**
      * Test subject
      *
-     * @var \App\Model\Entity\Provincia
+     * @var \App\Model\Table\ProvinciasTable
      */
-    protected $Provincia;
+    protected $Provincias;
+
+    protected array $fixtures = [      
+        'app.Provincias',
+    ];
 
     /**
      * setUp method
@@ -26,7 +30,7 @@ class ProvinciaTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->Provincia = new Provincia();
+        $this->Provincias = $this->getTableLocator()->get('Provincias');
     }
 
     /**
@@ -36,8 +40,22 @@ class ProvinciaTest extends TestCase
      */
     protected function tearDown(): void
     {
-        unset($this->Provincia);
+        unset($this->Provincias);
 
         parent::tearDown();
+    }
+
+    public function testEmptyNombreValidation(): void
+    {
+        // Crear una nueva entidad con un campo 'nombre' vacío
+        $provincia = $this->Provincias->newEntity([
+            'nombre' => '',            
+        ]);
+
+        // Obtener los errores de validación
+        $errors = $provincia->getErrors();
+
+        // Verificar que el error esté en el campo 'nombre'
+        $this->assertArrayHasKey('nombre', $errors, 'La validación debería fallar si el campo nombre está vacío');
     }
 }

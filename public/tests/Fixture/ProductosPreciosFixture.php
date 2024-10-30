@@ -22,9 +22,16 @@ class ProductosPreciosFixture extends TestFixture
                 'id' => 1,
                 'producto_id' => 1,
                 'precio' => 150000.00,
-                'fecha_desde' => '2024-10-17 15:44:50',
-                'fecha_hasta' => '2024-10-17 15:44:50',
+                'fecha_desde' => '2024-10-17 15:44:50',                
             ],
+            [
+                'id' => 2,
+                'producto_id' => 2,
+                'precio' => 250000.00,
+                'fecha_desde' => '2024-10-17 15:44:50',                
+            ],
+            
+
         ];
         parent::init();
     }

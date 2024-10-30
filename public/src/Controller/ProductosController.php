@@ -35,6 +35,7 @@ class ProductosController extends AppController
      */
     public function index()
     {
+       
         $conditions = $this->getConditions();
         $productos = $this->Productos->find()
             ->where($conditions['where'])
@@ -69,14 +70,16 @@ class ProductosController extends AppController
             ])
             ->first();
 
-        // debug($_SESSION);
+       
 
         if (!$producto) {
             $this->Flash->error(__('El producto no existe.'));
             return $this->redirect(['action' => 'index']);
         }
+       
         $this->set('provincias', $this->Productos->DetallesPedidos->Pedidos->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
         $this->set(compact('producto'));
+       // debug( $this->getRequest()->getSession()->read('RbacUsuario')['direccion']);die;
     }
 
     /**
@@ -186,6 +189,7 @@ class ProductosController extends AppController
 
 
             if ($data['productos_precios'][0]['precio'] != $producto->productos_precios[0]->precio) {
+              
 
                 $precioActual = $producto->productos_precios[0];
                 $precioActual->fecha_hasta =  date('Y-m-d H:i:s'); // Fecha actual

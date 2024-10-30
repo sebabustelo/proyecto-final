@@ -88,7 +88,7 @@
                                 </div>
                                 </p>
                                 <p>
-                                    <?php $direccion =     $this->getRequest()->getSession()->read('RbacUsuario')->direccion;
+                                    <?php $direccion =     $this->getRequest()->getSession()->read('RbacUsuario')['direccion'];
                                     // debug($direccion);
                                     ?>
                                     <i class="fa fa-map-marker"></i> <strong>Dirección de Entrega: </strong>

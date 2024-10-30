@@ -68,9 +68,9 @@
                             <div class="form-group col-sm-2">
                                 <label>Teléfono</label>
                                 <input  required type="number" maxlength="120" placeholder="Ingrese el teléfono"
-                                    class="form-control" name="telefono" >
-                                <?php if ($proveedor->getError('telefono')) { ?>
-                                    <?php foreach ($proveedor->getError('telefono') as $error) { ?>
+                                    class="form-control" name="celular" >
+                                <?php if ($proveedor->getError('celular')) { ?>
+                                    <?php foreach ($proveedor->getError('celular') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
                                     <?php } ?>
                                 <?php } ?>
