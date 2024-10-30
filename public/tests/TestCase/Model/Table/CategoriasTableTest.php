@@ -94,7 +94,6 @@ class CategoriasTableTest extends TestCase
      */
     public function testBuildRules(): void
     {
-        // Crear una nueva categoría con un nombre duplicado
         $categoriaDuplicada = $this->Categorias->newEntity([
             'nombre' => 'Categoria Duplicada', // Asegúrate de que este nombre ya existe en los fixtures
             'descripcion' => 'Descripcion de la categoria duplicada',
@@ -104,7 +103,6 @@ class CategoriasTableTest extends TestCase
 
         ]);
 
-        // Guardar la entidad
         $this->Categorias->save($categoriaDuplicada);
 
         // Ahora intentamos guardar otra categoría con el mismo nombre
@@ -116,13 +114,8 @@ class CategoriasTableTest extends TestCase
             'activo' => 1,
         ]);
 
-        // Guardar la entidad
         $result = $this->Categorias->save($nuevaCategoria);
-
-        // Comprobar que la entidad no se guardó debido a una regla de unicidad
         $this->assertFalse($result, 'La categoría fue guardada, pero debería haber fallado por violación de regla de unicidad.');
-
-        // Comprobar que hay errores de reglas
         $this->assertNotEmpty($nuevaCategoria->getErrors(), 'Se esperaban errores de reglas.');
     }
 
@@ -134,11 +127,9 @@ class CategoriasTableTest extends TestCase
      */
     public function testBeforeDelete(): void
     {
-        // Asegúrate de que una categoría y un producto están configurados en los fixtures
-        $categoria = $this->Categorias->get(1); // Obtiene la categoría desde los fixtures
-        $producto = $this->Categorias->Productos->get(1); // Obtiene el producto desde los fixtures
+        $categoria = $this->Categorias->get(1);
+        $producto = $this->Categorias->Productos->get(1);
 
-        // Intentar eliminar la categoría
         $result = $this->Categorias->delete($categoria);
 
         // Comprobar que la categoría no se eliminó debido a la asociación con un producto

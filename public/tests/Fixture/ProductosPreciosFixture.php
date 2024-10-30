@@ -21,7 +21,7 @@ class ProductosPreciosFixture extends TestFixture
             [
                 'id' => 1,
                 'producto_id' => 1,
-                'precio' => 1.5,
+                'precio' => 150000.00,
                 'fecha_desde' => '2024-10-17 15:44:50',
                 'fecha_hasta' => '2024-10-17 15:44:50',
             ],

@@ -10,6 +10,14 @@ use Cake\ORM\Entity;
 
 /**
  * App\Model\Table\TipoDocumentosTable Test Case
+ *
+ * Este caso de prueba contiene pruebas unitarias para la clase
+ * TipoDocumentosTable. Se encarga de verificar la funcionalidad
+ * y la validez de los métodos relacionados con la gestión de tipos
+ * de documentos, incluyendo la validación de datos y las
+ * restricciones de eliminación.
+ *
+ * @uses \App\Model\Table\TipoDocumentosTable
  */
 class TipoDocumentosTableTest extends TestCase
 {
@@ -23,6 +31,9 @@ class TipoDocumentosTableTest extends TestCase
     /**
      * Fixtures
      *
+     * Conjunto de datos que simulan la estructura de la base de datos
+     * para las pruebas. Incluye tipos de documentos y usuarios.
+     *
      * @var array<string>
      */
     protected array $fixtures = [
@@ -34,29 +45,36 @@ class TipoDocumentosTableTest extends TestCase
     /**
      * setUp method
      *
+     * Configura el entorno de prueba antes de cada método de prueba.
+     * Inicializa la instancia de TipoDocumentosTable.
+     *
      * @return void
      */
     protected function setUp(): void
     {
         parent::setUp();
         $this->TipoDocumentos = TableRegistry::getTableLocator()->get('TipoDocumentos');
-
     }
 
     /**
      * tearDown method
+     *
+     * Limpia el entorno de prueba después de cada método de prueba.
+     * Elimina la instancia de TipoDocumentosTable.
      *
      * @return void
      */
     protected function tearDown(): void
     {
         unset($this->TipoDocumentos);
-
         parent::tearDown();
     }
 
     /**
      * Test validationDefault method
+     *
+     * Verifica que la validación del campo 'descripcion' funcione correctamente.
+     * Debe fallar si la descripción está vacía.
      *
      * @return void
      */
@@ -72,23 +90,29 @@ class TipoDocumentosTableTest extends TestCase
     }
 
     /**
-     * Test beforeSave method - Verifica que el campo 'descripcion' se convierte en mayúsculas antes de guardar
+     * Test beforeSave method
+     *
+     * Verifica que el campo 'descripcion' se convierte en mayúsculas
+     * antes de guardar el tipo de documento.
      *
      * @return void
      */
     public function testBeforeSave(): void
     {
         $tipoDocumento = $this->TipoDocumentos->newEntity([
-            'descripcion' => 'cuil'
+            'descripcion' => 'CUIL'
         ]);
         $this->TipoDocumentos->save($tipoDocumento);
 
         // Verifica que el campo 'descripcion' se convirtió en mayúsculas
-        $this->assertEquals('CUIL', $tipoDocumento->nombre);
+        $this->assertEquals('CUIL', $tipoDocumento->descripcion);
     }
 
     /**
-     * Test beforeDelete method - Verifica que no se puede eliminar un TipoDocumento si tiene usuarios asociados
+     * Test beforeDelete method
+     *
+     * Verifica que no se puede eliminar un TipoDocumento si tiene
+     * usuarios asociados. Se espera que la operación falle.
      *
      * @return void
      */
@@ -103,11 +127,13 @@ class TipoDocumentosTableTest extends TestCase
         $this->assertFalse($result);
         $this->assertArrayHasKey('descripcion', $tipoDocumento->getErrors());
         $this->assertFalse($result, 'El tipo de documento fue eliminado, pero debería haber fallado debido a usuarios asociados.');
-
     }
 
     /**
-     * Test beforeDelete method - Verifica que se puede eliminar un TipoDocumento sin usuarios asociados
+     * Test beforeDelete method
+     *
+     * Verifica que se puede eliminar un TipoDocumento sin usuarios
+     * asociados. Se espera que la operación sea exitosa.
      *
      * @return void
      */

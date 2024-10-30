@@ -91,54 +91,54 @@ class AppController extends Controller
         }
     }
 
-    protected function getParamsKey($key)
-    {
-        return strtolower($this->getRequest()->getParam($key));
-    }
+    // protected function getParamsKey($key)
+    // {
+    //     return strtolower($this->getRequest()->getParam($key));
+    // }
 
-    public function isAuthorized($user)
-    {
-        if (isset($user['usuario']))
-            return true;
-        else
-            return false;
-    }
+    // public function isAuthorized($user)
+    // {
+    //     if (isset($user['usuario']))
+    //         return true;
+    //     else
+    //         return false;
+    // }
 
 
 
-    public static function secured_encrypt($data = null)
-    {
-        $firstKey = 'TjYkWzUHTCyPtAT/dshY1d5dfIYJjpGomVVN+GP9LWE=';
-        $secondKey = 'akAdbgh2pykFl+6jKdiOHoHMLo3ZlFVeIv709H3L7OnEyNI40tRXBA6aVs0XauPAEb7OlTBdFYI0+GJNtKxJ6g==';
-        $first_key = base64_decode($firstKey);
-        $second_key = base64_decode($secondKey);
-        $method = "aes-256-cbc";
-        $iv_length = openssl_cipher_iv_length($method);
-        $iv = openssl_random_pseudo_bytes($iv_length);
-        $first_encrypted = openssl_encrypt($data, $method, $first_key, OPENSSL_RAW_DATA, $iv);
-        //$second_encrypted = hash_hmac('sha3-512', $first_encrypted, $second_key, TRUE);
-        $second_encrypted = hash_hmac('sha512', $first_encrypted, $second_key, TRUE);
-        $output = base64_encode($iv . $second_encrypted . $first_encrypted);
-        return $output;
-    }
+    // public static function secured_encrypt($data = null)
+    // {
+    //     $firstKey = 'TjYkWzUHTCyPtAT/dshY1d5dfIYJjpGomVVN+GP9LWE=';
+    //     $secondKey = 'akAdbgh2pykFl+6jKdiOHoHMLo3ZlFVeIv709H3L7OnEyNI40tRXBA6aVs0XauPAEb7OlTBdFYI0+GJNtKxJ6g==';
+    //     $first_key = base64_decode($firstKey);
+    //     $second_key = base64_decode($secondKey);
+    //     $method = "aes-256-cbc";
+    //     $iv_length = openssl_cipher_iv_length($method);
+    //     $iv = openssl_random_pseudo_bytes($iv_length);
+    //     $first_encrypted = openssl_encrypt($data, $method, $first_key, OPENSSL_RAW_DATA, $iv);
+    //     //$second_encrypted = hash_hmac('sha3-512', $first_encrypted, $second_key, TRUE);
+    //     $second_encrypted = hash_hmac('sha512', $first_encrypted, $second_key, TRUE);
+    //     $output = base64_encode($iv . $second_encrypted . $first_encrypted);
+    //     return $output;
+    // }
 
-    public static function secured_decrypt($input = null)
-    {
-        $firstKey = 'TjYkWzUHTCyPtAT/dshY1d5dfIYJjpGomVVN+GP9LWE=';
-        $secondKey = 'akAdbgh2pykFl+6jKdiOHoHMLo3ZlFVeIv709H3L7OnEyNI40tRXBA6aVs0XauPAEb7OlTBdFYI0+GJNtKxJ6g==';
-        $first_key = base64_decode($firstKey);
-        $second_key = base64_decode($secondKey);
-        $mix = base64_decode($input);
-        $method = "aes-256-cbc";
-        $iv_length = openssl_cipher_iv_length($method);
-        $iv = substr($mix, 0, $iv_length);
-        $second_encrypted = substr($mix, $iv_length, 64);
-        $first_encrypted = substr($mix, $iv_length + 64);
-        $data = openssl_decrypt($first_encrypted, $method, $first_key, OPENSSL_RAW_DATA, $iv);
-        //$second_encrypted_new = hash_hmac('sha3-512', $first_encrypted, $second_key, TRUE);
-        $second_encrypted_new = hash_hmac('sha512', $first_encrypted, $second_key, TRUE);
-        if (hash_equals($second_encrypted, $second_encrypted_new))
-            return $data;
-        return false;
-    }
+    // public static function secured_decrypt($input = null)
+    // {
+    //     $firstKey = 'TjYkWzUHTCyPtAT/dshY1d5dfIYJjpGomVVN+GP9LWE=';
+    //     $secondKey = 'akAdbgh2pykFl+6jKdiOHoHMLo3ZlFVeIv709H3L7OnEyNI40tRXBA6aVs0XauPAEb7OlTBdFYI0+GJNtKxJ6g==';
+    //     $first_key = base64_decode($firstKey);
+    //     $second_key = base64_decode($secondKey);
+    //     $mix = base64_decode($input);
+    //     $method = "aes-256-cbc";
+    //     $iv_length = openssl_cipher_iv_length($method);
+    //     $iv = substr($mix, 0, $iv_length);
+    //     $second_encrypted = substr($mix, $iv_length, 64);
+    //     $first_encrypted = substr($mix, $iv_length + 64);
+    //     $data = openssl_decrypt($first_encrypted, $method, $first_key, OPENSSL_RAW_DATA, $iv);
+    //     //$second_encrypted_new = hash_hmac('sha3-512', $first_encrypted, $second_key, TRUE);
+    //     $second_encrypted_new = hash_hmac('sha512', $first_encrypted, $second_key, TRUE);
+    //     if (hash_equals($second_encrypted, $second_encrypted_new))
+    //         return $data;
+    //     return false;
+    // }
 }

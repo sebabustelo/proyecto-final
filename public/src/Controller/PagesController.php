@@ -33,9 +33,7 @@ use Cake\Event\EventInterface;
 class PagesController extends AppController
 {
 
-    public function _null() {
-    }
-    
+
 
     /**
      * Displays a view
@@ -68,7 +66,7 @@ class PagesController extends AppController
             $subpage = $path[1];
         }
         $this->set(compact('page', 'subpage'));
-        
+
 
         try {
             return $this->render(implode('/', $path));
@@ -78,6 +76,6 @@ class PagesController extends AppController
             }
             throw new NotFoundException();
         }
-    }   
-    
+    }
+
 }

@@ -33,6 +33,14 @@ class ConsultasEstadosFixture extends TestFixture
                 'activo' => 1,
                 'created' => '2024-10-17 15:44:41',
                 'modified' => '2024-10-17 15:44:41',
+            ],
+            [
+                'id' => 3,
+                'nombre' => 'TEST',
+                'descripcion' => 'estado para probar eliminacion',
+                'activo' => 1,
+                'created' => '2024-10-17 15:44:41',
+                'modified' => '2024-10-17 15:44:41',
             ]
         ];
         parent::init();

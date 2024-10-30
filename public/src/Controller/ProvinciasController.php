@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\MethodNotAllowedException;
+
 /**
  * Provincias Controller
  *
@@ -85,21 +88,25 @@ class ProvinciasController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $provincia = $this->Provincias->get($id);
+        try {
+            $this->request->allowMethod(['post', 'delete']);
+            $provincia = $this->Provincias->get($id);
 
-        if ($this->Provincias->delete($provincia)) {
-            $this->Flash->success(__('La provincia ha sido eliminada.'));
-        } else {
-            if ($provincia->getErrors()) {
-                foreach ($provincia->getErrors() as $field => $errors) {
-                    foreach ($errors as $error) {
-                        $this->Flash->error(__($error));
+            if ($this->Provincias->delete($provincia)) {
+                $this->Flash->success(__('La provincia ha sido eliminada.'));
+            } else {
+                if ($provincia->getErrors()) {
+                    foreach ($provincia->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
                     }
                 }
-            } else {
-                $this->Flash->error(__('No se pudo eliminar la provincia . Por favor, inténtalo de nuevo.'));
             }
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('La provincia no existe.'));
+        } catch (MethodNotAllowedException $e) {
+            $this->Flash->error(__('Método HTTP no permitido.'));
         }
 
         return $this->redirect(['action' => 'index']);

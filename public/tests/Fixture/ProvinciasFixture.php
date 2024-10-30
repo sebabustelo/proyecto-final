@@ -23,6 +23,11 @@ class ProvinciasFixture extends TestFixture
                 'nombre' => 'Buenos Aires',
                 'activo' => 1,
             ],
+            [
+                'id' => 2,
+                'nombre' => 'Misiones',
+                'activo' => 1,
+            ],
         ];
         parent::init();
     }

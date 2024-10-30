@@ -32,7 +32,7 @@
                                 <select name="provincia_id" class="form-control">
                                     <option value="">Seleccione un provincia</option>
                                     <?php foreach ($provincias as $k => $provincia) { ?>
-                                        <?php if ($filters['provincia_id'] == $k) { ?>
+                                        <?php if (isset($filters['provincia_id']) && $filters['provincia_id'] == $k) { ?>
                                             <option selected value="<?php echo $k ?>"><?php echo $provincia; ?></option>
                                         <?php  } else { ?>
                                             <option value="<?php echo $k ?>"><?php echo $provincia; ?></option>

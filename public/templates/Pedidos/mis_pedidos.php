@@ -22,7 +22,7 @@
                         <h3 class="box-title">Fecha de Pedido <?php echo $pedido->fecha_pedido->i18nFormat('dd/MM/yyyy'); ?>
 
 
-                    </h3>
+                        </h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -32,7 +32,7 @@
                         <div class="col-xs-8">
                             <br>
                             <div class="comment-text">
-                            <span class="label
+                                <span class="label
                                                     <?php
                                                     switch ($pedido->pedidos_estado->nombre) {
                                                         case 'PENDIENTE':
@@ -53,14 +53,17 @@
                                                         case 'FINALIZADO':
                                                             echo 'bg-green'; // Fondo verde
                                                             break;
+                                                        case 'CANCELADO':
+                                                            echo 'bg-red'; // Fondo verde
+                                                            break;
                                                         default:
                                                             echo 'bg-gray'; // Fondo gris por defecto
                                                             break;
                                                     }
                                                     ?>">
-                                                        <?php echo $pedido->pedidos_estado->nombre; ?>
-                                                </span><br>
-                                 <?php echo  "Fecha de Aplicación:",$pedido->detalles_pedidos[0]->fecha_aplicacion; ?> <br>
+                                    <?php echo $pedido->pedidos_estado->nombre; ?>
+                                </span><br>
+                                <?php echo  "Fecha de Intervención:", $pedido->fecha_intervencion; ?> <br>
                                 <?php echo  $pedido->detalles_pedidos[0]->producto->nombre ?>
                             </div>
                             <div class="comment-text pull-right">

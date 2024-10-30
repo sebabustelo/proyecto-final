@@ -87,8 +87,9 @@ class ConsultasEstadosController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $estado = $this->ConsultasEstados->get($id);
+
         if ($this->ConsultasEstados->delete($estado)) {
-            $this->Flash->success(__('El estado de consulta ha sido eliminada.'));
+            $this->Flash->success(__('El estado de consulta fue eliminado correctamente.'));
         } else {
             $this->Flash->error(__('No se pudo eliminar el estado de consulta. Por favor, inténtalo de nuevo.'));
         }

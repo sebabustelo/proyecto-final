@@ -135,19 +135,19 @@
                                     <thead>
                                         <tr>
                                             <th class="col-sm-2">
-                                                Estado
+                                                <?php echo $this->Paginator->sort('PedidosEstados.nombre', 'Estado'); ?>
                                             </th>
                                             <th class="col-sm-3">
-                                                Cliente
+                                                <?php echo $this->Paginator->sort('RbacUsuarios.nombre', __('Cliente')); ?>
                                             </th>
                                             <th class="col-sm-2">
-                                                Producto
+                                            <?php echo $this->Paginator->sort('Productos.nombre', __('Productos')); ?>
                                             </th>
                                             <th class="hidden-xs col-sm-2">
-                                                <?php echo $this->Paginator->sort('fecha_pedido', 'Fecha de Pedido'); ?>
+                                                <?php echo $this->Paginator->sort('Pedidos.fecha_pedido', 'Fecha de Pedido'); ?>
                                             </th>
                                             <th class="hidden-xs col-sm-2">
-                                                <?php echo $this->Paginator->sort('fecha_aplicacion', ' Fecha de Aplicación'); ?>
+                                                <?php echo $this->Paginator->sort('Pedidos.fecha_intervencion', ' Fecha de Intervención'); ?>
 
                                             </th class="hidden-xs col-sm-2">
                                             <th>
@@ -181,6 +181,9 @@
                                                         case 'FINALIZADO':
                                                             echo 'bg-green'; // Fondo verde
                                                             break;
+                                                        case 'CANCELADO':
+                                                            echo 'bg-red'; // Fondo verde
+                                                            break;
                                                         default:
                                                             echo 'bg-gray'; // Fondo gris por defecto
                                                             break;
@@ -205,11 +208,18 @@
                                                     <?php echo $this->Time->format($pedido->fecha_pedido, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
                                                 <td>
-                                                    <?php echo $this->Time->format($pedido->fecha_aplicacion, 'dd/MM/Y'); ?>
+                                                    <?php echo $this->Time->format($pedido->fecha_intervencion, 'dd/MM/Y'); ?>
                                                 </td>
                                                 <td class="pencil">
-                                                    <a href="/Pedidos/edit/<?php echo $pedido->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self">
-                                                        <i class="fa fa-pencil"></i></a>
+                                                    <?php if ($pedido->pedidos_estado->nombre != 'CANCELADO') {  ?>
+                                                        <?php if ((isset($accionesPermitidas['Pedidos']['edit']) && $accionesPermitidas['Pedidos']['edit'])) { ?>
+                                                            <a href="/Pedidos/edit/<?php echo $pedido->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self">
+                                                                <i class="fa fa-pencil"></i></a>
+                                                        <?php  } ?>
+                                                    <?php }else{  ?>
+                                                        <a href="#" class=" btn btn-default btn-xs "  title="Cancelado, no se puede editar" target="_self">
+                                                        <i class="fa fa-minus"></i></a>
+                                                    <?php  } ?>
                                                 </td>
                                                 <!-- <td class="remove">
                                                     <?= $this->Form->postLink(

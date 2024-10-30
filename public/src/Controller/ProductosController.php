@@ -91,6 +91,7 @@ class ProductosController extends AppController
     public function add()
     {
         $producto = $this->Productos->newEmptyEntity();
+
         if ($this->request->is('post')) {
             $data = $this->request->getData();
             $data['productos_precios'][0]['fecha_desde'] =  date('Y-m-d H:i:s'); // Fecha actual
@@ -126,10 +127,12 @@ class ProductosController extends AppController
                             $principal = false;
                         }
                         $this->Productos->ProductosArchivos->save($upload);
+
                     }
                     $this->Flash->success(__('El producto se guardo correctamente.'));
                     return $this->redirect(['action' => 'index']);
                 } else {
+
                     $this->Flash->error($result['error']);
                 }
             } else {

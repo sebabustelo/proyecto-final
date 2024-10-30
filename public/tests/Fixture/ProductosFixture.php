@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Test\Fixture;
@@ -29,6 +30,15 @@ class ProductosFixture extends TestFixture
                 'created' => '2024-10-17 15:44:47',
                 'modified' => '2024-10-17 15:44:47',
                 'activo' => 1,
+                'productos_precios' =>
+                [
+                    0 => [
+                        'producto_id' => 1,
+                        'precio' => 250000.00,
+                        'fecha_desde' => '2024-10-17 15:44:50',
+                        'fecha_hasta' => '2024-10-17 15:44:50',
+                    ]
+                ]
             ],
         ];
         parent::init();

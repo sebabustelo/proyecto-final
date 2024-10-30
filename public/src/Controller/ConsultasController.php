@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use Cake\Mailer\Mailer;
 use Cake\Mailer\Exception\MissingActionException;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
 /**
  * Consultas Controller
@@ -31,12 +32,11 @@ class ConsultasController extends AppController
         $conditions = $this->getConditions();
         $consultas = $this->Consultas->find()
             ->where($conditions['where'])
-            ->contain($conditions['contain']);          
+            ->contain($conditions['contain']);
 
         $this->set('filters', $this->getRequest()->getQuery());
         $this->set('consultas', $this->paginate($consultas));
         $this->set('estados', $this->Consultas->ConsultasEstados->find('all')->all());
-       
     }
 
     /**
@@ -46,7 +46,9 @@ class ConsultasController extends AppController
      */
     public function add()
     {
+
         $consulta = $this->Consultas->newEmptyEntity();
+
         if ($this->request->is('post')) {
             $estadoPendiente = $this->Consultas->ConsultasEstados->find('all')
                 ->where(['ConsultasEstados.nombre' => 'PENDIENTE'])
@@ -58,7 +60,7 @@ class ConsultasController extends AppController
 
 
             $consulta = $this->Consultas->patchEntity($consulta, $this->request->getData());
-           // debug($consulta);die;
+            // debug($consulta);die;
             if ($this->Consultas->save($consulta)) {
                 $this->Flash->success(__('Su consulta fue enviada correctamente, le responderemos a la brevedad.'));
 
@@ -87,8 +89,8 @@ class ConsultasController extends AppController
             $consulta = $this->Consultas->patchEntity($consulta, $this->request->getData());
 
             $estadoRespondido = $this->Consultas->ConsultasEstados->find('all')
-            ->where(['ConsultasEstados.nombre' => 'RESPONDIDO'])
-            ->first();
+                ->where(['ConsultasEstados.nombre' => 'RESPONDIDO'])
+                ->first();
 
             if ($estadoRespondido) {
                 $consulta->consulta_estado_id = $estadoRespondido->id;
@@ -106,7 +108,7 @@ class ConsultasController extends AppController
 
                 if ($this->sendEmail($datos)) {
                     $this->Consultas->getConnection()->commit();
-                    $this->Flash->success('Se ha enviado la respuesta al cliente ' .$consulta->usuario_consulta->usuario);
+                    $this->Flash->success('Se ha enviado la respuesta al cliente ' . $consulta->usuario_consulta->usuario);
                 } else {
                     $this->Consultas->getConnection()->rollback();
                     $this->Flash->error('No se pudo enviar el email al cliente');
@@ -117,7 +119,6 @@ class ConsultasController extends AppController
                 $this->Consultas->getConnection()->rollback();
                 $this->Flash->error('No se pudo guardar e enviar la respuesta');
             }
-
         }
         $this->set(compact('consulta'));
     }
@@ -131,9 +132,18 @@ class ConsultasController extends AppController
      */
     public function view($id = null)
     {
-        $consulta = $this->Consultas->get($id, contain: ['UsuarioConsultas', 'UsuarioRespuestas', 'ConsultasEstados']);
+        try {
+            $consulta = $this->Consultas->get($id, contain: ['UsuarioConsultas', 'UsuarioRespuestas', 'ConsultasEstados']);
+            // Establece la cabecera de respuesta 200
+            $this->response = $this->response->withStatus(200);
 
-        $this->set(compact('consulta'));
+            // Asigna la consulta a la vista
+            $this->set(compact('consulta'));
+            $this->render('view');
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('La consulta no existe.'));
+            return $this->redirect(['action' => 'index']);
+        }
     }
 
     /**
@@ -148,7 +158,7 @@ class ConsultasController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         $consulta = $this->Consultas->get($id);
         if ($this->Consultas->delete($consulta)) {
-            $this->Flash->success(__('The consulta fue eliminada correctamente.'));
+            $this->Flash->success(__('La consulta fue eliminada correctamente.'));
         } else {
             $this->Flash->error(__('La consulta no puedo ser eliminada. Por favor intente nuevamente.'));
         }
@@ -169,8 +179,8 @@ class ConsultasController extends AppController
         $conditions['where'] = [];
         $conditions['contain'] = ['UsuarioConsultas', 'UsuarioRespuestas', 'ConsultasEstados'];
 
-        if (isset($data['nombre']) and !empty($data['nombre'])) {
-            $conditions['where'][] = ['Consultas.usuario_id LIKE' => '%' . $data['nombre'] . '%'];
+        if (isset($data['motivo']) and !empty($data['motivo'])) {
+            $conditions['where'][] = ['Consultas.motivo LIKE' => '%' . $data['motivo'] . '%'];
         }
 
         if (isset($data['descripcion']) and !empty($data['descripcion'])) {
@@ -187,15 +197,15 @@ class ConsultasController extends AppController
         return $conditions;
     }
 
-    private function sendEmail($datos)
+    private function sendEmail($datos, Mailer $mailer = null)
     {
-        $mailer = new Mailer('default');
+        $mailer = $mailer ?: new Mailer('default'); // Usa el Mailer inyectado o crea uno nuevo
         try {
             $mailer->setFrom(['ipmagna-noreply@gmail.com' => 'IPMAGNA'])
                 ->setTo($datos['email'])
                 ->setSubject($datos['subject'])
                 ->setEmailFormat('html')
-                ->setViewVars(['motivo' => @$datos['motivo'],'respuesta' => @$datos['respuesta']])
+                ->setViewVars(['motivo' => @$datos['motivo'], 'respuesta' => @$datos['respuesta']])
                 ->viewBuilder()
                 ->setTemplate($datos['template'])
                 ->setPlugin('AdminLTE');
@@ -204,13 +214,12 @@ class ConsultasController extends AppController
 
             return true;
         } catch (MissingActionException $e) {
-            // Error al encontrar la acción del correo (plantilla faltante, etc.)
             $this->Flash->error('Error en el envío: ' . $e->getMessage());
             return false;
         } catch (\Exception $e) {
-            // Cualquier otro tipo de error
             $this->Flash->error('Se produjo un error inesperado: ' . $e->getMessage());
             return false;
         }
     }
+
 }

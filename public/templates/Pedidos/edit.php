@@ -189,7 +189,7 @@
                         <div class="form-group col-sm-12 text-center">
                             <a href="<?php echo $url; ?>" class="btn btn-default">
                                 <span class="fa fa-arrow-left"></span> Volver</a>
-                            <a id="cancelar_pedido" href="/Pedidos/cancel/<?php echo $pedido->id; ?>"
+                            <a id="cancelar_pedido" href="/Pedidos/cancelar/<?php echo $pedido->id; ?>"
                                 class="btn btn-danger" onclick="cancelarPedido(event, this)">
                                 <span class="fa fa-remove"></span> Cancelar Pedido
                             </a>

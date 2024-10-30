@@ -44,16 +44,17 @@ class PedidosController extends AppController
         // Construir la consulta inicial con las condiciones 'where' y 'contain'
         $query = $this->Pedidos->find()
             ->where($conditions['where'])
-            ->contain($conditions['contain']);
+            ->contain($conditions['contain'])
+            ->matching('DetallesPedidos.Productos')
+            ;
 
-        // Verificar si existe el índice 'matching' en las condiciones
-        if (!empty($conditions['matching'])) {
-            foreach ($conditions['matching'] as $match) {
-                // Aplicar el matching a la consulta
-                $query = $query->matching($match[0], $match[1]);
-            }
-        }
+        //$query = $query->order(['PedidosEstados.nombre' => 'ASC']);
 
+
+        $this->paginate = [
+            'sortableFields' => ['PedidosEstados.nombre', 'Pedidos.fecha_pedido', 'Pedidos.fecha_intervencion','RbacUsuarios.nombre','Productos.nombre']
+        ];
+       // debug( $query);
         // Paginación y seteo de variables
         $this->set('filters', $this->getRequest()->getQuery());
         $this->set('pedidos', $this->paginate($query));
@@ -109,16 +110,22 @@ class PedidosController extends AppController
             ], 'OrdenesMedicas', 'RbacUsuarios' => ['TipoDocumentos']])
             ->first();
 
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $pedido = $this->Pedidos->patchEntity($pedido, $this->request->getData());
-            if ($this->Pedidos->save($pedido)) {
-                $this->Flash->success(__('El pedido se actualizo correctamente.'));
+        if ($pedido->pedidos_estado->nombre != 'CANCELADO') {
 
-                return $this->redirect('/Pedidos/index');;
+            if ($this->request->is(['patch', 'post', 'put'])) {
+                $pedido = $this->Pedidos->patchEntity($pedido, $this->request->getData());
+                if ($this->Pedidos->save($pedido)) {
+                    $this->Flash->success(__('El pedido se actualizo correctamente.'));
+
+                    return $this->redirect('/Pedidos/index');
+                }
+                $this->Flash->error(__('El pedido no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
             }
-            $this->Flash->error(__('El pedido no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+            $this->set(compact('pedido'));
+        } else {
+            $this->Flash->error(__('El pedido se encuentra cancelado y no puede ser editado.'));
+            return $this->redirect('/Pedidos/index');
         }
-        $this->set(compact('pedido'));
     }
 
 
@@ -384,6 +391,26 @@ class PedidosController extends AppController
         $this->set('pedidos', $this->paginate($pedidos));
     }
 
+    public function cancelar($id)
+    {
+
+
+        $pedido = $this->Pedidos->get($id);
+
+        if (isset($pedido->cliente_id)) {
+            $estado_en_proceso = $this->Pedidos->PedidosEstados->find()->where(['PedidosEstados.nombre' => 'CANCELADO'])->first();
+            $pedido->estado_id = $estado_en_proceso->id;
+            $pedido->pedidos_estado = $estado_en_proceso;
+            if ($this->Pedidos->save($pedido)) {
+                $this->Flash->success(__('El pedido paso a estado CANCELADO.'));
+                return $this->redirect('/Pedidos/edit/' . $id);
+            } else {
+                $this->Flash->error(__('Ocurrio un error al intentar canclear el pedido.'));
+                return $this->redirect('/Pedidos/index');
+            }
+        }
+    }
+
     /**
      * Genera condiciones de búsqueda basadas en los parámetros de consulta de la solicitud.
      *
@@ -410,7 +437,6 @@ class PedidosController extends AppController
             'PedidosEstados',
             'DetallesPedidos' => ['Productos'],
             'OrdenesMedicas',
-            'PedidosEstados',
             'RbacUsuarios' => ['TipoDocumentos']
         ];
 
@@ -420,6 +446,10 @@ class PedidosController extends AppController
 
         if (isset($data['estado_id']) and !empty($data['estado_id'])) {
             $conditions['where'][] = ['Pedidos.estado_id' => $data['estado_id']];
+        }
+
+        if (isset($data['producto']) and !empty($data['producto'])) {
+            $conditions['where'][] = ['Productos.nombre like' => "%".$data['producto']."%"];
         }
 
         if (isset($data['fecha_pedido']) && !empty($data['fecha_pedido'])) {

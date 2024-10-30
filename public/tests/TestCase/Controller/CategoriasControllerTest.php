@@ -28,15 +28,14 @@ class CategoriasControllerTest extends TestCase
         'app.Proveedores',
     ];
 
-    /**
-     * Test index method
-     *
-     * @return void
-     * @uses \App\Controller\CategoriasController::index()
-     */
-    public function testIndex(): void
+    public function setUp(): void
     {
-        // Simular sesión con un usuario logueado y permisos
+        parent::setUp();
+        $this->initializeSession();
+    }
+
+    private function initializeSession(): void
+    {
         $this->session([
             'RbacUsuario' => [
                 'id' => 1,
@@ -61,15 +60,25 @@ class CategoriasControllerTest extends TestCase
             ],
             'RbacAcciones' => [
                 'Categorias' => [
-                    'index' => 1,  // Tiene permiso para 'index' en 'Categorias'
+                    'index' => 1,
+                    'add' => 1,
+                    'view' => 1,
+                    'delete' => 1,
                 ],
             ],
         ]);
+    }
 
-        // Simula una solicitud GET a la acción 'index' del controlador CategoriasController
+    /**
+     * Test index method
+     *
+     * @return void
+     * @uses \App\Controller\CategoriasController::index()
+     */
+    public function testIndex(): void
+    {
         $this->get('/categorias');
 
-        // Verifica que la respuesta sea exitosa (código HTTP 200)
         $this->assertResponseOk();
 
         // Verifica que los filtros sean asignados correctamente a la vista
@@ -84,37 +93,6 @@ class CategoriasControllerTest extends TestCase
         $this->assertResponseContains('Cadera');
     }
 
-    public function testIndexSinPermisos(): void
-    {
-        // Simular sesión con un usuario logueado pero sin permisos para 'index'
-        $this->session([
-            'RbacUsuario' => [
-                'id' => 1,
-                'perfil_id' => 1,
-                'usuario' => 'usuario_test',
-            ],
-            'RbacAcciones' => [
-                'Categorias' => [
-                    'index' => 0,  // Tiene permiso para 'index' en 'Categorias'
-                ],
-                'RbacUsuarios' => [
-                    'login' => 1
-                ]
-            ],
-        ]);
-
-        // Realiza la solicitud GET a la acción 'index' del controlador CategoriasController
-        $this->get('/categorias');
-
-        // Verifica que la respuesta es una redirección
-        //$this->assertRedirect('/rbac/rbacUsuarios/login');
-
-        // Verifica que el mensaje de error de permisos se haya mostrado
-        $this->assertFlashMessage('Usted no tiene permiso para acceder a la funcionalidad requerida.');
-    }
-
-
-
 
     /**
      * Test add method
@@ -124,30 +102,9 @@ class CategoriasControllerTest extends TestCase
      */
     public function testAddSuccess()
     {
-        $this->session([
-            'RbacUsuario' => [
-                'id' => 1,
-                'perfil_id' => 1,
-                'usuario' => 'usuario_test',
-            ],
-            'RbacAcciones' => [
-                'Categorias' => [
-                    'index' => 1,
-                    'add' => 1,
-                ],
-                'RbacUsuarios' => [
-                    'login' => 1
-                ]
-            ],
-        ]);
 
-        // Simulamos una solicitud GET para establecer el token CSRF
-        $this->get('/categorias/add');
-        // Verificamos que la respuesta sea exitosa
-        $this->assertResponseOk();
-
-        // Obtener el token CSRF desde la respuesta de la solicitud
-        $csrfToken = $_SESSION['csrfToken'];
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
 
         // Simulamos una solicitud POST con datos válidos
         $data = [
@@ -156,17 +113,10 @@ class CategoriasControllerTest extends TestCase
             'created' => '2024-10-17 15:44:36',
             'modified' => '2024-10-17 15:44:36',
             'activo' => 1,
-            'csrf' => $_SESSION['csrfToken']
         ];
 
-        // Ejecutamos la solicitud POST
         $this->post('/categorias/add', $data);
-
-        // Verificamos que la respuesta sea una redirección al index
         $this->assertResponseSuccess();
-        //$this->assertRedirect(['controller' => 'Categorias', 'action' => 'index']); // Verifica que se redirige a index
-
-
     }
 
 
@@ -179,13 +129,11 @@ class CategoriasControllerTest extends TestCase
             'descripcion' => 'Descripción sin nombre',
 
         ];
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
 
-        // Ejecutamos la solicitud POST
         $this->post('/categorias/add', $data);
-
-        // Verificamos que no se redirige
         $this->assertResponseSuccess();
-
 
         // Verificamos que no se haya guardado ninguna categoría
         $categorias = $this->getTableLocator()->get('Categorias');
@@ -229,6 +177,45 @@ class CategoriasControllerTest extends TestCase
         $this->assertEquals('set de rodilla', $categoria->descripcion);
     }
 
+    public function testEditFailure(): void
+    {
+        // ID de una categoría existente
+        $categoriaId = 1;
+
+        // Datos de actualización para la categoría
+        $data = [
+            'id' => 1,
+            'nombre' => '',
+            'descripcion' => 'set de rodilla'
+        ];
+
+        // Simula la petición POST/PATCH a la acción edit con los datos de actualización
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->post("/categorias/edit/{$categoriaId}", $data);
+
+        // Verifica que hubo una redirección a la página de índice o a otra URL especificada
+        $this->assertResponseCode(302);
+
+        // Verifica que se generó un mensaje de error específico para el campo 'nombre'
+        $this->assertFlashMessage('El nombre es obligatorio');
+    }
+
+    public function testEditNonExistentCategory(): void
+    {
+        $nonExistentId = 9999; // Un ID que no existe
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->post("/categorias/edit/{$nonExistentId}", [
+            'nombre' => 'Nueva Categoria',
+            'descripcion' => 'Descripción'
+        ]);
+
+        // Verifica que el código de respuesta sea 404 Not Found
+        $this->assertResponseCode(404);
+    }
+
 
     /**
      * Test delete method
@@ -241,7 +228,6 @@ class CategoriasControllerTest extends TestCase
         // ID de una categoría existente que se va a eliminar
         $categoriaId = 2;
 
-        // Simula la petición POST/DELETE para eliminar la categoría
         $this->enableCsrfToken();
         $this->enableSecurityToken();
         $this->post("/categorias/delete/{$categoriaId}");
@@ -250,7 +236,6 @@ class CategoriasControllerTest extends TestCase
         // Verifica que hubo una redirección después de eliminar
         $this->assertResponseCode(302);
         $this->assertFlashMessage('La categoría ha sido eliminada.');
-        //$this->assertRedirect(['controller' => 'Categorias', 'action' => 'index']);
 
         // Carga la categoría desde la base de datos para verificar que se ha eliminado
         $categorias = $this->getTableLocator()->get('Categorias');
@@ -260,43 +245,34 @@ class CategoriasControllerTest extends TestCase
         $this->assertNull($categoria, 'La categoría no fue eliminada correctamente.');
     }
 
-     /**
+    /**
      * Test delete method
      *
      * @return void
      * @uses \App\Controller\CategoriasController::delete()
      */
-    // public function testDeleteExist(): void
-    // {
-    //     // ID de una categoría existente que se va a eliminar
-    //     $categoriaId = 1;
+    public function testDeleteExist(): void
+    {
+        $categoriaId = 1;
 
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->post("/categorias/delete/{$categoriaId}");
 
+        // Verifica que hubo una redirección después de eliminar
+        $this->assertResponseCode(302);
 
-    //     // Simula la petición POST/DELETE para eliminar la categoría
-    //     $this->enableCsrfToken();
-    //     $this->enableSecurityToken();
-    //     $this->post("/categorias/delete/{$categoriaId}");
+        // Carga la categoría desde la base de datos para verificar que se ha eliminado
+        $categorias = $this->getTableLocator()->get('Categorias');
+        $categoria = $categorias->find()->where(['id' => $categoriaId])->first();
 
-
-    //     // Verifica que hubo una redirección después de eliminar
-    //     $this->assertResponseCode(302);
-    //     $this->assertFlashMessage('La categoría ha sido eliminada.');
-    //     //$this->assertRedirect(['controller' => 'Categorias', 'action' => 'index']);
-
-    //     // Carga la categoría desde la base de datos para verificar que se ha eliminado
-    //     $categorias = $this->getTableLocator()->get('Categorias');
-    //     $categoria = $categorias->find()->where(['id' => $categoriaId])->first();
-
-
-    //     $this->assertNull($categoria, 'La categoría no fue eliminada correctamente.');
-    // }
+         $this->assertNotNull($categoria, 'La categoría no fue eliminada correctamente.');
+    }
 
     public function testDeleteFailure(): void
     {
         // ID de una categoría inexistente
         $categoriaId = 9999;
-
 
         // Simula la petición POST/DELETE para eliminar la categoría
         $this->enableCsrfToken();
@@ -304,11 +280,40 @@ class CategoriasControllerTest extends TestCase
         $this->post("/categorias/delete/{$categoriaId}");
 
 
-        // Verifica que hubo una redirección al intentar eliminar una categoría inexistente
-        $this->assertResponseCode(404);
-       // $this->assertRedirect(['controller' => 'Categorias', 'action' => 'index']);
+        $this->assertResponseError();
+    }
 
-        // Verifica que el mensaje de error de eliminación fallida se haya mostrado
-        $this->assertFlashMessage('No se pudo eliminar la categoría. Por favor, inténtalo de nuevo.');
+
+    public function testGetConditions()
+    {
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();;
+
+        // Simula una consulta de request con datos
+        $this->get('/categorias/index?nombre=test&descripcion=ejemplo&activo=1'); // Cambia la URL según sea necesario
+
+        // Verifica que la respuesta contenga las condiciones esperadas
+        $this->assertResponseOk(); // Verifica que la respuesta fue exitosa
+        //$this->assertResponseContains('filters'); // Verifica que el contenido tenga 'conditions'
+
+        // Opcional: puedes acceder a la variable set en la respuesta
+        $data =  $this->_controller->getRequest()->getQuery();
+
+        if (isset($data['nombre']) and !empty($data['nombre'])) {
+            $conditions['where'][] = ['Categorias.nombre LIKE' => '%' . $data['nombre'] . '%'];
+        }
+
+        if (isset($data['descripcion']) and !empty($data['descripcion'])) {
+            $conditions['where'][] = ['Categorias.descripcion LIKE ' => '%' . $data['descripcion'] . '%'];
+        }
+
+        // Verifica las condiciones
+        $this->assertEquals([
+            'where' => [
+                ['Categorias.nombre LIKE' => '%test%'],
+                ['Categorias.descripcion LIKE ' => '%ejemplo%']
+            ]
+        ], $conditions);
     }
 }

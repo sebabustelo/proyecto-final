@@ -65,26 +65,32 @@ class CategoriasController extends AppController
      */
     public function edit($id = null)
     {
-        $categoria = $this->Categorias->get($id, contain: []);
+        try {
+            $categoria = $this->Categorias->get($id, contain: []);
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+            throw new \Cake\Http\Exception\NotFoundException(__('La categoría no existe'));
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
 
             $categoria = $this->Categorias->patchEntity($categoria, $this->request->getData());
-           //
+            //
             if ($this->Categorias->save($categoria)) {
                 $this->Flash->success(__('La categoría se actualizo correctamente.'));
 
                 return $this->redirect('/Categorias/index');
             } else {
+
                 if ($categoria->getErrors()) {
                     foreach ($categoria->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {
                             $this->Flash->error(__($error));
                         }
                     }
-                } else {
-                    $this->Flash->error(__('La categoría no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
                 }
+                // else {
+                //     $this->Flash->error(__('La categoría no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+                // }
             }
         }
         $this->set(compact('categoria'));
@@ -106,16 +112,17 @@ class CategoriasController extends AppController
         if ($this->Categorias->delete($categoria)) {
             $this->Flash->success(__('La categoría ha sido eliminada.'));
         } else {
-            debug($categoria->getErrors());die;
+
             if ($categoria->getErrors()) {
                 foreach ($categoria->getErrors() as $field => $errors) {
                     foreach ($errors as $error) {
                         $this->Flash->error(__($error));
                     }
                 }
-            } else {
-                $this->Flash->error(__('No se pudo eliminar la categoría. Por favor, inténtalo de nuevo.'));
             }
+            // else {
+            //     $this->Flash->error(__('No se pudo eliminar la categoría. Por favor, inténtalo de nuevo.'));
+            // }
         }
 
         return $this->redirect('/Categorias/index');

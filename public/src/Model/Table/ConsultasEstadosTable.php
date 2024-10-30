@@ -46,6 +46,10 @@ class ConsultasEstadosTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
+
+        $this->hasMany('Consultas', [
+            'foreignKey' => 'consulta_estado_id',
+        ]);
     }
 
     /**
@@ -102,6 +106,28 @@ class ConsultasEstadosTable extends Table
     {
         if ($entity->isNew() || $entity->isDirty('nombre')) {
             $entity->nombre = strtoupper($entity->nombre);
+        }
+    }
+
+    /**
+     * Modifies the entity before saving it to the database.
+     * Converts the 'nombre' field to uppercase the first letter before the save operation.
+     *
+     * @param \Cake\Event\EventInterface $event The event object.
+     * @param \Cake\ORM\Entity $entity The entity being saved.
+     * @param \ArrayObject $options Additional options for the save operation.
+     * @return void
+     */
+    public function beforeDelete($event, $entity, $options)
+    {
+
+        $consultasCount = $this->Consultas->find()
+            ->where(['consulta_estado_id' => $entity->id])
+            ->count();
+
+        if ($consultasCount > 0) {
+            $entity->setError('delete', __('No se puede eliminar el estado porque está asociada a uno o más consultas.'));
+            return false;
         }
     }
 }

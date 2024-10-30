@@ -91,11 +91,11 @@ class PedidosTable extends Table
 
         $validator
             ->integer('estado_id')
-            ->notEmptyString('estado_id');
+            ->notEmptyString('estado_id','El estado_id es obligatorio');
 
         $validator
             ->dateTime('fecha_pedido')
-            ->requirePresence('fecha_pedido', 'create')
+            ->requirePresence('fecha_pedido', 'create','La fecha del pedido es obligatoria')
             ->notEmptyDateTime('fecha_pedido');
 
         $validator
@@ -107,7 +107,7 @@ class PedidosTable extends Table
             ->date('fecha_intervencion')
             ->requirePresence('fecha_intervencion', 'create', 'El campo fecha de intervención es obligatoria.')
             ->notEmptyDateTime('fecha_intervencion', 'Debe ingresar una fecha de intervención.')
-            ->add('fecha_intervención', 'validFutureDate', [
+            ->add('fecha_intervencion', 'validFutureDate', [
                 'rule' => function ($value, $context) {
                     $currentDate = date('Y-m-d');
                     return $value > $currentDate;
