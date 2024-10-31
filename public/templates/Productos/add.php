@@ -95,7 +95,7 @@
                             <div class="form-group col-sm-12">
                                 <label>Info del producto</label>
 
-                                <textarea  required maxlength="2000" rows="2" placeholder="Ingrese la info del producto"
+                                <textarea  required maxlength="300" rows="2" placeholder="Ingrese la info del producto"
                                     class="form-control" name="descripcion_breve" oninvalid="this.setCustomValidity('Debe completar info del producto')"
                                     oninput="this.setCustomValidity('')"><?php echo $this->request->getData('descripcion_breve') ?></textarea>
                                 <?php if ($producto->getError('descripcion_breve')) { ?>
@@ -107,7 +107,7 @@
                             <div class="form-group col-sm-12">
                                 <label>Descripción</label>
 
-                                <textarea  required maxlength="2000" rows="3" placeholder="Ingrese la descripción"
+                                <textarea  required maxlength="2000" rows="8" placeholder="Ingrese la descripción"
                                     class="form-control" name="descripcion_larga" oninvalid="this.setCustomValidity('Debe completar la descripción')"
                                     oninput="this.setCustomValidity('')"><?php echo $this->request->getData('descripcion_larga') ?></textarea>
                                 <?php if ($producto->getError('descripcion_breve')) { ?>

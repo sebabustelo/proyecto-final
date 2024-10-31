@@ -78,12 +78,13 @@ class ProductosTable extends Table
     {
         $validator
             ->scalar('nombre')
-            ->maxLength('nombre', 255)
+            ->maxLength('nombre', 150)
             ->requirePresence('nombre', 'create')
             ->notEmptyString('nombre', 'Debe ingresar un nombre');
 
         $validator
             ->scalar('descripcion_breve')
+            ->maxLength('descripcion_breve', 300, 'La descripción no puede ser mayor a 300 caracteres')
             ->requirePresence('descripcion_breve', 'create')
             ->notEmptyString('descripcion_breve', 'Debe ingresar una descripción breve');
 

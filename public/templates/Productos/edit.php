@@ -70,7 +70,7 @@
                             <div class="form-group col-sm-2">
                                 <label>Stock</label>
                                 <input required type="number" maxlength="3" name="stock" min="0" placeholder="Ingrese el stock"
-                                class="form-control" value="<?php echo $producto->stock; ?>">
+                                    class="form-control" value="<?php echo $producto->stock; ?>">
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -80,16 +80,33 @@
                             <div class="form-group col-sm-2">
                                 <label>Precio</label>
                                 <input required type="number" maxlength="6" placeholder="Ingrese el precio" name="productos_precios[0][precio]"
-                                step="0.01" min="0" class="form-control" value="<?php echo isset($producto->productos_precios[0]->precio)?$producto->productos_precios[0]->precio:0; ?>">
+                                    step="0.01" min="0" class="form-control" value="<?php echo isset($producto->productos_precios[0]->precio) ? $producto->productos_precios[0]->precio : 0; ?>">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
                                     <?php } ?>
                                 <?php } ?>
                             </div>
+
+                            <div class="form-group col-sm-12">
+                                <label>Info del producto</label>
+
+                                <textarea required maxlength="300" rows="2" placeholder="Ingrese la info del producto"
+                                    class="form-control" name="descripcion_breve" oninvalid="this.setCustomValidity('Debe completar info del producto')"
+                                    oninput="this.setCustomValidity('')"><?php echo $producto->descripcion_breve; ?>
+                                </textarea>
+                                <?php if ($producto->getError('descripcion_breve')) { ?>
+                                    <?php foreach ($producto->getError('descripcion_breve') as $error) { ?>
+                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                                    <?php } ?>
+                                <?php } ?>
+                            </div>
                             <div class="form-group col-sm-12">
                                 <label>Descripción</label>
-                                <textarea required maxlength="2000" rows="3" placeholder="Ingrese la descripción" class="form-control" name="descripcion_breve"><?php echo $producto->descripcion_breve; ?></textarea>
+
+                                <textarea required maxlength="2000" rows="8" placeholder="Ingrese la descripción"
+                                    class="form-control" name="descripcion_larga" oninvalid="this.setCustomValidity('Debe completar la descripción')"
+                                    oninput="this.setCustomValidity('')"> <?php echo $producto->descripcion_larga; ?></textarea>
                                 <?php if ($producto->getError('descripcion_breve')) { ?>
                                     <?php foreach ($producto->getError('descripcion_breve') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>

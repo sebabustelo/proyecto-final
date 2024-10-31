@@ -275,6 +275,22 @@ class ProductosControllerTest extends TestCase
         $productoId = 2;
 
         $data =  [
+            'id' => 2,
+            'nombre' => '',
+
+            'descripcion_breve' => 'zarazaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaasdfasdfdsafdfsdfasfdasfdsafasdfsfdasfdasfdsafdsafdsdafasfsafasfsafdasfsafdasfdsafdsafasfasfsaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
+            'descripcion_larga' => 'zarazan zarazan zarazan.',
+            'stock' => 1,
+            'created' => '2024-10-17 15:44:47',
+            'modified' => '2024-10-17 15:44:47',
+            'activo' => 1,
+            'productos_precios' =>
+            [
+                0 => [
+                    'precio' => 250000.00,
+                    'fecha_desde' => '2024-10-17 15:44:50',
+                ]
+            ],
 
         ];
 

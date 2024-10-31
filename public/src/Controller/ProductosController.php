@@ -6,6 +6,8 @@ namespace App\Controller;
 
 use Cake\Http\Exception\NotFoundException;
 use Cake\Http\Response;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\MethodNotAllowedException;
 
 /**
  * Productos Controller
@@ -173,46 +175,46 @@ class ProductosController extends AppController
      */
     public function edit($id = null)
     {
-        $producto = $this->Productos->find()
-            ->where(['Productos.id' => $id])
-            ->contain([
-                'ProductosArchivos',
-                'ProductosPrecios' => function ($q) {
-                    return $q->order(['ProductosPrecios.fecha_desde' => 'DESC']);
-                }
-            ])
-            ->first();
-
-        if (!$producto) {
+        try {
+            $producto = $this->Productos->get($id, [
+                'contain' => [
+                    'ProductosArchivos',
+                    'ProductosPrecios' => function ($q) {
+                        return $q->order(['ProductosPrecios.fecha_desde' => 'DESC']);
+                    }
+                ]
+            ]);
+        } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('El producto no existe.'));
             return $this->redirect(['action' => 'index']);
         }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $data =  $this->request->getData();
+            $data = $this->request->getData();
+            $guardarProducto = true; // Indicador para saber si guardar el producto o no
 
+            // Verifica si hay un nuevo precio y si es diferente al actual
             if (isset($data['productos_precios'][0]['precio']) && $data['productos_precios'][0]['precio'] != $producto->productos_precios[0]->precio) {
-
                 $precioActual = $producto->productos_precios[0];
-                $precioActual->fecha_hasta =  date('Y-m-d H:i:s');
+                $precioActual->fecha_hasta = date('Y-m-d H:i:s');
 
-                // Guardar el precio existente con la fecha_hasta actualizada
+                // Intenta guardar el precio existente con la fecha_hasta actualizada
                 if ($this->Productos->ProductosPrecios->save($precioActual)) {
-                    // Crear un nuevo precio
+                    // Crea un nuevo precio
                     $nuevoPrecio = $this->Productos->ProductosPrecios->newEntity([
                         'producto_id' => $producto->id,
                         'precio' => $data['productos_precios'][0]['precio'],
                         'fecha_desde' => date('Y-m-d H:i:s'),
-                        'fecha_hasta' => null // Mantener como null hasta que haya un cambio futuro
+                        'fecha_hasta' => null // Mantiene null hasta un cambio futuro
                     ]);
 
-                    // Guardar el nuevo precio
-                    if ($this->Productos->ProductosPrecios->save($nuevoPrecio)) {
-                        $this->Flash->success(__('Nuevo precio guardado con éxito.'));
-                    } else {
-                        if ($nuevoPrecio->getErrors()) {
-                            foreach ($nuevoPrecio->getErrors() as $field => $errors) {
-                                foreach ($errors as $error) {
+                    // Intenta guardar el nuevo precio
+                    if (!$this->Productos->ProductosPrecios->save($nuevoPrecio)) {
+                        $guardarProducto = false;
+                        $errors = $nuevoPrecio->getErrors();
+                        if ($errors) {
+                            foreach ($errors as $field => $fieldErrors) {
+                                foreach ($fieldErrors as $error) {
                                     $this->Flash->error(__($error));
                                 }
                             }
@@ -221,21 +223,25 @@ class ProductosController extends AppController
                         }
                     }
                 } else {
+                    $guardarProducto = false;
                     $this->Flash->error(__('No se pudo actualizar el precio anterior.'));
                 }
             }
 
-            // Eliminar productos_precios de los datos antes de guardar el producto, porque ya lo actualice arriba
-            unset($data['productos_precios']);
-            $producto = $this->Productos->patchEntity($producto, $data);
+            // Solo intenta guardar el producto si no hubo errores en la actualización del precio
+            if ($guardarProducto) {
+                unset($data['productos_precios']);
+                $producto = $this->Productos->patchEntity($producto, $data);
 
-            if ($this->Productos->save($producto)) {
-                $this->Flash->success(__('El producto se actualizo correctamente.'));
-
-                return $this->redirect(['action' => 'index']);
+                if ($this->Productos->save($producto)) {
+                    $this->Flash->success(__('El producto se actualizó correctamente.'));
+                    return $this->redirect(['action' => 'index']);
+                }
+                $this->Flash->error(__('No se pudo actualizar el producto. Por favor, inténtalo de nuevo.'));
             }
-            $this->Flash->error(__('No se pudo eliminar el producto. Por favor, inténtalo de nuevo.'));
         }
+
+        // Obtiene categorías y proveedores activos
         $categorias = $this->Productos->Categorias->find('list')->where(['Categorias.activo' => 1])->all();
         $proveedores = $this->Productos->Proveedores->find('list')->where(['Proveedores.activo' => 1])->all();
         $this->set(compact('producto', 'categorias', 'proveedores'));
