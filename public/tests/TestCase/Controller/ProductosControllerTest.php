@@ -57,20 +57,20 @@ class ProductosControllerTest extends TestCase
                 'modified' => '2024-10-24 15:30:16',
                 'created_by' => 'Admin',
                 'modified_by' => 'Admin',
-                // 'direccion' => [
-                //     'id' => 1,
-                //     'calle' => 'padilla',
-                //     'numero' => '752',
-                //     'piso' => '2',
-                //     'departamento' => 'a',
-                //     'localidad_id' => 1,
-                //     'localidade' => [
-                //         'id' => 1,
-                //         'provincia_id' => 1,
-                //         'nombre' => 'Buenos Aires'
-                //     ]
+                'direccion' => [
+                    'id' => 1,
+                    'calle' => 'padilla',
+                    'numero' => '752',
+                    'piso' => '2',
+                    'departamento' => 'a',
+                    'localidad_id' => 1,
+                    'localidade' => [
+                        'id' => 1,
+                        'provincia_id' => 1,
+                        'nombre' => 'Buenos Aires'
+                    ]
 
-                // ]
+                ]
             ],
             'RbacAcciones' => [
                 'Productos' => [
@@ -120,27 +120,23 @@ class ProductosControllerTest extends TestCase
         // Configurar un ID válido para un producto que exista en tus fixtures
         $id = 1;
 
+        $this->get("/productos/detail/$id");
+        $this->assertResponseOk();
+        // Verificar que el producto y las provincias se pasaron a la vista
+        $this->assertResponseContains('producto');
+    }
+
+    public function testDetailProductoNoExistente()
+    {
+        // Configurar un ID no existente
+        $id = 99999;
+
         // Ejecutar la acción
         $this->get("/productos/detail/$id");
 
-        // Verificar que la respuesta es 200
-        $this->assertResponseOk();
-
-        // Verificar que el producto y las provincias se pasaron a la vista      
-        $this->assertResponseContains('producto');
-     }
-
-    // public function testDetailProductoNoExistente()
-    // {
-    //     // Configurar un ID no existente
-    //     $id = 99999;
-
-    //     // Ejecutar la acción
-    //     $this->get("/productos/detail/$id");       
-
-    //     // Verificar mensaje de error
-    //     $this->assertSession('El producto no existe.', 'Flash.flash.0.message');
-    // }
+        // Verificar mensaje de error
+        $this->assertSession('El producto no existe.', 'Flash.flash.0.message');
+    }
 
     /**
      * Test add method
@@ -165,7 +161,6 @@ class ProductosControllerTest extends TestCase
                 0 => [
                     'precio' => 250000.00,
                     'fecha_desde' => '2024-10-17 15:44:50',
-                    'fecha_hasta' => '2024-10-17 15:44:50',
                 ]
             ],
             'imagenes' => [
@@ -217,7 +212,7 @@ class ProductosControllerTest extends TestCase
     {
 
         $productoId = 2;
-
+        //Cambio el precio
         $data =  [
             'id' => 2,
             'nombre' => 'K-MOD2',
@@ -232,8 +227,7 @@ class ProductosControllerTest extends TestCase
             'productos_precios' =>
             [
                 0 => [
-                    'precio' => 250000.00,
-                    'fecha_desde' => '2024-10-17 15:44:50',
+                    'precio' => 350000.00,
                 ]
             ],
             'imagenes' => [
@@ -274,6 +268,66 @@ class ProductosControllerTest extends TestCase
 
         $this->assertEquals('K-MOD2', $producto->nombre);
     }
+
+    public function testEditFailure(): void
+    {
+
+        $productoId = 2;
+
+        $data =  [
+
+        ];
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+
+        $this->post("/Productos/edit/{$productoId}", $data);
+
+        // Verificar que la respuesta sea una redirección
+        $this->assertResponseSuccess();
+       // $this->assertFlashMessage('El producto no existe.');
+    }
+
+    public function testEditNotExist(): void
+    {
+
+        $productoId = 999;
+
+        $data =  [
+            'id' => 999,
+            'nombre' => 'TEST',
+            'categoria_id' => 1,
+            'proveedor_id' => 1,
+            'descripcion_breve' => 'zarazaaaa',
+            'descripcion_larga' => 'zarazan zarazan zarazan.',
+            'stock' => 1,
+            'created' => '2024-10-17 15:44:47',
+            'modified' => '2024-10-17 15:44:47',
+            'activo' => 1,
+            'productos_precios' =>
+            [
+                0 => [
+                    'precio' => 250000.00,
+                    'fecha_desde' => '2024-10-17 15:44:50',
+                ]
+            ],
+            'imagenes' => [
+                // Simula archivos de imagen
+                ['file_name' => 'file1.jpg', 'file_extension' => 'jpg', 'file_size' => 12345, 'file_path' => 'img/productos/file1.jpg'],
+                ['file_name' => 'file2.jpg', 'file_extension' => 'jpg', 'file_size' => 12345, 'file_path' => 'img/productos/file2.jpg']
+            ],
+        ];
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+
+        $this->post("/Productos/edit/{$productoId}", $data);
+
+        // Verificar que la respuesta sea una redirección
+        $this->assertResponseSuccess();
+        $this->assertFlashMessage('El producto no existe.');
+    }
+
 
     // /**
     //  * Test stock method

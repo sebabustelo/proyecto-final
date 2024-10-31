@@ -24,6 +24,12 @@ class LocalidadesFixture extends TestFixture
                 'nombre' => 'Chacabuco',
                 'activo' => 1,
             ],
+            [
+                'id' => 2,
+                'provincia_id' => 1,
+                'nombre' => 'Balcarce',
+                'activo' => 1,
+            ]
         ];
         parent::init();
     }

@@ -26,6 +26,8 @@ class ProveedoresTableTest extends TestCase
      */
     protected array $fixtures = [
         'app.Proveedores',
+        'app.Direcciones',
+        'app.Localidades'
     ];
 
     /**
@@ -62,7 +64,6 @@ class ProveedoresTableTest extends TestCase
     {
         // Datos válidos
         $validData =  [
-            'id' => 1,
             'nombre' => 'Lorem ipsum dolor sit amet',
             'descripcion' => 'Lorem ipsum dolor sit amet, aliquet feugiat. Convallis morbi fringilla gravida, phasellus feugiat dapibus velit nunc, pulvinar eget sollicitudin venenatis cum nullam, vivamus ut a sed, mollitia lectus. Nulla vestibulum massa neque ut et, id hendrerit sit, feugiat in taciti enim proin nibh, tempor dignissim, rhoncus duis vestibulum nunc mattis convallis.',
             'direccion_id' => 1,
@@ -80,7 +81,7 @@ class ProveedoresTableTest extends TestCase
         $this->assertEmpty($proveedor->getErrors(), 'Los datos válidos no deberían generar errores');
 
         // Datos inválidos (nombre vacío)
-        $invalidData =  [  
+        $invalidData =  [
             'nombre' => '',
             'descripcion' => 'Proveedor 1',
             'direccion_id' => 1,

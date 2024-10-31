@@ -68,7 +68,8 @@ class CategoriasController extends AppController
         try {
             $categoria = $this->Categorias->get($id, contain: []);
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
-            throw new \Cake\Http\Exception\NotFoundException(__('La categoría no existe'));
+            $this->Flash->error(__('La categoría no existe.'));
+            return $this->redirect(['action' => 'index']);
         }
 
         if ($this->request->is(['patch', 'post', 'put'])) {

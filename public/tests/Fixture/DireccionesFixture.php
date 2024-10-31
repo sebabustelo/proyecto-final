@@ -20,12 +20,12 @@ class DireccionesFixture extends TestFixture
         $this->records = [
             [
                 'id' => 1,
-                'calle' => 'Lorem ipsum dolor sit amet',
-                'numero' => 'Lorem ip',
-                'piso' => 'Lorem ip',
-                'departamento' => 'Lorem ip',
+                'calle' => 'Padill',
+                'numero' => '752',
+                'piso' => '1',
+                'departamento' => 'a',
                 'localidad_id' => 1,
-                'codigo_postal' => 'Lorem ip',
+                'codigo_postal' => '1416',
             ],
         ];
         parent::init();

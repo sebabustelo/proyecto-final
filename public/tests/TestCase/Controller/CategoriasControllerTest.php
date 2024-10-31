@@ -201,7 +201,7 @@ class CategoriasControllerTest extends TestCase
         $this->assertFlashMessage('El nombre es obligatorio');
     }
 
-    public function testEditNonExistentCategory(): void
+    public function testEditNonExistCategory(): void
     {
         $nonExistentId = 9999; // Un ID que no existe
 
@@ -212,8 +212,9 @@ class CategoriasControllerTest extends TestCase
             'descripcion' => 'Descripción'
         ]);
 
-        // Verifica que el código de respuesta sea 404 Not Found
-        $this->assertResponseCode(404);
+       //Si no existe la cateogria redirige al index
+        $this->assertResponseCode(302);
+        $this->assertFlashMessage('La categoría no existe.');
     }
 
 

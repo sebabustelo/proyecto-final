@@ -35,7 +35,7 @@ class ProductosController extends AppController
      */
     public function index()
     {
-       
+
         $conditions = $this->getConditions();
         $productos = $this->Productos->find()
             ->where($conditions['where'])
@@ -70,16 +70,16 @@ class ProductosController extends AppController
             ])
             ->first();
 
-       
+
 
         if (!$producto) {
             $this->Flash->error(__('El producto no existe.'));
             return $this->redirect(['action' => 'index']);
         }
-       
+
         $this->set('provincias', $this->Productos->DetallesPedidos->Pedidos->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
         $this->set(compact('producto'));
-       // debug( $this->getRequest()->getSession()->read('RbacUsuario')['direccion']);die;
+        // debug( $this->getRequest()->getSession()->read('RbacUsuario')['direccion']);die;
     }
 
     /**
@@ -130,7 +130,6 @@ class ProductosController extends AppController
                             $principal = false;
                         }
                         $this->Productos->ProductosArchivos->save($upload);
-
                     }
                     $this->Flash->success(__('El producto se guardo correctamente.'));
                     return $this->redirect(['action' => 'index']);
@@ -175,24 +174,27 @@ class ProductosController extends AppController
     public function edit($id = null)
     {
         $producto = $this->Productos->find()
-            ->where(['Productos.id' => $id]) // Filtrar por el ID del producto
+            ->where(['Productos.id' => $id])
             ->contain([
                 'ProductosArchivos',
                 'ProductosPrecios' => function ($q) {
-                    return $q->order(['ProductosPrecios.fecha_desde' => 'DESC']); // Ordenar por fecha_desde en orden ascendente
+                    return $q->order(['ProductosPrecios.fecha_desde' => 'DESC']);
                 }
             ])
-            ->first(); // Retorna el primer registro encontrado
+            ->first();
+
+        if (!$producto) {
+            $this->Flash->error(__('El producto no existe.'));
+            return $this->redirect(['action' => 'index']);
+        }
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data =  $this->request->getData();
 
-
-            if ($data['productos_precios'][0]['precio'] != $producto->productos_precios[0]->precio) {
-              
+            if (isset($data['productos_precios'][0]['precio']) && $data['productos_precios'][0]['precio'] != $producto->productos_precios[0]->precio) {
 
                 $precioActual = $producto->productos_precios[0];
-                $precioActual->fecha_hasta =  date('Y-m-d H:i:s'); // Fecha actual
+                $precioActual->fecha_hasta =  date('Y-m-d H:i:s');
 
                 // Guardar el precio existente con la fecha_hasta actualizada
                 if ($this->Productos->ProductosPrecios->save($precioActual)) {
@@ -315,7 +317,7 @@ class ProductosController extends AppController
         $categoria = $this->Productos->Categorias->get($id);
 
 
-        $conditions['where'][]= ['categoria_id' => $id];
+        $conditions['where'][] = ['categoria_id' => $id];
 
         $productos = $this->Productos->find()
             ->where($conditions['where'])
@@ -328,8 +330,8 @@ class ProductosController extends AppController
             ]);
 
         $this->set('productos', $this->paginate($productos));
-        $this->set('categoria',$categoria);
-        $this->set('categoria_id',$id);
+        $this->set('categoria', $categoria);
+        $this->set('categoria_id', $id);
         $this->set('filters', $this->getRequest()->getQuery());
     }
 
