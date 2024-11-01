@@ -80,7 +80,7 @@ class ProductosTable extends Table
             ->scalar('nombre')
             ->maxLength('nombre', 150)
             ->requirePresence('nombre', 'create')
-            ->notEmptyString('nombre', 'Debe ingresar un nombre');
+            ->notEmptyString('nombre', 'El campo nombre no puede estar vacío.');
 
         $validator
             ->scalar('descripcion_breve')

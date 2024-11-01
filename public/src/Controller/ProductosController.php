@@ -140,15 +140,13 @@ class ProductosController extends AppController
                     $this->Flash->error($result['error']);
                 }
             } else {
-
+                $this->Flash->error(__('El producto no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
                 if ($producto->getErrors()) {
                     foreach ($producto->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {
                             $this->Flash->error(__($error));
                         }
                     }
-                } else {
-                    $this->Flash->error(__('El producto no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
                 }
             }
         }
@@ -187,7 +185,12 @@ class ProductosController extends AppController
         } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('El producto no existe.'));
             return $this->redirect(['action' => 'index']);
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('El producto no es válido.');
+            return $this->redirect(['action' => 'index']);
         }
+
+
 
         if ($this->request->is(['patch', 'post', 'put'])) {
             $data = $this->request->getData();
@@ -195,36 +198,34 @@ class ProductosController extends AppController
 
             // Verifica si hay un nuevo precio y si es diferente al actual
             if (isset($data['productos_precios'][0]['precio']) && $data['productos_precios'][0]['precio'] != $producto->productos_precios[0]->precio) {
-                $precioActual = $producto->productos_precios[0];
-                $precioActual->fecha_hasta = date('Y-m-d H:i:s');
+
 
                 // Intenta guardar el precio existente con la fecha_hasta actualizada
-                if ($this->Productos->ProductosPrecios->save($precioActual)) {
-                    // Crea un nuevo precio
-                    $nuevoPrecio = $this->Productos->ProductosPrecios->newEntity([
-                        'producto_id' => $producto->id,
-                        'precio' => $data['productos_precios'][0]['precio'],
-                        'fecha_desde' => date('Y-m-d H:i:s'),
-                        'fecha_hasta' => null // Mantiene null hasta un cambio futuro
-                    ]);
 
-                    // Intenta guardar el nuevo precio
-                    if (!$this->Productos->ProductosPrecios->save($nuevoPrecio)) {
-                        $guardarProducto = false;
-                        $errors = $nuevoPrecio->getErrors();
-                        if ($errors) {
-                            foreach ($errors as $field => $fieldErrors) {
-                                foreach ($fieldErrors as $error) {
-                                    $this->Flash->error(__($error));
-                                }
-                            }
-                        } else {
-                            $this->Flash->error(__('No se pudo guardar el nuevo precio.'));
-                        }
-                    }
+                // Crea un nuevo precio
+                $nuevoPrecio = $this->Productos->ProductosPrecios->newEntity([
+                    'producto_id' => $producto->id,
+                    'precio' => $data['productos_precios'][0]['precio'],
+                    'fecha_desde' => date('Y-m-d H:i:s'),
+                    'fecha_hasta' => null // Mantiene null hasta un cambio futuro
+                ]);
+
+                // Intenta guardar el nuevo precio
+                if ($this->Productos->ProductosPrecios->save($nuevoPrecio)) {
+                    $precioActual = $producto->productos_precios[0];
+                    $precioActual->fecha_hasta = date('Y-m-d H:i:s');
+                    $this->Productos->ProductosPrecios->save($precioActual);
                 } else {
                     $guardarProducto = false;
-                    $this->Flash->error(__('No se pudo actualizar el precio anterior.'));
+                    $errors = $nuevoPrecio->getErrors();
+                    $this->Flash->error(__('No se pudo guardar el nuevo precio.'));
+                    if ($errors) {
+                        foreach ($errors as $field => $fieldErrors) {
+                            foreach ($fieldErrors as $error) {
+                                $this->Flash->error(__($error));
+                            }
+                        }
+                    }
                 }
             }
 
@@ -232,12 +233,11 @@ class ProductosController extends AppController
             if ($guardarProducto) {
                 unset($data['productos_precios']);
                 $producto = $this->Productos->patchEntity($producto, $data);
-
+                $this->Flash->error(__('El producto no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
                 if ($this->Productos->save($producto)) {
                     $this->Flash->success(__('El producto se actualizó correctamente.'));
                     return $this->redirect(['action' => 'index']);
                 }
-                $this->Flash->error(__('No se pudo actualizar el producto. Por favor, inténtalo de nuevo.'));
             }
         }
 
@@ -319,9 +319,16 @@ class ProductosController extends AppController
      */
     public function catalogoClienteCategorias($id = null)
     {
-        $conditions = $this->getConditionsPublic();
-        $categoria = $this->Productos->Categorias->get($id);
-
+        try {
+            $conditions = $this->getConditionsPublic();
+            $categoria = $this->Productos->Categorias->get($id);
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('La categoría no existe.'));
+            return $this->redirect(['action' => 'index']);
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('La categoría no es válida.');
+            return $this->redirect(['action' => 'index']);
+        }
 
         $conditions['where'][] = ['categoria_id' => $id];
 
@@ -350,13 +357,23 @@ class ProductosController extends AppController
      */
     public function delete($id = null)
     {
-
-        $this->request->allowMethod(['post', 'delete']);
-        $producto = $this->Productos->get($id);
-        if ($this->Productos->delete($producto)) {
-            $this->Flash->success(__('El producto ha sido eliminado.'));
-        } else {
-            $this->Flash->error(__('No se pudo eliminar el producto. Por favor, inténtalo de nuevo.'));
+        try {
+            $this->request->allowMethod(['post', 'delete']);          
+            $producto = $this->Productos->get($id);
+           
+            if ($this->Productos->delete($producto)) {
+                $this->Flash->success(__('El producto ha sido eliminado.'));
+            } else {
+                $this->Flash->error(__('No se pudo eliminar el producto. Por favor, inténtalo de nuevo.'));
+            }
+           
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('El producto no existe.'));
+        } catch (MethodNotAllowedException $e) {
+            $this->Flash->error(__('Método HTTP no permitido.'));
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('El producto no es válido.');
+            return $this->redirect(['action' => 'index']);
         }
 
         return $this->redirect(['action' => 'index']);

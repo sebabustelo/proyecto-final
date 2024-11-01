@@ -273,7 +273,7 @@ $action =   $this->request->getParam('action');
                         $active = '';
                     } ?>
                     <li class="<?php echo $active; ?>">
-                        <a href="<?php echo $this->Url->build(['plugin' => null, 'controller' => 'Productos', 'action' => 'catalogo_cliente_categorias', $id]); ?>">
+                        <a href="<?php echo $this->Url->build(['plugin' => null, 'controller' => 'Productos', 'action' => 'catalogoClienteCategorias', $id]); ?>">
                             <i class="fa fa-circle-o"></i> <?php echo h($categoria); ?>
                         </a>
                     </li>

@@ -171,7 +171,6 @@ class ProductosControllerTest extends TestCase
         ];
 
         // Crear el mock del componente Upload y envolverlo en un Closure
-        // Crear el mock del componente Upload y envolverlo en un Closure
         $this->mockService(
             \App\Controller\Component\UploadComponent::class,
             function () {
@@ -201,6 +200,43 @@ class ProductosControllerTest extends TestCase
         $nuevaProducto = $productos->last();
         $this->assertEquals('K-MOD', $nuevaProducto->nombre);
     }
+
+    public function testAddFailure(): void
+    {
+        $data =  [
+            'nombre' => '', // Campo vacío para forzar un error de validación
+            'categoria_id' => 1,
+            'proveedor_id' => 1,
+            'descripcion_breve' => 'zarazaaaa',
+            'descripcion_larga' => 'zarazan zarazan zarazan.',
+            'stock' => 1,
+            'created' => '2024-10-17 15:44:47',
+            'modified' => '2024-10-17 15:44:47',
+            'activo' => 1,
+            'productos_precios' =>
+            [
+                0 => [
+                    'precio' => 250000.00,
+                    'fecha_desde' => '2024-10-17 15:44:50',
+                ]
+            ],
+
+        ];
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+
+
+        $this->post('/Productos/add', $data);
+
+        // Verificar que la respuesta sea una redirección
+        $this->assertResponseSuccess();
+        $this->assertNoRedirect();  // Asegura que no haya redirección en caso de error
+
+        // Verificar que contiene un mensaje de error de validación para 'nombre'
+        $this->assertResponseContains('El campo nombre no puede estar vacío.');
+    }
+
 
     /**
      * Test edit method
@@ -269,6 +305,7 @@ class ProductosControllerTest extends TestCase
         $this->assertEquals('K-MOD2', $producto->nombre);
     }
 
+
     public function testEditFailure(): void
     {
 
@@ -287,7 +324,7 @@ class ProductosControllerTest extends TestCase
             'productos_precios' =>
             [
                 0 => [
-                    'precio' => 250000.00,
+                    'precio' => "asdfasdf",
                     'fecha_desde' => '2024-10-17 15:44:50',
                 ]
             ],
@@ -301,7 +338,7 @@ class ProductosControllerTest extends TestCase
 
         // Verificar que la respuesta sea una redirección
         $this->assertResponseSuccess();
-       // $this->assertFlashMessage('El producto no existe.');
+        // $this->assertFlashMessage('El producto no existe.');
     }
 
     public function testEditNotExist(): void
@@ -344,48 +381,159 @@ class ProductosControllerTest extends TestCase
         $this->assertFlashMessage('El producto no existe.');
     }
 
+    public function testEditBadArgument(): void
+    {
+        //producto no válida
+        $this->get('/productos/edit/test');
+        // Verificar que redirige debido a un argumento no válido        
+        $this->assertResponseCode(302);
 
-    // /**
-    //  * Test stock method
-    //  *
-    //  * @return void
-    //  * @uses \App\Controller\ProductosController::stock()
-    //  */
-    // public function testStock(): void
-    // {
-    //     $this->markTestIncomplete('Not implemented yet.');
-    // }
+        // Opcional: Verificar un mensaje de error por argumento inválido
+        $this->assertFlashMessage('El producto no es válido.');
+    }
 
-    // /**
-    //  * Test catalogoCliente method
-    //  *
-    //  * @return void
-    //  * @uses \App\Controller\ProductosController::catalogoCliente()
-    //  */
-    // public function testCatalogoCliente(): void
-    // {
-    //     $this->markTestIncomplete('Not implemented yet.');
-    // }
 
-    // /**
-    //  * Test catalogoClienteCategorias method
-    //  *
-    //  * @return void
-    //  * @uses \App\Controller\ProductosController::catalogoClienteCategorias()
-    //  */
-    // public function testCatalogoClienteCategorias(): void
-    // {
-    //     $this->markTestIncomplete('Not implemented yet.');
-    // }
+    /**
+     * Test stock method
+     *
+     * @return void
+     * @uses \App\Controller\ProductosController::stock()
+     */
+    public function testStockProducto(): void
+    {
+        // Caso de éxito: producto existente
+        $productoId = 1; // Asume que existe un producto con este ID en los datos de prueba
+        $this->get("/Productos/stock/{$productoId}");
 
-    // /**
-    //  * Test delete method
-    //  *
-    //  * @return void
-    //  * @uses \App\Controller\ProductosController::delete()
-    //  */
-    // public function testDelete(): void
-    // {
-    //     $this->markTestIncomplete('Not implemented yet.');
-    // }
+        // Verifica que la respuesta sea JSON
+        $this->assertContentType('application/json');
+        $this->assertResponseOk();
+
+        // Verifica que el JSON contiene los datos esperados
+        $responseData = json_decode((string)$this->_response->getBody(), true);
+        $this->assertArrayHasKey('id', $responseData);
+        $this->assertArrayHasKey('stock', $responseData);
+        $this->assertEquals($productoId, $responseData['id']);
+    }
+
+
+
+
+
+    /**
+     * Test catalogoCliente method
+     *
+     * @return void
+     * @uses \App\Controller\ProductosController::catalogoCliente()
+     */
+    public function testCatalogoClienteSuccess()
+    {
+        $this->get('/productos/catalogoCliente?search=K');
+
+        $this->assertResponseSuccess();
+
+        $productos = $this->viewVariable('productos');
+
+        $this->assertNotEmpty($productos, 'La lista de productos debería contener elementos');
+
+        // Puedes agregar una comprobación específica para los productos y sus relaciones
+        foreach ($productos as $producto) {
+            $this->assertNotEmpty($producto->categoria, 'Cada producto debería tener una categoría asociada');
+            $this->assertNotEmpty($producto->productos_archivos, 'Cada producto debería tener archivos asociados');
+            $this->assertNotEmpty($producto->productos_precios, 'Cada producto debería tener al menos un precio asociado');
+        }
+    }
+
+    /**
+     * Test catalogoClienteCategorias method
+     *
+     * @return void
+     * @uses \App\Controller\ProductosController::catalogoClienteCategorias()
+     */
+    public function testCatalogoClienteCategorias(): void
+    {
+        $this->get('/productos/catalogoClienteCategorias/1');
+
+        $this->assertResponseSuccess();
+
+        $productos = $this->viewVariable('productos');
+
+        $this->assertNotEmpty($productos, 'La lista de productos debería contener elementos');
+
+        // Puedes agregar una comprobación específica para los productos y sus relaciones
+        foreach ($productos as $producto) {
+            $this->assertNotEmpty($producto->categoria, 'Cada producto debería tener una categoría asociada');
+            $this->assertNotEmpty($producto->productos_archivos, 'Cada producto debería tener archivos asociados');
+            $this->assertNotEmpty($producto->productos_precios, 'Cada producto debería tener al menos un precio asociado');
+        }
+    }
+
+    public function testCatalogoClienteCategoriasNotExist(): void
+    {
+        $this->get('/productos/catalogoClienteCategorias/99');
+
+        // Verificar que redirige debido a una categoría no existente        
+        $this->assertResponseCode(302);
+
+        // Opcional: Verificar un mensaje de error
+        $this->assertFlashMessage('La categoría no existe.');
+    }
+
+    public function testCatalogoClienteCategoriasBadArgument(): void
+    {
+        //categoría no válida
+        $this->get('/productos/catalogoClienteCategorias/test');
+        // Verificar que redirige debido a un argumento no válido        
+        $this->assertResponseCode(302);
+
+        // Opcional: Verificar un mensaje de error por argumento inválido
+        $this->assertFlashMessage('La categoría no es válida.');
+    }
+
+    /**
+     * Test delete method
+     *
+     * Prueba el método delete para verificar que un tipo de documento se elimina correctamente
+     * @return void
+     * @uses \App\Controller\ProductosController::delete()
+     */
+    public function testDelete(): void
+    {
+        $productoId = 2;
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->post("/Productos/delete/{$productoId}");
+
+        // Verifica que hubo una redirección después de eliminar
+        $this->assertResponseCode(302);
+        
+    }
+
+    public function testDeleteNotExist(): void
+    {
+        $productoId = 99;
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->post("/Productos/delete/{$productoId}");
+
+        // Verifica que hubo una redirección después de eliminar
+        $this->assertResponseCode(302);
+
+        
+    }
+
+    public function testDeleteBadArgument(): void
+    {
+        $productoId = "test";
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->post("/Productos/delete/{$productoId}");
+
+        // Verifica que hubo una redirección después de eliminar
+        $this->assertResponseCode(302);
+        
+    }
 }

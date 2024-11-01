@@ -15,7 +15,7 @@
             <div class="box box-primary">
                 <div class="box-header  with-border">
                     <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> </h3>
-                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/productos/catalogo_cliente">
+                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/productos/catalogoCliente">
 
                         <div class="form-row text-center">
                             <div class="input-group col-md-6 col-md-offset-3 ">

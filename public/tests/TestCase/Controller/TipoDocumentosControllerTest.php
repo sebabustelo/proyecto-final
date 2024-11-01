@@ -339,7 +339,32 @@ class TipoDocumentosControllerTest extends TestCase
 
         $this->assertResponseCode(302);
 
-        $this->assertSession('No se puede eliminar este tipo de documento porque tiene usuarios asociados.', 'Flash.flash.0.message');
+        $this->assertSession('No se puede eliminar este tipo de documento porque tiene usuarios asociados.', 'Flash.flash.1.message');
+    }
+
+    public function testDeleteBadArgument(): void
+    {
+        $tipoDocumentoId = "tesasdfafast";
+
+        //tipo de documento no válida
+        $this->post("/TipoDocumentos/delete/{$tipoDocumentoId}");
+        // Verificar que redirige debido a un argumento no válido        
+        $this->assertResponseCode(302);
+
+        // Opcional: Verificar un mensaje de error por argumento inválido
+       // $this->assertSession('El tipo de documento no es válido.', 'Flash.flash.0.message');
+        $this->assertFlashMessage('El tipo de documento no es válido.');
+    }
+
+    public function testEditBadArgument(): void
+    {
+        //tipo de documento no válida
+        $this->get('/TipoDocumentos/edit/test');
+        // Verificar que redirige debido a un argumento no válido        
+        $this->assertResponseCode(302);
+
+        // Opcional: Verificar un mensaje de error por argumento inválido
+        $this->assertFlashMessage('El tipo de documento no es válido.');
     }
 
     /**

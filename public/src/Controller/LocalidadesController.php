@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace App\Controller;
 
 use Cake\Http\Response;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\MethodNotAllowedException;
+use Cake\Cache\Exception\InvalidArgumentException;
 
 /**
  * Localidades Controller
@@ -75,18 +78,33 @@ class LocalidadesController extends AppController
      */
     public function edit($id = null)
     {
-        $localidad = $this->Localidades->get($id, contain: []);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $localidad = $this->Localidades->patchEntity($localidad, $this->request->getData());
-            if ($this->Localidades->save($localidad)) {
-                $this->Flash->success(__('La localidad se actualizo correctamente.'));
+        try {
+            $localidad = $this->Localidades->get($id, contain: []);
+            if ($this->request->is(['patch', 'post', 'put'])) {
+                $localidad = $this->Localidades->patchEntity($localidad, $this->request->getData());
+                if ($this->Localidades->save($localidad)) {
+                    $this->Flash->success(__('La localidad se actualizo correctamente.'));
 
-                return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['action' => 'index']);
+                }
+                if ($localidad->getErrors()) {
+                    foreach ($localidad->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                }
+                $this->Flash->error(__('La localidad no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
             }
-            $this->Flash->error(__('La localidad no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+            $provincias = $this->Localidades->Provincias->find('list', limit: 200)->all();
+            $this->set(compact('localidad', 'provincias'));
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('La localidad no existe.'));
+            return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('El producto no es válido.');
+            return $this->redirect(['action' => 'index']);
         }
-        $provincias = $this->Localidades->Provincias->find('list', limit: 200)->all();
-        $this->set(compact('localidad', 'provincias'));
     }
 
     /**
