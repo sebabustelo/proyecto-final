@@ -166,15 +166,20 @@ class RbacUsuariosTable extends Table
         $validator
             ->add('documento', 'uniqueCombo', [
                 'rule' => function ($value, $context) {
-                    $tipo_documento_id = $context['data']['tipo_documento_id'];
-                    $documento = $context['data']['documento'];
+                    if (!isset($context['data']['id'])) {
 
-                    // Busca si ya existe un usuario con esa combinación de tipo_documento_id y documento
-                    $existingUser = $this->find()
-                        ->where(['tipo_documento_id' => $tipo_documento_id, 'documento' => $documento])
-                        ->first();
+                        $tipo_documento_id = $context['data']['tipo_documento_id'];
+                        $documento = $context['data']['documento'];
 
-                    return empty($existingUser); // Retorna verdadero si no existe, lo que significa que la validación pasa
+                        // Busca si ya existe un usuario con esa combinación de tipo_documento_id y documento
+                        $existingUser = $this->find()
+                            ->where(['tipo_documento_id' => $tipo_documento_id, 'documento' => $documento])
+                            ->first();
+
+                        return empty($existingUser); // Retorna verdadero si no existe, lo que significa que la validación pasa
+                    } else {
+                        return true;
+                    }
                 },
                 'message' => 'Este documento ya ha sido registrado.'
             ]);

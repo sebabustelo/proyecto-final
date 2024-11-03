@@ -15,6 +15,8 @@
 
                         <form id="formEditMyUser" role="form" action="/editMyUser" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
+                            <input type="hidden" name="id" value="<?php echo $rbacUsuario->id; ?>">
+
                             <div class="form-group col-sm-4">
                                 <label id="lblUsuario" for="usuario">Usuario</label>
                                 <input type="text" name="usuario" required value="<?php echo $rbacUsuario->usuario; ?>"
@@ -112,10 +114,10 @@
 
                             <div class="form-group col-sm-3">
                                 <label>Provincia</label><br>
-                                <select id="provincia_id" required name="direcciones[0][localidade][provincia][id]" class="form-control">
+                                <select id="provincia_id" required name="direccion[localidade][provincia][id]" class="form-control">
                                     <option selected value="">Seleccione una provincia</option>
                                     <?php foreach ($provincias as $id => $provincia) { ?>
-                                        <?php if ($rbacUsuario->direcciones[0]->localidade['provincia']['id'] == $id) { ?>
+                                        <?php if ($rbacUsuario->direccion->localidade['provincia']['id'] == $id) { ?>
                                             <option selected value="<?php echo $id ?>"><?php echo $provincia; ?></option>
                                         <?php } else { ?>
                                             <option value="<?php echo $id ?>"><?php echo $provincia; ?></option>
@@ -126,34 +128,34 @@
                             </div>
                             <div class="form-group col-sm-3">
                                 <label>Localidad</label><br>
-                                <select required id="localidad_id" name="direcciones[0][localidad_id]" class="form-control">
+                                <select required id="localidad_id" name="direccion[localidad_id]" class="form-control">
                                     <option selected value="">Seleccione una localidad</option>
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Calle</label>
-                                <input name="direcciones[0][calle]" required
-                                    value="<?php echo isset($rbacUsuario->direcciones[0]->calle) ? $rbacUsuario->direcciones[0]->calle : ''; ?>" type="text" class="form-control"
+                                <input name="direccion[calle]" required
+                                    value="<?php echo isset($rbacUsuario->direccion->calle) ? $rbacUsuario->direccion->calle : ''; ?>" type="text" class="form-control"
                                     oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
                                     placeholder="Calle" maxlength="100">
                             </div>
 
                             <div class="form-group col-sm-2">
                                 <label>Número</label>
-                                <input name="direcciones[0][numero]"
-                                    value="<?php echo isset($rbacUsuario->direcciones[0]->numero) ? $rbacUsuario->direcciones[0]->numero : ''; ?>"
+                                <input name="direccion[numero]"
+                                    value="<?php echo isset($rbacUsuario->direccion->numero) ? $rbacUsuario->direccion->numero : ''; ?>"
                                     type="number" class="form-control" placeholder="Número" min="1" max="9999" onkeydown="preventInvalidInput(event)"
                                     oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
                             </div>
                             <div class="form-group col-sm-1">
                                 <label>Piso</label>
-                                <input name="direcciones[0][piso]" type="text" class="form-control"
-                                    value="<?php echo isset($rbacUsuario->direcciones[0]->piso) ? $rbacUsuario->direcciones[0]->piso : ''; ?>" placeholder="Piso" maxlength="3">
+                                <input name="direccion[piso]" type="text" class="form-control"
+                                    value="<?php echo isset($rbacUsuario->direccion->piso) ? $rbacUsuario->direccion->piso : ''; ?>" placeholder="Piso" maxlength="3">
                             </div>
                             <div class="form-group col-sm-1">
                                 <label>Depto</label>
-                                <input name="direcciones[0][departamento]" type="text" class="form-control"
-                                    value="<?php echo isset($rbacUsuario->direcciones[0]->departamento) ? $rbacUsuario->direcciones[0]->departamento : ''; ?>" placeholder="Depto" maxlength="10">
+                                <input name="direccion[departamento]" type="text" class="form-control"
+                                    value="<?php echo isset($rbacUsuario->direccion->departamento) ? $rbacUsuario->direccion->departamento : ''; ?>" placeholder="Depto" maxlength="10">
                             </div>
 
 
@@ -238,7 +240,7 @@
 
         setTimeout(function() {
 
-            var localidadId = "<?php echo $rbacUsuario->direcciones[0]->localidad_id ?? ''; ?>";
+            var localidadId = "<?php echo $rbacUsuario->direccion->localidad_id ?? ''; ?>";
             if (localidadId) {
                 document.getElementById('localidad_id').value = localidadId;
             }

@@ -66,7 +66,7 @@ $action =   $this->request->getParam('action');
                     <?php //}
                     ?>
 
-                    <?php if ((isset($accionesPermitidas['Pedidos']['index']) && $accionesPermitidas['Configuraciones']['index'])) { ?>
+                    <?php if ((isset($accionesPermitidas['Pedidos']['index']) && $accionesPermitidas['Pedidos']['index'])) { ?>
                         <li class=" <?php echo ($controller == 'Pedidos' && ($action == 'index' || $action == ''  || $action == 'edit') ? ' active' : ''); ?>">
                             <a href="<?php echo $this->Url->build('/Pedidos/index'); ?>"><i class="fa fa-files-o"></i> Listado</a>
                         </li>

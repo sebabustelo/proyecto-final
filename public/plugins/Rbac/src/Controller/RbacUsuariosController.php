@@ -384,7 +384,9 @@ class RbacUsuariosController extends RbacController
                 $data['email'] = $rbacUsuario->email;
                 //Enviar mail para confirmar el cambio de correo del usuario, recibirar una url changeMail/token
             }
-            $rbacUsuario = $this->RbacUsuarios->patchEntity($rbacUsuario, $this->request->getData());
+            $data['tipo_cliente'] = 'particular';
+
+            $rbacUsuario = $this->RbacUsuarios->patchEntity($rbacUsuario,$data);
             if ($this->RbacUsuarios->save($rbacUsuario)) {
                 $this->Flash->success(__('Los datos del usuario han sido actualizados correctamente.'));
                 return $this->redirect(['action' => 'detail', $rbacUsuario->id]);
