@@ -83,7 +83,7 @@
                                 </div> -->
 
                                 <div class="form-group col-md-12">
-                                    <label for="comentario">Aclaraciones</label>
+                                    <label for="comentario">Comentario</label>
                                     <textarea class="form-control" name="comentario" value="<?php echo $this->request->getData('comentario') ?? ''; ?>" id="comentario" rows="2" maxlength="500" placeholder="Escriba aquí cualquier comentario..." ></textarea>
                                 </div>
                                 </p>

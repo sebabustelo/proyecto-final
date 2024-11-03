@@ -97,6 +97,8 @@ class TipoDocumentosController extends AppController
         } catch (\InvalidArgumentException $e) {
             $this->Flash->error(__('El tipo de documento no es válido.'));
             return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
+        }catch (\Exception $e) {
+            $this->Flash->error(__('El tipo de documento no es válido.'));
         }
     }
 
@@ -113,10 +115,11 @@ class TipoDocumentosController extends AppController
         try {
             $this->request->allowMethod(['post', 'delete']);
             $tipoDocumento = $this->TipoDocumentos->get($id);
-            
+
             if ($this->TipoDocumentos->delete($tipoDocumento)) {
                 $this->Flash->success(__('El Tipo de Documento se elimino correctamente.'));
-            } else {               
+            } else {
+
                 $this->Flash->error(__('El tipo de documento no puedo ser eliminado.'));
                 if ($tipoDocumento->getErrors()) {
                     foreach ($tipoDocumento->getErrors() as $field => $errors) {
@@ -126,18 +129,17 @@ class TipoDocumentosController extends AppController
                     }
                 }
             }
-            
+
         } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('El tipo de documento no existe.'));
         } catch (MethodNotAllowedException $e) {
             $this->Flash->error(__('Método HTTP no permitido.'));
         } catch (\InvalidArgumentException $e) {
             $this->Flash->error(__('El tipo de documento no es válido.'));
-            return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
         }
-       
 
-        return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
+        return $this->redirect(['action' => 'index']);
+
     }
 
     /**

@@ -43,6 +43,13 @@ class TipoDocumentosFixture extends TestFixture
                 'created' => '2024-10-17 15:44:55',
                 'modified' => '2024-10-17 15:44:55',
                 'activo' => 1,
+            ],
+            [
+                'id' => 3,
+                'descripcion' => 'LE',
+                'created' => '2024-10-17 15:44:55',
+                'modified' => '2024-10-17 15:44:55',
+                'activo' => 1,
             ]
         ];
         parent::init();

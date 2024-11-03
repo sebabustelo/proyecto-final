@@ -1,7 +1,12 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\MethodNotAllowedException;
+use Cake\Datasource\Exception\InvalidPrimaryKeyException;
 
 /**
  * Proveedores Controller
@@ -42,15 +47,17 @@ class ProveedoresController extends AppController
     {
         $proveedor = $this->Proveedores->newEmptyEntity();
         if ($this->request->is('post')) {
-            $proveedore = $this->Proveedores->patchEntity($proveedor, $this->request->getData());
+
+            $proveedor = $this->Proveedores->patchEntity($proveedor, $this->request->getData());
             if ($this->Proveedores->save($proveedor)) {
                 $this->Flash->success(__('El proveedor se guardo correctamente.'));
-
                 return $this->redirect('/Proveedores/index');;
             }
             $this->Flash->error(__('El proveedor no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
         }
+
         $this->set(compact('proveedor'));
+        $this->render();
     }
 
     /**
@@ -62,17 +69,35 @@ class ProveedoresController extends AppController
      */
     public function edit($id = null)
     {
-        $proveedor = $this->Proveedores->get($id, contain: []);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $proveedor = $this->Proveedores->patchEntity($proveedor, $this->request->getData());
-            if ($this->Proveedores->save($proveedor)) {
-                $this->Flash->success(__('El proveedor se actualizo correctamente.'));
+        try {
+            $proveedor = $this->Proveedores->get($id, contain: []);
+            if ($this->request->is(['patch', 'post', 'put'])) {
+                $proveedor = $this->Proveedores->patchEntity($proveedor, $this->request->getData());
+                if ($this->Proveedores->save($proveedor)) {
+                    $this->Flash->success(__('El proveedor se actualizo correctamente.'));
 
-                return $this->redirect('/Proveedores/index');;
+                    return $this->redirect('/Proveedores/index');;
+                }
+                $this->Flash->error(__('El proveedor no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+                if ($proveedor->getErrors()) {
+                    foreach ($proveedor->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                }
             }
-            $this->Flash->error(__('El proveedor no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+            $this->set(compact('proveedor'));
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+            $this->Flash->error(__('El proveedor no existe.'));
+            return $this->redirect(['action' => 'index']);
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('El proveedor no es válido.');
+            return $this->redirect(['action' => 'index']);
+        } catch (InvalidPrimaryKeyException $e) {
+            $this->Flash->error('El proveedor no es válido.');
+            return $this->redirect(['action' => 'index']);
         }
-        $this->set(compact('proveedor'));
     }
 
     /**
@@ -84,12 +109,22 @@ class ProveedoresController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $proveedor = $this->Proveedores->get($id);
-        if ($this->Proveedores->delete($proveedor)) {
-            $this->Flash->success(__('El proveedor ha sido eliminada.'));
-        } else {
-            $this->Flash->error(__('No se pudo eliminar el proveedor. Por favor, inténtalo de nuevo.'));
+        try {
+            $this->request->allowMethod(['post', 'delete']);
+            $proveedor = $this->Proveedores->get($id);
+            if ($this->Proveedores->delete($proveedor)) {
+                $this->Flash->success(__('El proveedor ha sido eliminada.'));
+            } else {
+                $this->Flash->error(__('No se pudo eliminar el proveedor. Por favor, inténtalo de nuevo.'));
+            }
+        } catch (MethodNotAllowedException $e) {
+            $this->Flash->error(__('Método HTTP no permitido.'));
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+            $this->Flash->error(__('El proveedor no existe.'));
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('El proveedor no es válido.');
+        } catch (InvalidPrimaryKeyException $e) {
+            $this->Flash->error('El proveedor no es válido.');
         }
 
         return $this->redirect('/Proveedores/index');;

@@ -197,6 +197,57 @@ class ProvinciasControllerTest extends TestCase
         $this->assertEmpty($provincia);
     }
 
+    public function testEditNotExist(): void
+    {
+        $provinciaId = 999;
+
+        $data =  [
+            'id' => '999',
+            'descripcion' => 'TEST DE PRUEBA',
+            'activo' => 1,
+        ];
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->post("/Provincias/edit/{$provinciaId}", $data);
+        //$this->assertSession('El tipo de documento no existe.', 'Flash.flash.0.message');
+        $this->assertResponseCode(302);
+        $this->assertFlashMessage('La provincia no existe.');
+
+    }
+
+    public function testEditBadArgument(): void
+    {
+        $this->get('/Provincias/edit/test');
+        $this->assertResponseCode(302);
+        $this->assertFlashMessage('La provincia no es válida.');
+    }
+
+    public function testEditEmptyArgument(): void
+    {
+        $this->get('/Provincias/edit/');
+        $this->assertResponseCode(302);
+        $this->assertFlashMessage('La provincia no es válida.');
+    }
+
+    public function testDeleteWithAssociatedLocalidades(): void
+    {
+        $provinciaId = 1;
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->post("/Provincias/delete/{$provinciaId}");
+
+        // Verifica que hubo una redirección después de eliminar
+        $this->assertResponseCode(302);
+
+        // Carga el tipo de documento desde la base de datos para verificar que se ha eliminado
+        $provincias = $this->getTableLocator()->get('Provincias');
+        $provincia = $provincias->find()->where(['id' => $provinciaId])->first();
+
+        $this->assertSession('No se puede eliminar la provincia porque está asociada a una o más localidades.', 'Flash.flash.1.message');
+    }
+
     /**
      * Test delete method
      *
@@ -221,6 +272,19 @@ class ProvinciasControllerTest extends TestCase
         $this->assertNull($provincia, 'La provincia fue eliminado correctamente.');
     }
 
+    public function testDeleteEmpty(): void
+    {
+        $provinciaId = '';
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->post("/Provincias/delete/{$provinciaId}");
+
+        // Verifica que hubo una redirección después de eliminar
+        $this->assertResponseCode(302);
+        $this->assertSession('La provincia no es válida.', 'Flash.flash.0.message');
+    }
+
     public function testDeleteNotExist(): void
     {
         $provinciaId = 99;
@@ -242,6 +306,18 @@ class ProvinciasControllerTest extends TestCase
 
         $this->assertResponseCode(302);
         $this->assertSession('Método HTTP no permitido.', 'Flash.flash.0.message');
+    }
+
+    public function testDeleteBadArgument(): void
+    {
+        $provinciaId = "provincia";
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->post("/Provincias/delete/{$provinciaId}");
+        $this->assertResponseCode(302);
+        // $this->assertSession('El tipo de documento no es válido.', 'Flash.flash.0.message');
+        $this->assertFlashMessage('La provincia no es válida.');
     }
 
     public function testGetConditions()

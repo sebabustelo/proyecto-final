@@ -45,16 +45,12 @@ class PedidosController extends AppController
         $query = $this->Pedidos->find()
             ->where($conditions['where'])
             ->contain($conditions['contain'])
-            ->matching('DetallesPedidos.Productos')
-            ;
-
-        //$query = $query->order(['PedidosEstados.nombre' => 'ASC']);
-
+            ->matching('DetallesPedidos.Productos');
 
         $this->paginate = [
-            'sortableFields' => ['PedidosEstados.nombre', 'Pedidos.fecha_pedido', 'Pedidos.fecha_intervencion','RbacUsuarios.nombre','Productos.nombre']
+            'sortableFields' => ['PedidosEstados.nombre', 'Pedidos.fecha_pedido', 'Pedidos.fecha_intervencion', 'RbacUsuarios.nombre', 'Productos.nombre']
         ];
-       // debug( $query);
+        //  debug($this->paginate($query));die;
         // Paginación y seteo de variables
         $this->set('filters', $this->getRequest()->getQuery());
         $this->set('pedidos', $this->paginate($query));
@@ -70,7 +66,7 @@ class PedidosController extends AppController
     {
         $pedidos = $this->Pedidos->newEmptyEntity();
         if ($this->request->is('post')) {
-            $proveedore = $this->Pedidos->patchEntity($pedidos, $this->request->getData());
+            $pedido = $this->Pedidos->patchEntity($pedidos, $this->request->getData());
             if ($this->Pedidos->save($pedidos)) {
                 $this->Flash->success(__('El pedido se guardo correctamente.'));
 
@@ -78,7 +74,21 @@ class PedidosController extends AppController
             }
             $this->Flash->error(__('El pedido no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
         }
-        $this->set(compact('pedido'));
+        // $this->set(compact('pedido'));
+
+        $productos = $this->Pedidos->DetallesPedidos->Productos->find()
+            ->contain([
+                'Categorias',
+                'ProductosArchivos',
+                'ProductosPrecios' => function ($q) {
+                    return $q->order(['ProductosPrecios.fecha_desde' => 'DESC']);
+                }
+            ])
+            ->all();
+
+        $this->set('usuarios', $this->Pedidos->RbacUsuarios->find('list')->where(['activo' => 1])->order('apellido')->all());
+        $this->set('provincias', $this->Pedidos->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
+        $this->set(compact('productos'));
     }
 
     /**
@@ -449,7 +459,7 @@ class PedidosController extends AppController
         }
 
         if (isset($data['producto']) and !empty($data['producto'])) {
-            $conditions['where'][] = ['Productos.nombre like' => "%".$data['producto']."%"];
+            $conditions['where'][] = ['Productos.nombre like' => "%" . $data['producto'] . "%"];
         }
 
         if (isset($data['fecha_pedido']) && !empty($data['fecha_pedido'])) {

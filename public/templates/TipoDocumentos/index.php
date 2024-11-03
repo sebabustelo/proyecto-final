@@ -131,7 +131,7 @@ use Cake\Core\Configure;
                                                 <td>
                                                     <?= $this->Form->postLink(
                                                         __('<i class="fa fa-remove"></i>'),
-                                                        ['action' => 'delete', $tipoDocumento->id],
+                                                        ['controller'=>'tipoDocumentos','action' => 'delete', $tipoDocumento->id],
                                                         [
                                                             'confirm' => __('¿Esta seguro de eliminar el documento {0}?', $tipoDocumento->descripcion),
                                                             'class' => 'btn btn-danger btn-xs pencil',

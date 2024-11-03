@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\MethodNotAllowedException;
+
 /**
  * Categorias Controller
  *
@@ -67,21 +70,16 @@ class CategoriasController extends AppController
     {
         try {
             $categoria = $this->Categorias->get($id, contain: []);
-        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
-            $this->Flash->error(__('La categoría no existe.'));
-            return $this->redirect(['action' => 'index']);
-        }
 
-        if ($this->request->is(['patch', 'post', 'put'])) {
+            if ($this->request->is(['patch', 'post', 'put'])) {
 
-            $categoria = $this->Categorias->patchEntity($categoria, $this->request->getData());
-            //
-            if ($this->Categorias->save($categoria)) {
-                $this->Flash->success(__('La categoría se actualizo correctamente.'));
+                $categoria = $this->Categorias->patchEntity($categoria, $this->request->getData());
 
-                return $this->redirect('/Categorias/index');
-            } else {
-
+                if ($this->Categorias->save($categoria)) {
+                    $this->Flash->success(__('La categoría se actualizo correctamente.'));
+                    return $this->redirect('/Categorias/index');
+                }
+                $this->Flash->error(__('La categoría no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
                 if ($categoria->getErrors()) {
                     foreach ($categoria->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {
@@ -89,12 +87,15 @@ class CategoriasController extends AppController
                         }
                     }
                 }
-                // else {
-                //     $this->Flash->error(__('La categoría no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
-                // }
             }
+            $this->set(compact('categoria'));
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+            $this->Flash->error(__('La categoría no existe.'));
+            return $this->redirect(['action' => 'index']);
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('La categoría no es válida.');
+            return $this->redirect(['action' => 'index']);
         }
-        $this->set(compact('categoria'));
     }
 
     /**
@@ -106,24 +107,29 @@ class CategoriasController extends AppController
      */
     public function delete($id = null)
     {
+        try {
+            $this->request->allowMethod(['post', 'delete']);
+            $categoria = $this->Categorias->get($id);
 
-        $this->request->allowMethod(['post', 'delete']);
-        $categoria = $this->Categorias->get($id);
-
-        if ($this->Categorias->delete($categoria)) {
-            $this->Flash->success(__('La categoría ha sido eliminada.'));
-        } else {
-
-            if ($categoria->getErrors()) {
-                foreach ($categoria->getErrors() as $field => $errors) {
-                    foreach ($errors as $error) {
-                        $this->Flash->error(__($error));
+            if ($this->Categorias->delete($categoria)) {
+                $this->Flash->success(__('La categoría ha sido eliminada.'));
+            } else {
+                $this->Flash->error(__('No se pudo eliminar la categoría. Por favor, inténtalo de nuevo.'));
+                if ($categoria->getErrors()) {
+                    foreach ($categoria->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
                     }
                 }
             }
-            // else {
-            //     $this->Flash->error(__('No se pudo eliminar la categoría. Por favor, inténtalo de nuevo.'));
-            // }
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('La categoría no existe.'));
+        } catch (MethodNotAllowedException $e) {
+            $this->Flash->error(__('Método HTTP no permitido.'));
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('La categoría no es válido.');
+            return $this->redirect(['action' => 'index']);
         }
 
         return $this->redirect('/Categorias/index');

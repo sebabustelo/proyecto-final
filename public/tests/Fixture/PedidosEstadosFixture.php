@@ -35,6 +35,15 @@ class PedidosEstadosFixture extends TestFixture
                 'created' => '2024-10-17 15:44:47',
                 'modified' => '2024-10-17 15:44:47',
                 'orden' => 1,
+            ],
+            [
+                'id' => 3,
+                'nombre' => 'estado 3',
+                'descripcion' => 'estado 3',
+                'activo' => 1,
+                'created' => '2024-10-17 15:44:47',
+                'modified' => '2024-10-17 15:44:47',
+                'orden' => 1,
             ]
         ];
         parent::init();

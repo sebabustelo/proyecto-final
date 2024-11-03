@@ -12,7 +12,7 @@
 </style>
 <section class="content-header">
     <h1>
-    <i class="fa fa-fw fa-medkit"></i> Gestión de Productos
+        <i class="fa fa-fw fa-medkit"></i> Gestión de Productos
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Productos</a></li> <i class="fa fa-arrow-right"></i>
@@ -34,7 +34,7 @@
                         <div class="form-row">
                             <div class="form-group col-md-2">
                                 <input type="text" name="nombre" placeholder="Nombre" class="form-control" id="nombre" aria-label="nombre"
-                                value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
+                                    value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
                             </div>
                             <div class="form-group col-md-8">
                                 <input type="text" name="descripcion_breve" placeholder="Descripción breve" class="form-control" id="descripcion_breve" aria-label="descripcion_breve" value="<?php echo (isset($filters['descripcion_breve'])) ? $filters['descripcion_breve'] : '' ?>">
@@ -127,8 +127,8 @@
                                         </tr>
                                     </thead>
                                     <tfoot>
-                                        <tr >
-                                            <td colspan="12" >
+                                        <tr>
+                                            <td colspan="12">
                                                 <div class="text-center">
                                                     <ul class="pagination justify-content-center">
                                                         <li class="page-item">
@@ -136,7 +136,7 @@
                                                             <?php echo $this->Paginator->prev('<'); ?>
                                                         </li>
                                                         <li class="page-item">
-                                                            <?php echo $this->Paginator->numbers(['modulus'=>4]); ?>
+                                                            <?php echo $this->Paginator->numbers(['modulus' => 4]); ?>
                                                         </li>
                                                         <li class="page-item">
                                                             <?php echo $this->Paginator->next('>'); ?>
@@ -156,14 +156,14 @@
                                             <tr>
                                                 <!-- Columna Imagen -->
                                                 <td>
-                                                    <img src="/img/productos/<?php echo $producto->productos_archivos[0]['file_name'] ; ?>" alt="Imagen" class="img-thumbnail" style="width: 90%;">
+                                                    <img src="/img/productos/<?php echo $producto->productos_archivos[0]['file_name']; ?>" alt="Imagen" class="img-thumbnail" style="width: 90%;">
                                                 </td>
 
                                                 <td>
                                                     <?php echo $producto->nombre; ?>
                                                 </td>
                                                 <td class=" hidden-xs">
-                                                    <?php echo mostrarResumen($producto->descripcion_breve, 200); ?>
+                                                    <?php  echo $producto->descripcion_breve;  ?>
                                                 </td>
                                                 <td class=" hidden-xs">
                                                     <?php echo $this->Time->format($producto->created, 'dd/MM/Y HH:mm:ss'); ?>
@@ -213,23 +213,3 @@
         </div>
     </div>
 </section>
-
-
-
-<?php
-function mostrarResumen($texto, $limite = 100)
-{
-    if (strlen($texto) <= $limite) {
-        return $texto; // Si el texto es menor o igual al límite, lo devuelve tal cual.
-    }
-
-    $corte = substr($texto, 0, $limite);
-    $ultimoEspacio = strrpos($corte, ' '); // Encuentra la última posición de un espacio.
-
-    if ($ultimoEspacio !== false) {
-        $corte = substr($corte, 0, $ultimoEspacio); // Corta en el último espacio para no cortar palabras.
-    }
-
-    return $corte . '...'; // Agrega puntos suspensivos.
-}
-?>

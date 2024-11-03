@@ -1,7 +1,14 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
+
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\MethodNotAllowedException;
+use Cake\Cache\Exception\InvalidArgumentException;
+use Cake\Datasource\Exception\InvalidPrimaryKeyException;
+use Exception;
 
 /**
  * Estados Controller
@@ -63,17 +70,35 @@ class PedidosEstadosController extends AppController
      */
     public function edit($id = null)
     {
-        $estado = $this->PedidosEstados->get($id, contain: []);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $estado = $this->PedidosEstados->patchEntity($estado, $this->request->getData());
-            if ($this->PedidosEstados->save($estado)) {
-                $this->Flash->success(__('El estado se actualizo correctamente.'));
+        try {
+            $estado = $this->PedidosEstados->get($id, contain: []);
+            if ($this->request->is(['patch', 'post', 'put'])) {
+                $estado = $this->PedidosEstados->patchEntity($estado, $this->request->getData());
+                if ($this->PedidosEstados->save($estado)) {
+                    $this->Flash->success(__('El estado se actualizo correctamente.'));
 
-                return $this->redirect('/PedidosEstados/index');
+                    return $this->redirect('/PedidosEstados/index');
+                }
+                $this->Flash->error(__('El estado no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+                if ($estado->getErrors()) {
+                    foreach ($estado->getErrors() as $fieldErrors) {
+                        foreach ($fieldErrors as $error) {
+                            $this->Flash->error($error);
+                        }
+                    }
+                }
             }
-            $this->Flash->error(__('El estado no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+            $this->set(compact('estado'));
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('El estado no existe.'));
+            return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error(__('El estado no es válido.'));
+            return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
+        } catch (InvalidPrimaryKeyException $e) {
+            $this->Flash->error('El estado no es válido.');
+            return $this->redirect(['action' => 'index']);
         }
-        $this->set(compact('estado'));
     }
 
     /**
@@ -85,15 +110,31 @@ class PedidosEstadosController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $estado = $this->PedidosEstados->get($id);
-        if ($this->PedidosEstados->delete($estado)) {
-            $this->Flash->success(__('El estado ha sido eliminada.'));
-        } else {
-            $this->Flash->error(__('No se pudo eliminar el estado. Por favor, inténtalo de nuevo.'));
+        try {
+            $this->request->allowMethod(['post', 'delete']);
+            $estado = $this->PedidosEstados->get($id);
+            if ($this->PedidosEstados->delete($estado)) {
+                $this->Flash->success(__('El estado ha sido eliminada.'));
+            } else {
+
+                $this->Flash->error(__('No se pudo eliminar el estado.'));
+                if ($estado->getErrors()) {
+                    foreach ($estado->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                }
+            }
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('El estado no existe.'));
+        } catch (MethodNotAllowedException $e) {
+            $this->Flash->error(__('Método HTTP no permitido.'));
+        } catch (\Exception $e) {
+            $this->Flash->error(__('El estado no es válido.'));
         }
 
-        return $this->redirect('/PedidoEstados/index');
+        return $this->redirect('/PedidosEstados/index');
     }
 
 

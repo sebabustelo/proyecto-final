@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Test\Fixture;
@@ -29,7 +30,14 @@ class LocalidadesFixture extends TestFixture
                 'provincia_id' => 1,
                 'nombre' => 'Balcarce',
                 'activo' => 1,
+            ],
+            [
+                'id' => 3,
+                'provincia_id' => 1,
+                'nombre' => 'Junin',
+                'activo' => 1,
             ]
+
         ];
         parent::init();
     }

@@ -63,7 +63,15 @@ class LocalidadesController extends AppController
 
                 return $this->redirect(['action' => 'index']);
             }
-            $this->Flash->error(__('La localidad no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+            $this->Flash->error(__('La localidad no pudo ser guardada.'));
+            if ($localidad->getErrors()) {
+
+                foreach ($localidad->getErrors() as $fieldErrors) {
+                    foreach ($fieldErrors as $error) {
+                        $this->Flash->error($error);
+                    }
+                }
+            }
         }
         $provincias = $this->Localidades->Provincias->find('list', limit: 200)->all();
         $this->set(compact('localidad', 'provincias'));
@@ -87,6 +95,7 @@ class LocalidadesController extends AppController
 
                     return $this->redirect(['action' => 'index']);
                 }
+                $this->Flash->error(__('La localidad no pudo ser guardada.'));
                 if ($localidad->getErrors()) {
                     foreach ($localidad->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {
@@ -94,7 +103,6 @@ class LocalidadesController extends AppController
                         }
                     }
                 }
-                $this->Flash->error(__('La localidad no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
             }
             $provincias = $this->Localidades->Provincias->find('list', limit: 200)->all();
             $this->set(compact('localidad', 'provincias'));
@@ -102,8 +110,10 @@ class LocalidadesController extends AppController
             $this->Flash->error(__('La localidad no existe.'));
             return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
         } catch (\InvalidArgumentException $e) {
-            $this->Flash->error('El producto no es válido.');
+            $this->Flash->error('La localidad no es válida.');
             return $this->redirect(['action' => 'index']);
+        } catch (\Exception $e) {
+            $this->Flash->error(__('La localidad no es válida.'));
         }
     }
 
@@ -116,24 +126,39 @@ class LocalidadesController extends AppController
      */
     public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $localidad = $this->Localidades->get($id);
-        //debug($localidad);die;
-        if ($this->Localidades->delete($localidad)) {
-            $this->Flash->success(__('La localidad ha sido eliminada.'));
-        } else {
+        try {
+            $this->request->allowMethod(['post', 'delete']);
 
-            if ($localidad->getErrors()) {
-                foreach ($localidad->getErrors() as $field => $errors) {
-                    foreach ($errors as $error) {
-                        $this->Flash->error(__($error));
+            $localidad = $this->Localidades->get($id);
+
+            if ($this->Localidades->delete($localidad)) {
+                $this->Flash->success(__('La localidad ha sido eliminada.'));
+            } else {
+
+                if ($localidad->getErrors()) {
+                    foreach ($localidad->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
                     }
                 }
-            } else {
-                $this->Flash->error(__('No se pudo eliminar la localidad. Por favor, inténtalo de nuevo.'));
+                $this->Flash->error(__('No se pudo eliminar la localidad.'));
+                if ($localidad->getErrors()) {
+                    foreach ($localidad->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                }
             }
-        }
 
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('La localidad no existe.'));
+        } catch (MethodNotAllowedException $e) {
+            $this->Flash->error(__('Método HTTP no permitido.'));
+        } catch (\Exception $e) {
+            $this->Flash->error(__('La localidad no es válida.'));
+        }
         return $this->redirect(['action' => 'index']);
     }
 

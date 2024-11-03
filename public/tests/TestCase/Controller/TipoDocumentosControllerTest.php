@@ -246,18 +246,27 @@ class TipoDocumentosControllerTest extends TestCase
         $tipoDocumentoId = 999;
 
         $data =  [
-            'id'=>'999',
+            'id' => '999',
             'descripcion' => 'TEST',
             'activo' => 1,
         ];
 
         $this->enableCsrfToken();
         $this->enableSecurityToken();
-        $this->post("/TipoDocumentos/edit/{$tipoDocumentoId}",$data);
+        $this->post("/TipoDocumentos/edit/{$tipoDocumentoId}", $data);
         //$this->assertSession('El tipo de documento no existe.', 'Flash.flash.0.message');
         $this->assertResponseCode(302);
         //$this->assertSession('El tipo de documento no existe.', 'Flash.flash.0.message');
     }
+
+    public function testEditBadArgument(): void
+    {
+        //tipo de documento no válida
+        $this->get('/TipoDocumentos/edit/test');
+        $this->assertResponseCode(302);
+        $this->assertFlashMessage('El tipo de documento no es válido.');
+    }
+
 
     /**
      * Test delete method
@@ -268,7 +277,7 @@ class TipoDocumentosControllerTest extends TestCase
      */
     public function testDelete(): void
     {
-        $tipoDocumentoId = 2;
+        $tipoDocumentoId = 3;
 
         $this->enableCsrfToken();
         $this->enableSecurityToken();
@@ -344,28 +353,16 @@ class TipoDocumentosControllerTest extends TestCase
 
     public function testDeleteBadArgument(): void
     {
-        $tipoDocumentoId = "tesasdfafast";
+        $tipoDocumentoId = "tipo-documento-no-valido";
 
-        //tipo de documento no válida
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
         $this->post("/TipoDocumentos/delete/{$tipoDocumentoId}");
-        // Verificar que redirige debido a un argumento no válido        
         $this->assertResponseCode(302);
-
-        // Opcional: Verificar un mensaje de error por argumento inválido
-       // $this->assertSession('El tipo de documento no es válido.', 'Flash.flash.0.message');
+        // $this->assertSession('El tipo de documento no es válido.', 'Flash.flash.0.message');
         $this->assertFlashMessage('El tipo de documento no es válido.');
     }
 
-    public function testEditBadArgument(): void
-    {
-        //tipo de documento no válida
-        $this->get('/TipoDocumentos/edit/test');
-        // Verificar que redirige debido a un argumento no válido        
-        $this->assertResponseCode(302);
-
-        // Opcional: Verificar un mensaje de error por argumento inválido
-        $this->assertFlashMessage('El tipo de documento no es válido.');
-    }
 
     /**
      * Test testGetConditions method

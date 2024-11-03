@@ -72,8 +72,6 @@ class ProductosController extends AppController
             ])
             ->first();
 
-
-
         if (!$producto) {
             $this->Flash->error(__('El producto no existe.'));
             return $this->redirect(['action' => 'index']);
@@ -81,7 +79,7 @@ class ProductosController extends AppController
 
         $this->set('provincias', $this->Productos->DetallesPedidos->Pedidos->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
         $this->set(compact('producto'));
-        // debug( $this->getRequest()->getSession()->read('RbacUsuario')['direccion']);die;
+
     }
 
     /**
@@ -358,25 +356,28 @@ class ProductosController extends AppController
     public function delete($id = null)
     {
         try {
-            $this->request->allowMethod(['post', 'delete']);          
+            $this->request->allowMethod(['post', 'delete']);
             $producto = $this->Productos->get($id);
-           
+
             if ($this->Productos->delete($producto)) {
                 $this->Flash->success(__('El producto ha sido eliminado.'));
+                return $this->redirect(['action' => 'index']);
             } else {
+
                 $this->Flash->error(__('No se pudo eliminar el producto. Por favor, inténtalo de nuevo.'));
             }
-           
+
         } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('El producto no existe.'));
+            return $this->redirect(['action' => 'index']);
         } catch (MethodNotAllowedException $e) {
             $this->Flash->error(__('Método HTTP no permitido.'));
+            return $this->redirect(['action' => 'index']);
         } catch (\InvalidArgumentException $e) {
             $this->Flash->error('El producto no es válido.');
             return $this->redirect(['action' => 'index']);
         }
 
-        return $this->redirect(['action' => 'index']);
     }
 
     /**

@@ -203,7 +203,8 @@ class CategoriasControllerTest extends TestCase
 
     public function testEditNonExistCategory(): void
     {
-        $nonExistentId = 9999; // Un ID que no existe
+        // Un ID que no existe
+        $nonExistentId = 9999;
 
         $this->enableCsrfToken();
         $this->enableSecurityToken();
@@ -224,34 +225,6 @@ class CategoriasControllerTest extends TestCase
      * @return void
      * @uses \App\Controller\CategoriasController::delete()
      */
-    public function testDelete(): void
-    {
-        // ID de una categoría existente que se va a eliminar
-        $categoriaId = 2;
-
-        $this->enableCsrfToken();
-        $this->enableSecurityToken();
-        $this->post("/categorias/delete/{$categoriaId}");
-
-
-        // Verifica que hubo una redirección después de eliminar
-        $this->assertResponseCode(302);
-        $this->assertFlashMessage('La categoría ha sido eliminada.');
-
-        // Carga la categoría desde la base de datos para verificar que se ha eliminado
-        $categorias = $this->getTableLocator()->get('Categorias');
-        $categoria = $categorias->find()->where(['id' => $categoriaId])->first();
-
-
-        $this->assertNull($categoria, 'La categoría no fue eliminada correctamente.');
-    }
-
-    /**
-     * Test delete method
-     *
-     * @return void
-     * @uses \App\Controller\CategoriasController::delete()
-     */
     public function testDeleteExist(): void
     {
         $categoriaId = 1;
@@ -260,7 +233,6 @@ class CategoriasControllerTest extends TestCase
         $this->enableSecurityToken();
         $this->post("/categorias/delete/{$categoriaId}");
 
-        // Verifica que hubo una redirección después de eliminar
         $this->assertResponseCode(302);
 
         // Carga la categoría desde la base de datos para verificar que se ha eliminado
@@ -275,28 +247,22 @@ class CategoriasControllerTest extends TestCase
         // ID de una categoría inexistente
         $categoriaId = 9999;
 
-        // Simula la petición POST/DELETE para eliminar la categoría
         $this->enableCsrfToken();
         $this->enableSecurityToken();
         $this->post("/categorias/delete/{$categoriaId}");
 
+        $this->assertResponseCode(302);
+        $this->assertFlashMessage('La categoría no existe.');
 
-        $this->assertResponseError();
     }
-
 
     public function testGetConditions()
     {
-
         $this->enableCsrfToken();
         $this->enableSecurityToken();;
 
-        // Simula una consulta de request con datos
         $this->get('/categorias/index?nombre=test&descripcion=ejemplo&activo=1'); // Cambia la URL según sea necesario
-
-        // Verifica que la respuesta contenga las condiciones esperadas
-        $this->assertResponseOk(); // Verifica que la respuesta fue exitosa
-        //$this->assertResponseContains('filters'); // Verifica que el contenido tenga 'conditions'
+        $this->assertResponseOk();
 
         // Opcional: puedes acceder a la variable set en la respuesta
         $data =  $this->_controller->getRequest()->getQuery();
@@ -309,7 +275,6 @@ class CategoriasControllerTest extends TestCase
             $conditions['where'][] = ['Categorias.descripcion LIKE ' => '%' . $data['descripcion'] . '%'];
         }
 
-        // Verifica las condiciones
         $this->assertEquals([
             'where' => [
                 ['Categorias.nombre LIKE' => '%test%'],

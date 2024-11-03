@@ -97,7 +97,6 @@ class PedidosEstadosTable extends Table
 
     /**
      * Modifies the entity before saving it to the database.
-     * Converts the 'nombre' field to uppercase before the save operation.
      *
      * @param \Cake\Event\EventInterface $event The event object.
      * @param \Cake\ORM\Entity $entity The entity being saved.
@@ -113,7 +112,6 @@ class PedidosEstadosTable extends Table
 
     /**
      * Modifies the entity before saving it to the database.
-     * Converts the 'nombre' field to uppercase the first letter before the save operation.
      *
      * @param \Cake\Event\EventInterface $event The event object.
      * @param \Cake\ORM\Entity $entity The entity being saved.
@@ -127,7 +125,9 @@ class PedidosEstadosTable extends Table
             ->count();
 
         if ($pedidosCount > 0) {
-            throw new PersistenceFailedException($entity, __('No se puede eliminar el estado porque tiene pedidos asociados.'));
+            //throw new PersistenceFailedException($entity, ['Este estado no puede ser eliminado porque tiene pedidos asociados.']);
+            $entity->setError('delete', __('El estado porque tiene pedidos asociados.'));
+            return false;
         }
     }
 }

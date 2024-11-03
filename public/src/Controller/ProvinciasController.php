@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\MethodNotAllowedException;
+use Cake\Datasource\Exception\InvalidPrimaryKeyException;
 
 /**
  * Provincias Controller
@@ -66,17 +67,36 @@ class ProvinciasController extends AppController
      */
     public function edit($id = null)
     {
-        $provincia = $this->Provincias->get($id, contain: []);
-        if ($this->request->is(['patch', 'post', 'put'])) {
-            $provincia = $this->Provincias->patchEntity($provincia, $this->request->getData());
-            if ($this->Provincias->save($provincia)) {
-                $this->Flash->success(__('La categoría se actualizo correctamente.'));
+        try {
 
-                return $this->redirect(['action' => 'index']);
+            $provincia = $this->Provincias->get($id, contain: []);
+            if ($this->request->is(['patch', 'post', 'put'])) {
+                $provincia = $this->Provincias->patchEntity($provincia, $this->request->getData());
+                if ($this->Provincias->save($provincia)) {
+                    $this->Flash->success(__('La provincia se actualizo correctamente.'));
+
+                    return $this->redirect(['action' => 'index']);
+                }
+                $this->Flash->error(__('La provincia no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+                if ($provincia->getErrors()) {
+                    foreach ($provincia->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                }
             }
-            $this->Flash->error(__('La categoría no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+            $this->set(compact('provincia'));
+        } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
+            $this->Flash->error(__('La provincia no existe.'));
+            return $this->redirect(['action' => 'index']);
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('La provincia no es válida.');
+            return $this->redirect(['action' => 'index']);
+        }catch (InvalidPrimaryKeyException $e) {
+            $this->Flash->error('La provincia no es válida.');
+            return $this->redirect(['action' => 'index']);
         }
-        $this->set(compact('provincia'));
     }
 
     /**
@@ -94,12 +114,12 @@ class ProvinciasController extends AppController
 
             if ($this->Provincias->delete($provincia)) {
                 $this->Flash->success(__('La provincia ha sido eliminada.'));
-            } else {
-                if ($provincia->getErrors()) {
-                    foreach ($provincia->getErrors() as $field => $errors) {
-                        foreach ($errors as $error) {
-                            $this->Flash->error(__($error));
-                        }
+            }
+            $this->Flash->error(__('La provincia no puedo ser eliminada.'));
+            if ($provincia->getErrors()) {
+                foreach ($provincia->getErrors() as $field => $errors) {
+                    foreach ($errors as $error) {
+                        $this->Flash->error(__($error));
                     }
                 }
             }
@@ -107,6 +127,10 @@ class ProvinciasController extends AppController
             $this->Flash->error(__('La provincia no existe.'));
         } catch (MethodNotAllowedException $e) {
             $this->Flash->error(__('Método HTTP no permitido.'));
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('La provincia no es válida.');
+        }catch (InvalidPrimaryKeyException $e) {
+            $this->Flash->error('La provincia no es válida.');
         }
 
         return $this->redirect(['action' => 'index']);

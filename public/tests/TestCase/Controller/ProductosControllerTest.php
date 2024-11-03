@@ -385,7 +385,7 @@ class ProductosControllerTest extends TestCase
     {
         //producto no válida
         $this->get('/productos/edit/test');
-        // Verificar que redirige debido a un argumento no válido        
+        // Verificar que redirige debido a un argumento no válido
         $this->assertResponseCode(302);
 
         // Opcional: Verificar un mensaje de error por argumento inválido
@@ -472,7 +472,7 @@ class ProductosControllerTest extends TestCase
     {
         $this->get('/productos/catalogoClienteCategorias/99');
 
-        // Verificar que redirige debido a una categoría no existente        
+        // Verificar que redirige debido a una categoría no existente
         $this->assertResponseCode(302);
 
         // Opcional: Verificar un mensaje de error
@@ -483,7 +483,7 @@ class ProductosControllerTest extends TestCase
     {
         //categoría no válida
         $this->get('/productos/catalogoClienteCategorias/test');
-        // Verificar que redirige debido a un argumento no válido        
+        // Verificar que redirige debido a un argumento no válido
         $this->assertResponseCode(302);
 
         // Opcional: Verificar un mensaje de error por argumento inválido
@@ -505,9 +505,8 @@ class ProductosControllerTest extends TestCase
         $this->enableSecurityToken();
         $this->post("/Productos/delete/{$productoId}");
 
-        // Verifica que hubo una redirección después de eliminar
         $this->assertResponseCode(302);
-        
+        $this->assertFlashMessage('El producto ha sido eliminado.');
     }
 
     public function testDeleteNotExist(): void
@@ -518,10 +517,8 @@ class ProductosControllerTest extends TestCase
         $this->enableSecurityToken();
         $this->post("/Productos/delete/{$productoId}");
 
-        // Verifica que hubo una redirección después de eliminar
         $this->assertResponseCode(302);
-
-        
+        $this->assertFlashMessage('El producto no existe.');
     }
 
     public function testDeleteBadArgument(): void
@@ -532,8 +529,59 @@ class ProductosControllerTest extends TestCase
         $this->enableSecurityToken();
         $this->post("/Productos/delete/{$productoId}");
 
-        // Verifica que hubo una redirección después de eliminar
+
         $this->assertResponseCode(302);
-        
+        $this->assertFlashMessage('El producto no es válido.');
+
+    }
+
+    public function testDeleteMethodNotAllowed(): void
+    {
+        $productoId = 1;
+
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();
+        $this->get("/Productos/delete/{$productoId}");
+
+        $this->assertResponseCode(302);
+        $this->assertSession('Método HTTP no permitido.', 'Flash.flash.0.message');
+    }
+
+    public function testGetConditions()
+    {
+        $this->enableCsrfToken();
+        $this->enableSecurityToken();;
+
+        $this->get('/Productos/index?nombre=ejemplo&activo=1&descripcion_breve=zaraza');
+        $this->assertResponseOk();
+
+        // Acceder a la variable set en la respuesta
+        $data =  $this->_controller->getRequest()->getQuery();
+
+        if (isset($data['nombre']) and !empty($data['nombre'])) {
+            $conditions['where'][] = ['Productos.nombre LIKE' => '%' . $data['nombre'] . '%'];
+        }
+
+        // if (isset($data['cuit']) and !empty($data['cuit'])) {
+        //     $conditions['where'][] = ['Proveedores.cuit' => $data['cuit']];
+        // }
+
+        if (isset($data['descripcion_breve']) and !empty($data['descripcion_breve'])) {
+            $conditions['where'][] = ['Productos.descripcion_breve LIKE' => '%' . $data['descripcion_breve'] . '%'];
+        }
+
+        if (isset($data['activo']) and !empty($data['activo'])) {
+            $conditions['where'][] = ['Productos.activo' => $data['activo']];
+        }
+
+        // Verifica las condiciones
+        $this->assertEquals([
+            'where' => [
+                ['Productos.nombre LIKE' => '%ejemplo%'],
+                ['Productos.descripcion_breve LIKE' => '%zaraza%'],
+                //['Proveedores.cuit' => '2028999186'],
+                ['Productos.activo' => '1']
+            ]
+        ], $conditions);
     }
 }

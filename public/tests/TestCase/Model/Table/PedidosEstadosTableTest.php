@@ -101,8 +101,8 @@ class PedidosEstadosTableTest extends TestCase
     public function testBeforeDeleteWithAssociatedPedidos(): void
     {
         $estado = $this->PedidosEstados->get(1); // Obtén un estado que tenga pedidos asociados en la base de datos de prueba
-        $this->expectException(PersistenceFailedException::class);
-        $this->PedidosEstados->delete($estado);
+        //$this->expectException(PersistenceFailedException::class);
+        $this->assertFalse($this->PedidosEstados->delete($estado));
 
     }
 

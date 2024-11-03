@@ -30,10 +30,10 @@ class ErrorController extends AppController
      *
      * @return void
      */
-    public function initialize(): void
-    {
-        // Only add parent::initialize() if you are confident your appcontroller is safe.
-    }
+    // public function initialize(): void
+    // {
+    //     // Only add parent::initialize() if you are confident your appcontroller is safe.
+    // }
 
     /**
      * beforeFilter callback.
@@ -41,9 +41,9 @@ class ErrorController extends AppController
      * @param \Cake\Event\EventInterface<\Cake\Controller\Controller> $event Event.
      * @return \Cake\Http\Response|null|void
      */
-    public function beforeFilter(EventInterface $event)
-    {
-    }
+    // public function beforeFilter(EventInterface $event)
+    // {
+    // }
 
     /**
      * beforeRender callback.
@@ -64,7 +64,7 @@ class ErrorController extends AppController
      * @param \Cake\Event\EventInterface<\Cake\Controller\Controller> $event Event.
      * @return \Cake\Http\Response|null|void
      */
-    public function afterFilter(EventInterface $event)
-    {
-    }
+    // public function afterFilter(EventInterface $event)
+    // {
+    // }
 }
