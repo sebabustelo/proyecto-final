@@ -112,4 +112,16 @@ class CategoriasTable extends Table
         }
     }
 
+    public function beforeSave($event, $entity, $options)
+    {
+        $productosCount = $this->Productos->find()
+            ->where(['categoria_id' => $entity->id])
+            ->count();
+
+        if ($productosCount > 0 && !$entity->activo) {
+            $entity->setError('delete', __('No se puede desactivar esta categoría porque está asociada a uno o más productos.'));
+            return false;
+        }
+    }
+
 }

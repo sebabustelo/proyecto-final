@@ -79,7 +79,7 @@ class CategoriasController extends AppController
                     $this->Flash->success(__('La categoría se actualizo correctamente.'));
                     return $this->redirect('/Categorias/index');
                 }
-                $this->Flash->error(__('La categoría no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+                $this->Flash->error(__('La categoría no pudo ser guardada.'));
                 if ($categoria->getErrors()) {
                     foreach ($categoria->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {
@@ -92,8 +92,8 @@ class CategoriasController extends AppController
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('La categoría no existe.'));
             return $this->redirect(['action' => 'index']);
-        } catch (\InvalidArgumentException $e) {
-            $this->Flash->error('La categoría no es válida.');
+        } catch (\Exception $e) {
+            $this->Flash->error(__('La categoría no es válida.'));
             return $this->redirect(['action' => 'index']);
         }
     }

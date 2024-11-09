@@ -4,6 +4,7 @@
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\TipoDocumento> $tipoDocumentos
  */
+
 use Cake\Core\Configure;
 ?>
 <section class="content-header">
@@ -109,7 +110,7 @@ use Cake\Core\Configure;
                                 <table class="table table-hover table-striped table-ajax">
                                     <thead>
                                         <tr>
-                                        <th>
+                                            <th>
                                                 <?php echo $this->Paginator->sort('nombre', 'Nombre'); ?>
                                             </th>
                                             <th class="hidden-xs">
@@ -131,20 +132,25 @@ use Cake\Core\Configure;
                                                 <td class="hidden-xs">
                                                     <?php echo $estado->descripcion; ?>
                                                 </td>
-                                                <td >
-                                                    <a href="/PedidosEstados/edit/<?php echo $estado->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                <td>
+                                                    <?php if ((isset($accionesPermitidas['PedidosEstados']['edit']) && $accionesPermitidas['PedidosEstados']['edit'])) { ?>
+                                                        <a href="/PedidosEstados/edit/<?php echo $estado->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php  } ?>
                                                 </td>
+
                                                 <td class="remove">
-                                                    <?= $this->Form->postLink(
-                                                        __('<i class="fa fa-remove"></i>'),
-                                                        ['action' => 'delete', $estado->id],
-                                                        [
-                                                            'confirm' => __('¿Esta seguro de eliminar el documento {0}?', $estado->nombre),
-                                                            'class' => 'btn btn-danger btn-xs pencil',
-                                                            'title' => 'Eliminar',
-                                                            'escape' => false
-                                                        ]
-                                                    ) ?>
+                                                    <?php if ((isset($accionesPermitidas['PedidosEstados']['delete']) && $accionesPermitidas['PedidosEstados']['delete'])) { ?>
+                                                        <?= $this->Form->postLink(
+                                                            __('<i class="fa fa-remove"></i>'),
+                                                            ['action' => 'delete', $estado->id],
+                                                            [
+                                                                'confirm' => __('¿Esta seguro de eliminar el documento {0}?', $estado->nombre),
+                                                                'class' => 'btn btn-danger btn-xs pencil',
+                                                                'title' => 'Eliminar',
+                                                                'escape' => false
+                                                            ]
+                                                        ) ?>
+                                                    <?php  } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

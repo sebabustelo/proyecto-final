@@ -163,7 +163,7 @@
                                                     <?php echo $producto->nombre; ?>
                                                 </td>
                                                 <td class=" hidden-xs">
-                                                    <?php  echo $producto->descripcion_breve;  ?>
+                                                    <?php echo $producto->descripcion_breve;  ?>
                                                 </td>
                                                 <td class=" hidden-xs">
                                                     <?php echo $this->Time->format($producto->created, 'dd/MM/Y HH:mm:ss'); ?>
@@ -173,21 +173,25 @@
                                                 </td>
 
                                                 <td class="pencil">
-                                                    <a href="/Productos/edit/<?php echo $producto->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self">
-                                                        <i class="fa fa-pencil"></i>
-                                                    </a>
+                                                    <?php if ((isset($accionesPermitidas['Productos']['edit']) && $accionesPermitidas['Productos']['edit'])) { ?>
+                                                        <a href="/Productos/edit/<?php echo $producto->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self">
+                                                            <i class="fa fa-pencil"></i>
+                                                        </a>
+                                                    <?php  } ?>
                                                 </td>
 
                                                 <td class="remove">
-                                                    <?= $this->Form->postLink(
-                                                        __('<i class="fa fa-remove"></i>'),
-                                                        ['action' => 'delete', $producto->id],
-                                                        [
-                                                            'confirm' => __('¿Está seguro de eliminar el producto {0}?', $producto->nombre),
-                                                            'class' => 'btn btn-danger btn-xs pencil',
-                                                            'escape' => false
-                                                        ]
-                                                    ) ?>
+                                                    <?php if ((isset($accionesPermitidas['Productos']['delete']) && $accionesPermitidas['Productos']['delete'])) { ?>
+                                                        <?= $this->Form->postLink(
+                                                            __('<i class="fa fa-remove"></i>'),
+                                                            ['action' => 'delete', $producto->id],
+                                                            [
+                                                                'confirm' => __('¿Está seguro de eliminar el producto {0}?', $producto->nombre),
+                                                                'class' => 'btn btn-danger btn-xs pencil',
+                                                                'escape' => false
+                                                            ]
+                                                        ) ?>
+                                                    <?php  } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

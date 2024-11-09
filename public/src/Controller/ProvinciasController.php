@@ -90,11 +90,8 @@ class ProvinciasController extends AppController
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('La provincia no existe.'));
             return $this->redirect(['action' => 'index']);
-        } catch (\InvalidArgumentException $e) {
-            $this->Flash->error('La provincia no es válida.');
-            return $this->redirect(['action' => 'index']);
-        }catch (InvalidPrimaryKeyException $e) {
-            $this->Flash->error('La provincia no es válida.');
+        } catch (\Exception $e) {
+            $this->Flash->error(__('La provincia no es válida.'));
             return $this->redirect(['action' => 'index']);
         }
     }
@@ -114,12 +111,13 @@ class ProvinciasController extends AppController
 
             if ($this->Provincias->delete($provincia)) {
                 $this->Flash->success(__('La provincia ha sido eliminada.'));
-            }
-            $this->Flash->error(__('La provincia no puedo ser eliminada.'));
-            if ($provincia->getErrors()) {
-                foreach ($provincia->getErrors() as $field => $errors) {
-                    foreach ($errors as $error) {
-                        $this->Flash->error(__($error));
+            } else {
+                $this->Flash->error(__('La provincia no puedo ser eliminada.'));
+                if ($provincia->getErrors()) {
+                    foreach ($provincia->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
                     }
                 }
             }
@@ -127,10 +125,8 @@ class ProvinciasController extends AppController
             $this->Flash->error(__('La provincia no existe.'));
         } catch (MethodNotAllowedException $e) {
             $this->Flash->error(__('Método HTTP no permitido.'));
-        } catch (\InvalidArgumentException $e) {
-            $this->Flash->error('La provincia no es válida.');
-        }catch (InvalidPrimaryKeyException $e) {
-            $this->Flash->error('La provincia no es válida.');
+        } catch (\Exception $e) {
+            $this->Flash->error(__('La provincia no es válida.'));
         }
 
         return $this->redirect(['action' => 'index']);

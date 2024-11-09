@@ -91,11 +91,8 @@ class ProveedoresController extends AppController
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('El proveedor no existe.'));
             return $this->redirect(['action' => 'index']);
-        } catch (\InvalidArgumentException $e) {
-            $this->Flash->error('El proveedor no es válido.');
-            return $this->redirect(['action' => 'index']);
-        } catch (InvalidPrimaryKeyException $e) {
-            $this->Flash->error('El proveedor no es válido.');
+        }  catch (\Exception $e) {
+            $this->Flash->error(__('El proveedor no es válido.'));
             return $this->redirect(['action' => 'index']);
         }
     }

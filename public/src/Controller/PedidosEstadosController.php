@@ -6,8 +6,6 @@ namespace App\Controller;
 
 use Cake\Datasource\Exception\RecordNotFoundException;
 use Cake\Http\Exception\MethodNotAllowedException;
-use Cake\Cache\Exception\InvalidArgumentException;
-use Cake\Datasource\Exception\InvalidPrimaryKeyException;
 use Exception;
 
 /**
@@ -91,13 +89,9 @@ class PedidosEstadosController extends AppController
             $this->set(compact('estado'));
         } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('El estado no existe.'));
-            return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
-        } catch (\InvalidArgumentException $e) {
-            $this->Flash->error(__('El estado no es válido.'));
-            return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
-        } catch (InvalidPrimaryKeyException $e) {
-            $this->Flash->error('El estado no es válido.');
             return $this->redirect(['action' => 'index']);
+        } catch (\Exception $e) {
+            $this->Flash->error(__('El estado no es válido.'));
         }
     }
 

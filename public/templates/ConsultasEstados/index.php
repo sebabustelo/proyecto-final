@@ -4,6 +4,7 @@
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\TipoDocumento> $tipoDocumentos
  */
+
 use Cake\Core\Configure;
 ?>
 <section class="content-header">
@@ -94,7 +95,7 @@ use Cake\Core\Configure;
                     <h3 class="box-title"> <span class="fa fa-list"></span> Estados de consulta desde el portal</h3>
                     <div class="box-tools pull-right">
                         <?php if (!empty($accionesPermitidas['ConsultasEstados']['add'])) { ?>
-                            <a title="Agregar Estado de consulta" href="/ConsultasEstados/add/"  class="btn btn-primary btn-sm ">
+                            <a title="Agregar Estado de consulta" href="/ConsultasEstados/add/" class="btn btn-primary btn-sm ">
                                 <span class="glyphicon glyphicon-plus-sign"></span> <span class="buttonText hidden-xs">Nuevo
                                     Estado de consulta</span></a>
                         <?php } ?>
@@ -110,7 +111,7 @@ use Cake\Core\Configure;
                                 <table class="table table-hover table-striped table-ajax">
                                     <thead>
                                         <tr>
-                                        <th>
+                                            <th>
                                                 <?php echo $this->Paginator->sort('nombre', 'Nombre'); ?>
                                             </th>
                                             <th class="hidden-xs">
@@ -131,20 +132,24 @@ use Cake\Core\Configure;
                                                 <td class="hidden-xs">
                                                     <?php echo $estado->descripcion; ?>
                                                 </td>
-                                                <td >
-                                                    <a href="/ConsultasEstados/edit/<?php echo $estado->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                <td>
+                                                    <?php if ((isset($accionesPermitidas['ConsultasEstados']['edit']) && $accionesPermitidas['ConsultasEstados']['edit'])) { ?>
+                                                        <a href="/ConsultasEstados/edit/<?php echo $estado->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php  } ?>
                                                 </td>
                                                 <td class="remove">
-                                                    <?= $this->Form->postLink(
-                                                        __('<i class="fa fa-remove"></i>'),
-                                                        ['action' => 'delete', $estado->id],
-                                                        [
-                                                            'confirm' => __('¿Esta seguro de eliminar el documento {0}?', $estado->nombre),
-                                                            'class' => 'btn btn-danger btn-xs pencil',
-                                                            'title' => 'Eliminar',
-                                                            'escape' => false
-                                                        ]
-                                                    ) ?>
+                                                    <?php if ((isset($accionesPermitidas['ConsultasEstados']['delete']) && $accionesPermitidas['ConsultasEstados']['delete'])) { ?>
+                                                        <?= $this->Form->postLink(
+                                                            __('<i class="fa fa-remove"></i>'),
+                                                            ['action' => 'delete', $estado->id],
+                                                            [
+                                                                'confirm' => __('¿Esta seguro de eliminar el documento {0}?', $estado->nombre),
+                                                                'class' => 'btn btn-danger btn-xs pencil',
+                                                                'title' => 'Eliminar',
+                                                                'escape' => false
+                                                            ]
+                                                        ) ?>
+                                                    <?php  } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

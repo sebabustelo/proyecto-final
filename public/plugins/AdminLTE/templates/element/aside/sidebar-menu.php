@@ -271,7 +271,8 @@ $action =   $this->request->getParam('action');
                         $active = ($id == $this->request->getParam('pass')[0]) ? ' active' : '';
                     } else {
                         $active = '';
-                    } ?>
+                    }
+                    ?>
                     <li class="<?php echo $active; ?>">
                         <a href="<?php echo $this->Url->build(['plugin' => null, 'controller' => 'Productos', 'action' => 'catalogoClienteCategorias', $id]); ?>">
                             <i class="fa fa-circle-o"></i> <?php echo h($categoria); ?>

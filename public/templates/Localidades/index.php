@@ -129,8 +129,8 @@
                                         </tr>
                                     </thead>
                                     <tfoot>
-                                        <tr >
-                                            <td colspan="12" >
+                                        <tr>
+                                            <td colspan="12">
                                                 <div class="text-center">
                                                     <ul class="pagination justify-content-center">
                                                         <li class="page-item">
@@ -138,7 +138,7 @@
                                                             <?php echo $this->Paginator->prev('<'); ?>
                                                         </li>
                                                         <li class="page-item">
-                                                            <?php echo $this->Paginator->numbers(['modulus'=>4]); ?>
+                                                            <?php echo $this->Paginator->numbers(['modulus' => 4]); ?>
                                                         </li>
                                                         <li class="page-item">
                                                             <?php echo $this->Paginator->next('>'); ?>
@@ -164,9 +164,12 @@
                                                 </td>
 
                                                 <td class="col-md-2">
-                                                    <a href="/Localidades/edit/<?php echo $localidad->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php if ((isset($accionesPermitidas['Localidades']['edit']) && $accionesPermitidas['Localidades']['edit'])) { ?>
+                                                        <a href="/Localidades/edit/<?php echo $localidad->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php  } ?>
                                                 </td>
                                                 <td class="col-md-">
+                                                <?php if ((isset($accionesPermitidas['Localidades']['delete']) && $accionesPermitidas['Localidades']['delete'])) { ?>
                                                     <?= $this->Form->postLink(
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $localidad->id],
@@ -177,6 +180,7 @@
                                                             'escape' => false
                                                         ]
                                                     ) ?>
+                                                       <?php  } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

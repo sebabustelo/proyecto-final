@@ -35,7 +35,7 @@ class PermisosComponent extends Component
         if (!$isPublicAction) {
 
             if (is_null($session->read('RbacUsuario'))) {
-                // debug(is_null($session->read('RbacUsuario')));die;
+
                 //Si no esta logueado solo puede accedeer a las acciones definidas en el array $this->accionesNoPublicasPermitidasSinLogin
 
                 return $this->Controller->redirect([
@@ -46,7 +46,7 @@ class PermisosComponent extends Component
                 //}
             } else {
                 $accionesPermitidasPorPerfiles = $session->read('RbacAcciones');
-                //debug($accionesPermitidasPorPerfiles);die;
+
                 $tienePermiso = (bool) FALSE;
 
 
@@ -55,13 +55,17 @@ class PermisosComponent extends Component
                 }
 
                 if (!$tienePermiso) {
-                    $this->Controller->Flash->error('Usted no tiene permiso para acceder a la funcionalidad requerida.');
+                   // $this->Controller->Flash->error('Usted no tiene permiso para acceder a la funcionalidad requerida.');
                     return $this->Controller->redirect([
-                        'plugin' => 'Rbac',
-                        'controller' => 'RbacUsuarios',
-                        'action' => 'login'
+                        'plugin'=>'Rbac',
+                        'controller' => 'Errors',
+                        'action' => 'error403'
                     ]);
                 }
+                // debug(isset($accionesPermitidasPorPerfiles[$controlador][$accion]));
+                // debug( $accionesPermitidasPorPerfiles);
+                // debug(!$tienePermiso);
+                // die;
             }
         }
     }

@@ -7,7 +7,7 @@
 ?>
 <section class="content-header">
     <h1>
-    <i class="fa fa-cubes"></i> Gestión de Proveedores
+        <i class="fa fa-cubes"></i> Gestión de Proveedores
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Proveedores</a></li> <i class="fa fa-arrow-right"></i>
@@ -165,19 +165,23 @@
                                                     <?php echo $this->Time->format($proveedor->modified, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
                                                 <td class="pencil">
-                                                    <a href="/Proveedores/edit/<?php echo $proveedor->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php if ((isset($accionesPermitidas['Proveedores']['edit']) && $accionesPermitidas['Proveedores']['edit'])) { ?>
+                                                        <a href="/Proveedores/edit/<?php echo $proveedor->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php  } ?>
                                                 </td>
                                                 <td class="remove">
-                                                    <?= $this->Form->postLink(
-                                                        __('<i class="fa fa-remove"></i>'),
-                                                        ['action' => 'delete', $proveedor->id],
-                                                        [
-                                                            'confirm' => __('¿Esta seguro de eliminar el proveedor {0}?', $proveedor->nombre),
-                                                            'class' => 'btn btn-danger btn-xs pencil',
-                                                            'title' => 'Eliminar',
-                                                            'escape' => false
-                                                        ]
-                                                    ) ?>
+                                                    <?php if ((isset($accionesPermitidas['Proveedores']['delete']) && $accionesPermitidas['Proveedores']['delete'])) { ?>
+                                                        <?= $this->Form->postLink(
+                                                            __('<i class="fa fa-remove"></i>'),
+                                                            ['action' => 'delete', $proveedor->id],
+                                                            [
+                                                                'confirm' => __('¿Esta seguro de eliminar el proveedor {0}?', $proveedor->nombre),
+                                                                'class' => 'btn btn-danger btn-xs pencil',
+                                                                'title' => 'Eliminar',
+                                                                'escape' => false
+                                                            ]
+                                                        ) ?>
+                                                    <?php  } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

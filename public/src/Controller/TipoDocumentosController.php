@@ -99,6 +99,7 @@ class TipoDocumentosController extends AppController
             return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
         }catch (\Exception $e) {
             $this->Flash->error(__('El tipo de documento no es válido.'));
+            return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
         }
     }
 

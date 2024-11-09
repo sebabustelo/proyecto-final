@@ -240,7 +240,7 @@ class ProductosController extends AppController
         }
 
         // Obtiene categorías y proveedores activos
-        $categorias = $this->Productos->Categorias->find('list')->where(['Categorias.activo' => 1])->all();
+        $categorias = $this->Productos->Categorias->find('list')->all();
         $proveedores = $this->Productos->Proveedores->find('list')->where(['Proveedores.activo' => 1])->all();
         $this->set(compact('producto', 'categorias', 'proveedores'));
     }
@@ -434,6 +434,8 @@ class ProductosController extends AppController
         $orConditions[] = ['Productos.nombre LIKE' => '%' . $data['search'] . '%'];
         $orConditions[] = ['Productos.descripcion_breve LIKE ' => '%' . $data['search'] . '%'];
         $conditions['where']['OR'] = $orConditions;
+        $conditions['where'][] = ['Categorias.activo' => 1 ];
+        $conditions['where'][] = ['Productos.activo' => 1 ];
 
         return $conditions;
     }

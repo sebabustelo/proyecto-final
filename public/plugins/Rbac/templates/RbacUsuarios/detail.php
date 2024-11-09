@@ -56,22 +56,22 @@
                                 <h5 class="description-header">Dirección</h5>
                                 <span class="description-text">
                                     <?php if (
-                                        !empty($rbacUsuario->direcciones[0]->localidade->provincia->nombre) &&
-                                        !empty($rbacUsuario->direcciones[0]->localidade->nombre)
+                                        !empty($rbacUsuario->direccion->localidade->provincia->nombre) &&
+                                        !empty($rbacUsuario->direccion->localidade->nombre)
                                     ): ?>
-                                        <?php echo $rbacUsuario->direcciones[0]->localidade->provincia->nombre . ", " . $rbacUsuario->direcciones[0]->localidade->nombre . " "; ?>
+                                        <?php echo $rbacUsuario->direccion->localidade->provincia->nombre . ", " . $rbacUsuario->direccion->localidade->nombre . " "; ?>
                                     <?php endif; ?>
 
-                                    <?php if (!empty($rbacUsuario->direcciones[0]->calle) && !empty($rbacUsuario->direcciones[0]->numero)): ?>
-                                        <?php echo "Calle: " . $rbacUsuario->direcciones[0]->calle . " " . $rbacUsuario->direcciones[0]->numero . " "; ?>
+                                    <?php if (!empty($rbacUsuario->direccion->calle) && !empty($rbacUsuario->direccion->numero)): ?>
+                                        <?php echo "Calle: " . $rbacUsuario->direccion->calle . " " . $rbacUsuario->direccion->numero . " "; ?>
                                     <?php endif; ?>
 
-                                    <?php if (!empty($rbacUsuario->direcciones[0]->piso)): ?>
-                                        <?php echo "Piso: " . $rbacUsuario->direcciones[0]->piso . " "; ?>
+                                    <?php if (!empty($rbacUsuario->direccion->piso)): ?>
+                                        <?php echo "Piso: " . $rbacUsuario->direccion->piso . " "; ?>
                                     <?php endif; ?>
 
-                                    <?php if (!empty($rbacUsuario->direcciones[0]->departamento)): ?>
-                                        <?php echo "Depto: " . $rbacUsuario->direcciones[0]->departamento; ?>
+                                    <?php if (!empty($rbacUsuario->direccion->departamento)): ?>
+                                        <?php echo "Depto: " . $rbacUsuario->direccion->departamento; ?>
                                     <?php endif; ?>
                                 </span>
 

@@ -59,7 +59,7 @@
                             </p>
                             <!-- Formulario para cargar receta y aclaración -->
                             <form id="pedidoForm" action="/Pedidos/addForCliente" method="POST" enctype="multipart/form-data">
-                                <input type="hidden" name="csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
+                            <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                                 <p>
                                     <i class="fa fa-fw  fa-cube"></i> <strong>Datos solicitados: </strong>
                                 <div class="form-group col-md-8">
@@ -74,13 +74,10 @@
                                 </div>
                                 <!-- Cantidad -->
 
-                                <!-- <div class="form-group col-md-2">
-                                <?php //debug($this->request->getData('detalle_pedido')[0]['cantidad']) ?>
-                                    <label for="cantidad">Cantidad</label>
-                                    <input onkeydown="preventInvalidInput(event)" oninput="limitInputLength(this)"
-                                        type="number" class="form-control" id="cantidad"  value="<?php echo $this->request->getData('detalle_pedido')[0]['cantidad'] ?? ''; ?>"
-                                        name="detalles_pedidos[0][cantidad]" min="1" max="99" required>
-                                </div> -->
+                                <div class="form-group col-md-2">
+                                    <!-- <label for="cantidad">Cantidad</label> -->
+                                    <input type="hidden" value="1">
+                                </div>
 
                                 <div class="form-group col-md-12">
                                     <label for="comentario">Comentario</label>
@@ -258,7 +255,7 @@
         const fechaIntervencionInput = document.getElementById("fecha_intervencion");
         const fechaIntervencion = new Date(fechaIntervencionInput.value);
         const fechaActual = new Date();
-        fechaActual.setDate(fechaActual.getDate() + 1);
+        fechaActual.setDate(fechaActual.getDate());
         // Eliminar horas, minutos y segundos para comparar solo las fechas
         fechaActual.setHours(0, 0, 0, 0);
 

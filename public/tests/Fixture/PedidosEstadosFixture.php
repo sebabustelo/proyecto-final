@@ -29,7 +29,7 @@ class PedidosEstadosFixture extends TestFixture
             ],
             [
                 'id' => 2,
-                'nombre' => 'estado 2',
+                'nombre' => 'PAGADO',
                 'descripcion' => 'Lorem ipsum dolor sit amet',
                 'activo' => 1,
                 'created' => '2024-10-17 15:44:47',
@@ -38,7 +38,7 @@ class PedidosEstadosFixture extends TestFixture
             ],
             [
                 'id' => 3,
-                'nombre' => 'estado 3',
+                'nombre' => 'PENDIENTE',
                 'descripcion' => 'estado 3',
                 'activo' => 1,
                 'created' => '2024-10-17 15:44:47',

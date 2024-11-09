@@ -39,18 +39,32 @@
                                 </select>
                             </div>
                             <div class="form-group col-md-3">
-                                <input type="number" name="documento" placeholder="DNI/CUIT" class="form-control" id="cuit" aria-label="cuit" value="<?php echo (isset($filters['cuit'])) ? $filters['cuit'] : '' ?>">
+                            <input type="text" placeholder="Número de Doc." maxlength="11"
+                                    class="form-control"
+                                    value="<?php echo (isset($filters['documento'])) ? $filters['documento'] : '' ?>"
+                                    name="documento" id="documento"
+                                    oninput="validateDocumentInput()"
+                                    onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();">
+
                             </div>
 
                             <div class="form-group col-md-3">
-                                <input type="text" name="apellido" placeholder="Apellido" class="form-control" id="nombre" aria-label="nombre" value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
+                                <input type="text" name="apellido"
+                                placeholder="Apellido" class="form-control" id="nombre"
+                                aria-label="nombre"
+                                maxlength="50"
+                                value="<?php echo (isset($filters['nombre'])) ? $filters['nombre'] : '' ?>">
                             </div>
                             <div class="form-group col-md-3">
-                                <input type="email" name="email" placeholder="Correo electrónico" class="form-control" id="nombre" aria-label="email" value="<?php echo (isset($filters['email'])) ? $filters['email'] : '' ?>">
+                                <input type="email" name="email" placeholder="Correo electrónico"
+                                class="form-control" id="nombre" aria-label="email"
+                                  maxlength="50"
+                                value="<?php echo (isset($filters['email'])) ? $filters['email'] : '' ?>">
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="">&nbsp;</label>
-                                <input type="text" name="producto" placeholder="Producto" class="form-control" id="nombre" aria-label="producto" value="<?php echo (isset($filters['producto'])) ? $filters['producto'] : '' ?>">
+                                <input type="text" name="producto" placeholder="Producto" class="form-control" id="nombre" aria-label="producto"
+                                value="<?php echo (isset($filters['producto'])) ? $filters['producto'] : '' ?>">
                             </div>
 
                             <div class="form-group col-md-4">
@@ -64,12 +78,14 @@
                                 <!-- /.input group -->
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="">Fecha de aplicación</label>
+                                <label for="">Fecha de intervención</label>
                                 <div class="input-group">
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    <input type="text" class="form-control pull-right" value="<?php echo (isset($filters['fecha_aplicacion'])) ? $filters['fecha_aplicacion'] : '' ?>" id="fecha_aplicacion" name="fecha_aplicacion" placeholder="fecha desde - fecha hasta">
+                                    <input type="text" class="form-control pull-right"
+                                    value="<?php echo (isset($filters['fecha_intervencion'])) ? $filters['fecha_intervencion'] : '' ?>"
+                                    id="fecha_intervencion" name="fecha_intervencion" placeholder="fecha desde - fecha hasta">
                                 </div>
                                 <!-- /.input group -->
                             </div>
@@ -90,7 +106,7 @@
                                     $(function() {
                                         $('#limpiar').on('click', function() {
                                             $('#formOrderFilter').find(
-                                                'input:text, input:password, select, textarea').val('');
+                                                'input:text, input:password,  input[type="email"], select, textarea').val('');
                                             // $('#formOrderFilter').find(
                                             //     'input:radio, input:checkbox:not(#activo)').prop(
                                             //     'checked', false);
@@ -141,7 +157,7 @@
                                                 <?php echo $this->Paginator->sort('RbacUsuarios.nombre', __('Cliente')); ?>
                                             </th>
                                             <th class="col-sm-2">
-                                            <?php echo $this->Paginator->sort('Productos.nombre', __('Productos')); ?>
+                                                <?php echo $this->Paginator->sort('Productos.nombre', __('Productos')); ?>
                                             </th>
                                             <th class="hidden-xs col-sm-2">
                                                 <?php echo $this->Paginator->sort('Pedidos.fecha_pedido', 'Fecha de Pedido'); ?>
@@ -211,14 +227,16 @@
                                                     <?php echo $this->Time->format($pedido->fecha_intervencion, 'dd/MM/Y'); ?>
                                                 </td>
                                                 <td class="pencil">
-                                                    <?php if ($pedido->pedidos_estado->nombre != 'CANCELADO') {  ?>
-                                                        <?php if ((isset($accionesPermitidas['Pedidos']['edit']) && $accionesPermitidas['Pedidos']['edit'])) { ?>
-                                                            <a href="/Pedidos/edit/<?php echo $pedido->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self">
-                                                                <i class="fa fa-pencil"></i></a>
+                                                    <?php if ((isset($accionesPermitidas['Pedidos']['edit']) && $accionesPermitidas['Pedidos']['edit'])) { ?>
+                                                        <?php if ($pedido->pedidos_estado->nombre != 'CANCELADO') {  ?>
+                                                            <?php if ((isset($accionesPermitidas['Pedidos']['edit']) && $accionesPermitidas['Pedidos']['edit'])) { ?>
+                                                                <a href="/Pedidos/edit/<?php echo $pedido->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self">
+                                                                    <i class="fa fa-pencil"></i></a>
+                                                            <?php  } ?>
+                                                        <?php } else {  ?>
+                                                            <a href="#" class=" btn btn-default btn-xs " title="Cancelado, no se puede editar" target="_self">
+                                                                <i class="fa fa-minus"></i></a>
                                                         <?php  } ?>
-                                                    <?php }else{  ?>
-                                                        <a href="#" class=" btn btn-default btn-xs "  title="Cancelado, no se puede editar" target="_self">
-                                                        <i class="fa fa-minus"></i></a>
                                                     <?php  } ?>
                                                 </td>
                                                 <!-- <td class="remove">
@@ -285,7 +303,7 @@
         $(this).val('');
     });
 
-    $('#fecha_aplicacion').daterangepicker({
+    $('#fecha_intervencion').daterangepicker({
         "locale": {
             "direction": "ltr",
             "format": 'DD/MM/YYYY',
@@ -304,11 +322,11 @@
 
 
 
-    $('#fecha_aplicacion').on('apply.daterangepicker', function(ev, picker) {
+    $('#fecha_intervencion').on('apply.daterangepicker', function(ev, picker) {
         $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
     });
 
-    $('#fecha_aplicacion').on('cancel.daterangepicker', function(ev, picker) {
+    $('#fecha_intervencion').on('cancel.daterangepicker', function(ev, picker) {
         $(this).val('');
     });
 </script>

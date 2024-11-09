@@ -8,7 +8,7 @@ use Cake\I18n\DateTime;
 use Cake\Routing\Router;
 use Cake\Mailer\Mailer;
 use Cake\Mailer\Exception\MissingActionException;
-use Cake\Http\Exception\InvalidCsrfTokenException;
+use Cake\Datasource\Exception\RecordNotFoundException;
 
 /**
  * Categorias Controller
@@ -101,40 +101,58 @@ class PedidosController extends AppController
     public function edit($id = null)
     {
         // Cargar el pedido para obtener la fecha_pedido
-        $pedido = $this->Pedidos->find()
-            ->where(['Pedidos.id' => $id])
-            ->contain(['PedidosEstados', 'OrdenesMedicas', 'DetallesPedidos' => [
-                'Productos' => [
-                    'ProductosPrecios' => function ($q) use ($id) {
-                        // Obtener el pedido usando el ID
-                        $pedido = $this->Pedidos->get($id);
-                        return $q->where([
-                            'fecha_desde <=' => $pedido->fecha_pedido,
-                            'OR' => [
-                                'fecha_hasta >=' => $pedido->fecha_pedido,
-                                'fecha_hasta IS' => null // Considerar también precios sin fecha_hasta
-                            ]
-                        ]);
-                    }
-                ]
-            ], 'OrdenesMedicas', 'RbacUsuarios' => ['TipoDocumentos']])
-            ->first();
 
-        if ($pedido->pedidos_estado->nombre != 'CANCELADO') {
-
-            if ($this->request->is(['patch', 'post', 'put'])) {
-                $pedido = $this->Pedidos->patchEntity($pedido, $this->request->getData());
-                if ($this->Pedidos->save($pedido)) {
-                    $this->Flash->success(__('El pedido se actualizo correctamente.'));
-
-                    return $this->redirect('/Pedidos/index');
-                }
-                $this->Flash->error(__('El pedido no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+        try {
+            if (!is_numeric($id)) {
+                throw new \Exception("Error Processing Request", 1);
             }
-            $this->set(compact('pedido'));
-        } else {
-            $this->Flash->error(__('El pedido se encuentra cancelado y no puede ser editado.'));
-            return $this->redirect('/Pedidos/index');
+
+            $pedido = $this->Pedidos->find()
+                ->where(['Pedidos.id' => $id])
+                ->contain(['PedidosEstados', 'OrdenesMedicas', 'DetallesPedidos' => [
+                    'Productos' => [
+                        'ProductosPrecios' => function ($q) use ($id) {
+                            // Obtener el pedido usando el ID
+                            $pedido = $this->Pedidos->get($id);
+                            return $q->where([
+                                'fecha_desde <=' => $pedido->fecha_pedido,
+                                'OR' => [
+                                    'fecha_hasta >=' => $pedido->fecha_pedido,
+                                    'fecha_hasta IS' => null // Considerar también precios sin fecha_hasta
+                                ]
+                            ]);
+                        }
+                    ]
+                ], 'OrdenesMedicas', 'RbacUsuarios' => ['TipoDocumentos']])
+                ->first();
+            //if(!iss)
+
+            if (!$pedido) {
+                throw new RecordNotFoundException("Error Processing Request", 1);
+            }
+
+            if ($pedido->pedidos_estado->nombre != 'CANCELADO') {
+
+                if ($this->request->is(['patch', 'post', 'put'])) {
+                    $pedido = $this->Pedidos->patchEntity($pedido, $this->request->getData());
+                    if ($this->Pedidos->save($pedido)) {
+                        $this->Flash->success(__('El pedido se actualizo correctamente.'));
+
+                        return $this->redirect('/Pedidos/index');
+                    }
+                    $this->Flash->error(__('El pedido no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+                }
+                $this->set(compact('pedido'));
+            } else {
+                $this->Flash->error(__('El pedido se encuentra cancelado y no puede ser editado.'));
+                return $this->redirect('/Pedidos/index');
+            }
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('El pedido no existe.'));
+            return $this->redirect(['action' => 'index']);
+        } catch (\Exception $e) {
+            $this->Flash->error(__('El pedido no es válido.'));
+            return $this->redirect(['action' => 'index']);
         }
     }
 
@@ -161,6 +179,7 @@ class PedidosController extends AppController
             $connection->begin();
 
             try {
+
                 $pedido = $this->Pedidos->patchEntity(
                     $pedido,
                     $this->request->getData(),
@@ -184,25 +203,31 @@ class PedidosController extends AppController
                 $pedido['estado_id'] = $estadoPendiente->id;
                 $pedido['cliente_id'] = $_SESSION['RbacUsuario']['id'];
                 $pedido['fecha_pedido'] = date('Y-m-d H:i:s');
+                $pedido['detalles_pedidos'][0]['cantidad'] = 1;
+
 
                 // Verificar stock
                 $producto_id = $pedido->detalles_pedidos[0]->producto_id;
                 $producto = $this->Pedidos->DetallesPedidos->Productos->find()->where(['id' => $producto_id])->first();
 
-                if ($producto->stock >= ($this->request->getData('detalles_pedidos')[0]['cantidad'])) {
+                // if ($producto->stock >= ($this->request->getData('detalles_pedidos')[0]['cantidad'])) {
+                if ($producto->stock >= 1) {
                     $producto->stock = $producto->stock - 1;
                     $this->Pedidos->DetallesPedidos->Productos->save($producto);
                 } else {
+
                     //$this->Flash->error(__('Lo sentimos, el producto que solicitaste se ha agotado. Por favor, verifica más tarde o elige otro producto.'));
-                    throw new \Exception('Lo sentimos, el producto que solicitaste se ha agotado. Por favor, verifica más tarde o elige otro producto.');
+                    throw new \Exception('Lo sentimos, el producto que solicitaste se ha agotado. Por favor, vuelve más tarde o elige otro producto.');
                 }
 
                 // Guardar el pedido
                 if ($this->Pedidos->save($pedido)) {
 
                     // Subida de la orden médica
+
                     $file = $this->request->getData('orden_medica');
                     $result = $this->Upload->upload($file, WWW_ROOT . 'uploads/ordenes_medicas/');
+
 
                     if ($result['status']) {
                         $orden_medica = $this->Pedidos->OrdenesMedicas->newEmptyEntity();
@@ -227,17 +252,25 @@ class PedidosController extends AppController
                         //throw new \Exception($result['error']); // Lanzar una excepción si hay un error al subir la orden médica
                     }
                 } else {
+                    if ($pedido->getErrors()) {
+                        foreach ($pedido->getErrors() as $field => $errors) {
+                            foreach ($errors as $error) {
+                                $this->Flash->error(__($error));
+                            }
+                        }
+                    }
+                   // die("1");
                     $this->Flash->error(__('Ocurrio un error al guardar el pedido'));
                     //throw new \Exception('Error al guardar el pedido.');
                 }
             } catch (\Exception $e) {
                 // En caso de error, hacer rollback de la transacción
+               // die("2");
                 $connection->rollback();
                 // $this->Flash->error(__('Ocurrio un error al guardar el pedido'));
                 $this->Flash->error($e->getMessage());
             }
             return $this->redirect('/Productos/catalogoCliente');
-            $this->set(compact('pedido'));
         }
     }
 
@@ -314,8 +347,7 @@ class PedidosController extends AppController
 
         $this->RbacToken = $this->fetchTable('Rbac.RbacToken');
         $resultToken = $this->RbacToken->find()->where(['token' => $token])->contain(['RbacUsuarios'])->first();
-        // debug($resultToken);
-        // die;
+
 
         if (!$resultToken || !$this->RbacToken->isValidToken($token)) {
             $this->Flash->error('Token no es válido o ha expirado.');
@@ -323,7 +355,9 @@ class PedidosController extends AppController
         }
 
         $partes = explode('-', $resultToken->token);
-
+        // debug($partes);
+        // debug($resultToken);
+        // die;
         // Obtener el primer valor antes del guion
         $pedido_id = $partes[0];
 
@@ -354,7 +388,7 @@ class PedidosController extends AppController
             ->where(['nombre' => 'PAGADO'])
             ->first();
 
-        // Asignar valores adicionales al pedido
+
         $pedido['estado_id'] = $estadoPagado->id;
 
         if ($this->Pedidos->save($pedido)) {
@@ -462,12 +496,24 @@ class PedidosController extends AppController
             $conditions['where'][] = ['Productos.nombre like' => "%" . $data['producto'] . "%"];
         }
 
+        if (isset($data['documento']) and !empty($data['documento'])) {
+            $conditions['where'][] = ['RbacUsuarios.documento like' => "%" . $data['documento'] . "%"];
+        }
+
+        if (isset($data['apellido']) and !empty($data['apellido'])) {
+            $conditions['where'][] = ['RbacUsuarios.apellido like' => "%" . $data['apellido'] . "%"];
+        }
+
+        if (isset($data['email']) and !empty($data['email'])) {
+            $conditions['where'][] = ['RbacUsuarios.email like' => "%" . $data['email'] . "%"];
+        }
+
         if (isset($data['fecha_pedido']) && !empty($data['fecha_pedido'])) {
             // Separar las dos fechas basadas en el guion
             $fechas = explode(' - ', $data['fecha_pedido']);
 
             // Convertir las cadenas de fecha en objetos DateTime con hora de inicio y fin
-            $fecha_inicio = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[0] . ' 00:00:01');
+            $fecha_inicio = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[0] . ' 00:00:00');
             $fecha_fin = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[1] . ' 23:59:59');
 
             // Verificar si las fechas fueron creadas correctamente
@@ -484,7 +530,7 @@ class PedidosController extends AppController
             $fechas = explode(' - ', $data['fecha_intervencion']);
 
             // Convertir las cadenas de fecha en objetos DateTime con hora de inicio y fin
-            $fecha_inicio = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[0] . ' 00:00:01');
+            $fecha_inicio = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[0] . ' 00:00:00');
             $fecha_fin = DateTime::createFromFormat('d/m/Y H:i:s', $fechas[1] . ' 23:59:59');
 
             // Verificar si las fechas fueron creadas correctamente

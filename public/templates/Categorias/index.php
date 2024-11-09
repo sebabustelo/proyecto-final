@@ -4,11 +4,12 @@
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\Categorias> $categorias
  */
+
 use Cake\Core\Configure;
 ?>
 <section class="content-header">
     <h1>
-      <?php echo Configure::read('Menu.ParamatrosSistema') ?>
+        <?php echo Configure::read('Menu.ParamatrosSistema') ?>
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Categorías</a></li> <i class="fa fa-arrow-right"></i>
@@ -144,19 +145,23 @@ use Cake\Core\Configure;
                                                     <?php echo $this->Time->format($categoria->modified, 'dd/MM/Y HH:mm:ss'); ?>
                                                 </td>
                                                 <td>
-                                                    <a href="/Categorias/edit/<?php echo $categoria->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php if ((isset($accionesPermitidas['Categorias']['edit']) && $accionesPermitidas['Categorias']['edit'])) { ?>
+                                                        <a href="/Categorias/edit/<?php echo $categoria->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php  } ?>
                                                 </td>
                                                 <td class="remove">
-                                                    <?= $this->Form->postLink(
-                                                        __('<i class="fa fa-remove"></i>'),
-                                                        ['action' => 'delete', $categoria->id],
-                                                        [
-                                                            'confirm' => __('¿Esta seguro de eliminar la categoría {0}?', $categoria->nombre),
-                                                            'class' => 'btn btn-danger btn-xs pencil',
-                                                            'title' => 'Eliminar',
-                                                            'escape' => false
-                                                        ]
-                                                    ) ?>
+                                                    <?php if ((isset($accionesPermitidas['Categorias']['edit']) && $accionesPermitidas['Categorias']['edit'])) { ?>
+                                                        <?= $this->Form->postLink(
+                                                            __('<i class="fa fa-remove"></i>'),
+                                                            ['action' => 'delete', $categoria->id],
+                                                            [
+                                                                'confirm' => __('¿Esta seguro de eliminar la categoría {0}?', $categoria->nombre),
+                                                                'class' => 'btn btn-danger btn-xs pencil',
+                                                                'title' => 'Eliminar',
+                                                                'escape' => false
+                                                            ]
+                                                        ) ?>
+                                                    <?php  } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

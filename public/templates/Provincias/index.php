@@ -145,9 +145,14 @@
                                                     <?php echo $provincia->nombre; ?>
                                                 </td>
                                                 <td class="col-md-1">
-                                                    <a href="/Provincias/edit/<?php echo $provincia->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+
+                                                    <?php if ((isset($accionesPermitidas['Provincias']['edit']) && $accionesPermitidas['Provincias']['edit'])) { ?>
+                                                        <a href="/Provincias/edit/<?php echo $provincia->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php  } ?>
                                                 </td>
+
                                                 <td class="col-md-1">
+                                                <?php if ((isset($accionesPermitidas['Provincias']['delete']) && $accionesPermitidas['Provincias']['delete'])) { ?>
                                                     <?= $this->Form->postLink(
                                                         __('<i class="fa fa-remove"></i>'),
                                                         ['action' => 'delete', $provincia->id],
@@ -158,6 +163,7 @@
                                                             'escape' => false
                                                         ]
                                                     ) ?>
+                                                     <?php  } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>

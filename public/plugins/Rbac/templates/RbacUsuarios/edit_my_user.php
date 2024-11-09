@@ -42,7 +42,7 @@
                                     <?php  } ?>
                                 </div>
                                 <div class="form-group col-sm-4">
-                                    <label >Apellido</label>
+                                    <label>Apellido</label>
                                     <input required type="text" value="<?php echo $rbacUsuario->apellido; ?>" placeholder="Ingrese el apellido" class="form-control" name="apellido" oninvalid="this.setCustomValidity('Debe completar el/los apellido/s')" oninput="this.setCustomValidity('')">
                                     <?php foreach ($rbacUsuario->getError('apellido') as $k => $v) { ?>
                                         <div class="form-group   label label-danger">
@@ -54,9 +54,9 @@
                                 </div>
                             <?php } else { ?>
                                 <div class="form-group col-sm-8">
-                                    <label >Razon Social</label>
+                                    <label>Razon Social</label>
                                     <input required type="text" value="<?php echo $rbacUsuario->razon_social; ?>" placeholder="Ingrese la razón social"
-                                     class="form-control" name="apellido" oninvalid="this.setCustomValidity('Debe completar la razón social')" oninput="this.setCustomValidity('')">
+                                        class="form-control" name="apellido" oninvalid="this.setCustomValidity('Debe completar la razón social')" oninput="this.setCustomValidity('')">
                                     <?php foreach ($rbacUsuario->getError('razon_social') as $k => $v) { ?>
                                         <div class="form-group   label label-danger">
                                             <span class=" "> <i class="fa fa-exclamation-circle" aria-hidden="true"></i>
@@ -83,7 +83,7 @@
 
                             <div class="form-group col-sm-2">
                                 <label>Tipo de Documento</label><br>
-                                <select required name="tipo_documento_id" class="form-control">
+                                <select required name="tipo_documento_id" id="tipo_documento_id" class="form-control">
                                     <option value="">Seleccione</option>
                                     <?php foreach ($tipoDocumentos as $id => $tipoDocumento) : ?>
                                         <?php if ($rbacUsuario->tipo_documento_id == $id) { ?>
@@ -97,9 +97,9 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <label>Documento</label>
-                                <input required type="text" placeholder="Número de Doc." maxlength="20"
-                                    class="form-control" value="<?php echo $rbacUsuario->documento; ?>" name="documento"
-                                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9]/g, '');"
+                                <input required type="text" placeholder="Número de Doc." maxlength="11"
+                                    class="form-control" value="<?php echo $rbacUsuario->documento; ?>" name="documento" id="documento"
+                                    oninput="validateDocumentInput()"
                                     onkeydown="if(event.key === '-' || event.key === ' ' || event.key === '+') event.preventDefault();">
                             </div>
                             <div class="form-group col-sm-4">
@@ -144,13 +144,25 @@
                                 <label>Número</label>
                                 <input name="direccion[numero]"
                                     value="<?php echo isset($rbacUsuario->direccion->numero) ? $rbacUsuario->direccion->numero : ''; ?>"
-                                    type="number" class="form-control" placeholder="Número" min="1" max="9999" onkeydown="preventInvalidInput(event)"
+                                    type="number"
+                                    class="form-control"
+                                    placeholder="Número"
+                                    min="1"
+                                    max="9999"
+                                    onkeydown="preventInvalidInput(event)"
                                     oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
                             </div>
                             <div class="form-group col-sm-1">
                                 <label>Piso</label>
-                                <input name="direccion[piso]" type="text" class="form-control"
-                                    value="<?php echo isset($rbacUsuario->direccion->piso) ? $rbacUsuario->direccion->piso : ''; ?>" placeholder="Piso" maxlength="3">
+                                <input name="direccion[piso]"
+                                    value="<?php echo isset($rbacUsuario->direccion->piso) ? $rbacUsuario->direccion->piso : ''; ?>"
+                                    type="number"
+                                    class="form-control"
+                                    placeholder="Piso"
+                                    min="1"
+                                    max="99"
+                                    onkeydown="preventInvalidInput(event)"
+                                    oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2);">
                             </div>
                             <div class="form-group col-sm-1">
                                 <label>Depto</label>
@@ -254,6 +266,19 @@
         const invalidChars = ['e', 'E', '+', '-']; // caracteres que quieres restringir
         if (invalidChars.includes(event.key)) {
             event.preventDefault();
+        }
+    }
+
+    function validateDocumentInput() {
+        var tipoDocumento = document.getElementById('tipo_documento_id').value;
+        var documentoInput = document.getElementById('documento');
+
+        if (tipoDocumento === '3') { // PASAPORTE
+            // Permitir letras y números
+            documentoInput.value = documentoInput.value.replace(/[^a-zA-Z0-9]/g, '');
+        } else {
+            // Permitir solo números
+            documentoInput.value = documentoInput.value.replace(/\D/g, '');
         }
     }
 </script>

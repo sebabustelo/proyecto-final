@@ -343,7 +343,7 @@ class LocalidadesControllerTest extends TestCase
     public function testGetConditions()
     {
         $this->enableCsrfToken();
-        $this->enableSecurityToken();;
+        $this->enableSecurityToken();
 
         $this->get('/Localidades/index?nombre=ejemplo&provincia_id=1&activo=1');
         $this->assertResponseOk();

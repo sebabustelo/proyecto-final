@@ -32,7 +32,7 @@
                     <div class="form-row">
                         <form id="ProductosEditForm" name="ProductosEditForm" role="form" action="/Productos/edit/<?php echo $producto->id; ?>" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
-                            <div class="form-group col-sm-4">
+                            <div class="form-group col-sm-3">
                                 <label>Nombre</label>
                                 <input required type="text" maxlength="150" placeholder="Ingrese el nombre" class="form-control" name="nombre" value="<?php echo $producto->nombre; ?>">
                                 <?php if ($producto->getError('nombre')) { ?>
@@ -67,7 +67,7 @@
                                     <?php endforeach; ?>
                                 </select>
                             </div>
-                            <div class="form-group col-sm-2">
+                            <div class="form-group col-sm-1">
                                 <label>Stock</label>
                                 <input required type="number" maxlength="3" name="stock" min="0" placeholder="Ingrese el stock"
                                     class="form-control" value="<?php echo $producto->stock; ?>">
@@ -86,6 +86,15 @@
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
                                     <?php } ?>
                                 <?php } ?>
+                            </div>
+                            <div class="form-group   col-sm-2">
+                                <label>&nbsp;</label><br>
+                                <label class="btn btn-default btn-block">
+                                    <input type="hidden" name="activo" value="0">
+                                    <input value="1" type="checkbox" name="activo" <?php echo (isset($producto) and $producto['activo']) == 'true' ? 'checked' : ''; ?>>
+                                    <span>Activo</span>
+
+                                </label>
                             </div>
 
                             <div class="form-group col-sm-12">

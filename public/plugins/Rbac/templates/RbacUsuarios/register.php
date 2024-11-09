@@ -131,8 +131,16 @@ use Cake\Core\Configure; ?>
                     oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
             </div>
             <div class="col-xs-4">
-                <input name="direccion[piso]" type="text" class="form-control" placeholder="Piso" maxlength="3"
-                    value="<?php echo !empty($this->request->getData('direccion')['piso']) ? $this->request->getData('direccion')['piso'] : ''; ?>">
+
+                <input name="direccion[piso]"
+                    value="<?php echo isset($rbacUsuario->direccion->piso) ? $rbacUsuario->direccion->piso : ''; ?>"
+                    type="number"
+                    class="form-control"
+                    placeholder="Piso"
+                    min="1"
+                    max="99"
+                    onkeydown="preventInvalidInput(event)"
+                    oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2);">
             </div>
             <div class="col-xs-4">
                 <input name="direccion[departamento]" type="text" class="form-control" placeholder="Depto" maxlength="3"
@@ -330,7 +338,7 @@ use Cake\Core\Configure; ?>
         var tipoDocumento = document.getElementById('tipo_documento_id').value;
         var documentoInput = document.getElementById('documento');
 
-        if (tipoDocumento === '3') { // Cambia 'PASAPORTE_ID' por el ID correspondiente al pasaporte
+        if (tipoDocumento === '3') { // PASAPORTE
             // Permitir letras y números
             documentoInput.value = documentoInput.value.replace(/[^a-zA-Z0-9]/g, '');
         } else {

@@ -108,12 +108,10 @@ class LocalidadesController extends AppController
             $this->set(compact('localidad', 'provincias'));
         } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('La localidad no existe.'));
-            return $this->redirect(['controller' => 'TipoDocumentos', 'action' => 'index']);
-        } catch (\InvalidArgumentException $e) {
-            $this->Flash->error('La localidad no es válida.');
             return $this->redirect(['action' => 'index']);
         } catch (\Exception $e) {
             $this->Flash->error(__('La localidad no es válida.'));
+            return $this->redirect(['action' => 'index']);
         }
     }
 
@@ -151,7 +149,6 @@ class LocalidadesController extends AppController
                     }
                 }
             }
-
         } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('La localidad no existe.'));
         } catch (MethodNotAllowedException $e) {

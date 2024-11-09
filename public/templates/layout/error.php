@@ -81,17 +81,18 @@ use Cake\Core\Configure;
                     <!-- Mostrar código de error y detalles solo en modo depuración -->
                     <div class="error-details">
                         <h3>Detalles del Error:</h3>
-                        <p><strong>Código de error:</strong> <?= h($code) ?></p>
-                        <p><?= h($this->fetch('content')) ?></p>
+
+                        <p><?php echo($this->fetch('content')) ?></p>
                     </div>
                 <?php else: ?>
-                    <p><strong>Código de error:</strong> <?= h($code) ?></p>
-                    <p>Estamos trabajando para solucionar este problema lo antes posible.</p>
+
+                    <p> <?php echo $this->fetch('content'); ?></p>
                 <?php endif; ?>
 
 
             </div>
-            <a href="<?= $this->Url->build('/') ?>" class="btn">Volver a la Página de Inicio</a>
+            <a href="<?= $this->request->referer('/', true) ?>" class="btn">Volver</a>
+
         </main>
     </div>
 </body>

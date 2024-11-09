@@ -4,6 +4,7 @@
  * @var \App\View\AppView $this
  * @var iterable<\App\Model\Entity\TipoDocumento> $tipoDocumentos
  */
+
 use Cake\Core\Configure;
 ?>
 <section class="content-header">
@@ -126,19 +127,24 @@ use Cake\Core\Configure;
                                                     <?php echo $tipoDocumento->descripcion; ?>
                                                 </td>
                                                 <td>
-                                                    <a href="/TipoDocumentos/edit/<?php echo $tipoDocumento->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php if ((isset($accionesPermitidas['TipoDocumentos']['edit']) && $accionesPermitidas['TipoDocumentos']['edit'])) { ?>
+                                                        <a href="/TipoDocumentos/edit/<?php echo $tipoDocumento->id; ?>" class="editar btn btn-success btn-xs pencil" title="Editar" target="_self"><i class="fa fa-pencil"></i></a>
+                                                    <?php } ?>
                                                 </td>
+
                                                 <td>
-                                                    <?= $this->Form->postLink(
-                                                        __('<i class="fa fa-remove"></i>'),
-                                                        ['controller'=>'tipoDocumentos','action' => 'delete', $tipoDocumento->id],
-                                                        [
-                                                            'confirm' => __('¿Esta seguro de eliminar el documento {0}?', $tipoDocumento->descripcion),
-                                                            'class' => 'btn btn-danger btn-xs pencil',
-                                                            'title' => 'Eliminar',
-                                                            'escape' => false
-                                                        ]
-                                                    ) ?>
+                                                    <?php if ((isset($accionesPermitidas['TipoDocumentos']['delete']) && $accionesPermitidas['TipoDocumentos']['delete'])) { ?>
+                                                        <?= $this->Form->postLink(
+                                                            __('<i class="fa fa-remove"></i>'),
+                                                            ['controller' => 'tipoDocumentos', 'action' => 'delete', $tipoDocumento->id],
+                                                            [
+                                                                'confirm' => __('¿Esta seguro de eliminar el documento {0}?', $tipoDocumento->descripcion),
+                                                                'class' => 'btn btn-danger btn-xs pencil',
+                                                                'title' => 'Eliminar',
+                                                                'escape' => false
+                                                            ]
+                                                        ) ?>
+                                                    <?php  } ?>
                                                 </td>
                                             </tr>
                                         <?php } ?>
