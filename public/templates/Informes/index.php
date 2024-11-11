@@ -13,6 +13,39 @@
 
 <!-- Main content -->
 <section class="content">
+    <div class="row">
+        <div class="col-md-12 ">
+            <div class="info-box">
+                <div class="info-box-content">
+                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/Informes/index">
+                        <div class=" form-row">
+                            <div class="form-group col-md-8">
+                                <label for="">Rango de fecha de pedidos</label>
+                                <div class="input-group">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    <input type="text" class="form-control" value="<?php echo (isset($filters['fecha_pedido'])) ? $filters['fecha_pedido'] : '' ?>" id="fecha_pedido" name="fecha_pedido" placeholder="fecha desde - fecha hasta">
+                                </div>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="">&nbsp;</label>
+                                <div class="input-group">
+
+                                    <button type="submit" id="enviar" class="btn btn-primary">
+                                        <span class="glyphicon glyphicon-search"></span>
+                                        Buscar
+                                    </button>
+                                </div>
+
+
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Info boxes -->
     <div class="row">
 
@@ -23,7 +56,7 @@
 
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Pedidos en Curso</span>
+                    <span class="info-box-text">Pedidos PENDIENTES</span>
                     <span class="info-box-number">41</span>
                 </div>
                 <!-- /.info-box-content -->
@@ -54,7 +87,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">Nuevos Clientes</span>
-                    <span class="info-box-number">27</span>
+                    <span class="info-box-number"><?php echo count($clientes); ?></span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -78,9 +111,9 @@
                 <!-- /.box-header -->
                 <div class="box-body">
                     <div class="row">
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <p class="text-center">
-                                <strong>Ventas: 1 Enero, 2024 - 30 Julio, 2024</strong>
+                                <strong>Ventas: <?php echo $filters['fecha_pedido'] ?></strong>
                             </p>
 
                             <div class="chart">
@@ -90,48 +123,7 @@
                             <!-- /.chart-responsive -->
                         </div>
                         <!-- /.col -->
-                        <div class="col-md-4">
-                            <p class="text-center">
-                                <strong>Goal Completion</strong>
-                            </p>
-
-                            <div class="progress-group">
-                                <span class="progress-text">Add Products to Cart</span>
-                                <span class="progress-number"><b>160</b>/200</span>
-
-                                <div class="progress sm">
-                                    <div class="progress-bar progress-bar-aqua" style="width: 80%"></div>
-                                </div>
-                            </div>
-                            <!-- /.progress-group -->
-                            <div class="progress-group">
-                                <span class="progress-text">Complete Purchase</span>
-                                <span class="progress-number"><b>310</b>/400</span>
-
-                                <div class="progress sm">
-                                    <div class="progress-bar progress-bar-red" style="width: 80%"></div>
-                                </div>
-                            </div>
-                            <!-- /.progress-group -->
-                            <div class="progress-group">
-                                <span class="progress-text">Visit Premium Page</span>
-                                <span class="progress-number"><b>480</b>/800</span>
-
-                                <div class="progress sm">
-                                    <div class="progress-bar progress-bar-green" style="width: 80%"></div>
-                                </div>
-                            </div>
-                            <!-- /.progress-group -->
-                            <div class="progress-group">
-                                <span class="progress-text">Send Inquiries</span>
-                                <span class="progress-number"><b>250</b>/500</span>
-
-                                <div class="progress sm">
-                                    <div class="progress-bar progress-bar-yellow" style="width: 80%"></div>
-                                </div>
-                            </div>
-                            <!-- /.progress-group -->
-                        </div>
+                       
                         <!-- /.col -->
                     </div>
                     <!-- /.row -->
@@ -139,41 +131,16 @@
                 <!-- ./box-body -->
                 <div class="box-footer">
                     <div class="row">
-                        <div class="col-sm-3 col-xs-6">
+                        <div class="col-sm-12 col-xs-6">
                             <div class="description-block border-right">
-                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 17%</span>
+
                                 <h5 class="description-header">$35,210.43</h5>
                                 <span class="description-text">INGRESOS TOTALES</span>
                             </div>
                             <!-- /.description-block -->
                         </div>
                         <!-- /.col -->
-                        <div class="col-sm-3 col-xs-6">
-                            <div class="description-block border-right">
-                                <span class="description-percentage text-yellow"><i class="fa fa-caret-left"></i> 0%</span>
-                                <h5 class="description-header">$10,390.90</h5>
-                                <span class="description-text">COSTOS TOTALES</span>
-                            </div>
-                            <!-- /.description-block -->
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-sm-3 col-xs-6">
-                            <div class="description-block border-right">
-                                <span class="description-percentage text-green"><i class="fa fa-caret-up"></i> 20%</span>
-                                <h5 class="description-header">$24,813.53</h5>
-                                <span class="description-text">GANANCIA TOTAL</span>
-                            </div>
-                            <!-- /.description-block -->
-                        </div>
-                        <!-- /.col -->
-                        <div class="col-sm-3 col-xs-6">
-                            <div class="description-block">
-                                <span class="description-percentage text-red"><i class="fa fa-caret-down"></i> 18%</span>
-                                <h5 class="description-header">1200</h5>
-                                <span class="description-text">OBJETIVOS COMPLETOS</span>
-                            </div>
-                            <!-- /.description-block -->
-                        </div>
+
                     </div>
                     <!-- /.row -->
                 </div>
@@ -198,12 +165,12 @@
 
                 <!-- /.col -->
 
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <!-- USERS LIST -->
                     <div class="box">
                         <div class="box box-danger">
                             <div class="box-header with-border">
-                                <h3 class="box-title">Últimos Registros de Clientes en el mes</h3>
+                                <h3 class="box-title">Registros de últimos clientes <?php echo $filters['fecha_pedido']  ?> (máximo 8)</h3>
 
                                 <div class="box-tools pull-right">
                                     <span class="label label-danger"><?php echo count($clientes); ?> clientes nuevos</span>
@@ -216,8 +183,7 @@
                             <!-- /.box-header -->
                             <div class="box-body ">
                                 <ul class="users-list clearfix">
-                                    <?php
-                                    $fecha = new DateTime();
+                                    <?php                                  
                                     $meses = [
                                         '01' => 'Ene',
                                         '02' => 'Feb',
@@ -233,13 +199,22 @@
                                         '12' => 'Dic'
                                     ];
 
-                                    $dia = $fecha->format('d');
-                                    $mes = $meses[$fecha->format('m')]; ?>
-                                    <?php foreach ($clientes as $k => $cliente) { ?>
+                                    ?>
+                                    <?php 
+                                    //muestra como maximo 8 registros
+                                    $cantidadClientes = 0;
+                                    foreach ($clientes as $k => $cliente) { 
+                                        $dia = $cliente->created->format('d');
+                                        $mes = $meses[$cliente->created->format('m')]; 
+                                        $cantidadClientes = $cantidadClientes +1;
+                                        if($cantidadClientes== 9){
+                                            break;
+                                        }
+                                        ?>
                                         <li>
                                             <img src="/img/user-profile.png" style="width: 75px;" alt="User Avatar" class="img-circle">
                                             <a target="_blank" class="users-list-name" href="/rbac/RbacUsuarios/edit/<?php echo $cliente['id']; ?>">
-                                                <?php echo $cliente['nombre']." ".$cliente['apellido']; ?></a>
+                                                <?php echo $cliente['nombre'] . " " . $cliente['apellido']; ?></a>
                                             <span class="users-list-date"><?php echo  $dia . ' ' . $mes; ?></span>
                                         </li>
                                     <?php } ?>
@@ -254,77 +229,7 @@
                     </div>
                     <!--/.box -->
                 </div>
-                <!-- PRODUCT LIST -->
-                <div class="col-md-6">
-                    <div class="box box-primary">
-                        <div class="box-header with-border">
-                            <h3 class="box-title">Productos agregados recientemente</h3>
-
-                            <div class="box-tools pull-right">
-                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                                </button>
-                                <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
-                            </div>
-                        </div>
-                        <!-- /.box-header -->
-                        <div class="box-body">
-                            <ul class="products-list product-list-in-box">
-                                <li class="item">
-                                    <div class="product-img">
-                                        <?php echo $this->Html->image('default-50x50.gif', array('alt' => 'Product Image')); ?>
-                                    </div>
-                                    <div class="product-info">
-                                        <a href="javascript:void(0)" class="product-title">Samsung TV
-                                            <span class="label label-warning pull-right">$1800</span></a>
-                                        <span class="product-description">
-                                            Samsung 32" 1080p 60Hz LED Smart HDTV.
-                                        </span>
-                                    </div>
-                                </li>
-                                <!-- /.item -->
-                                <li class="item">
-                                    <div class="product-img">
-                                        <?php echo $this->Html->image('default-50x50.gif', array('alt' => 'Product Image')); ?>
-                                    </div>
-                                    <div class="product-info">
-                                        <a href="javascript:void(0)" class="product-title">Bicycle
-                                            <span class="label label-info pull-right">$700</span></a>
-                                        <span class="product-description">
-                                            26" Mongoose Dolomite Men's 7-speed, Navy Blue.
-                                        </span>
-                                    </div>
-                                </li>
-                                <!-- /.item -->
-                                <li class="item">
-                                    <div class="product-img">
-                                        <?php echo $this->Html->image('default-50x50.gif', array('alt' => 'Product Image')); ?>
-                                    </div>
-                                    <div class="product-info">
-                                        <a href="javascript:void(0)" class="product-title">Xbox One <span class="label label-danger pull-right">$350</span></a>
-                                        <span class="product-description">
-                                            Xbox One Console Bundle with Halo Master Chief Collection.
-                                        </span>
-                                    </div>
-                                </li>
-                                <!-- /.item -->
-                                <li class="item">
-                                    <div class="product-img">
-                                        <?php echo $this->Html->image('default-50x50.gif', array('alt' => 'Product Image')); ?>
-                                    </div>
-                                    <div class="product-info">
-                                        <a href="javascript:void(0)" class="product-title">PlayStation 4
-                                            <span class="label label-success pull-right">$399</span></a>
-                                        <span class="product-description">
-                                            PlayStation 4 500GB Console (PS4)
-                                        </span>
-                                    </div>
-                                </li>
-                                <!-- /.item -->
-                            </ul>
-                        </div>
-
-                    </div>
-                </div>
+               
 
 
                 <!-- /.col -->
@@ -334,7 +239,7 @@
             <!-- TABLE: LATEST ORDERS -->
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Últimos pedidos</h3>
+                    <h3 class="box-title">Pedidos <?php echo $filters['fecha_pedido'] ?></h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -400,13 +305,157 @@
 </section>
 <!-- /.content -->
 
-<!-- jvectormap -->
-<?php //echo $this->Html->css('AdminLTE./bower_components/jvectormap/jquery-jvectormap', ['block' => 'css']); ?>
-<!-- Sparkline -->
-<?php //echo $this->Html->script('AdminLTE./bower_components/jquery-sparkline/dist/jquery.sparkline.min', ['block' => 'script']); ?>
-<!-- jvectormap -->
-<?php //echo $this->Html->script('AdminLTE./plugins/jvectormap/jquery-jvectormap-1.2.2.min', ['block' => 'script']); ?>
-<?php //echo $this->Html->script('AdminLTE./plugins/jvectormap/jquery-jvectormap-world-mill-en', ['block' => 'script']); ?>
 <!-- ChartJS -->
 <?php echo $this->Html->script('AdminLTE./bower_components/chart.js/Chart', ['block' => 'script']); ?>
-<?php echo $this->Html->script('informes', ['block' => 'script']); ?>
+<?php //echo $this->Html->script('informes', ['block' => 'script']); 
+?>
+<script>
+    // Calcular el rango de los últimos 30 días
+    const startOfLast30Days = moment().subtract(30, 'days').format('DD/MM/YYYY');
+    const endOfToday = moment().format('DD/MM/YYYY');
+
+    $('#fecha_pedido').daterangepicker({
+        "locale": {
+            "direction": "ltr",
+            "format": 'DD/MM/YYYY',
+            "separator": " - ",
+            "applyLabel": "Aplicar",
+            "cancelLabel": "Cancelar",
+            "fromLabel": "Desde",
+            "toLabel": "Hasta",
+        },
+        "showWeekNumbers": true,
+        "opens": "right",
+        "autoUpdateInput": true,
+        // "startDate": moment().subtract(30, 'days'), // Fecha de inicio: 30 días antes de hoy
+        //  "endDate": moment() // Fecha de fin: hoy
+    });
+
+    let fechas = "<?php echo isset($filters['fecha_pedido']) ? $filters['fecha_pedido'] : ''; ?>";
+
+    // Si la variable fechas tiene un rango de fechas, se asignan al daterangepicker
+    if (fechas) {
+        var dateRange = fechas.split(' - ');
+        $('#fecha_pedido').val(fechas);
+        $('#fecha_pedido').data('daterangepicker').setStartDate(dateRange[0]);
+        $('#fecha_pedido').data('daterangepicker').setEndDate(dateRange[1]);
+    }
+
+    // $('#fecha_pedido').on('apply.daterangepicker', function(ev, picker) {
+    //     $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+    // });
+
+    // $('#fecha_pedido').on('cancel.daterangepicker', function(ev, picker) {
+    //     $(this).val('');
+    // });
+
+    $(function() {
+        "use strict";
+
+        /* ChartJS
+         * -------
+         * Here we will create a few charts using ChartJS
+         */
+
+        // -----------------------
+        // - MONTHLY SALES CHART -
+        // -----------------------
+
+        // Get context with jQuery - using jQuery's .get() method.
+        var salesChartCanvas = $("#salesChart").get(0).getContext("2d");
+        // This will get the first returned node in the jQuery collection.
+        var salesChart = new Chart(salesChartCanvas);
+
+        <?php
+        $meses = [
+            1 => 'Enero',
+            2 => 'Febrero',
+            3 => 'Marzo',
+            4 => 'Abril',
+            5 => 'Mayo',
+            6 => 'Junio',
+            7 => 'Julio',
+            8 => 'Agosto',
+            9 => 'Septiembre',
+            10 => 'Octubre',
+            11 => 'Noviembre',
+            12 => 'Diciembre'
+        ];
+
+        $mesLabels = [];
+        foreach ($mesesRango as $k => $pedido) {
+            // Mapeo de mes numérico a nombre
+            $mesLabels[] = $meses[$pedido['mes']];
+            $totalPedidos[] = $pedido['total_pedidos'];
+        }
+        ?>
+
+        var mesesLabels = <?php echo json_encode($mesLabels); ?>; // Los nombres de los meses
+        var pedidosPorMes = <?php echo json_encode($totalPedidos); ?>; // Los totales de pedidos por mes
+
+        var salesChartData = {
+
+
+            labels:  mesesLabels, 
+            datasets: [{
+                label: "Pedidos",
+                fillColor: "rgba(60,141,188,0.9)",
+                strokeColor: "rgba(60,141,188,0.8)",
+                pointColor: "#3b8bba",
+                pointStrokeColor: "rgba(60,141,188,1)",
+                pointHighlightFill: "#fff",
+                pointHighlightStroke: "rgba(60,141,188,1)",
+                data: pedidosPorMes,
+            }, ],
+        };
+
+        var salesChartOptions = {
+            // Boolean - If we should show the scale at all
+            showScale: true,
+            // Boolean - Whether grid lines are shown across the chart
+            scaleShowGridLines: false,
+            // String - Colour of the grid lines
+            scaleGridLineColor: "rgba(0,0,0,.05)",
+            // Number - Width of the grid lines
+            scaleGridLineWidth: 1,
+            // Boolean - Whether to show horizontal lines (except X axis)
+            scaleShowHorizontalLines: true,
+            // Boolean - Whether to show vertical lines (except Y axis)
+            scaleShowVerticalLines: true,
+            // Boolean - Whether the line is curved between points
+            bezierCurve: true,
+            // Number - Tension of the bezier curve between points
+            bezierCurveTension: 0.3,
+            // Boolean - Whether to show a dot for each point
+            pointDot: false,
+            // Number - Radius of each point dot in pixels
+            pointDotRadius: 4,
+            // Number - Pixel width of point dot stroke
+            pointDotStrokeWidth: 1,
+            // Number - amount extra to add to the radius to cater for hit detection outside the drawn point
+            pointHitDetectionRadius: 20,
+            // Boolean - Whether to show a stroke for datasets
+            datasetStroke: true,
+            // Number - Pixel width of dataset stroke
+            datasetStrokeWidth: 2,
+            // Boolean - Whether to fill the dataset with a color
+            datasetFill: true,
+            // String - A legend template
+            legendTemplate: "<ul class='<%=name.toLowerCase()%>-legend'><% for (var i=0; i<datasets.length; i++){%><li><span style='background-color:<%=datasets[i].lineColor%>'></span><%=datasets[i].label%></li><%}%></ul>",
+            // Boolean - whether to maintain the starting aspect ratio or not when responsive, if set to false, will take up entire container
+            maintainAspectRatio: true,
+            // Boolean - whether to make the chart responsive to window resizing
+            responsive: true,
+        };
+
+        // Create the line chart
+        salesChart.Line(salesChartData, salesChartOptions);
+
+
+
+
+
+
+
+    });
+</script>
