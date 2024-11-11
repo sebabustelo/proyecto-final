@@ -10,19 +10,10 @@ $action =   $this->request->getParam('action');
     <?php if ($_SESSION['RbacUsuario']['perfil_id'] <> 8) { ?>
         <li class="header"><i class="fa f-lg  fa-arrow-circle-right"></i> Menú Administración </li>
 
-        <?php //if ((isset($accionesPermitidas['Db']['index']) && $accionesPermitidas['Db']['index'])) {
-        ?>
-        <!-- <li class=" <?php echo ($controller == 'Db' && ($action == 'index') ? ' active' : ''); ?>">
-                <a href="<?php echo $this->Url->build('/db/db/index'); ?>">
-                    <i class="fa fa-fw fa-database"></i>
-                    <span>Consulta DB</span>
-                </a>
-            </li> -->
-        <?php //}
-        ?>
+
         <?php if ((isset($accionesPermitidas['Consultas']['index']) && $accionesPermitidas['Consultas']['index'])) {
         ?>
-        <li>
+            <li>
                 <a href="<?php echo $this->Url->build('Consultas/index'); ?>">
                     <i class="fa fa-fw  fa-envelope"></i>
                     <span>Gestión de Consultas</span>
@@ -170,15 +161,13 @@ $action =   $this->request->getParam('action');
         <?php } ?>
 
 
-        <?php //if ((isset($accionesPermitidas['Informes']['index']) && $accionesPermitidas['Informes']['index'])) {
-        ?>
-        <!-- <li class=" <?php echo ($controller == 'Informes' && ($action == 'index' || $action == ''  || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
+        <?php if ((isset($accionesPermitidas['Informes']['index']) && $accionesPermitidas['Informes']['index'])) {      ?>
+            <li class=" <?php echo ($controller == 'Informes' && ($action == 'index' || $action == ''  || $action == 'add' || $action == 'edit') ? ' active' : ''); ?>">
                 <a href="<?php echo $this->Url->build('/Informes/index'); ?>">
                     <i class="fa fa-area-chart"></i> <span>Informes</span>
                 </a>
-            </li> -->
-        <?php //}
-        ?>
+            </li>
+        <?php }    ?>
         <?php
         if (
             (isset($accionesPermitidas['TipoDocumentos']['index']) && $accionesPermitidas['TipoDocumentos']['index']) ||
@@ -299,7 +288,7 @@ $action =   $this->request->getParam('action');
     <?php }  ?>
     <?php if ((isset($accionesPermitidas['Consultas']['add']) && $accionesPermitidas['Consultas']['add'])) {
     ?>
-    <li>
+        <li>
             <a href="<?php echo $this->Url->build('/Consultas/add'); ?>">
                 <i class="fa fa-fw  fa-envelope"></i>
                 <span>Consultas</span></a>

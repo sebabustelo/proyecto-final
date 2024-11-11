@@ -40,8 +40,8 @@
                         <div class="form-group col-sm-6">
                             <label>Usuario</label>
 
-                            <select required class="form-control" name="usuario_id">
-                                <?php foreach ($usuarios as $id=>$usuario): ?>
+                            <select required class="form-control" name="cliente_id">
+                                <?php foreach ($usuarios as $id => $usuario): ?>
                                     <option value="<?php echo $id; ?>"><?php echo $usuario; ?></option>
                                 <?php endforeach; ?>
                             </select>
@@ -66,7 +66,10 @@
                             <input type="date" class="form-control" name="fecha_intervencion"
                                 min="<?php echo date('Y-m-d', strtotime('+1 day')); ?>" id="fecha_intervencion" required>
                         </div>
-
+                        <div class="form-group col-md-2">
+                            <!-- <label for="cantidad">Cantidad</label> -->
+                            <input type="hidden" value="1">
+                        </div>
 
                         <div class="form-group col-md-12">
                             <label for="comentario">Comentario</label>
@@ -114,8 +117,15 @@
                                 </div>
                                 <div class="col-xs-4">
                                     <label for="piso">Piso</label>
-                                    <input name="direccion[piso]" type="text" class="form-control" placeholder="Piso" maxlength="3"
-                                        value="<?php echo $direccion->piso ?? ''; ?>">
+                                    <input name="direccion[piso]"
+                                        value="<?php echo isset($direccion->numero) ? $direccion->numero : ''; ?>"
+                                        type="number"
+                                        class="form-control"
+                                        placeholder="Piso"
+                                        min="1"
+                                        max="99"
+                                        onkeydown="preventInvalidInput(event)"
+                                        oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2);">
                                 </div>
                                 <div class="col-xs-4">
                                     <label for="departamento">Departamento</label>
@@ -147,14 +157,11 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
-
-
         var provinciaSelect = document.getElementById('provincia_id');
         var localidadSelect = document.getElementById('localidad_id');
 
         provinciaSelect.addEventListener('change', function() {
             var provinciaId = this.value;
-
 
             if (provinciaId) {
 
@@ -179,7 +186,7 @@
 
         setTimeout(function() {
 
-            var localidadId = "<?php echo $rbacUsuario->direccion->localidad_id ?? ''; ?>";
+            var localidadId = "<?php echo $direccion->localidad_id ?? ''; ?>";
             if (localidadId) {
                 document.getElementById('localidad_id').value = localidadId;
             }

@@ -61,6 +61,7 @@ return [
         'imageBaseUrl' => 'img/',
         'cssBaseUrl' => 'css/',
         'jsBaseUrl' => 'js/',
+        'docBaseUrl' => 'doc/',
         'paths' => [
             'plugins' => [ROOT . DS . 'plugins' . DS],
             'templates' => [ROOT . DS . 'templates' . DS],

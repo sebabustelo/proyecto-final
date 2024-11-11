@@ -67,14 +67,32 @@ class PedidosController extends AppController
         $pedidos = $this->Pedidos->newEmptyEntity();
         if ($this->request->is('post')) {
             $pedido = $this->Pedidos->patchEntity($pedidos, $this->request->getData());
+
+            // Obtener estado PENDIENTE
+            $estadoPendiente = $this->Pedidos->PedidosEstados
+                ->find()
+                ->where(['nombre' => 'PENDIENTE'])
+                ->first();
+
+            $pedido['cliente_id'] = $pedido['cliente_id'];
+            $pedido['estado_id'] = $estadoPendiente->id;
+            $pedido['fecha_pedido'] = date('Y-m-d H:i:s');
+            $pedido->detalles_pedidos[0]->cantidad = 1;
+
             if ($this->Pedidos->save($pedidos)) {
                 $this->Flash->success(__('El pedido se guardo correctamente.'));
-
                 return $this->redirect('/Pedidos/index');;
             }
-            $this->Flash->error(__('El pedido no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+            $this->Flash->error(__('El pedido no pudo ser guardada'));
+            if ($pedido->getErrors()) {
+                foreach ($pedido->getErrors() as $field => $errors) {
+                    foreach ($errors as $error) {
+                        $this->Flash->error(__($error));
+                    }
+                }
+            }
         }
-        // $this->set(compact('pedido'));
+
 
         $productos = $this->Pedidos->DetallesPedidos->Productos->find()
             ->contain([
@@ -259,13 +277,13 @@ class PedidosController extends AppController
                             }
                         }
                     }
-                   // die("1");
+                    // die("1");
                     $this->Flash->error(__('Ocurrio un error al guardar el pedido'));
                     //throw new \Exception('Error al guardar el pedido.');
                 }
             } catch (\Exception $e) {
                 // En caso de error, hacer rollback de la transacción
-               // die("2");
+                // die("2");
                 $connection->rollback();
                 // $this->Flash->error(__('Ocurrio un error al guardar el pedido'));
                 $this->Flash->error($e->getMessage());

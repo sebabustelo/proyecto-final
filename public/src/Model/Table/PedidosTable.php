@@ -127,8 +127,8 @@ class PedidosTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->existsIn(['cliente_id'], 'RbacUsuarios'), ['errorField' => 'cliente_id']);
-        $rules->add($rules->existsIn(['estado_id'], 'PedidosEstados'), ['errorField' => 'estado_id']);
+        $rules->add($rules->existsIn(['cliente_id'], 'RbacUsuarios'), ['errorField' => 'cliente_id','message' => 'El cliente especificado no existe.']);
+        $rules->add($rules->existsIn(['estado_id'], 'PedidosEstados'), ['errorField' => 'estado_id','message' => 'El estado especificado no existe.']);
 
         return $rules;
     }
