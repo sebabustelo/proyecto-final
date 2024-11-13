@@ -80,7 +80,7 @@
 <?php echo $this->Html->script('AdminLTE./bower_components/fullcalendar/dist/fullcalendar.min', ['block' => 'script']); ?>
 <?php echo $this->Html->script('AdminLTE./bower_components/fullcalendar/dist/locale/es.js', ['block' => 'script']); ?>
 
-<?php debug($pedidos) ?>
+
 <?php $this->start('scriptBottom'); ?>
 <script>
     $(function() {
