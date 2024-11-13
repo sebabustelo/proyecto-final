@@ -40,10 +40,10 @@ class InformesController extends AppController
         } else {
             // Si no se proporciona fecha, establecer un rango por defecto (últimos 30 días)
             $fecha_inicio = new DateTime();
-            $fecha_inicio->modify('-60 days')->setTime(0, 0, 0); // Establecer la hora a las 00:00:00
+            $fecha_inicio = $fecha_inicio->modify('-2 months')->setTime(0, 0, 0); // Establecer la hora a las 00:00:00
 
             $fecha_fin = new DateTime();
-            $fecha_fin->setTime(23, 59, 59); // Establecer la hora a las 23:59:59
+            $fecha_fin = $fecha_fin->setTime(23, 59, 59); // Establecer la hora a las 23:59:59
 
             // Redirigir a la misma acción con el rango de fechas por defecto
             return $this->redirect([
@@ -62,6 +62,7 @@ class InformesController extends AppController
                 'RbacUsuarios.created >=' => $fecha_inicio,
                 'RbacUsuarios.created <=' => $fecha_fin
             ])
+            ->orderBy(['created DESC'])
             ->all();
 
         $this->set('clientes', $clientes);
@@ -70,8 +71,8 @@ class InformesController extends AppController
 
         $pedidosCantidad = $pedidosTable->find('all')
             ->where([
-                'Pedidos.created >=' => $fecha_inicio,
-                'Pedidos.created <=' => $fecha_fin
+                'Pedidos.fecha_pedido >=' => $fecha_inicio,
+                'Pedidos.fecha_pedido <=' => $fecha_fin
             ])
             ->count();
 
@@ -84,44 +85,111 @@ class InformesController extends AppController
                 'anio' => $rango_fecha_inicio->format('Y')  // El año
             ];
 
-            
+
             $rango_fecha_inicio = $rango_fecha_inicio->modify('first day of next month');
-            
         }
 
         // Consulta para contar pedidos por mes
         $pedidosPorMes = $pedidosTable->find()
             ->select([
-                'mes' => 'MONTH(Pedidos.created)',
-                'anio' => 'YEAR(Pedidos.created)',
-                'total_pedidos' => $pedidosTable->find()->func()->count('*')
+                'mes' => 'MONTH(Pedidos.fecha_pedido)',
+                'anio' => 'YEAR(Pedidos.fecha_pedido)',
+                'total_pedidos' => $pedidosTable->find()->func()->count('*'),
             ])
             ->where([
-                'Pedidos.created >=' => $fecha_inicio,
-                'Pedidos.created <=' => $fecha_fin
+                'Pedidos.fecha_pedido >=' => $fecha_inicio,
+                'Pedidos.fecha_pedido <=' => $fecha_fin
             ])
-            ->group(['anio', 'mes'])
-            ->order(['anio' => 'ASC', 'mes' => 'ASC'])
+            ->groupBy(['anio', 'mes'])
+            ->orderBy(['anio' => 'ASC', 'mes' => 'ASC'])
             ->toArray();
 
         // Inicializamos el array de meses con los valores predeterminados en 0
         foreach ($mesesRango as &$mes) {
-            $mes['total_pedidos'] = 0;  
+            $mes['total_pedidos'] = 0;
         }
 
         // Llenamos el array de meses con los valores obtenidos de la consulta
         foreach ($pedidosPorMes as $pedido) {
             foreach ($mesesRango as &$mes) {
                 if ($mes['mes'] == $pedido['mes'] && $mes['anio'] == $pedido['anio']) {
-                    $mes['total_pedidos'] = $pedido['total_pedidos'];              
+                    $mes['total_pedidos'] = $pedido['total_pedidos'];
                 }
             }
-        }            
-       
+        }
+
         $this->set('mesesRango', $mesesRango);  // Pasamos los datos al view
-        
+
+        //calcular monto total en el periododo consultado
+
+        $pedidos =  $pedidosTable->find()
+            ->where([
+                'Pedidos.fecha_pedido >=' => $fecha_inicio,
+                'Pedidos.fecha_pedido <=' => $fecha_fin
+            ])
+            ->contain([
+                'PedidosEstados',
+                'DetallesPedidos' => [
+                    'Productos' => [
+                        'ProductosPrecios' => function ($q) use ($fecha_inicio, $fecha_fin) {
+                            return $q->where([
+                                'fecha_desde <=' => $fecha_fin,
+                                'OR' => [
+                                    'fecha_hasta >=' => $fecha_inicio,
+                                    'fecha_hasta IS' => null // Incluir precios sin fecha de fin
+                                ]
+                            ]);
+                        }
+                    ]
+                ]
+            ])
+            ->orderBy(['fecha_pedido desc'])
+            ->all();
 
 
+
+        $ventas =  $pedidosTable->find()
+        ->where([
+            'Pedidos.fecha_pedido >=' => $fecha_inicio,
+            'Pedidos.fecha_pedido <=' => $fecha_fin,
+            'Pedidos.estado_id' => '5'
+        ])
+        ->contain([
+            'PedidosEstados',
+            'DetallesPedidos' => [
+                'Productos' => [
+                    'ProductosPrecios' => function ($q) use ($fecha_inicio, $fecha_fin) {
+                        return $q->where([
+                            'fecha_desde <=' => $fecha_fin,
+                            'OR' => [
+                                'fecha_hasta >=' => $fecha_inicio,
+                                'fecha_hasta IS' => null // Incluir precios sin fecha de fin
+                            ]
+                        ]);
+                    }
+                ]
+            ]
+        ])
+        ->orderBy(['fecha_pedido desc'])
+        ->all();
+
+        $total = 0;
+
+        foreach ($ventas as $pedido) {
+            foreach ($pedido->detalles_pedidos as $detalle) {
+                foreach ($detalle->producto->productos_precios as $precio) {
+                    // Asegúrate de que el precio esté dentro del rango de fechas
+                    if ($precio->fecha_desde <= $fecha_fin && ($precio->fecha_hasta >= $fecha_inicio || $precio->fecha_hasta === null)) {
+                        $total += $precio->precio; // Sumar el precio del producto en el periodo
+                    }
+                }
+            }
+        }
+
+
+        $this->set('pedidos', $pedidos);
+        $this->set('ventas', $ventas);
+        $this->set('total', $total);
         $this->set('filters', $this->getRequest()->getQuery());
     }
 }

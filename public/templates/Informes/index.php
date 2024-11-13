@@ -53,11 +53,11 @@
         <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-red"><i class="ion ion-ios-cart-outline"></i></span>
-
+                <?php $cantidadVentas = count($ventas); ?>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Pedidos PENDIENTES</span>
-                    <span class="info-box-number">41</span>
+                    <span class="info-box-text">Ventas</span>
+                    <span class="info-box-number"><?php echo $cantidadVentas; ?></span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -74,7 +74,7 @@
 
                 <div class="info-box-content">
                     <span class="info-box-text">Ventas</span>
-                    <span class="info-box-number">74</span>
+                    <span class="info-box-number"><?php echo number_format($total, 0, ',', '.'); ?></span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -101,7 +101,7 @@
         <div class="col-md-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Informe mensual de ventas</h3>
+                    <h3 class="box-title">Informe mensual de pedidos</h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -123,7 +123,7 @@
                             <!-- /.chart-responsive -->
                         </div>
                         <!-- /.col -->
-                       
+
                         <!-- /.col -->
                     </div>
                     <!-- /.row -->
@@ -134,8 +134,8 @@
                         <div class="col-sm-12 col-xs-6">
                             <div class="description-block border-right">
 
-                                <h5 class="description-header">$35,210.43</h5>
-                                <span class="description-text">INGRESOS TOTALES</span>
+                                <!-- <h5 class="description-header">$35,210.43</h5>
+                                <span class="description-text">INGRESOS TOTALES</span> -->
                             </div>
                             <!-- /.description-block -->
                         </div>
@@ -170,7 +170,7 @@
                     <div class="box">
                         <div class="box box-danger">
                             <div class="box-header with-border">
-                                <h3 class="box-title">Registros de últimos clientes <?php echo $filters['fecha_pedido']  ?> (máximo 8)</h3>
+                                <h3 class="box-title">Últimos clientes registrados <?php echo $filters['fecha_pedido']  ?> (máximo 8)</h3>
 
                                 <div class="box-tools pull-right">
                                     <span class="label label-danger"><?php echo count($clientes); ?> clientes nuevos</span>
@@ -183,7 +183,7 @@
                             <!-- /.box-header -->
                             <div class="box-body ">
                                 <ul class="users-list clearfix">
-                                    <?php                                  
+                                    <?php
                                     $meses = [
                                         '01' => 'Ene',
                                         '02' => 'Feb',
@@ -200,17 +200,17 @@
                                     ];
 
                                     ?>
-                                    <?php 
+                                    <?php
                                     //muestra como maximo 8 registros
                                     $cantidadClientes = 0;
-                                    foreach ($clientes as $k => $cliente) { 
+                                    foreach ($clientes as $k => $cliente) {
                                         $dia = $cliente->created->format('d');
-                                        $mes = $meses[$cliente->created->format('m')]; 
-                                        $cantidadClientes = $cantidadClientes +1;
-                                        if($cantidadClientes== 9){
+                                        $mes = $meses[$cliente->created->format('m')];
+                                        $cantidadClientes = $cantidadClientes + 1;
+                                        if ($cantidadClientes == 9) {
                                             break;
                                         }
-                                        ?>
+                                    ?>
                                         <li>
                                             <img src="/img/user-profile.png" style="width: 75px;" alt="User Avatar" class="img-circle">
                                             <a target="_blank" class="users-list-name" href="/rbac/RbacUsuarios/edit/<?php echo $cliente['id']; ?>">
@@ -229,7 +229,7 @@
                     </div>
                     <!--/.box -->
                 </div>
-               
+
 
 
                 <!-- /.col -->
@@ -239,7 +239,7 @@
             <!-- TABLE: LATEST ORDERS -->
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">Pedidos <?php echo $filters['fecha_pedido'] ?></h3>
+                    <h3 class="box-title">Últimos pedidos registrados <?php echo $filters['fecha_pedido'] ?> (máximo 10)</h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
@@ -253,49 +253,66 @@
                         <table class="table no-margin">
                             <thead>
                                 <tr>
-                                    <th>Pedido</th>
+                                    <th>Fecha Pedido</th>
                                     <th>Producto</th>
                                     <th>Estado</th>
 
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR9842</a></td>
-                                    <td>Call of Duty IV</td>
-                                    <td><span class="label label-success">Enviado</span></td>
+                                <?php $cantidadPedidos = count($pedidos); ?>
+                                <?php foreach ($pedidos as $k => $pedido) { ?>
+                                    <tr>
+                                        <td><a target="_blank" href="/pedidos/edit/<?php echo $pedido['id']; ?>"> <?php echo $this->Time->format($pedido->fecha_pedido, 'dd/MM/Y HH:mm:ss'); ?></a></td>
+                                        <td><?php echo $pedido->detalles_pedidos[0]->producto->nombre ?></td>
+                                        <td>
+                                            <small class="label
+                                                    <?php
+                                                    switch ($pedido->pedidos_estado->nombre) {
+                                                        case 'PENDIENTE':
+                                                            echo 'bg-yellow'; // Fondo amarillo
+                                                            break;
+                                                        case 'INCOMPLETO':
+                                                            echo 'bg-red'; // Fondo rojo
+                                                            break;
+                                                        case 'EN_PROCESO':
+                                                            echo 'bg-blue'; // Fondo azul
+                                                            break;
+                                                        case 'PAGADO':
+                                                            echo 'bg-purple'; // Fondo morado
+                                                            break;
+                                                        case 'EN_CAMINO':
+                                                            echo 'bg-orange'; // Fondo naranja
+                                                            break;
+                                                        case 'FINALIZADO':
+                                                            echo 'bg-green'; // Fondo verde
+                                                            break;
+                                                        case 'CANCELADO':
+                                                            echo 'bg-red'; // Fondo verde
+                                                            break;
+                                                        default:
+                                                            echo 'bg-gray'; // Fondo gris por defecto
+                                                            break;
+                                                    }
+                                                    ?>">
+                                                <?php echo $pedido->pedidos_estado->nombre; ?>
+                                            </small>
+                                        </td>
 
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR1848</a></td>
-                                    <td>Samsung Smart TV</td>
-                                    <td><span class="label label-warning">Pendiente</span></td>
-
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                                    <td>iPhone 6 Plus</td>
-                                    <td><span class="label label-danger">Entregado</span></td>
-
-                                </tr>
-                                <tr>
-                                    <td><a href="pages/examples/invoice.html">OR7429</a></td>
-                                    <td>Samsung Smart TV</td>
-                                    <td><span class="label label-info">En proceso</span></td>
-
-                                </tr>
-
+                                    </tr>
+                                <?php
+                                    if ($cantidadPedidos == 11) {
+                                        break;
+                                    }
+                                } ?>
                             </tbody>
                         </table>
                     </div>
                     <!-- /.table-responsive -->
                 </div>
                 <!-- /.box-body -->
-                <div class="box-footer clearfix">
-                    <a href="javascript:void(0)" class="btn btn-sm btn-info btn-flat pull-left">Place New Order</a>
-                    <a href="javascript:void(0)" class="btn btn-sm btn-default btn-flat pull-right">View All Orders</a>
-                </div>
-                <!-- /.box-footer -->
+
+
             </div>
             <!-- /.box -->
 
@@ -307,7 +324,7 @@
 
 <!-- ChartJS -->
 <?php echo $this->Html->script('AdminLTE./bower_components/chart.js/Chart', ['block' => 'script']); ?>
-<?php //echo $this->Html->script('informes', ['block' => 'script']); 
+<?php //echo $this->Html->script('informes', ['block' => 'script']);
 ?>
 <script>
     // Calcular el rango de los últimos 30 días
@@ -396,7 +413,7 @@
         var salesChartData = {
 
 
-            labels:  mesesLabels, 
+            labels: mesesLabels,
             datasets: [{
                 label: "Pedidos",
                 fillColor: "rgba(60,141,188,0.9)",
