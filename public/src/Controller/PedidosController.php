@@ -610,4 +610,18 @@ class PedidosController extends AppController
             return false;
         }
     }
+
+    public function calendar()
+    {
+
+        $pedidosTable = $this->fetchTable('Pedidos');
+
+        // Consulta para contar pedidos por mes
+        $pedidos = $pedidosTable->find()
+            ->orderBy(['fecha_pedido' => 'ASC'])
+            ->contain(['RbacUsuarios'])
+            ->toArray();
+
+        $this->set("pedidos", $pedidos);
+    }
 }

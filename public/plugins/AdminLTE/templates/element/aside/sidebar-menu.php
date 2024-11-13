@@ -45,15 +45,11 @@ $action =   $this->request->getParam('action');
                 <ul class="treeview-menu">
                     <?php //if ((isset($accionesPermitidas['Configuraciones']['index']) && $accionesPermitidas['Configuraciones']['index'])) {
                     ?>
-                    <!-- <li>
-                    <a href="<?php echo $this->Url->build('/pages/calendar'); ?>">
-                        <i class="fa fa-calendar"></i> <span>Agenda</span>
-                        <span class="pull-right-container">
-                            <small class="label pull-right bg-red">3</small>
-                            <small class="label pull-right bg-blue">17</small>
-                        </span>
+                    <li>
+                    <a href="<?php echo $this->Url->build('/pedidos/calendar'); ?>">
+                        <i class="fa fa-calendar"></i> <span>Agenda</span>                        
                     </a>
-                </li> -->
+                </li>
                     <?php //}
                     ?>
 

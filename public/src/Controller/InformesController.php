@@ -104,20 +104,45 @@ class InformesController extends AppController
             ->orderBy(['anio' => 'ASC', 'mes' => 'ASC'])
             ->toArray();
 
+        $ventasPorMes = $pedidosTable->find()
+            ->select([
+                'mes' => 'MONTH(Pedidos.fecha_pedido)',
+                'anio' => 'YEAR(Pedidos.fecha_pedido)',
+                'total_ventas' => $pedidosTable->find()->func()->count('*'),
+            ])
+            ->where([
+                'Pedidos.fecha_pedido >=' => $fecha_inicio,
+                'Pedidos.fecha_pedido <=' => $fecha_fin,
+                'Pedidos.estado_id' => '5'
+            ])
+            ->groupBy(['anio', 'mes'])
+            ->orderBy(['anio' => 'ASC', 'mes' => 'ASC'])
+            ->toArray();
+
         // Inicializamos el array de meses con los valores predeterminados en 0
         foreach ($mesesRango as &$mes) {
             $mes['total_pedidos'] = 0;
+            $mes['total_ventas'] = 0;
         }
 
         // Llenamos el array de meses con los valores obtenidos de la consulta
         foreach ($pedidosPorMes as $pedido) {
             foreach ($mesesRango as &$mes) {
                 if ($mes['mes'] == $pedido['mes'] && $mes['anio'] == $pedido['anio']) {
-                    $mes['total_pedidos'] = $pedido['total_pedidos'];
+                    $mes['total_pedidos'] = $pedido['total_pedidos'];                   
                 }
             }
         }
 
+        foreach ($ventasPorMes as $pedido) {
+            foreach ($mesesRango as &$mes) {
+                if ($mes['mes'] == $pedido['mes'] && $mes['anio'] == $pedido['anio']) {
+                    $mes['total_ventas'] = $pedido['total_ventas'];                   
+                }
+            }
+        }
+
+  
         $this->set('mesesRango', $mesesRango);  // Pasamos los datos al view
 
         //calcular monto total en el periododo consultado
@@ -149,29 +174,29 @@ class InformesController extends AppController
 
 
         $ventas =  $pedidosTable->find()
-        ->where([
-            'Pedidos.fecha_pedido >=' => $fecha_inicio,
-            'Pedidos.fecha_pedido <=' => $fecha_fin,
-            'Pedidos.estado_id' => '5'
-        ])
-        ->contain([
-            'PedidosEstados',
-            'DetallesPedidos' => [
-                'Productos' => [
-                    'ProductosPrecios' => function ($q) use ($fecha_inicio, $fecha_fin) {
-                        return $q->where([
-                            'fecha_desde <=' => $fecha_fin,
-                            'OR' => [
-                                'fecha_hasta >=' => $fecha_inicio,
-                                'fecha_hasta IS' => null // Incluir precios sin fecha de fin
-                            ]
-                        ]);
-                    }
+            ->where([
+                'Pedidos.fecha_pedido >=' => $fecha_inicio,
+                'Pedidos.fecha_pedido <=' => $fecha_fin,
+                'Pedidos.estado_id' => '5'
+            ])
+            ->contain([
+                'PedidosEstados',
+                'DetallesPedidos' => [
+                    'Productos' => [
+                        'ProductosPrecios' => function ($q) use ($fecha_inicio, $fecha_fin) {
+                            return $q->where([
+                                'fecha_desde <=' => $fecha_fin,
+                                'OR' => [
+                                    'fecha_hasta >=' => $fecha_inicio,
+                                    'fecha_hasta IS' => null // Incluir precios sin fecha de fin
+                                ]
+                            ]);
+                        }
+                    ]
                 ]
-            ]
-        ])
-        ->orderBy(['fecha_pedido desc'])
-        ->all();
+            ])
+            ->orderBy(['fecha_pedido desc'])
+            ->all();
 
         $total = 0;
 

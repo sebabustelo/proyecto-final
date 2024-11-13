@@ -172,6 +172,30 @@
                                             </th>
                                         </tr>
                                     </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="12">
+                                                <div class="text-center">
+                                                    <ul class="pagination justify-content-center">
+                                                        <li class="page-item">
+                                                            <?php echo $this->Paginator->first('<<'); ?>
+                                                            <?php echo $this->Paginator->prev('<'); ?>
+                                                        </li>
+                                                        <li class="page-item">
+                                                            <?php echo $this->Paginator->numbers(['modulus' => 4]); ?>
+                                                        </li>
+                                                        <li class="page-item">
+                                                            <?php echo $this->Paginator->next('>'); ?>
+                                                            <?php echo $this->Paginator->last('>>'); ?>
+                                                        </li>
+                                                    </ul>
+                                                    <p class="text-center">
+                                                        Página: <?php echo $this->Paginator->counter('{{page}} de {{pages}}, mostrando {{current}} pedidos de {{count}}'); ?>
+                                                    </p>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tfoot>
                                     <tbody>
                                         <?php foreach ($pedidos as $pedido) {  ?>
                                             <tr>

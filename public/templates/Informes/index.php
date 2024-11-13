@@ -117,6 +117,7 @@
                             </p>
 
                             <div class="chart">
+                                <div id="chart-legend"></div>
                                 <!-- Sales Chart Canvas -->
                                 <canvas id="salesChart" style="height: 180px;"></canvas>
                             </div>
@@ -404,26 +405,37 @@
             // Mapeo de mes numérico a nombre
             $mesLabels[] = $meses[$pedido['mes']];
             $totalPedidos[] = $pedido['total_pedidos'];
+            $totalVentas[] = $pedido['total_ventas'];
         }
         ?>
 
         var mesesLabels = <?php echo json_encode($mesLabels); ?>; // Los nombres de los meses
         var pedidosPorMes = <?php echo json_encode($totalPedidos); ?>; // Los totales de pedidos por mes
+        var ventasPorMes = <?php echo json_encode($totalVentas); ?>; // Los totales de ventas por mes
 
         var salesChartData = {
-
-
             labels: mesesLabels,
             datasets: [{
-                label: "Pedidos",
-                fillColor: "rgba(60,141,188,0.9)",
-                strokeColor: "rgba(60,141,188,0.8)",
-                pointColor: "#3b8bba",
-                pointStrokeColor: "rgba(60,141,188,1)",
-                pointHighlightFill: "#fff",
-                pointHighlightStroke: "rgba(60,141,188,1)",
-                data: pedidosPorMes,
-            }, ],
+                    label: 'Pedidos',
+                    fillColor: 'rgba(210, 214, 222, 0.3)', // Mayor transparencia
+                    strokeColor: 'rgba(210, 214, 222, 0.5)', // Moderada transparencia
+                    pointColor: 'rgba(210, 214, 222, 0.5)',
+                    pointStrokeColor: 'rgba(193, 199, 209, 0.6)', // Con un poco de transparencia
+                    pointHighlightFill: 'rgba(255, 255, 255, 0.8)', // Algo de transparencia en el highlight
+                    pointHighlightStroke: 'rgba(220, 220, 220, 0.6)',
+                    data: pedidosPorMes,
+                },
+                {
+                    label: 'Ventas',
+                    fillColor: 'rgba(60, 141, 188, 0.3)', // Más transparencia para el fondo
+                    strokeColor: 'rgba(60, 141, 188, 0.5)', // Líneas con moderada transparencia
+                    pointColor: 'rgba(59, 139, 186, 0.6)', // Transparencia en puntos
+                    pointStrokeColor: 'rgba(60, 141, 188, 0.6)', // Transparente en bordes de punto
+                    pointHighlightFill: 'rgba(255, 255, 255, 0.8)', // Highlight transparente
+                    pointHighlightStroke: 'rgba(60, 141, 188, 0.6)',
+                    data: ventasPorMes,
+                }
+            ],
         };
 
         var salesChartOptions = {
@@ -468,9 +480,15 @@
         // Create the line chart
         salesChart.Line(salesChartData, salesChartOptions);
 
+        // Genera la leyenda manualmente con el color de la línea (strokeColor)
+        var legendHtml = '<ul>';
+        salesChartData.datasets.forEach(function(dataset) {
+            legendHtml += '<li style=" list-style: none;"><span style="display:inline-block;width:12px;height:12px;background-color:' + dataset.strokeColor + ';margin-right:5px;"></span>' + dataset.label + '</li>';
+        });
+        legendHtml += '</ul>';
 
-
-
+        // Agrega la leyenda al contenedor #chart-legend
+        $('#chart-legend').html(legendHtml);
 
 
 
