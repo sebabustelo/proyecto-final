@@ -79,7 +79,6 @@ class ProductosController extends AppController
 
         $this->set('provincias', $this->Productos->DetallesPedidos->Pedidos->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
         $this->set(compact('producto'));
-
     }
 
     /**
@@ -366,7 +365,6 @@ class ProductosController extends AppController
 
                 $this->Flash->error(__('No se pudo eliminar el producto. Por favor, inténtalo de nuevo.'));
             }
-
         } catch (RecordNotFoundException $e) {
             $this->Flash->error(__('El producto no existe.'));
             return $this->redirect(['action' => 'index']);
@@ -376,7 +374,14 @@ class ProductosController extends AppController
         } catch (\InvalidArgumentException $e) {
             $this->Flash->error('El producto no es válido.');
             return $this->redirect(['action' => 'index']);
+        } catch (\Cake\Database\Exception\QueryException $e) {
+            $this->Flash->error(__('El producto no puede ser eliminado porque esta asociado a uno o más pedidos.'));
+            return $this->redirect('/Productos/index');
+        } catch (\Exception $e) {
+            $this->Flash->error(__('El producto no puede ser eliminado.'));
+            return $this->redirect('/Productos/index');
         }
+
 
     }
 
@@ -434,8 +439,8 @@ class ProductosController extends AppController
         $orConditions[] = ['Productos.nombre LIKE' => '%' . $data['search'] . '%'];
         $orConditions[] = ['Productos.descripcion_breve LIKE ' => '%' . $data['search'] . '%'];
         $conditions['where']['OR'] = $orConditions;
-        $conditions['where'][] = ['Categorias.activo' => 1 ];
-        $conditions['where'][] = ['Productos.activo' => 1 ];
+        $conditions['where'][] = ['Categorias.activo' => 1];
+        $conditions['where'][] = ['Productos.activo' => 1];
 
         return $conditions;
     }

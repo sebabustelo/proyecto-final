@@ -104,7 +104,13 @@ class RbacUsuariosTable extends Table
                         'message' => 'El usuario existe en la base de datos, no pueden existir duplicados.',
                     ],
                 ]
-            );
+            )
+            ->add('usuario', 'noSpaces', [
+                'rule' => function ($value, $context) {
+                    return strpos($value, ' ') === false;
+                },
+                'message' => 'El usuario no puede contener solo espacios en blanco.',
+            ]);
 
         $validator
             ->email('email', false, 'El campo usuario debe ser una dirección de correo válida.')
@@ -189,7 +195,7 @@ class RbacUsuariosTable extends Table
             ->add('razon_social', 'requiredIfTipoClienteObraSocial', [
                 'rule' => function ($value, $context) {
                     if ($context['data']['razon_social'] == 'obra_social') {
-                        return !empty($context['data']['obra_social']);
+                        return !empty(trim($context['data']['obra_social']));
                     } else {
                         return true;
                     }

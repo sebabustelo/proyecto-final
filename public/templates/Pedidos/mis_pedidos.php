@@ -66,9 +66,7 @@
                                 <?php echo  "Fecha de Intervención:", $pedido->fecha_intervencion; ?> <br>
                                 <?php echo  $pedido->detalles_pedidos[0]->producto->nombre ?>
                             </div>
-                            <div class="comment-text pull-right">
-                                <button type="button" class="btn btn-block btn-primary">Ver detalles</button>
-                            </div>
+
                         </div>
                     </div>
                 </div>

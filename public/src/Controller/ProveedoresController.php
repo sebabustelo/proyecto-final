@@ -48,16 +48,19 @@ class ProveedoresController extends AppController
         $proveedor = $this->Proveedores->newEmptyEntity();
         if ($this->request->is('post')) {
 
-            $proveedor = $this->Proveedores->patchEntity($proveedor, $this->request->getData());
+            $proveedor = $this->Proveedores->patchEntity($proveedor, $this->request->getData(), ['associated' => ['Direcciones']]);
+            // debug($this->request->getData());
+            // debug($proveedor);
+            // die;
             if ($this->Proveedores->save($proveedor)) {
                 $this->Flash->success(__('El proveedor se guardo correctamente.'));
-                return $this->redirect('/Proveedores/index');;
+                return $this->redirect('/Proveedores/index');
             }
             $this->Flash->error(__('El proveedor no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
         }
 
         $this->set(compact('proveedor'));
-        $this->render();
+        $this->set('provincias', $this->Proveedores->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
     }
 
     /**
@@ -70,7 +73,9 @@ class ProveedoresController extends AppController
     public function edit($id = null)
     {
         try {
-            $proveedor = $this->Proveedores->get($id, contain: []);
+
+            $proveedor = $this->Proveedores->get($id,contain:['Direcciones' => ['Localidades' => 'Provincias']]);
+
             if ($this->request->is(['patch', 'post', 'put'])) {
                 $proveedor = $this->Proveedores->patchEntity($proveedor, $this->request->getData());
                 if ($this->Proveedores->save($proveedor)) {
@@ -88,10 +93,11 @@ class ProveedoresController extends AppController
                 }
             }
             $this->set(compact('proveedor'));
+            $this->set('provincias', $this->Proveedores->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {
             $this->Flash->error(__('El proveedor no existe.'));
             return $this->redirect(['action' => 'index']);
-        }  catch (\Exception $e) {
+        } catch (\Exception $e) {
             $this->Flash->error(__('El proveedor no es válido.'));
             return $this->redirect(['action' => 'index']);
         }
@@ -112,7 +118,14 @@ class ProveedoresController extends AppController
             if ($this->Proveedores->delete($proveedor)) {
                 $this->Flash->success(__('El proveedor ha sido eliminada.'));
             } else {
-                $this->Flash->error(__('No se pudo eliminar el proveedor. Por favor, inténtalo de nuevo.'));
+                // $this->Flash->error(__('No se pudo eliminar el proveedor. Por favor, inténtalo de nuevo.'));
+                if ($proveedor->getErrors()) {
+                    foreach ($proveedor->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                }
             }
         } catch (MethodNotAllowedException $e) {
             $this->Flash->error(__('Método HTTP no permitido.'));
@@ -122,9 +135,11 @@ class ProveedoresController extends AppController
             $this->Flash->error('El proveedor no es válido.');
         } catch (InvalidPrimaryKeyException $e) {
             $this->Flash->error('El proveedor no es válido.');
+        } catch (\Exception $e) {
+            $this->Flash->error(__('La localidad no es válida.'));
         }
 
-        return $this->redirect('/Proveedores/index');;
+        return $this->redirect('/Proveedores/index');
     }
 
     /**

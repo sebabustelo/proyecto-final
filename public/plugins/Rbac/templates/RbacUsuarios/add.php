@@ -35,13 +35,13 @@ use Cake\Core\Configure;
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
 
                             <div class="form-group col-sm-3">
-                                <label  for="usuario">Usuario</label>
+                                <label for="usuario">Usuario</label>
                                 <input type="text" name="usuario" required id="RbacUsuarioUsuario"
                                     oninvalid="this.setCustomValidity('Complete el usuario')" oninput="this.setCustomValidity('')"
                                     placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo $this->request->getData('usuario'); ?>">
                             </div>
                             <div class="form-group col-sm-3">
-                                <label  for="usuario">Usuario</label>
+                                <label for="usuario">Usuario</label>
                                 <input type="email" name="email" required
                                     oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
                                     placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo $this->request->getData('usuario'); ?>">
@@ -100,22 +100,35 @@ use Cake\Core\Configure;
                                     value="<?php echo !empty($this->request->getData('direccion')['calle']) ? $this->request->getData('direccion')['calle'] : ''; ?>"
                                     type="text" class="form-control"
                                     oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
-                                    placeholder="Calle" maxlength="100" min="1">
+                                    placeholder="Calle" maxlength="50" min="1">
                             </div>
 
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Número</label>
-                                <input name="direccion[numero]" required value="<?php echo !empty($this->request->getData('direccion')['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>" type="number" class="form-control" placeholder="Número" maxlength="4" min="1">
+                                <input name="direccion[numero]" required
+                                    value="<?php echo !empty($this->request->getData('direccion')['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>"
+                                    type="number" class="form-control" placeholder="Número"
+                                    min="1" max="9999"
+                                    onkeydown="preventInvalidInput(event)">
                             </div>
 
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Piso</label>
-                                <input name="direccion[piso]" value="<?php echo !empty($this->request->getData('direccion')['piso']) ? $this->request->getData('direcciones')[0]['piso'] : ''; ?>" type="text" class="form-control" placeholder="Piso" maxlength="3">
+                                <input name="direccion[piso]"
+                                    value="<?php echo !empty($this->request->getData('direccion')['piso']) ? $this->request->getData('direcciones')[0]['piso'] : ''; ?>"
+                                    type="number" class="form-control"
+                                    placeholder="Piso"
+                                    min="1"
+                                    max="99"
+                                    onkeydown="preventInvalidInput(event)">
                             </div>
 
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Depto</label>
-                                <input name="direccion[departamento]" value="<?php echo !empty($this->request->getData('direccion')['departamento']) ? $this->request->getData('direcciones')[0]['departamento'] : ''; ?>" type="text" class="form-control" placeholder="Depto" maxlength="10">
+                                <input name="direccion[departamento]"
+                                value="<?php echo !empty($this->request->getData('direccion')['departamento']) ? $this->request->getData('direcciones')[0]['departamento'] : ''; ?>"
+                                type="text" class="form-control" placeholder="Depto"
+                                maxlength="3" >
                             </div>
 
 
@@ -185,7 +198,6 @@ use Cake\Core\Configure;
         provinciaSelect.addEventListener('change', function() {
             const provinciaId = this.value;
 
-
             if (provinciaId) {
 
                 fetch('/localidades/localidades/' + provinciaId)
@@ -228,6 +240,13 @@ use Cake\Core\Configure;
         } else {
             // Permitir solo números
             documentoInput.value = documentoInput.value.replace(/\D/g, '');
+        }
+    }
+
+    function preventInvalidInput(event) {
+        const invalidChars = ['e', 'E', '+', '-', '.']; // caracteres que quieres restringir
+        if (invalidChars.includes(event.key)) {
+            event.preventDefault();
         }
     }
 </script>

@@ -65,7 +65,14 @@ class DireccionesTable extends Table
             ->scalar('calle')
             ->maxLength('calle', 100)
             ->requirePresence('calle', 'create')
-            ->notEmptyString('calle');
+            ->notEmptyString('calle')
+            ->add('calle', 'noSpaces', [
+                'rule' => function ($value, $context) {
+                    return strpos($value, ' ') === false;
+                },
+                'message' => 'La calle no puede contener solo espacios en blanco.',
+            ]);
+;
 
         $validator
             ->scalar('numero')

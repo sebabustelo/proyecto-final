@@ -151,7 +151,8 @@ use Cake\Core\Configure; ?>
 
     <div class="form-group has-feedback">
         <input name="celular" required type="number" step="1" max="999999999999" oninput="if(this.value.length > 12) this.value = this.value.slice(0, 12);"
-            value="<?php echo $this->request->getData('celular'); ?>" class="form-control" placeholder="(*) Celular" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
+            value="<?php echo $this->request->getData('celular'); ?>" class="form-control"
+             placeholder="(*) Celular" oninput="this.value = this.value.replace(/[^0-9]/g, '');">
         <span class="glyphicon fa fa-lg fa-mobile-phone form-control-feedback"></span>
     </div>
 
@@ -396,7 +397,7 @@ use Cake\Core\Configure; ?>
     }
 
     function preventInvalidInput(event) {
-        const invalidChars = ['e', 'E', '+', '-']; // caracteres que quieres restringir
+        const invalidChars = ['e', 'E', '+', '-','.']; // caracteres que quieres restringir
         if (invalidChars.includes(event.key)) {
             event.preventDefault();
         }

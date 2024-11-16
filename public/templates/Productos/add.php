@@ -162,7 +162,7 @@
 
 <script>
     function preventInvalidInput(event) {
-        const invalidChars = ['e', 'E', '+', '-']; // caracteres que quieres restringir
+        const invalidChars = ['e', 'E', '+', '-','.']; // caracteres que quieres restringir
         if (invalidChars.includes(event.key)) {
             event.preventDefault();
         }

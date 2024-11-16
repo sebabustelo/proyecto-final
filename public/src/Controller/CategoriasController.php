@@ -114,7 +114,7 @@ class CategoriasController extends AppController
             if ($this->Categorias->delete($categoria)) {
                 $this->Flash->success(__('La categoría ha sido eliminada.'));
             } else {
-                $this->Flash->error(__('No se pudo eliminar la categoría. Por favor, inténtalo de nuevo.'));
+                //$this->Flash->error(__('No se pudo eliminar la categoría.'));
                 if ($categoria->getErrors()) {
                     foreach ($categoria->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {

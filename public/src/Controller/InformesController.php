@@ -129,7 +129,7 @@ class InformesController extends AppController
         foreach ($pedidosPorMes as $pedido) {
             foreach ($mesesRango as &$mes) {
                 if ($mes['mes'] == $pedido['mes'] && $mes['anio'] == $pedido['anio']) {
-                    $mes['total_pedidos'] = $pedido['total_pedidos'];                   
+                    $mes['total_pedidos'] = $pedido['total_pedidos'];
                 }
             }
         }
@@ -137,12 +137,12 @@ class InformesController extends AppController
         foreach ($ventasPorMes as $pedido) {
             foreach ($mesesRango as &$mes) {
                 if ($mes['mes'] == $pedido['mes'] && $mes['anio'] == $pedido['anio']) {
-                    $mes['total_ventas'] = $pedido['total_ventas'];                   
+                    $mes['total_ventas'] = $pedido['total_ventas'];
                 }
             }
         }
 
-  
+
         $this->set('mesesRango', $mesesRango);  // Pasamos los datos al view
 
         //calcular monto total en el periododo consultado
@@ -159,16 +159,15 @@ class InformesController extends AppController
                         'ProductosPrecios' => function ($q) use ($fecha_inicio, $fecha_fin) {
                             return $q->where([
                                 'fecha_desde <=' => $fecha_fin,
-                                'OR' => [
-                                    'fecha_hasta >=' => $fecha_inicio,
-                                    'fecha_hasta IS' => null // Incluir precios sin fecha de fin
-                                ]
+                                'fecha_hasta IS' => null // Incluir precios sin fecha de fin
+
                             ]);
                         }
                     ]
                 ]
             ])
             ->orderBy(['fecha_pedido desc'])
+            ->limit(10)
             ->all();
 
 
@@ -186,10 +185,8 @@ class InformesController extends AppController
                         'ProductosPrecios' => function ($q) use ($fecha_inicio, $fecha_fin) {
                             return $q->where([
                                 'fecha_desde <=' => $fecha_fin,
-                                'OR' => [
-                                    'fecha_hasta >=' => $fecha_inicio,
-                                    'fecha_hasta IS' => null // Incluir precios sin fecha de fin
-                                ]
+                                'fecha_hasta IS' => null // Incluir precios sin fecha de fin
+
                             ]);
                         }
                     ]

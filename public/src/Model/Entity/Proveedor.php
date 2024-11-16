@@ -40,5 +40,6 @@ class Proveedor extends Entity
         'created' => true,
         'modified' => true,
         'activo' => true,
+        'direccion'=>true
     ];
 }

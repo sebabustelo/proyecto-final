@@ -46,7 +46,6 @@ class ConsultasController extends AppController
      */
     public function add()
     {
-
         $consulta = $this->Consultas->newEmptyEntity();
 
         if ($this->request->is('post')) {
@@ -54,19 +53,26 @@ class ConsultasController extends AppController
                 ->where(['ConsultasEstados.nombre' => 'PENDIENTE'])
                 ->first();
 
-            if ($estadoPendiente) {
-                $consulta->consulta_estado_id = $estadoPendiente->id;
+            $data =  $this->request->getData();
+            if (isset($estadoPendiente->id)) {
+                $data['consulta_estado_id'] = $estadoPendiente->id;
             }
 
+            $consulta = $this->Consultas->patchEntity($consulta, $data);
 
-            $consulta = $this->Consultas->patchEntity($consulta, $this->request->getData());
-            // debug($consulta);die;
             if ($this->Consultas->save($consulta)) {
                 $this->Flash->success(__('Su consulta fue enviada correctamente, le responderemos a la brevedad.'));
-
                 return $this->redirect(['action' => 'add']);
             }
+
             $this->Flash->error(__('La consulta no pudo ser enviada. Por favor intenete nuevamente.'));
+            if ($consulta->getErrors()) {
+                foreach ($consulta->getErrors() as $field => $errors) {
+                    foreach ($errors as $error) {
+                        $this->Flash->error(__($error));
+                    }
+                }
+            }
         }
         $this->set(compact('consulta'));
     }
@@ -104,11 +110,11 @@ class ConsultasController extends AppController
                 $datos['respuesta']        = $consulta->respuesta;
                 $datos['aplicacion'] = "IPMAGNA";
                 $datos['template']   = 'consulta';
-                $datos['email']      = $consulta->usuario_consulta->usuario;
+                $datos['email']      = $consulta->usuario_consulta->email;
 
                 if ($this->sendEmail($datos)) {
                     $this->Consultas->getConnection()->commit();
-                    $this->Flash->success('Se ha enviado la respuesta al cliente ' . $consulta->usuario_consulta->usuario);
+                    $this->Flash->success('Se ha enviado la respuesta al cliente ' . $consulta->usuario_consulta->email);
                 } else {
                     $this->Consultas->getConnection()->rollback();
                     $this->Flash->error('No se pudo enviar el email al cliente');
@@ -221,5 +227,4 @@ class ConsultasController extends AppController
             return false;
         }
     }
-
 }

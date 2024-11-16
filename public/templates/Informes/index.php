@@ -113,7 +113,7 @@
                     <div class="row">
                         <div class="col-md-12">
                             <p class="text-center">
-                                <strong>Ventas: <?php echo $filters['fecha_pedido'] ?></strong>
+                                <strong>Período: <?php echo $filters['fecha_pedido'] ?></strong>
                             </p>
 
                             <div class="chart">
@@ -359,13 +359,6 @@
         $('#fecha_pedido').data('daterangepicker').setEndDate(dateRange[1]);
     }
 
-    // $('#fecha_pedido').on('apply.daterangepicker', function(ev, picker) {
-    //     $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-    // });
-
-    // $('#fecha_pedido').on('cancel.daterangepicker', function(ev, picker) {
-    //     $(this).val('');
-    // });
 
     $(function() {
         "use strict";
@@ -415,6 +408,7 @@
 
         var salesChartData = {
             labels: mesesLabels,
+
             datasets: [{
                     label: 'Pedidos',
                     fillColor: 'rgba(210, 214, 222, 0.3)', // Mayor transparencia
@@ -427,12 +421,12 @@
                 },
                 {
                     label: 'Ventas',
-                    fillColor: 'rgba(60, 141, 188, 0.3)', // Más transparencia para el fondo
-                    strokeColor: 'rgba(60, 141, 188, 0.5)', // Líneas con moderada transparencia
-                    pointColor: 'rgba(59, 139, 186, 0.6)', // Transparencia en puntos
-                    pointStrokeColor: 'rgba(60, 141, 188, 0.6)', // Transparente en bordes de punto
+                    fillColor: 'rgba(96, 92, 168, 0.3)', // Más transparencia para el fondo
+                    strokeColor: 'rgba(96, 92, 168, 0.5)', // Líneas con moderada transparencia
+                    pointColor: 'rgba(96, 92, 168, 0.6)', // Transparencia en puntos
+                    pointStrokeColor: 'rgba(96, 92, 168, 0.6)', // Transparente en bordes de punto
                     pointHighlightFill: 'rgba(255, 255, 255, 0.8)', // Highlight transparente
-                    pointHighlightStroke: 'rgba(60, 141, 188, 0.6)',
+                    pointHighlightStroke: 'rgba(96, 92, 168, 0.6)', // Bordes de highlight
                     data: ventasPorMes,
                 }
             ],
@@ -456,7 +450,7 @@
             // Number - Tension of the bezier curve between points
             bezierCurveTension: 0.3,
             // Boolean - Whether to show a dot for each point
-            pointDot: false,
+            pointDot: true,
             // Number - Radius of each point dot in pixels
             pointDotRadius: 4,
             // Number - Pixel width of point dot stroke

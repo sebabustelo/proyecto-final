@@ -48,9 +48,14 @@ class ProveedoresTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Direcciones', [
-            'foreignKey' => 'direccion_id',
-        ]);
+        $this->belongsTo(
+            'Direcciones',
+            [
+                'className'        => 'Rbac.Direcciones',
+                'foreignKey' => 'direccion_id',
+                'propertyName' => 'direccion'
+            ]
+        );
     }
 
     /**
@@ -63,14 +68,27 @@ class ProveedoresTable extends Table
     {
         $validator
             ->scalar('nombre')
-            ->maxLength('nombre', 255)
+            ->maxLength('nombre', 50)
             ->requirePresence('nombre', 'create')
-            ->notEmptyString('nombre','El nombre es obligatorio');
+            ->notEmptyString('nombre', 'El nombre es obligatorio')
+            ->add('nombre', 'noSpaces', [
+                'rule' => function ($value, $context) {
+                    return strpos($value, ' ') === false;
+                },
+                'message' => 'El nombre no puede contener solo espacios en blanco.',
+            ]);
 
         $validator
             ->scalar('descripcion')
+            ->maxLength('nombre', 150)
             ->requirePresence('descripcion', 'create')
-            ->notEmptyString('descripcion');
+            ->notEmptyString('descripcion', 'La descripción es obligatoria')
+            ->add('descripcion', 'noSpaces', [
+                'rule' => function ($value, $context) {
+                    return strpos($value, ' ') === false;
+                },
+                'message' => 'La descripción no puede contener solo espacios en blanco.',
+            ]);
 
         $validator
             ->integer('direccion_id')
@@ -82,7 +100,17 @@ class ProveedoresTable extends Table
         $validator
             ->email('email')
             ->requirePresence('email', 'create')
-            ->notEmptyString('email');
+            ->notEmptyString('email')
+            ->add(
+                'email',
+                [
+                    'unique' => [
+                        'rule' => 'validateUnique',
+                        'provider' => 'table',
+                        'message' => 'Existe un proveedor con ese email, no pueden haber duplicados.',
+                    ],
+                ]
+            );
 
         $validator
             ->scalar('cuit')
@@ -92,7 +120,17 @@ class ProveedoresTable extends Table
             ->add('cuit', 'validFormat', [
                 'rule' => [$this, 'validarCuit'],
                 'message' => 'El CUIT no es válido.',
-            ]);
+            ])
+            ->add(
+                'cuit',
+                [
+                    'unique' => [
+                        'rule' => 'validateUnique',
+                        'provider' => 'table',
+                        'message' => 'Existe un proveedor con el mismo cuit, no pueden haber duplicados.',
+                    ],
+                ]
+            );
 
         $validator
             ->boolean('activo')

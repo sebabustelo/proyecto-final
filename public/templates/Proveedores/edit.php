@@ -7,7 +7,7 @@
 ?>
 <section class="content-header">
     <h1>
-    <i class="fa fa-cubes"></i> Gestión de Proveedores
+        <i class="fa fa-cubes"></i> Gestión de Proveedores
     </h1>
     <ol class="breadcrumb">
         <li><a href="#"><i class="fa  fa-dot-circle-o"></i>Proveedores</a></li> <i class="fa fa-arrow-right"></i>
@@ -32,8 +32,10 @@
                         <form id="ProveedoresEditForm" name="ProveedoresEditForm" role="form" action="/Proveedores/edit/<?php echo $proveedor->id; ?>" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <div class="form-group col-sm-4">
-                                <label>Nombre</label>
-                                <input required type="text" maxlength="255" placeholder="Ingrese el nombre" value="<?php echo $proveedor->nombre; ?>"
+                                <label>(*) Nombre</label>
+                                <input required type="text" maxlength="50"
+                                    placeholder="Ingrese el nombre"
+                                    value="<?php echo $proveedor->nombre; ?>"
                                     class="form-control" name="nombre">
                                 <?php if ($proveedor->getError('nombre')) { ?>
                                     <?php foreach ($proveedor->getError('nombre') as $error) { ?>
@@ -41,10 +43,17 @@
                                     <?php } ?>
                                 <?php } ?>
                             </div>
-                            <div class="form-group col-sm-2">
-                                <label>CUIT</label>
-                                <input required type="number" maxlength="11" id="cuit" placeholder="Ingrese el CUIT"
-                                    class="form-control" name="cuit" oninvalid="this.setCustomValidity('Debe completar el CUIT')" oninput="this.setCustomValidity('')"
+                            <div class="form-group col-sm-4">
+                                <label>(*) CUIT</label>
+                                <input required
+                                    type="number"
+                                    maxlength="11"
+                                    id="cuit"
+                                    placeholder="Ingrese el CUIT"
+                                    class="form-control"
+                                    name="cuit"
+                                    oninvalid="this.setCustomValidity('Debe completar el CUIT')"
+                                    oninput="this.setCustomValidity('')"
                                     value="<?php echo $proveedor->cuit; ?>">
                                 <?php if ($proveedor->getError('cuit')) { ?>
                                     <?php foreach ($proveedor->getError('cuit') as $error) { ?>
@@ -65,9 +74,14 @@
 
                             </div>
                             <div class="form-group col-sm-2">
-                                <label>Teléfono</label>
-                                <input required type="number" maxlength="120" placeholder="Ingrese el teléfono"
-                                    class="form-control" name="celular" value="<?php echo $proveedor->celular; ?>">
+                                <label>(*) Celular</label>
+                                <input required type="number"
+                                    maxlength="120"
+                                    placeholder="Ingrese el celular"
+                                    class="form-control"
+                                    name="celular"
+                                    oninput="if(this.value.length > 12) this.value = this.value.slice(0, 12);"
+                                    value="<?php echo $proveedor->celular; ?>">
                                 <?php if ($proveedor->getError('celular')) { ?>
                                     <?php foreach ($proveedor->getError('celular') as $error) { ?>
                                         <span class=" badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -75,25 +89,77 @@
                                 <?php } ?>
 
                             </div>
-                            <div class="form-group col-sm-6">
-                                <label>Descripción</label>
-                                <input type="text" maxlength="500" placeholder="Ingrese una descripción"
-                                    class="form-control" name="descripcion" value="<?php echo $proveedor->descripcion; ?>">
+                            <div class="form-group col-sm-10">
+                                <label>(*) Descripción</label>
+                                <input type="text"
+                                    maxlength="150"
+                                    placeholder="Ingrese una descripción"
+                                    class="form-control"
+                                    name="descripcion"
+                                    value="<?php echo $proveedor->descripcion; ?>">
                                 <?php if ($proveedor->getError('descripcion')) { ?>
                                     <?php foreach ($proveedor->getError('descripcion') as $error) { ?>
                                         <span class=" badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
                                     <?php } ?>
                                 <?php } ?>
                             </div>
-                            <div class="form-group col-sm-4">
-                                <label>Dirección</label>
-                                <input required type="text" maxlength="255" placeholder="Ingrese la dirección"
-                                    class="form-control" name="direccion" value="<?php echo $proveedor->direccion; ?>">
-                                <?php if ($proveedor->getError('direccion')) { ?>
-                                    <?php foreach ($proveedor->getError('direccion') as $error) { ?>
-                                        <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
+                            <div class="form-group col-sm-3">
+                                <label>(*) Provincia</label><br>
+                                <select id="provincia_id" required name="direccion[localidade][provincia][id]" class="form-control">
+                                    <option selected value="">Seleccione una provincia</option>
+                                    <?php foreach ($provincias as $id => $provincia) { ?>
+                                        <?php if ($proveedor->direccion->localidade['provincia']['id'] == $id) { ?>
+                                            <option selected value="<?php echo $id ?>"><?php echo $provincia; ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $id ?>"><?php echo $provincia; ?></option>
+                                        <?php } ?>
                                     <?php } ?>
-                                <?php } ?>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-3">
+                                <label>(*) Localidad</label><br>
+                                <select required id="localidad_id" name="direccion[localidad_id]" class="form-control">
+                                    <option selected value="">Seleccione una localidad</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <label for="direccion">(*) Calle</label>
+                                <input name="direccion[calle]" required
+                                    value="<?php echo isset($proveedor->direccion->calle) ? $proveedor->direccion->calle : ''; ?>"
+                                    type="text" class="form-control"
+                                    oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');"
+                                    placeholder="Calle" maxlength="50" min="1">
+                            </div>
+
+                            <div class="form-group col-sm-1">
+                                <label for="direccion">Número</label>
+                                <input name="direccion[numero]" required
+                                    value="<?php echo isset($proveedor->direccion->numero) ? $proveedor->direccion->numero : ''; ?>"
+                                    type="number"
+                                    class="form-control"
+                                    placeholder="Número"
+                                    min="1" max="9999"
+                                    onkeydown="preventInvalidInput(event)"
+                                    oninput="if(this.value.length > 5) this.value = this.value.slice(0, 5);">
+                            </div>
+                            <div class="form-group col-sm-1">
+                                <label for="direccion">Piso</label>
+                                <input name="direccion[piso]"
+                                    value="<?php echo isset($proveedor->direccion->piso) ? $proveedor->direccion->piso : ''; ?>"
+                                    type="number"
+                                    class="form-control"
+                                    placeholder="Piso"
+                                    min="1"
+                                    max="99"
+                                    onkeydown="preventInvalidInput(event)"
+                                    oninput="if(this.value.length > 2) this.value = this.value.slice(0, 2);">
+                            </div>
+
+                            <div class="form-group col-sm-2">
+                                <label for="direccion">Depto</label>
+                                <input name="direccion[departamento]"
+                                    value="<?php echo isset($proveedor->direccion->departamento) ? $proveedor->direccion->departamento : ''; ?>"
+                                    type="text" class="form-control" placeholder="Depto" maxlength="3">
                             </div>
                             <div class="form-group   col-sm-2">
                                 <label>&nbsp;</label><br>
@@ -131,7 +197,49 @@
     </div>
 </section>
 <script>
-    document.getElementById('ProveedoresAddForm').addEventListener('submit', function(event) {
+    document.addEventListener('DOMContentLoaded', function() {
+
+
+        const provinciaSelect = document.getElementById('provincia_id');
+        const localidadSelect = document.getElementById('localidad_id');
+
+        provinciaSelect.addEventListener('change', function() {
+            const provinciaId = this.value;
+
+            if (provinciaId) {
+
+                fetch('/localidades/localidades/' + provinciaId)
+
+                    .then(response => response.json())
+                    .then(data => {
+                        localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
+
+                        data.forEach(function(localidad) {
+
+                            localidadSelect.innerHTML += '<option value="' + localidad.id + '">' + localidad.nombre + '</option>';
+                        });
+                    })
+                    .catch(error => console.error('Error al cargar localidades:', error));
+            } else {
+                localidadSelect.innerHTML = '<option selected value="">Seleccione una localidad</option>';
+            }
+        });
+
+        document.getElementById('provincia_id').dispatchEvent(new Event('change'));
+
+        setTimeout(function() {
+
+            var localidadId = "<?php echo $proveedor->direccion->localidad_id ?? ''; ?>";
+            if (localidadId) {
+                document.getElementById('localidad_id').value = localidadId;
+            }
+        }, 1000);
+
+
+
+    });
+
+    document.getElementById('ProveedoresEditForm').addEventListener('submit', function(event) {
         const cuit = document.getElementById('cuit').value;
         const mensajeError = document.getElementById('mensaje-error');
 
@@ -165,5 +273,12 @@
 
         // Comparar con el dígito verificador (último dígito del CUIT)
         return verificador === parseInt(cuit[10]);
+    }
+
+    function preventInvalidInput(event) {
+        const invalidChars = ['e', 'E', '+', '-', '.']; // caracteres que quieres restringir
+        if (invalidChars.includes(event.key)) {
+            event.preventDefault();
+        }
     }
 </script>

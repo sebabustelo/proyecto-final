@@ -21,9 +21,12 @@ class PedidosController extends AppController
     protected array $paginate = [
         'limit' => 10,
         'order' => [
-            'Pedidos.fecha_pedido' => 'asc',
+            'Pedidos.fecha_pedido' => 'desc',
         ],
+        'sortableFields' => ['PedidosEstados.nombre', 'Pedidos.fecha_pedido', 'Pedidos.fecha_intervencion', 'RbacUsuarios.nombre', 'Productos.nombre']
+
     ];
+
 
     public function initialize(): void
     {
@@ -38,22 +41,16 @@ class PedidosController extends AppController
      */
     public function index()
     {
-        // Obtener las condiciones
         $conditions = $this->getConditions();
 
-        // Construir la consulta inicial con las condiciones 'where' y 'contain'
-        $query = $this->Pedidos->find()
+
+        $pedidos = $this->Pedidos->find()
             ->where($conditions['where'])
             ->contain($conditions['contain'])
             ->matching('DetallesPedidos.Productos');
 
-        $this->paginate = [
-            'sortableFields' => ['PedidosEstados.nombre', 'Pedidos.fecha_pedido', 'Pedidos.fecha_intervencion', 'RbacUsuarios.nombre', 'Productos.nombre']
-        ];
-        //  debug($this->paginate($query));die;
-        // Paginación y seteo de variables
         $this->set('filters', $this->getRequest()->getQuery());
-        $this->set('pedidos', $this->paginate($query));
+        $this->set('pedidos', $this->paginate($pedidos));
         $this->set('estados', $this->Pedidos->PedidosEstados->find('list')->orderBy('orden')->all());
     }
 
@@ -235,7 +232,7 @@ class PedidosController extends AppController
                 } else {
 
                     //$this->Flash->error(__('Lo sentimos, el producto que solicitaste se ha agotado. Por favor, verifica más tarde o elige otro producto.'));
-                    throw new \Exception('Lo sentimos, el producto que solicitaste se ha agotado. Por favor, vuelve más tarde o elige otro producto.');
+                    throw new \Exception('Lo sentimos, el producto que solicitaste se ha agotado.');
                 }
 
                 // Guardar el pedido

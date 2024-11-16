@@ -9,31 +9,7 @@
     </ol>
 </section>
 <section id="CatalogoClienteList" class="content">
-    <div class="row">
-        <div class="col-xs-12">
-            <div class="box box-primary">
-                <div class="box-header  with-border">
-                    <h3 class="box-title"> <span class="fa fa-search fa-lg"></span> </h3>
-                    <form method="get" accept-charset="utf-8" class="form abox" id="formOrderFilter" action="/productos/catalogo_cliente_categorias/<?php echo $categoria_id; ?>">
 
-                        <div class="form-row text-center">
-                            <div class="input-group col-md-6 col-md-offset-3 ">
-                                <input type="text" name="search" value="<?php echo (isset($filters['search'])) ? $filters['search'] : '' ?>" placeholder=" Buscar productos... " class="form-control">
-                                <span class="input-group-btn">
-                                    <button type="submit" class="btn btn-primary btn-flat"> <span class="glyphicon glyphicon-search"></span></button>
-                                </span>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-                <!-- /.box-header -->
-
-                <!-- /.box-body -->
-            </div>
-            <!-- /.box -->
-        </div>
-        <!-- /.col -->
-    </div>
     <div class="row">
         <?php foreach ($productos as $k => $producto) { ?>
             <div class="col-sm-6 col-md-3 " style="margin-bottom: 20px;">
