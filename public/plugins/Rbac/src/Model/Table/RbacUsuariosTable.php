@@ -109,7 +109,7 @@ class RbacUsuariosTable extends Table
                 'rule' => function ($value, $context) {
                     return strpos($value, ' ') === false;
                 },
-                'message' => 'El usuario no puede contener solo espacios en blanco.',
+                'message' => 'El nombre de usuario no puede contener espacios en blanco.',
             ]);
 
         $validator
