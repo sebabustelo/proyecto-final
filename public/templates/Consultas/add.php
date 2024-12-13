@@ -31,8 +31,8 @@ use Cake\Core\Configure;
                             <input type="hidden" name="usuario_consulta_id" value="<?php echo  $_SESSION['RbacUsuario']['id']; ?>">
 
                             <div class="form-group col-sm-12">
-                                <label>Mótivo</label>
-                                <textarea required maxlength="2000" rows="5" placeholder="Ingrese el mótivo de la consulta" class="form-control" name="motivo"></textarea>
+                                <label>Motivo</label>
+                                <textarea required maxlength="2000" rows="5" placeholder="Ingrese el motivo de la consulta" class="form-control" name="motivo"></textarea>
                                 <?php if ($consulta->getError('motivo')) { ?>
                                     <?php foreach ($consulta->getError('motivo') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>

@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Rbac\Model\Table;
@@ -66,13 +67,12 @@ class DireccionesTable extends Table
             ->maxLength('calle', 100)
             ->requirePresence('calle', 'create')
             ->notEmptyString('calle')
-            ->add('calle', 'noSpaces', [
+            ->add('calle', 'noOnlySpaces', [
                 'rule' => function ($value, $context) {
-                    return strpos($value, ' ') === false;
+                    return strlen(trim($value)) > 0;
                 },
                 'message' => 'La calle no puede contener solo espacios en blanco.',
             ]);
-;
 
         $validator
             ->scalar('numero')

@@ -65,6 +65,11 @@ class RbacUsuariosTable extends Table
                 'propertyName' => 'direccion'
             ]
         );
+
+        $this->hasMany('Pedidos', [
+            'foreignKey' => 'cliente_id',
+            'className' => 'App\Model\Table\PedidosTable'
+        ]);
     }
 
     /**
@@ -235,6 +240,27 @@ class RbacUsuariosTable extends Table
             ->notEmptyString('password_confirm', 'La confirmación del password es obligatoria.');
 
         return $validator;
+    }
+
+    /**
+     * Modifies the entity before saving it to the database.
+     * Converts the 'nombre' field to uppercase the first letter before the save operation.
+     *
+     * @param \Cake\Event\EventInterface $event The event object.
+     * @param \Cake\ORM\Entity $entity The entity being saved.
+     * @param \ArrayObject $options Additional options for the save operation.
+     * @return void
+     */
+    public function beforeDelete($event, $entity, $options)
+    {
+        $pedidosCount = $this->Pedidos->find()
+            ->where(['cliente_id' => $entity->id])
+            ->count();
+
+        if ($pedidosCount > 0) {
+            $entity->setError('delete', __('No se puede eliminar el usuario porque está asociado a uno o más pedidos. Puede desactivarlo si no quiere que el mismo ingrese al sistema.'));
+            return false;
+        }
     }
 
 

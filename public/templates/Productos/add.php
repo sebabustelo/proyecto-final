@@ -110,8 +110,8 @@
                                 <textarea  required maxlength="2000" rows="8" placeholder="Ingrese la descripción"
                                     class="form-control" name="descripcion_larga" oninvalid="this.setCustomValidity('Debe completar la descripción')"
                                     oninput="this.setCustomValidity('')"><?php echo $this->request->getData('descripcion_larga') ?></textarea>
-                                <?php if ($producto->getError('descripcion_breve')) { ?>
-                                    <?php foreach ($producto->getError('descripcion_breve') as $error) { ?>
+                                <?php if ($producto->getError('descripcion_larga')) { ?>
+                                    <?php foreach ($producto->getError('descripcion_larga') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
                                     <?php } ?>
                                 <?php } ?>

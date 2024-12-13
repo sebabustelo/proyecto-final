@@ -9,6 +9,9 @@ use Cake\Mailer\Mailer;
 use Cake\Mailer\Exception\MissingActionException;
 use Cake\Http\Client;
 use Cake\Http\Response;
+use Cake\Datasource\Exception\RecordNotFoundException;
+use Cake\Http\Exception\MethodNotAllowedException;
+use Exception;
 
 class RbacUsuariosController extends RbacController
 {
@@ -203,23 +206,41 @@ class RbacUsuariosController extends RbacController
      */
     public function delete($id, $usuario_activo = 0)
     {
-        $rbacUsuario = $this->RbacUsuarios->get($id, [
-            'contain' => ['RbacPerfiles'],
-        ]);
 
-        if ($usuario_activo == 1) {
+        try {
+            $this->request->allowMethod(['post', 'delete']);
+            $rbacUsuario = $this->RbacUsuarios->get($id, [
+                'contain' => ['RbacPerfiles'],
+            ]);
+
             if ($this->RbacUsuarios->delete($rbacUsuario)) {
-                $this->getRequest()->getSession()->destroy();
-                $this->redirect(array('action' => 'login'));
-            }
-        } else {
-            if ($this->RbacUsuarios->delete($rbacUsuario)) {
+                if ($usuario_activo == 1) {
+                    $this->getRequest()->getSession()->destroy();
+                }
                 $this->Flash->success('El Usuario ha sido eliminado correctamente.', 'flash_custom');
-                $this->redirect(array('action' => 'index'));
-                //return $this->redirect($this->referer());
+            } else {
+
+                if ($rbacUsuario->getErrors()) {
+                    foreach ($rbacUsuario->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+                            $this->Flash->error(__($error));
+                        }
+                    }
+                }
             }
+        } catch (RecordNotFoundException $e) {
+            $this->Flash->error(__('El usuario no existe.'));
+        } catch (MethodNotAllowedException $e) {
+            $this->Flash->error(__('Método HTTP no permitido.'));
+        } catch (\InvalidArgumentException $e) {
+            $this->Flash->error('El usuario no es válido.');
+        } catch (Exception $e) {
+            $this->Flash->error('El usuario no es válido.');
         }
+        return $this->redirect(['action' => 'index']);
     }
+
+
 
     private function sendEmail($datos)
     {
@@ -304,7 +325,7 @@ class RbacUsuariosController extends RbacController
                             'email' => $usuario
                         ]
                     ])
-                    ->contain(['Direcciones'=>['Localidades'=>['Provincias']],'RbacPerfiles' => ['RbacAcciones', 'RbacAccionDefault']])
+                    ->contain(['Direcciones' => ['Localidades' => ['Provincias']], 'RbacPerfiles' => ['RbacAcciones', 'RbacAccionDefault']])
                     ->first();
 
                 if (isset($usr->id) and $usr->activo) {
@@ -364,6 +385,7 @@ class RbacUsuariosController extends RbacController
     {
         $session = $this->getRequest()->getSession();
         $user = $session->read('RbacUsuario');
+
         if (is_null($session->read('RbacUsuario'))) {
             return $this->redirect([
                 'plugin' => 'Rbac',
@@ -374,7 +396,7 @@ class RbacUsuariosController extends RbacController
 
         $rbacUsuario = $this->RbacUsuarios->find()
             ->where(['RbacUsuarios.id' => $user->id])
-            ->contain(['Direcciones' => ['Localidades' => ['Provincias']]])
+            ->contain(['Direcciones' => ['Localidades' => ['Provincias']], 'RbacPerfiles' => ['RbacAcciones', 'RbacAccionDefault']])
             ->first();
 
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -386,11 +408,19 @@ class RbacUsuariosController extends RbacController
             }
             $data['tipo_cliente'] = 'particular';
 
-            $rbacUsuario = $this->RbacUsuarios->patchEntity($rbacUsuario,$data);
+            $rbacUsuario = $this->RbacUsuarios->patchEntity($rbacUsuario, $data);
+
+
             if ($this->RbacUsuarios->save($rbacUsuario)) {
+                $rbacUsuario = $this->RbacUsuarios->find()
+                    ->where(['RbacUsuarios.id' => $user->id])
+                    ->contain(['Direcciones' => ['Localidades' => ['Provincias']], 'RbacPerfiles' => ['RbacAcciones', 'RbacAccionDefault']])
+                    ->first();
+                $session->write('RbacUsuario', $rbacUsuario);
                 $this->Flash->success(__('Los datos del usuario han sido actualizados correctamente.'));
                 return $this->redirect(['action' => 'detail', $rbacUsuario->id]);
             } else {
+
                 if ($rbacUsuario->getErrors()) {
                     foreach ($rbacUsuario->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {

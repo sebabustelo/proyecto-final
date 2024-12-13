@@ -47,11 +47,11 @@ use Cake\Core\Configure; ?>
     <!-- Select para elegir entre Particular y Obra Social -->
     <div class="form-group has-feedback">
         <select id="tipo_cliente" name="tipo_cliente" class="form-control">
-            <option <?php if ($this->request->getData('tipo_client') == 'obra_social') echo 'selected'; ?> value="obra_social">Obra Social</option>
             <option <?php if ($this->request->getData('tipo_client') == 'particular') echo 'selected'; ?> value="particular">Particular</option>
+            <option <?php if ($this->request->getData('tipo_client') == 'obra_social') echo 'selected'; ?> value="obra_social">Obra Social</option>
         </select>
     </div>
-    
+
     <!-- Campos para Particular -->
     <div id="particularFields">
         <div class="form-group has-feedback">
@@ -67,7 +67,7 @@ use Cake\Core\Configure; ?>
     <!-- Campos para Obra Social -->
     <div id="obraSocialFields" style="display: none;">
         <div class="form-group has-feedback">
-            <input name="razon_social" maxlength="100" type="text"  value="<?php echo $this->request->getData('razon_social'); ?>" class="form-control" placeholder=" (*)Razón Social">
+            <input name="razon_social" maxlength="100" type="text" value="<?php echo $this->request->getData('razon_social'); ?>" class="form-control" placeholder=" (*)Razón Social">
             <span class="glyphicon glyphicon-briefcase form-control-feedback"></span>
         </div>
         <span id="mensaje-error" style="display: none;" class="badge bg-red"><i class="fa fa-warning"></i> El CUIT es inválido</span>

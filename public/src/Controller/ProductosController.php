@@ -29,6 +29,10 @@ class ProductosController extends AppController
         ],
     ];
 
+    public function test(){
+
+    }
+
 
     /**
      * Index method
@@ -230,7 +234,7 @@ class ProductosController extends AppController
             if ($guardarProducto) {
                 unset($data['productos_precios']);
                 $producto = $this->Productos->patchEntity($producto, $data);
-                $this->Flash->error(__('El producto no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
+
                 if ($this->Productos->save($producto)) {
                     $this->Flash->success(__('El producto se actualizó correctamente.'));
                     return $this->redirect(['action' => 'index']);

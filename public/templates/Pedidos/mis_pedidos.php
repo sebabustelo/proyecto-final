@@ -14,7 +14,7 @@
 
     <div class="row">
         <?php foreach ($pedidos as $k => $pedido) { ?>
-            <div class="col-xs-12 col-sm-6 ">
+            <div class="col-xs-12 col-lg-6 ">
                 <div class="box box-solid">
                     <div class="box-header with-border">
                         <i class="fa fa-calendar"></i>
@@ -27,7 +27,7 @@
                     <!-- /.box-header -->
                     <div class="box-body">
                         <div class="col-xs-4">
-                            <img src="/img/productos/<?php echo $pedido->detalles_pedidos[0]->producto->productos_archivos[0]->file_name  ?>" alt="Photo" class="img-responsive pad">
+                            <img src="/img/productos/<?php echo $pedido->detalles_pedidos[0]->producto->productos_archivos[0]->file_name  ?>" alt="Photo" class="img-responsive ">
                         </div>
                         <div class="col-xs-8">
                             <br>
@@ -72,8 +72,5 @@
                 </div>
             </div>
         <?php } ?>
-
-
-
     </div>
 </section>
