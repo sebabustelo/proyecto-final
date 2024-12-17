@@ -142,13 +142,13 @@ class ProductosController extends AppController
                 }
             } else {
                 $this->Flash->error(__('El producto no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
-                if ($producto->getErrors()) {
-                    foreach ($producto->getErrors() as $field => $errors) {
-                        foreach ($errors as $error) {
-                            $this->Flash->error(__($error));
-                        }
-                    }
-                }
+                // if ($producto->getErrors()) {
+                //     foreach ($producto->getErrors() as $field => $errors) {
+                //         foreach ($errors as $error) {
+                //             $this->Flash->error(__($error));
+                //         }
+                //     }
+                // }
             }
         }
         $categorias = $this->Productos->Categorias->find('list')->where(['Categorias.activo' => 1])->all();
@@ -238,6 +238,8 @@ class ProductosController extends AppController
                 if ($this->Productos->save($producto)) {
                     $this->Flash->success(__('El producto se actualizó correctamente.'));
                     return $this->redirect(['action' => 'index']);
+                } else {
+                    $this->Flash->error(__('El producto no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
                 }
             }
         }

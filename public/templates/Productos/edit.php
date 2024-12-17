@@ -33,7 +33,7 @@
                         <form id="ProductosEditForm" name="ProductosEditForm" role="form" action="/Productos/edit/<?php echo $producto->id; ?>" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <div class="form-group col-sm-3">
-                                <label>Nombre</label>
+                                <label>(*) Nombre</label>
                                 <input required type="text" maxlength="150" placeholder="Ingrese el nombre" class="form-control" name="nombre" value="<?php echo $producto->nombre; ?>">
                                 <?php if ($producto->getError('nombre')) { ?>
                                     <?php foreach ($producto->getError('nombre') as $error) { ?>
@@ -42,7 +42,7 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label>Categoría</label><br>
+                                <label>(*) Categoría</label><br>
                                 <select required name="categoria_id" class="form-control">
                                     <option value="">Seleccione una categoría</option>
                                     <?php foreach ($categorias as $id => $categoria) : ?>
@@ -55,7 +55,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label>Proveedores</label><br>
+                                <label>(*) Proveedores</label><br>
                                 <select required name="proveedor_id" class="form-control">
                                     <option value="">Seleccione un proveedor</option>
                                     <?php foreach ($proveedores as $id => $proveedor) : ?>
@@ -68,7 +68,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-sm-1">
-                                <label>Stock</label>
+                                <label>(*) Stock</label>
                                 <input required type="number" maxlength="3" name="stock" min="0" placeholder="Ingrese el stock"
                                     class="form-control" value="<?php echo $producto->stock; ?>">
                                 <?php if ($producto->getError('stock')) { ?>
@@ -78,7 +78,7 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label>Precio</label>
+                                <label>(*) Precio</label>
                                 <input required type="number" maxlength="6" placeholder="Ingrese el precio" name="productos_precios[0][precio]"
                                     step="0.01" min="0" class="form-control" value="<?php echo isset($producto->productos_precios[0]->precio) ? $producto->productos_precios[0]->precio : 0; ?>">
                                 <?php if ($producto->getError('precio')) { ?>
@@ -98,7 +98,7 @@
                             </div>
 
                             <div class="form-group col-sm-12">
-                                <label>Info del producto</label>
+                                <label>(*) Info del producto</label>
 
                                 <textarea required maxlength="300" rows="2" placeholder="Ingrese la info del producto"
                                     class="form-control" name="descripcion_breve" oninvalid="this.setCustomValidity('Debe completar info del producto')"
@@ -111,7 +111,7 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-12">
-                                <label>Descripción</label>
+                                <label>(*) Descripción</label>
 
                                 <textarea required maxlength="2000" rows="8" placeholder="Ingrese la descripción"
                                     class="form-control" name="descripcion_larga" oninvalid="this.setCustomValidity('Debe completar la descripción')"
@@ -191,6 +191,10 @@
                                     <?php endforeach; ?>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="form-row form-group col-sm-12 callout callout-info" role="alert">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            Los campos con (*) son obligatorios.
                         </div>
 
                     </div>

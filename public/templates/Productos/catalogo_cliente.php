@@ -39,7 +39,13 @@
         <?php foreach ($productos as $k => $producto) { ?>
             <div class="col-sm-6 col-md-3 " style="margin-bottom: 20px;">
                 <div class="thumbnail product-item">
-                    <img src="/img/productos/<?php echo $producto->productos_archivos[0]->file_name; ?>" alt="Producto 1">
+                    <?php if (isset($producto->productos_archivos[0]['file_name'])) { ?>
+                        <img src="/img/productos/<?php echo $producto->productos_archivos[0]->file_name; ?>" alt="Producto 1">
+                    <?php } else { ?>
+                        <img src="/img/productos/producto_sin_imagen.png" alt="Producto 1">
+
+                    <?php } ?>
+
                     <div class="caption">
                         <h4><?php echo $producto->nombre; ?></h4>
                         <p>Precio: <?php echo "$" . $producto->productos_precios[0]->precio; ?></p>
@@ -62,23 +68,23 @@
         <?php } ?>
     </div>
     <div class="text-center">
-            <ul class="pagination justify-content-center">
-                <li class="page-item">
-                    <?php echo $this->Paginator->first('<<'); ?>
-                    <?php echo $this->Paginator->prev('<'); ?>
-                </li>
-                <li class="page-item">
-                    <?php echo $this->Paginator->numbers(['modulus' => 4]); ?>
-                </li>
-                <li class="page-item">
-                    <?php echo $this->Paginator->next('>'); ?>
-                    <?php echo $this->Paginator->last('>>'); ?>
-                </li>
-            </ul>
-            <p class="text-center">
-                Página: <?php echo $this->Paginator->counter('{{page}} de {{pages}}, mostrando {{current}} productos de {{count}}'); ?>
-            </p>
-        </div>
+        <ul class="pagination justify-content-center">
+            <li class="page-item">
+                <?php echo $this->Paginator->first('<<'); ?>
+                <?php echo $this->Paginator->prev('<'); ?>
+            </li>
+            <li class="page-item">
+                <?php echo $this->Paginator->numbers(['modulus' => 4]); ?>
+            </li>
+            <li class="page-item">
+                <?php echo $this->Paginator->next('>'); ?>
+                <?php echo $this->Paginator->last('>>'); ?>
+            </li>
+        </ul>
+        <p class="text-center">
+            Página: <?php echo $this->Paginator->counter('{{page}} de {{pages}}, mostrando {{current}} productos de {{count}}'); ?>
+        </p>
+    </div>
 
 </section>
 

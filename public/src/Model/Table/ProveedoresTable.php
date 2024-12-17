@@ -71,11 +71,11 @@ class ProveedoresTable extends Table
             ->maxLength('nombre', 50)
             ->requirePresence('nombre', 'create')
             ->notEmptyString('nombre', 'El nombre es obligatorio')
-            ->add('nombre', 'noSpaces', [
+            ->add('nombre', 'notEmpty', [
                 'rule' => function ($value, $context) {
-                    return strpos($value, ' ') === false;
+                    return !empty(trim($context['data']['nombre']));
                 },
-                'message' => 'El nombre no puede contener solo espacios en blanco.',
+                'message' => 'El nombre es obligatorio y no puede tener solo espacios en blanco.',
             ]);
 
         $validator
@@ -83,9 +83,9 @@ class ProveedoresTable extends Table
             ->maxLength('nombre', 150)
             ->requirePresence('descripcion', 'create')
             ->notEmptyString('descripcion', 'La descripción es obligatoria')
-            ->add('descripcion', 'noSpaces', [
+            ->add('descripcion', 'notEmpty', [
                 'rule' => function ($value, $context) {
-                    return strpos($value, ' ') === false;
+                    return !empty(trim($context['data']['descripcion']));
                 },
                 'message' => 'La descripción no puede contener solo espacios en blanco.',
             ]);

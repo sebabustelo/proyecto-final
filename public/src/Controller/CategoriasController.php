@@ -80,13 +80,13 @@ class CategoriasController extends AppController
                     return $this->redirect('/Categorias/index');
                 }
                 $this->Flash->error(__('La categoría no pudo ser guardada.'));
-                if ($categoria->getErrors()) {
-                    foreach ($categoria->getErrors() as $field => $errors) {
-                        foreach ($errors as $error) {
-                            $this->Flash->error(__($error));
-                        }
-                    }
-                }
+                // if ($categoria->getErrors()) {
+                //     foreach ($categoria->getErrors() as $field => $errors) {
+                //         foreach ($errors as $error) {
+                //             $this->Flash->error(__($error));
+                //         }
+                //     }
+                // }
             }
             $this->set(compact('categoria'));
         } catch (\Cake\Datasource\Exception\RecordNotFoundException $e) {

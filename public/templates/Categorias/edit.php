@@ -4,6 +4,7 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Categorias $categoria
  */
+
 use Cake\Core\Configure;
 ?>
 <section class="content-header">
@@ -33,7 +34,7 @@ use Cake\Core\Configure;
                         <form id="CategoriasAddForm" name="CategoriasEditForm" role="form" action="/Categorias/edit/<?php echo $categoria->id; ?>" method="POST">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <div class="form-group col-sm-2">
-                                <label>Nombre</label>
+                                <label>(*) Nombre </label>
                                 <input style='text-transform: uppercase;' required type="text" maxlength="100" placeholder="Ingrese el nombre"
                                     class="form-control" value="<?php echo $categoria->nombre; ?>" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')" oninput="this.setCustomValidity('')">
                                 <?php if ($categoria->getError('nombre')) { ?>
@@ -83,6 +84,11 @@ use Cake\Core\Configure;
                                     Guardar</button>
                             </div>
                         </form>
+                        <div class="form-row form-group col-sm-12 callout callout-info" role="alert">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            Los campos con (*) son obligatorios.
+                        </div>
+
                     </div>
                 </div>
             </div>

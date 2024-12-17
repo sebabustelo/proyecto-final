@@ -97,10 +97,18 @@ class RbacUsuariosController extends RbacController
                         $this->Flash->error('No se pudo generar token antes de enviar confirmación del nuevo usuario');
                     }
                 } else {
+
                     if ($rbacUsuario->getErrors()) {
                         foreach ($rbacUsuario->getErrors() as $field => $errors) {
                             foreach ($errors as $error) {
-                                $this->Flash->error(__($error));
+
+                                if(!is_array(($error))){
+                                    $this->Flash->error(__($error));
+                                }else{
+                                    foreach ($error as $e) {
+                                        $this->Flash->error(__($e));
+                                    }
+                                }
                             }
                         }
                     } else {
@@ -246,7 +254,7 @@ class RbacUsuariosController extends RbacController
     {
         $mailer = new Mailer('default');
         try {
-            $mailer->setFrom(['ipmagna-noreply@gmail.com' => 'IPMAGNA'])
+            $mailer->setFrom(['sebabustelo@gmail.com' => 'IPMAGNA'])
                 ->setTo($datos['email'])
                 ->setSubject($datos['subject'])
                 ->setEmailFormat('html')
@@ -461,12 +469,18 @@ class RbacUsuariosController extends RbacController
 
                 $rbacUsuario = $this->RbacUsuarios->newEntity($data, ['associated' => ['RbacPerfiles', 'Direcciones']]);
 
-
                 if ($rbacUsuario->getErrors()) {
 
                     foreach ($rbacUsuario->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {
-                            $this->Flash->error(__($error));
+
+                            if(!is_array(($error))){
+                                $this->Flash->error(__($error));
+                            }else{
+                                foreach ($error as $e) {
+                                    $this->Flash->error(__($e));
+                                }
+                            }
                         }
                     }
                 } else {

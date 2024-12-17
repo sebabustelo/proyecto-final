@@ -64,7 +64,13 @@ class CategoriasTable extends Table
             ->maxLength('nombre', 200, 'El nombre no puede ser mayor a 200 caracteres')
             ->requirePresence('nombre', 'create', 'El nombre es obligatorio')
             ->notEmptyString('nombre', 'El nombre es obligatorio')
-            ->add('nombre', 'unique', ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Ya existe una categoría con ese nombre. Por favor, elija un nombre diferente.']);
+            ->add('nombre', 'unique', ['rule' => 'validateUnique', 'provider' => 'table', 'message' => 'Ya existe una categoría con ese nombre. Por favor, elija un nombre diferente.'])
+            ->add('nombre', 'notEmpty', [
+                'rule' => function ($value, $context) {
+                    return !empty(trim($context['data']['nombre']));
+                },
+                'message' => 'El nombre es obligatorio y no puede tener solo espacios en blanco.',
+            ]);
 
         $validator
             ->scalar('descripcion')
@@ -114,14 +120,15 @@ class CategoriasTable extends Table
 
     public function beforeSave($event, $entity, $options)
     {
+
         $productosCount = $this->Productos->find()
-            ->where(['categoria_id' => $entity->id])
+            ->where(['categoria_id' => (isset($entity->id)) ? $entity->id : 0])
             ->count();
+
 
         if ($productosCount > 0 && !$entity->activo) {
             $entity->setError('delete', __('No se puede desactivar esta categoría porque está asociada a uno o más productos.'));
             return false;
         }
     }
-
 }

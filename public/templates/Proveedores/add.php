@@ -79,7 +79,7 @@
                                     <?php } ?>
                                 <?php } ?>
 
-                            </div>
+                            </div><br><br><br><br><br>
                             <div class="form-group col-sm-2">
                                 <label>(*) Celular</label>
                                 <input required

@@ -12,8 +12,11 @@
 
 <section id="MisPedidos" class="content">
 
-    <div class="row">
-        <?php foreach ($pedidos as $k => $pedido) { ?>
+    <?php $cont = 1; ?>
+    <?php foreach ($pedidos as $k => $pedido) { ?>
+        <?php if (isset($cont) && $cont % 2 === 0): ?>
+            <div class="row">
+            <?php endif ?>
             <div class="col-xs-12 col-lg-6 ">
                 <div class="box box-solid">
                     <div class="box-header with-border">
@@ -71,6 +74,11 @@
                     </div>
                 </div>
             </div>
-        <?php } ?>
-    </div>
+            <?php if (isset($cont) && $cont % 2 === 0): ?>
+            </div>
+        <?php endif ?>
+        <?php $cont++; ?>
+
+    <?php } ?>
+
 </section>

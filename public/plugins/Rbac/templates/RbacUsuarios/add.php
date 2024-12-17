@@ -38,22 +38,28 @@ use Cake\Core\Configure;
                                 <label for="usuario">Usuario</label>
                                 <input type="text" name="usuario" required id="RbacUsuarioUsuario"
                                     oninvalid="this.setCustomValidity('Complete el usuario')" oninput="this.setCustomValidity('')"
-                                    placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo $this->request->getData('usuario'); ?>">
+                                    placeholder="Ingrese el usuario" class="form-control" maxlength="20" value="<?php echo $this->request->getData('usuario'); ?>">
                             </div>
                             <div class="form-group col-sm-3">
-                                <label for="usuario">Usuario</label>
+                                <label for="usuario">Email</label>
                                 <input type="email" name="email" required
                                     oninvalid="this.setCustomValidity('Complete el usuario (mail)')" oninput="this.setCustomValidity('')"
-                                    placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo $this->request->getData('usuario'); ?>">
+                                    placeholder="Ingrese el usuario" class="form-control" maxlength="50" value="<?php echo $this->request->getData('email'); ?>">
                             </div>
 
                             <div class="form-group col-sm-3">
                                 <label for="nombre">Nombre</label>
-                                <input required type="text" placeholder="Ingrese el/los nombre/s" class="form-control" name="nombre" value="<?php echo $this->request->getData('nombre'); ?>" oninvalid="this.setCustomValidity('Debe completar el/los nombre/s')" oninput="this.setCustomValidity('')">
+                                <input required type="text" placeholder="Ingrese el/los nombre/s" class="form-control" name="nombre"
+                                value="<?php echo $this->request->getData('nombre'); ?>"
+                                oninvalid="this.setCustomValidity('Debe completar el/los nombre/s (solo letras)')" oninput="this.setCustomValidity('')"
+                                pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ']+.*$"  >
                             </div>
                             <div class="form-group col-sm-3">
                                 <label for="apellido">Apellido</label>
-                                <input required type="text" placeholder="Ingrese el/los apellido/s" class="form-control" name="apellido" value="<?php echo $this->request->getData('apellido'); ?>" oninvalid="this.setCustomValidity('Debe completar el/los apellido/s')" oninput="this.setCustomValidity('')">
+                                <input required type="text" placeholder="Ingrese el/los apellido/s" class="form-control" name="apellido"
+                                value="<?php echo $this->request->getData('apellido'); ?>" oninvalid="this.setCustomValidity('Debe completar el/los apellido/s (solo letras)')"
+                                 oninput="this.setCustomValidity('')"
+                                 pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ']+.*$" >
                             </div>
 
                             <div class="form-group col-sm-2">
@@ -106,7 +112,7 @@ use Cake\Core\Configure;
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Número</label>
                                 <input name="direccion[numero]" required
-                                    value="<?php echo !empty($this->request->getData('direccion')['numero']) ? $this->request->getData('direcciones')[0]['numero'] : ''; ?>"
+                                    value="<?php echo !empty($this->request->getData('direccion')['numero']) ? $this->request->getData('direccion')['numero'] : ''; ?>"
                                     type="number" class="form-control" placeholder="Número"
                                     min="1" max="9999"
                                     onkeydown="preventInvalidInput(event)">
@@ -115,7 +121,7 @@ use Cake\Core\Configure;
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Piso</label>
                                 <input name="direccion[piso]"
-                                    value="<?php echo !empty($this->request->getData('direccion')['piso']) ? $this->request->getData('direcciones')[0]['piso'] : ''; ?>"
+                                    value="<?php echo !empty($this->request->getData('direccion')['piso']) ? $this->request->getData('direccion')['piso'] : ''; ?>"
                                     type="number" class="form-control"
                                     placeholder="Piso"
                                     min="1"
@@ -126,7 +132,7 @@ use Cake\Core\Configure;
                             <div class="form-group col-sm-2">
                                 <label for="direccion">Depto</label>
                                 <input name="direccion[departamento]"
-                                value="<?php echo !empty($this->request->getData('direccion')['departamento']) ? $this->request->getData('direcciones')[0]['departamento'] : ''; ?>"
+                                value="<?php echo !empty($this->request->getData('direccion')['departamento']) ? $this->request->getData('direccion')['departamento'] : ''; ?>"
                                 type="text" class="form-control" placeholder="Depto"
                                 maxlength="3" >
                             </div>

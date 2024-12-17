@@ -47,7 +47,7 @@ use Cake\Core\Configure;
                                 <?php  } ?>
                             </div>
                             <div class="form-group col-sm-3">
-                                <label id="lblUsuario">Usuario (mail)</label>
+                                <label id="lblUsuario">Email</label>
                                 <input type="email" name="email" required value="<?php echo $rbacUsuario->email; ?>" oninvalid="this.setCustomValidity('Complete el email)')"
                                  oninput="this.setCustomValidity('')" placeholder="Ingrese el usuario" class="form-control" maxlength="120" value="<?php echo (!$rbacUsuario->getError('usuario')) ? $this->request->getData('usuario') : ''; ?>">
                                 <?php foreach ($rbacUsuario->getError('email') as $k => $v) { ?>
@@ -162,7 +162,7 @@ use Cake\Core\Configure;
 
                             <div class="form-group col-sm-2">
                                 <label>Perfil</label><br>
-                                <select required id="rbac-perfiles-ids" name="rbac_perfiles[_ids][]" class="form-control">
+                                <select required name="perfil_id" name="rbac_perfiles[_ids][]" class="form-control">
                                     <?php foreach ($rbacPerfiles as $id => $perfil) : ?>
                                         <?php if ($rbacUsuario->perfil_id == $id) { ?>
                                             <option selected value="<?php echo $id; ?>"><?php echo $perfil; ?></option>

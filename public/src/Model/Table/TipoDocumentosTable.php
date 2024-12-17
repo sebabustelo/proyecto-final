@@ -88,7 +88,7 @@ class TipoDocumentosTable extends Table
     public function beforeDelete($event, $entity, $options)
     {
         $count = $this->RbacUsuarios->find()
-            ->where(['tipo_documento_id' => $entity->id])
+            ->where(['tipo_documento_id' =>  (isset($entity->id))?$entity->id:0])
             ->count();
 
         if ($count > 0) {

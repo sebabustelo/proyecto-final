@@ -226,7 +226,7 @@ return [
             'port' => env('EMAIL_PORT', null),
             'timeout' => env('EMAIL_TIMEOUT', null),
             'username' => env('EMAIL_USERNAME', 'sebabustelo@gmail.com'),
-            'password' => env('EMAIL_PASSWORD', null),
+            'password' => 'vvrc ssyf nstx jily',//env('EMAIL_PASSWORD', null),
             'client' => null,
             'tls' => true,
             'url' => env('EMAIL_TRANSPORT_DEFAULT_URL', null),

@@ -34,7 +34,7 @@
                         <form id="ProductosAddForm" name="ProductosAddForm" role="form" action="/Productos/add/" method="POST" enctype="multipart/form-data">
                             <input type="hidden" name="_csrfToken" value="<?php echo $this->request->getAttribute('csrfToken'); ?>">
                             <div class="form-group col-sm-4">
-                                <label>Nombre</label>
+                                <label>(*) Nombre</label>
                                 <input required type="text" maxlength="150" placeholder="Ingrese el nombre"
                                     class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el nombre')"
                                     oninput="this.setCustomValidity('')" value="<?php echo $this->request->getData('nombre') ?>">
@@ -45,7 +45,7 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label>Categoría</label><br>
+                                <label>(*) Categoría</label><br>
                                 <select required name="categoria_id" class="form-control">
                                     <option value="">Seleccione una categoría</option>
                                     <?php foreach ($categorias as $id => $categoria) : ?>
@@ -58,7 +58,7 @@
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label>Proveedores</label><br>
+                                <label>(*) Proveedores</label><br>
                                 <select required name="proveedor_id" class="form-control">
                                     <option value="">Seleccione un proveedor</option>
                                     <?php foreach ($proveedores as $id => $proveedor) : ?>
@@ -71,10 +71,10 @@
                                 </select>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label>Stock</label>
+                                <label>(*) Stock</label>
                                 <input required type="number" maxlength="5" placeholder="Ingrese el stock" class="form-control"
                                     onkeydown="preventInvalidInput(event)" name="stock" oninput="this.setCustomValidity('')" min="0"
-                                     value="<?php echo $this->request->getData('stock') ?>">
+                                    value="<?php echo $this->request->getData('stock') ?>">
                                 <?php if ($producto->getError('stock')) { ?>
                                     <?php foreach ($producto->getError('stock') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -82,10 +82,10 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-2">
-                                <label>Precio</label>
+                                <label>(*) Precio</label>
                                 <input required type="number" maxlength="6" placeholder="Ingrese el precio" min="0"
                                     class="form-control" onkeydown="preventInvalidInput(event)" name="productos_precios[0][precio]"
-                                    step="0.01" oninput="this.setCustomValidity('')" value="<?php echo isset($this->request->getData('productos_precios')[0]['precio'])?$this->request->getData('productos_precios')[0]['precio']:'' ?>">
+                                    step="0.01" oninput="this.setCustomValidity('')" value="<?php echo isset($this->request->getData('productos_precios')[0]['precio']) ? $this->request->getData('productos_precios')[0]['precio'] : '' ?>">
                                 <?php if ($producto->getError('precio')) { ?>
                                     <?php foreach ($producto->getError('precio') as $error) { ?>
                                         <span class="badge bg-red"><i class="fa fa-warning"></i> <?php echo $error; ?></span>
@@ -93,9 +93,9 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-12">
-                                <label>Info del producto</label>
+                                <label>(*) Info del producto</label>
 
-                                <textarea  required maxlength="300" rows="2" placeholder="Ingrese la info del producto"
+                                <textarea required maxlength="300" rows="2" placeholder="Ingrese la info del producto"
                                     class="form-control" name="descripcion_breve" oninvalid="this.setCustomValidity('Debe completar info del producto')"
                                     oninput="this.setCustomValidity('')"><?php echo $this->request->getData('descripcion_breve') ?></textarea>
                                 <?php if ($producto->getError('descripcion_breve')) { ?>
@@ -105,9 +105,9 @@
                                 <?php } ?>
                             </div>
                             <div class="form-group col-sm-12">
-                                <label>Descripción</label>
+                                <label>(*) Descripción</label>
 
-                                <textarea  required maxlength="2000" rows="8" placeholder="Ingrese la descripción"
+                                <textarea required maxlength="2000" rows="8" placeholder="Ingrese la descripción"
                                     class="form-control" name="descripcion_larga" oninvalid="this.setCustomValidity('Debe completar la descripción')"
                                     oninput="this.setCustomValidity('')"><?php echo $this->request->getData('descripcion_larga') ?></textarea>
                                 <?php if ($producto->getError('descripcion_larga')) { ?>
@@ -148,6 +148,10 @@
                                     Guardar</button>
                             </div>
                         </form>
+                        <div class="form-row form-group col-sm-12 callout callout-info" role="alert">
+                            <i class="fa fa-info-circle" aria-hidden="true"></i>
+                            Los campos con (*) son obligatorios.
+                        </div>
 
                         <div class="form-row form-group col-sm-12 callout callout-info" role="alert">
                             <i class="fa fa-info-circle" aria-hidden="true"></i>
@@ -162,7 +166,7 @@
 
 <script>
     function preventInvalidInput(event) {
-        const invalidChars = ['e', 'E', '+', '-','.']; // caracteres que quieres restringir
+        const invalidChars = ['e', 'E', '+', '-', '.']; // caracteres que quieres restringir
         if (invalidChars.includes(event.key)) {
             event.preventDefault();
         }
@@ -256,4 +260,5 @@
         });
 
     })
+
 </script>

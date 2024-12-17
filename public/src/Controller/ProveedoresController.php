@@ -56,7 +56,7 @@ class ProveedoresController extends AppController
                 $this->Flash->success(__('El proveedor se guardo correctamente.'));
                 return $this->redirect('/Proveedores/index');
             }
-            $this->Flash->error(__('El proveedor no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
+            $this->Flash->error(__('El proveedor no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
         }
 
         $this->set(compact('proveedor'));
@@ -83,14 +83,14 @@ class ProveedoresController extends AppController
 
                     return $this->redirect('/Proveedores/index');;
                 }
-                $this->Flash->error(__('El proveedor no pudo ser guardada. Por favor, verifique los campos e intenete nuevamente.'));
-                if ($proveedor->getErrors()) {
-                    foreach ($proveedor->getErrors() as $field => $errors) {
-                        foreach ($errors as $error) {
-                            $this->Flash->error(__($error));
-                        }
-                    }
-                }
+                $this->Flash->error(__('El proveedor no pudo ser guardado. Por favor, verifique los campos e intenete nuevamente.'));
+                // if ($proveedor->getErrors()) {
+                //     foreach ($proveedor->getErrors() as $field => $errors) {
+                //         foreach ($errors as $error) {
+                //             $this->Flash->error(__($error));
+                //         }
+                //     }
+                // }
             }
             $this->set(compact('proveedor'));
             $this->set('provincias', $this->Proveedores->Direcciones->Localidades->Provincias->find('list')->where(['activo' => 1])->order('nombre')->all());

@@ -43,6 +43,9 @@ class UploadComponent extends Component
     public function uploadMultiple($files, $destination)
     {
         $uploadedFiles = [];
+        if (is_null($files)) {
+            $files = [];
+        }
 
         foreach ($files as $file) {
 

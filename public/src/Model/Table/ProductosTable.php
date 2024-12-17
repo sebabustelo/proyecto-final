@@ -80,7 +80,14 @@ class ProductosTable extends Table
             ->scalar('nombre')
             ->maxLength('nombre', 150)
             ->requirePresence('nombre', 'create')
-            ->notEmptyString('nombre', 'El campo nombre no puede estar vacío.');
+            ->notEmptyString('nombre', 'El campo nombre no puede estar vacío.')
+            ->add('nombre', 'notEmpty', [
+                'rule' => function ($value, $context) {
+                    return !empty(trim($context['data']['nombre']));
+                },
+                'message' => 'El nombre es obligatorio y no puede tener solo espacios en blanco.',
+            ]);
+
 
         $validator
             ->scalar('descripcion_breve')

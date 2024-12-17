@@ -155,10 +155,15 @@
                                         <?php foreach ($productos as $producto) { ?>
                                             <tr>
                                                 <!-- Columna Imagen -->
-                                                <td>
-                                                    <img src="/img/productos/<?php echo $producto->productos_archivos[0]['file_name']; ?>" alt="Imagen" class="img-thumbnail" style="width: 90%;">
-                                                </td>
-
+                                                <?php if (isset($producto->productos_archivos[0]['file_name'])) { ?>
+                                                    <td>
+                                                        <img src="/img/productos/<?php echo $producto->productos_archivos[0]['file_name']; ?>" alt="Imagen" class="img-thumbnail" style="width: 90%;">
+                                                    </td>
+                                                <?php } else { ?>
+                                                    <td>
+                                                        <img src="/img/productos/producto_sin_imagen.png" alt="Imagen" class="img-thumbnail" style="width: 90%;">
+                                                    </td>
+                                                <?php } ?>
                                                 <td>
                                                     <?php echo $producto->nombre; ?>
                                                 </td>

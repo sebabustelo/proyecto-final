@@ -151,8 +151,9 @@ class RbacUsuariosTable extends Table
             ->add('nombre', 'requiredIfTipoClienteParticular', [
                 'rule' => function ($value, $context) {
                     //Si es particular, debo validar
-                    if ($context['data']['tipo_cliente'] == 'particular') {
+                    if (isset($context['data']['tipo_cliente']) && $context['data']['tipo_cliente'] == 'particular') {
                         return !empty(trim($context['data']['nombre']));
+                       // return preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/", $context['data']['nombre']);
                     } else {
                         return true;
                     }
@@ -164,8 +165,9 @@ class RbacUsuariosTable extends Table
             ->add('apellido', 'requiredIfTipoClienteParticular', [
                 'rule' => function ($value, $context) {
                     //Si es particular, debo validar
-                    if ($context['data']['tipo_cliente'] == 'particular') {
+                    if (isset($context['data']['tipo_cliente']) && $context['data']['tipo_cliente'] == 'particular') {
                         return !empty(trim($context['data']['apellido']));
+                       // return preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/", $context['data']['apellido']);
                     } else {
                         return true;
                     }

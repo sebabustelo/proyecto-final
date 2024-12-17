@@ -226,7 +226,7 @@ use Cake\Core\Configure;
             echo '<br />EMAIL_PORT:' . env('EMAIL_PORT');
             echo '<br />EMAIL_HOST:' . env('EMAIL_HOST');
             echo '<br />EMAIL_USERNAME:' . env('EMAIL_USERNAME');
-            //echo '<br />EMAIL_PASSWORD:'.env('EMAIL_PASSWORD');
+            echo '<br />EMAIL_PASSWORD:'.env('EMAIL_PASSWORD');
             echo '<br />EMAIL_TRANSPORT:' . env('EMAIL_TRANSPORT');
             echo '<br />EMAIL_TIMEOUT:' . env('EMAIL_TIMEOUT');
             echo '<br />EMAIL_TLS:';

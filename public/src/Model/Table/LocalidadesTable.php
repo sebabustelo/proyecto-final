@@ -90,7 +90,7 @@ class LocalidadesTable extends Table
      */
     public function beforeDelete($event, $entity, $options)
     {
-        
+
         $direccionesCount = $this->Direcciones->find()
             ->where(['localidad_id' => $entity->id])
             ->count();
