@@ -49,17 +49,18 @@ use Cake\Core\Configure;
 
                             <div class="form-group col-sm-3">
                                 <label for="nombre">Nombre</label>
+                                   <input required type="hidden"  class="form-control" name="tipo_cliente" value="particular">
                                 <input required type="text" placeholder="Ingrese el/los nombre/s" class="form-control" name="nombre"
                                 value="<?php echo $this->request->getData('nombre'); ?>"
                                 oninvalid="this.setCustomValidity('Debe completar el/los nombre/s (solo letras)')" oninput="this.setCustomValidity('')"
-                                pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ']+.*$"  >
+                                 >
                             </div>
                             <div class="form-group col-sm-3">
                                 <label for="apellido">Apellido</label>
                                 <input required type="text" placeholder="Ingrese el/los apellido/s" class="form-control" name="apellido"
                                 value="<?php echo $this->request->getData('apellido'); ?>" oninvalid="this.setCustomValidity('Debe completar el/los apellido/s (solo letras)')"
                                  oninput="this.setCustomValidity('')"
-                                 pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ']+.*$" >
+                                 >
                             </div>
 
                             <div class="form-group col-sm-2">
@@ -226,7 +227,7 @@ use Cake\Core\Configure;
         document.getElementById('provincia_id').dispatchEvent(new Event('change'));
 
         setTimeout(function() {
-            var localidadId = "<?php echo $this->request->getData('direcciones')[0]['localidad_id'] ?? ''; ?>";
+            var localidadId = "<?php echo $this->request->getData('direccion')['localidad_id'] ?? ''; ?>";
             if (localidadId) {
                 document.getElementById('localidad_id').value = localidadId;
             }

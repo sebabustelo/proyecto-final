@@ -70,7 +70,14 @@ class RbacPerfilesTable extends Table
             ->maxLength('descripcion', 100)
             ->requirePresence('descripcion', 'create')
             ->notEmptyString('descripcion')
-            ->add('descripcion', 'unique', ['rule' => 'validateUnique', 'provider' => 'table']);
+            ->add('descripcion', 'unique', ['rule' => 'validateUnique', 'provider' => 'table'])
+            ->add('descripcion', 'noEmpty', [
+                'rule' => function ($value, $context) {
+                        return preg_match('/^\s|\s$/', $value) && preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/u", $value)?false:true;
+                },
+                'message' => 'La descripción es obligatorio y no puede tener espacios en blanco al principio y/o final de la cadena.',
+            ]);
+
 
         return $validator;
     }

@@ -150,15 +150,13 @@ class RbacUsuariosTable extends Table
         $validator
             ->add('nombre', 'requiredIfTipoClienteParticular', [
                 'rule' => function ($value, $context) {
-                    //Si es particular, debo validar
+
                     if (isset($context['data']['tipo_cliente']) && $context['data']['tipo_cliente'] == 'particular') {
-                        return !empty(trim($context['data']['nombre']));
-                       // return preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/", $context['data']['nombre']);
-                    } else {
-                        return true;
+                        return preg_match('/^\s|\s$/', $value) && preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/u", $value)?false:true;
                     }
+                    return true;
                 },
-                'message' => 'El nombre es obligatorio y no puede tener solo espacios en blanco.',
+                'message' => 'El nombre es obligatorio y no puede tener espacios en blanco al principio y/o final de la cadena.',
             ]);
 
         $validator
@@ -166,13 +164,13 @@ class RbacUsuariosTable extends Table
                 'rule' => function ($value, $context) {
                     //Si es particular, debo validar
                     if (isset($context['data']['tipo_cliente']) && $context['data']['tipo_cliente'] == 'particular') {
-                        return !empty(trim($context['data']['apellido']));
-                       // return preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/", $context['data']['apellido']);
+                        return preg_match('/^\s|\s$/', $value) && preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/u", $value)?false:true;
+                        // return preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/", $context['data']['apellido']);
                     } else {
                         return true;
                     }
                 },
-                'message' => 'El apellido es obligatorio y no puede tener solo espacios en blanco. .',
+                'message' => 'El apellido es obligatorio y no puede tener espacios en blanco al principio y/o final de la cadena.',
             ]);
 
 
@@ -202,12 +200,12 @@ class RbacUsuariosTable extends Table
             ->add('razon_social', 'requiredIfTipoClienteObraSocial', [
                 'rule' => function ($value, $context) {
                     if ($context['data']['razon_social'] == 'obra_social') {
-                        return !empty(trim($context['data']['obra_social']));
+                        return preg_match('/^\s|\s$/', $value) && preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/u", $value)?false:true;
                     } else {
                         return true;
                     }
                 },
-                'message' => 'La razón social es obligatoria y no puede tener solo espacios en blanco.',
+                'message' => 'La razón social es obligatoria y no puede tener espacios en blanco al principio y/o final de la cadena.',
             ]);
 
         return $validator;

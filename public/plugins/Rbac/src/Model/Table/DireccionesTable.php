@@ -69,9 +69,11 @@ class DireccionesTable extends Table
             ->notEmptyString('calle')
             ->add('calle', 'noOnlySpaces', [
                 'rule' => function ($value, $context) {
-                    return strlen(trim($value)) > 0;
+
+                        return preg_match('/^\s|\s$/', $value) && preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/u", $value)?false:true;
+
                 },
-                'message' => 'La calle no puede contener solo espacios en blanco.',
+                'message' => 'La calle no puede  tener espacios en blanco al princio y/o final de la cadena.',
             ]);
 
         $validator

@@ -395,4 +395,10 @@ use Cake\Core\Configure; ?>
             document.getElementById('localidad_id').value = localidadId;
         }
     }, 1000); // Ajusta el tiempo según sea necesario
+
+    inputs.forEach(function(input) {
+        input.addEventListener('input', function() {
+            input.value = input.value.replace(/^\s+|\s+$/g, '');
+        });
+    });
 </script>

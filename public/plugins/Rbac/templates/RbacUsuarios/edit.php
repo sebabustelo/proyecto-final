@@ -61,6 +61,7 @@ use Cake\Core\Configure;
                             <?php if (!empty($rbacUsuario->nombre)) { ?>
                                 <div class="form-group col-sm-3">
                                     <label>Nombre</label>
+                                    <input required type="hidden"  class="form-control" name="tipo_cliente" value="particular">
                                     <input required type="text" value="<?php echo $rbacUsuario->nombre; ?>" placeholder="Ingrese el nombre" class="form-control" name="nombre" oninvalid="this.setCustomValidity('Debe completar el/los nombre/s')" oninput="this.setCustomValidity('')">
                                     <?php foreach ($rbacUsuario->getError('nombre') as $k => $v) { ?>
                                         <div class="form-group   label label-danger">
@@ -252,7 +253,7 @@ use Cake\Core\Configure;
 
         setTimeout(function() {
 
-            var localidadId = "<?php echo $rbacUsuario->direccion->localidad_id ?? ''; ?>";
+            var localidadId = "<?php echo $this->request->getData('direccion')['localidad_id'] ?? ''; ?>";
             if (localidadId) {
                 document.getElementById('localidad_id').value = localidadId;
             }

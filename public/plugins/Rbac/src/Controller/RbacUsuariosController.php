@@ -62,6 +62,8 @@ class RbacUsuariosController extends RbacController
                     $rbacUsuario['password'] = hash('sha256', $seed . $rbacUsuario['password']);
                 }
                 $rbacUsuario['activo'] = 0;
+                $rbacUsuario['tipo_cliente'] = 'particular';
+                //debug($rbacUsuario);die;
                 $this->RbacUsuarios->getConnection()->begin();
 
                 if ($this->RbacUsuarios->save($rbacUsuario)) {

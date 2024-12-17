@@ -45,6 +45,21 @@ class RbacPerfilesController extends RbacController
                 return $this->redirect(['plugin' => 'Rbac', 'controller' => 'RbacPerfiles', 'action' => 'index']);
             } else {
                 $this->Flash->error('No pudo crear perfil');
+                if ($rbacPerfil->getErrors()) {
+                    foreach ($rbacPerfil->getErrors() as $field => $errors) {
+                        foreach ($errors as $error) {
+
+                            if(!is_array(($error))){
+                                $this->Flash->error(__($error));
+                            }else{
+                                foreach ($error as $e) {
+                                    $this->Flash->error(__($e));
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
         }
 
@@ -100,6 +115,20 @@ class RbacPerfilesController extends RbacController
                 return $this->redirect(['plugin' => 'Rbac', 'controller' => 'RbacPerfiles', 'action' => 'index']);
             }
             $this->Flash->error('No se puede actualizar el perfil');
+            if ($rbacPerfil->getErrors()) {
+                foreach ($rbacPerfil->getErrors() as $field => $errors) {
+                    foreach ($errors as $error) {
+
+                        if(!is_array(($error))){
+                            $this->Flash->error(__($error));
+                        }else{
+                            foreach ($error as $e) {
+                                $this->Flash->error(__($e));
+                            }
+                        }
+                    }
+                }
+            }
         }
         //debug($_SESSION);
         foreach ($rbacPerfil->rbac_acciones as $k => $accion) {
