@@ -384,7 +384,7 @@ class ProductosController extends AppController
             $this->Flash->error(__('El producto no puede ser eliminado porque esta asociado a uno o más pedidos.'));
             return $this->redirect('/Productos/index');
         } catch (\Exception $e) {
-            $this->Flash->error(__('El producto no puede ser eliminado.'));
+            $this->Flash->error(__('El producto no puede ser eliminado porque esta asociado a uno o más pedidos.'));
             return $this->redirect('/Productos/index');
         }
 

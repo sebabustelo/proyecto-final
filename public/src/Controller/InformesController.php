@@ -104,6 +104,55 @@ class InformesController extends AppController
             ->orderBy(['anio' => 'ASC', 'mes' => 'ASC'])
             ->toArray();
 
+        $pedidosCanceladosPorMes = $pedidosTable->find()
+            ->select([
+                'mes' => 'MONTH(Pedidos.fecha_pedido)',
+                'anio' => 'YEAR(Pedidos.fecha_pedido)',
+                'total_pedidos' => $pedidosTable->find()->func()->count('*'),
+            ])
+            ->where([
+                'Pedidos.fecha_pedido >=' => $fecha_inicio,
+                'Pedidos.fecha_pedido <=' => $fecha_fin,
+                'Pedidos.estado_id' => '6'
+            ])
+            ->groupBy(['anio', 'mes'])
+            ->orderBy(['anio' => 'ASC', 'mes' => 'ASC'])
+            ->toArray();
+
+
+        $pedidosPendientesPorMes = $pedidosTable->find()
+            ->select([
+                'mes' => 'MONTH(Pedidos.fecha_pedido)',
+                'anio' => 'YEAR(Pedidos.fecha_pedido)',
+                'total_pedidos' => $pedidosTable->find()->func()->count('*'),
+            ])
+            ->where([
+                'Pedidos.fecha_pedido >=' => $fecha_inicio,
+                'Pedidos.fecha_pedido <=' => $fecha_fin,
+                'Pedidos.estado_id' => '2'
+            ])
+            ->groupBy(['anio', 'mes'])
+            ->orderBy(['anio' => 'ASC', 'mes' => 'ASC'])
+            ->toArray();
+
+        $pedidosEnProcesosPorMes = $pedidosTable->find()
+            ->select([
+                'mes' => 'MONTH(Pedidos.fecha_pedido)',
+                'anio' => 'YEAR(Pedidos.fecha_pedido)',
+                'total_pedidos' => $pedidosTable->find()->func()->count('*'),
+            ])
+            ->where([
+                'Pedidos.fecha_pedido >=' => $fecha_inicio,
+                'Pedidos.fecha_pedido <=' => $fecha_fin,
+                'Pedidos.estado_id' => '3'
+            ])
+            ->groupBy(['anio', 'mes'])
+            ->orderBy(['anio' => 'ASC', 'mes' => 'ASC'])
+            ->toArray();
+
+
+
+
         $ventasPorMes = $pedidosTable->find()
             ->select([
                 'mes' => 'MONTH(Pedidos.fecha_pedido)',
@@ -122,14 +171,40 @@ class InformesController extends AppController
         // Inicializamos el array de meses con los valores predeterminados en 0
         foreach ($mesesRango as &$mes) {
             $mes['total_pedidos'] = 0;
+            $mes['total_pedidos_pendientes'] = 0;
+            $mes['total_pedidos_cancelados'] = 0;
+            $mes['total_pedidos_en_procesos'] = 0;
             $mes['total_ventas'] = 0;
         }
 
-        // Llenamos el array de meses con los valores obtenidos de la consulta
         foreach ($pedidosPorMes as $pedido) {
             foreach ($mesesRango as &$mes) {
                 if ($mes['mes'] == $pedido['mes'] && $mes['anio'] == $pedido['anio']) {
                     $mes['total_pedidos'] = $pedido['total_pedidos'];
+                }
+            }
+        }
+
+        foreach ($pedidosPendientesPorMes as $pedido) {
+            foreach ($mesesRango as &$mes) {
+                if ($mes['mes'] == $pedido['mes'] && $mes['anio'] == $pedido['anio']) {
+                    $mes['total_pedidos_pendientes'] = $pedido['total_pedidos'];
+                }
+            }
+        }
+
+        foreach ($pedidosEnProcesosPorMes as $pedido) {
+            foreach ($mesesRango as &$mes) {
+                if ($mes['mes'] == $pedido['mes'] && $mes['anio'] == $pedido['anio']) {
+                    $mes['total_pedidos_en_procesos'] = $pedido['total_pedidos'];
+                }
+            }
+        }
+
+        foreach ($pedidosCanceladosPorMes as $pedido) {
+            foreach ($mesesRango as &$mes) {
+                if ($mes['mes'] == $pedido['mes'] && $mes['anio'] == $pedido['anio']) {
+                    $mes['total_pedidos_cancelados'] = $pedido['total_pedidos'];
                 }
             }
         }
@@ -171,8 +246,7 @@ class InformesController extends AppController
             ->all();
 
 
-
-        $ventas =  $pedidosTable->find()
+        $pedidos_pagados =  $pedidosTable->find()
             ->where([
                 'Pedidos.fecha_pedido >=' => $fecha_inicio,
                 'Pedidos.fecha_pedido <=' => $fecha_fin,
@@ -197,7 +271,7 @@ class InformesController extends AppController
 
         $total = 0;
 
-        foreach ($ventas as $pedido) {
+        foreach ($pedidos_pagados as $pedido) {
             foreach ($pedido->detalles_pedidos as $detalle) {
                 foreach ($detalle->producto->productos_precios as $precio) {
                     // Asegúrate de que el precio esté dentro del rango de fechas
@@ -210,7 +284,10 @@ class InformesController extends AppController
 
 
         $this->set('pedidos', $pedidos);
-        $this->set('ventas', $ventas);
+        $this->set('pedidos_pagados', $pedidos_pagados);
+        //$this->set('pedidos_cancelados', $pedidos_cancelados);
+        //$this->set('pedidos_en_proceso', $pedidos_en_proceso);
+        //$this->set('pedidos_pendientes', $pedidos_pendientes);
         $this->set('total', $total);
         $this->set('filters', $this->getRequest()->getQuery());
     }

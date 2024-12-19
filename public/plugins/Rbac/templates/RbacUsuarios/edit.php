@@ -253,7 +253,7 @@ use Cake\Core\Configure;
 
         setTimeout(function() {
 
-            var localidadId = "<?php echo $this->request->getData('direccion')['localidad_id'] ?? ''; ?>";
+            var localidadId = "<?php echo $rbacUsuario['direccion']['localidad_id'] ?? ''; ?>";
             if (localidadId) {
                 document.getElementById('localidad_id').value = localidadId;
             }

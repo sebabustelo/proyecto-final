@@ -83,7 +83,7 @@ class ProductosTable extends Table
             ->notEmptyString('nombre', 'El campo nombre no puede estar vacío.')
             ->add('nombre', 'notEmpty', [
                 'rule' => function ($value, $context) {
-                    return !empty(trim($context['data']['nombre']));
+                     return preg_match('/^\s|\s$/', $value) && preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/u", $value)?false:true;
                 },
                 'message' => 'El nombre es obligatorio y no puede tener solo espacios en blanco.',
             ]);

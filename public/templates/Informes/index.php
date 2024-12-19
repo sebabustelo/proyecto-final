@@ -53,7 +53,7 @@
         <div class="col-md-4 col-sm-6 col-xs-12">
             <div class="info-box">
                 <span class="info-box-icon bg-red"><i class="ion ion-ios-cart-outline"></i></span>
-                <?php $cantidadVentas = count($ventas); ?>
+                <?php $cantidadVentas = count($pedidos_pagados); ?>
 
                 <div class="info-box-content">
                     <span class="info-box-text">Ventas</span>
@@ -322,7 +322,6 @@
         <!-- /.row -->
 </section>
 <!-- /.content -->
-
 <!-- ChartJS -->
 <?php echo $this->Html->script('AdminLTE./bower_components/chart.js/Chart', ['block' => 'script']); ?>
 <?php //echo $this->Html->script('informes', ['block' => 'script']);
@@ -398,19 +397,30 @@
             // Mapeo de mes numérico a nombre
             $mesLabels[] = $meses[$pedido['mes']];
             $totalPedidos[] = $pedido['total_pedidos'];
+            $totalPedidosCancelados[] = $pedido['total_pedidos_cancelados'];
+            $totalPedidosPendientes[] = $pedido['total_pedidos_pendientes'];
+            $totalPedidosEnProcesos[] = $pedido['total_pedidos_en_procesos'];
             $totalVentas[] = $pedido['total_ventas'];
         }
         ?>
 
         var mesesLabels = <?php echo json_encode($mesLabels); ?>; // Los nombres de los meses
         var pedidosPorMes = <?php echo json_encode($totalPedidos); ?>; // Los totales de pedidos por mes
+        var pedidosCanceladosPorMes = <?php echo json_encode($totalPedidosCancelados); ?>;
+        var pedidosPendientesPorMes = <?php echo json_encode($totalPedidosPendientes); ?>;
+        var pedidosEnProcesosPorMes = <?php echo json_encode($totalPedidosEnProcesos); ?>;
         var ventasPorMes = <?php echo json_encode($totalVentas); ?>; // Los totales de ventas por mes
+
+        console.log(pedidosPorMes)
+        console.log(pedidosCanceladosPorMes)
+        console.log(pedidosPendientesPorMes)
+        console.log(ventasPorMes)
 
         var salesChartData = {
             labels: mesesLabels,
 
             datasets: [{
-                    label: 'Pedidos',
+                    label: 'Pedidos Realizados',
                     fillColor: 'rgba(210, 214, 222, 0.3)', // Mayor transparencia
                     strokeColor: 'rgba(210, 214, 222, 0.5)', // Moderada transparencia
                     pointColor: 'rgba(210, 214, 222, 0.5)',
@@ -420,7 +430,37 @@
                     data: pedidosPorMes,
                 },
                 {
-                    label: 'Ventas',
+                    label: 'Pedidos Cancelados',
+                    fillColor: 'rgba(255, 99, 132, 0.1)', // Rojo claro con mayor transparencia
+                    strokeColor: 'rgba(255, 99, 132, 0.5)', // Rojo moderado con transparencia
+                    pointColor: 'rgba(255, 99, 132, 0.5)', // Rojo para puntos
+                    pointStrokeColor: 'rgba(200, 80, 120, 0.6)', // Rojo oscuro con algo de transparencia
+                    pointHighlightFill: 'rgba(255, 255, 255, 0.8)', // Blanco con algo de transparencia
+                    pointHighlightStroke: 'rgba(255, 99, 132, 0.6)', // Rojo con moderada transparencia
+                    data: pedidosCanceladosPorMes,
+                },
+                {
+                    label: 'Pedidos Pendientes',
+                    fillColor: 'rgba(255, 165, 0, 0.2)', // Naranja claro con mayor transparencia
+                    strokeColor: 'rgba(255, 165, 0, 0.5)', // Naranja moderado con algo de transparencia
+                    pointColor: 'rgba(255, 165, 0, 0.5)', // Naranja para los puntos
+                    pointStrokeColor: 'rgba(255, 140, 0, 0.6)', // Naranja más oscuro con algo de transparencia
+                    pointHighlightFill: 'rgba(255, 255, 255, 0.8)', // Blanco para resaltado con algo de transparencia
+                    pointHighlightStroke: 'rgba(255, 165, 0, 0.6)', // Naranja moderado con transparencia
+                    data: pedidosPendientesPorMes,
+                },
+                {
+                    label: 'Pedidos En Proceso',
+                    fillColor: 'rgba(173, 216, 230, 0.2)', // Azul claro con mucha transparencia
+                    strokeColor: 'rgba(173, 216, 230, 0.5)', // Azul moderado con algo de transparencia
+                    pointColor: 'rgba(173, 216, 230, 0.5)', // Azul para los puntos
+                    pointStrokeColor: 'rgba(135, 206, 235, 0.6)', // Azul más intenso con algo de transparencia
+                    pointHighlightFill: 'rgba(255, 255, 255, 0.8)', // Blanco para resaltado con algo de transparencia
+                    pointHighlightStroke: 'rgba(173, 216, 230, 0.6)', // Azul moderado con transparencia
+                    data: pedidosEnProcesosPorMes, // Asumiendo que los datos son los mismos
+                },
+                {
+                    label: 'Pedidos Pagados',
                     fillColor: 'rgba(96, 92, 168, 0.3)', // Más transparencia para el fondo
                     strokeColor: 'rgba(96, 92, 168, 0.5)', // Líneas con moderada transparencia
                     pointColor: 'rgba(96, 92, 168, 0.6)', // Transparencia en puntos

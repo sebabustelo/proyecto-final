@@ -73,7 +73,7 @@ class ProveedoresTable extends Table
             ->notEmptyString('nombre', 'El nombre es obligatorio')
             ->add('nombre', 'notEmpty', [
                 'rule' => function ($value, $context) {
-                    return !empty(trim($context['data']['nombre']));
+                    return preg_match('/^\s|\s$/', $value) && preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/u", $value)?false:true;
                 },
                 'message' => 'El nombre es obligatorio y no puede tener solo espacios en blanco.',
             ]);
@@ -85,7 +85,7 @@ class ProveedoresTable extends Table
             ->notEmptyString('descripcion', 'La descripción es obligatoria')
             ->add('descripcion', 'notEmpty', [
                 'rule' => function ($value, $context) {
-                    return !empty(trim($context['data']['descripcion']));
+                    return preg_match('/^\s|\s$/', $value) && preg_match("/^[a-zA-ZÁÉÍÓÚáéíóúñÑ' ]+$/u", $value)?false:true;
                 },
                 'message' => 'La descripción no puede contener solo espacios en blanco.',
             ]);
