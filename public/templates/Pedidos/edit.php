@@ -89,6 +89,16 @@
 
                                     <dt>Teléfono:</dt>
                                     <dd><?php echo h($pedido->cliente->celular); ?></dd>
+
+                                    <dt>Dirección:</dt>
+                                    <dd><?php echo h($pedido->direccion->localidade->provincia->nombre . ", " . $pedido->direccion->localidade->nombre); ?></dd>
+                                    <dd>
+                                        <?php echo h($pedido->direccion->calle . " " . $pedido->direccion->numero); ?>
+                                        <?php echo h(" (".$pedido->direccion->piso . " " . $pedido->direccion->departamento.")"); ?>
+                                    </dd>
+
+
+
                                 </dl>
                             </div>
                         </div>

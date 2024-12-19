@@ -124,7 +124,7 @@ class PedidosController extends AppController
 
             $pedido = $this->Pedidos->find()
                 ->where(['Pedidos.id' => $id])
-                ->contain(['PedidosEstados', 'OrdenesMedicas', 'DetallesPedidos' => [
+                ->contain(['PedidosEstados', 'OrdenesMedicas','Direcciones'=> ['Localidades'=> ['Provincias']], 'DetallesPedidos' => [
                     'Productos' => [
                         'ProductosPrecios' => function ($q) use ($id) {
                             // Obtener el pedido usando el ID

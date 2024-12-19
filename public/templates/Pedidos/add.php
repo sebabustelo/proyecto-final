@@ -86,7 +86,7 @@
                             <select id="provincia_id" required name="provincia_id" class="form-control">
                                 <option selected value="">Seleccione una provincia</option>
                                 <?php foreach ($provincias as $id => $provincia) { ?>
-                                    <option value="<?php echo $id; ?>" <?php echo ($direccion->localidade->provincia_id == $id) ? 'selected' : ''; ?>>
+                                    <option value="<?php echo $id; ?>" >
                                         <?php echo $provincia; ?>
                                     </option>
                                 <?php } ?>
@@ -103,7 +103,7 @@
                         <div class="form-group col-md-4">
                             <label for="calle">Calle</label>
                             <input name="direccion[calle]" required type="text" maxlength="50"
-                                value="<?php echo $direccion->calle ?? ''; ?>"
+                                value=""
                                 class="form-control" placeholder="Calle" oninput="this.value = this.value.replace(/[^a-zA-Z0-9' ]/g, '');">
                         </div>
 
@@ -112,13 +112,13 @@
                                 <div class="col-xs-4">
                                     <label for="numero">Número</label>
                                     <input name="direccion[numero]" required type="number"
-                                        value="<?php echo $direccion->numero ?? ''; ?>"
+                                        value=""
                                         class="form-control" placeholder="Número" min="1" max="9999" oninput="this.value = this.value.slice(0, 5);" onkeydown="preventInvalidInput(event)">
                                 </div>
                                 <div class="col-xs-4">
                                     <label for="piso">Piso</label>
                                     <input name="direccion[piso]"
-                                        value="<?php echo isset($direccion->numero) ? $direccion->numero : ''; ?>"
+                                        value=""
                                         type="number"
                                         class="form-control"
                                         placeholder="Piso"
@@ -130,7 +130,7 @@
                                 <div class="col-xs-4">
                                     <label for="departamento">Departamento</label>
                                     <input name="direccion[departamento]" type="text" class="form-control" placeholder="Depto" maxlength="3"
-                                        value="<?php echo  $direccion->departamento ?? ''; ?>">
+                                        value="">
                                 </div>
                             </div>
                         </div>
