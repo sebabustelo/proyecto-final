@@ -9,34 +9,35 @@
     </ol>
 </section>
 <section id="CatalogoClienteList" class="content">
-
-    <div class="row">
-        <?php foreach ($productos as $k => $producto) { ?>
-            <div class="col-sm-6 col-md-3 " style="margin-bottom: 20px;">
-                <div class="thumbnail product-item">
-                    <img src="/img/productos/<?php echo $producto->productos_archivos[0]->file_name; ?>" alt="Producto 1">
-                    <div class="caption">
-                        <h4><?php echo $producto->nombre; ?></h4>
-                        <p>Precio: <?php echo "$" . $producto->productos_precios[0]->precio; ?></p>
-                        <p>
-                            <?php
-                            $descripcion = $producto->descripcion_breve;
-                            if (strlen($descripcion) > 100) {
-                                $descripcion = substr($descripcion, 0, strrpos(substr($descripcion, 0, 150), ' ')) . '...';
-                            }
-                            echo $descripcion;
-                            ?>
-                        </p>
-                        <div class="button-group">
-                            <a href="/Productos/detail/<?php echo $producto->id ?>" class="btn btn-success" role="button"><i class="fa fa-shopping-bag"></i> Solicitar</a>
-                            <!-- <a href="/Pedidos/addCart" class="btn btn-primary" role="button"> <span class="fa fa-shopping-cart"></span></a> -->
+    <?php if (count($productos) > 0) { ?>
+        <div class="row">
+            <?php foreach ($productos as $k => $producto) { ?>
+                <div class="col-sm-6 col-md-3 " style="margin-bottom: 20px;">
+                    <div class="thumbnail product-item">
+                        <img src="/img/productos/<?php echo $producto->productos_archivos[0]->file_name; ?>" alt="Producto 1">
+                        <div class="caption">
+                            <h4><?php echo $producto->nombre; ?></h4>
+                            <p>Precio: <?php echo "$" . $producto->productos_precios[0]->precio; ?></p>
+                            <p>
+                                <?php
+                                $descripcion = $producto->descripcion_breve;
+                                if (strlen($descripcion) > 100) {
+                                    $descripcion = substr($descripcion, 0, strrpos(substr($descripcion, 0, 150), ' ')) . '...';
+                                }
+                                echo $descripcion;
+                                ?>
+                            </p>
+                            <div class="button-group">
+                                <a href="/Productos/detail/<?php echo $producto->id ?>" class="btn btn-success" role="button"><i class="fa fa-shopping-bag"></i> Solicitar</a>
+                                <!-- <a href="/Pedidos/addCart" class="btn btn-primary" role="button"> <span class="fa fa-shopping-cart"></span></a> -->
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        <?php } ?>
-    </div>
-    <div class="text-center">
+            <?php } ?>
+        </div>
+
+        <div class="text-center">
             <ul class="pagination justify-content-center">
                 <li class="page-item">
                     <?php echo $this->Paginator->first('<<'); ?>
@@ -54,6 +55,14 @@
                 Página: <?php echo $this->Paginator->counter('{{page}} de {{pages}}, mostrando {{current}} productos de {{count}}'); ?>
             </p>
         </div>
+    <?php } else { ?>
+        <div class="no-products-message" style="text-align: center; margin-top: 50px;">
+            <i class="fa fa-info-circle" style="font-size: 50px; color: #007bff;"></i>
+            <h3 style="color: #333; margin-top: 10px;">No existen productos en esta categoría.Por favor, explore otras categorías.</h3>
+
+        </div>
+
+    <?php } ?>
 
 </section>
 
