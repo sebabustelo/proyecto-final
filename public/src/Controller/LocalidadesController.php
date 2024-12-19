@@ -133,7 +133,9 @@ class LocalidadesController extends AppController
                 $this->Flash->success(__('La localidad ha sido eliminada.'));
             } else {
 
-                //$this->Flash->error(__('No se pudo eliminar la localidad.'));
+                $this->Flash->error(__('No se pudo eliminar la localidad.'));
+                // debug("entro");
+                // die;
                 if ($localidad->getErrors()) {
                     foreach ($localidad->getErrors() as $field => $errors) {
                         foreach ($errors as $error) {

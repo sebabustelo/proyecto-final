@@ -31,7 +31,7 @@
                             <span class="badge" style="background-color: #0073b7;"> </span> Pedido En Proceso
                         </div>
                         <div class="col-md-3">
-                            <span class="badge" style="background-color: #00a65a;"> </span> Pedido Pagado
+                            <span class="badge" style="background-color: #605ca8 ;"> </span> Pedido Pagado
                         </div>
                         <div class="col-md-3">
                             <span class="badge" style="background-color: #f56954;"> </span> Pedido Cancelado
@@ -51,7 +51,7 @@
                             <span class="badge" style="background-color: #0073b7;"> </span> Pedido En Proceso
                         </div>
                         <div class="col-md-3">
-                            <span class="badge" style="background-color: #00a65a;"> </span> Pedido Pagado
+                            <span class="badge" style="background-color: #605ca8 ;"> </span> Pedido Pagado
                         </div>
                         <div class="col-md-3">
                             <span class="badge" style="background-color: #f56954;"> </span> Pedido Cancelado
@@ -104,12 +104,12 @@
                 backgroundColor = '#f39c12'; // Naranja pendiente
                 borderColor = '#f39c12';
             } else if (pedido.estado_id === 5) {
-                backgroundColor = '#00a65a'; // Verde pagado
-                borderColor = '#00a65a';
+                backgroundColor = '#605ca8 '; // Verde pagado
+                borderColor = '#605ca8 ';
             } else if (pedido.estado_id === 3) {
                 backgroundColor = '#0073b7'; // Azul en proceso
                 borderColor = '#0073b7';
-            } else if (pedido.estado_id === 4) {
+            } else if (pedido.estado_id === 6) {
                 backgroundColor = '#f56954'; // Rojo cancelado
                 borderColor = '#f56954';
             } else {

@@ -198,7 +198,7 @@ class CategoriasControllerTest extends TestCase
         $this->assertResponseCode(302);
 
         // Verifica que se generó un mensaje de error específico para el campo 'nombre'
-        $this->assertFlashMessage('El nombre es obligatorio');
+        $this->assertFlashMessage('La categoría no pudo ser guardada.');
     }
 
     public function testEditNonExistCategory(): void

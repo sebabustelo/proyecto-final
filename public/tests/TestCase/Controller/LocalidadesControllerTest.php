@@ -298,7 +298,8 @@ class LocalidadesControllerTest extends TestCase
 
         $this->assertResponseCode(302);
 
-        $this->assertSession('No se pudo eliminar la localidad.', 'Flash.flash.1.message');
+        //$this->assertSession('No se pudo eliminar la localidad.', 'Flash.flash.1.message');
+        $this->assertFlashMessage('No se pudo eliminar la localidad.');
     }
 
     public function testDeleteBadArgument(): void
