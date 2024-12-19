@@ -68,8 +68,8 @@ class ProveedoresTableTest extends TestCase
             'descripcion' => 'Lorem ipsum dolor sit amet, aliquet feugiat. ',
             'direccion_id' => 1,
             'celular' => 1,
-            'email' => 'test@test.com',
-            'cuit' => '20289991868',
+            'email' => 'test3@test.com',
+            'cuit' => '27316180057',
             'created' => '2024-10-20 17:49:54',
             'modified' => '2024-10-20 17:49:54',
             'activo' => 1,
@@ -87,7 +87,7 @@ class ProveedoresTableTest extends TestCase
             'direccion_id' => 1,
             'celular' => 1,
             'email' => 'Lorem ipsum dolor sit amet',
-            'cuit' => 'Lorem ipsum dolor ',
+            'cuit' => '27316180057',
             'created' => '2024-10-20 17:49:54',
             'modified' => '2024-10-20 17:49:54',
             'activo' => 1,
@@ -114,16 +114,17 @@ class ProveedoresTableTest extends TestCase
             'descripcion' => 'Lorem ipsum dolor sit amet, aliquet feugiat',
             'direccion_id' => 1,
             'celular' => 1,
-            'email' => 'test@test.com',
-            'cuit' => '20289991868',
+            'email' => 'test4@test.com',
+            'cuit' => '27316180057',
             'created' => '2024-10-20 17:49:54',
             'modified' => '2024-10-20 17:49:54',
             'activo' => 1,
         ];
-        $data['cuit'] = '20289991868';
+        //$data['cuit'] = '20289991868';
 
         // Crea una entidad de proveedor con CUIT válido
         $proveedor = $this->Proveedores->newEntity($data);
+        //debug($proveedor->getErrors());die;
         $this->assertEmpty($proveedor->getErrors(), 'El CUIT válido no debería generar errores');
 
         // Ejemplo de un CUIT inválido
